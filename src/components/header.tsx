@@ -15,7 +15,7 @@ export function Header() {
       </nav>
       <div className="nav-actions">
         <a href="#" className="login-link">Log in</a>
-        <a href="#signup" className="button button-primary button-small">Create free account</a>
+        <a href="#signup" className="button button-primary button-small"><span className="signup-long">Create free account</span><span className="signup-short">Sign up</span></a>
       </div>
     </header>
   );
