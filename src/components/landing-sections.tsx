@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Icon } from "./icons";
 
 const ButtonPair = () => (
@@ -446,15 +447,15 @@ export function Footer() {
         </div>
         <div>
           <b>Company</b>
-          <a href="#">About us</a>
+          <Link href="/about">About us</Link>
           <a href="#">Careers</a>
           <a href="#">Blog</a>
-          <a href="#">Contact us</a>
+          <Link href="/contact">Contact us</Link>
         </div>
         <div>
           <b>Support</b>
           <a href="#">Help center</a>
-          <a href="#">Contact support</a>
+          <Link href="/contact">Contact support</Link>
           <a href="#faq">FAQs</a>
         </div>
         <div>

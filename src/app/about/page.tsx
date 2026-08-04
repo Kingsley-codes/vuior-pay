@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { Icon } from "@/components/icons";
 import { SiteFooter } from "@/components/site-footer";
@@ -26,7 +27,7 @@ export default function AboutPage() {
           <p className="inner-eyebrow">ABOUT VUIOR</p>
           <h1>Building a better way<br />to manage bills.</h1>
           <p>Vuior helps you pay your bills early, stay organized,<br className="desktop-break" /> and earn real rewards for good financial habits.</p>
-          <div className="about-actions"><a className="button button-primary" href="/#signup">Create free account</a><a className="text-link" href="/#how-it-works">See how it works <Icon name="arrow" /></a></div>
+          <div className="about-actions"><Link className="button button-primary" href="/#signup">Create free account</Link><Link className="text-link" href="/#how-it-works">See how it works <Icon name="arrow" /></Link></div>
         </div>
         <div className="about-visual">
           <Image src="/about-hero.png" alt="Vuior customer smiling while paying a bill on her phone" fill sizes="(max-width: 800px) 100vw, 48vw" priority />
@@ -48,7 +49,7 @@ export default function AboutPage() {
 
       <section className="about-cta">
         <div><h2>Join thousands of users who are<br />getting more from their bills.</h2></div>
-        <div className="about-cta-actions"><a className="button button-primary button-small" href="/#signup">Create free account</a><a className="text-link" href="/#how-it-works">See how it works <Icon name="arrow" /></a></div>
+        <div className="about-cta-actions"><Link className="button button-primary button-small" href="/#signup">Create free account</Link><Link className="text-link" href="/#how-it-works">See how it works <Icon name="arrow" /></Link></div>
         <Image src="/rewards-gift.png" alt="Gift box and reward coins" width={245} height={150} />
       </section>
       <SiteFooter />

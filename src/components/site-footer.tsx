@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function SiteFooter() {
   return (
@@ -12,9 +13,9 @@ export function SiteFooter() {
             <a href="#" aria-label="X">𝕏</a><a href="#" aria-label="YouTube">▶</a>
           </div>
         </div>
-        <div><b>Product</b><a href="/#how-it-works">How it works</a><a href="/#rewards">Rewards</a><a href="/#features">Features</a><a href="/#providers">Bill providers</a></div>
-        <div><b>Company</b><a href="/about">About us</a><a href="#">Careers</a><a href="#">Blog</a><a href="/contact">Contact us</a></div>
-        <div><b>Support</b><a href="#">Help center</a><a href="/contact">Contact support</a><a href="/#faq">FAQs</a></div>
+        <div><b>Product</b><Link href="/#how-it-works">How it works</Link><Link href="/#rewards">Rewards</Link><Link href="/#features">Features</Link><Link href="/#providers">Bill providers</Link></div>
+        <div><b>Company</b><Link href="/about">About us</Link><a href="#">Careers</a><a href="#">Blog</a><Link href="/contact">Contact us</Link></div>
+        <div><b>Support</b><a href="#">Help center</a><Link href="/contact">Contact support</Link><Link href="/#faq">FAQs</Link></div>
         <div><b>Legal</b><a href="#">Privacy policy</a><a href="#">Terms of service</a><a href="#">Cookie policy</a></div>
       </div>
       <p className="copyright">© 2026 Vuior. All rights reserved.</p>
