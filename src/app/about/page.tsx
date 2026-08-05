@@ -30,7 +30,7 @@ export default function AboutPage() {
           <div className="about-actions"><Link className="button button-primary" href="/#signup">Create free account</Link><Link className="text-link" href="/#how-it-works">See how it works <Icon name="arrow" /></Link></div>
         </div>
         <div className="about-visual">
-          <Image src="/about-hero.png" alt="Vuior customer smiling while paying a bill on her phone" fill sizes="(max-width: 800px) 100vw, 48vw" priority />
+          <Image src="/about-hero-cutout.png" alt="Vuior customer smiling while paying a bill on her phone" fill sizes="(max-width: 800px) 100vw, 48vw" priority />
           <div className="payment-card"><span className="success-dot">✓</span><b>Payment Successful</b><small>Electricity Bill</small><strong>$85.50</strong><em>You earned<br /><mark>+5% credits</mark></em></div>
           <div className="credits-card"><small>Available credits</small><strong>2,450</strong><span>♙</span></div>
         </div>
@@ -50,7 +50,7 @@ export default function AboutPage() {
       <section className="about-cta">
         <div><h2>Join thousands of users who are<br />getting more from their bills.</h2></div>
         <div className="about-cta-actions"><Link className="button button-primary button-small" href="/#signup">Create free account</Link><Link className="text-link" href="/#how-it-works">See how it works <Icon name="arrow" /></Link></div>
-        <Image src="/rewards-gift.png" alt="Gift box and reward coins" width={245} height={150} />
+        <Image src="/rewards-gift-v2.png" alt="Gift box and reward coins" width={245} height={150} />
       </section>
       <SiteFooter />
     </main>
