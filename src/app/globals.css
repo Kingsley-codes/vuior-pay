@@ -1144,37 +1144,51 @@ footer .footer-brand img {
 }
 
 @media (min-width: 901px) {
+  .hero-copy > p {
+    font-size: 20px;
+  }
   .section-copy > p {
-    font-size: 16px;
-    line-height: 1.65;
+    font-size: 17px;
+    line-height: 1.7;
   }
   .rewards-copy > p {
-    font-size: 15px;
-    line-height: 1.65;
+    font-size: 16px;
+    line-height: 1.7;
   }
   .step p {
-    font-size: 13px;
-    line-height: 1.65;
+    font-size: 15px;
+    line-height: 1.7;
   }
   .download p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .security-item p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .faq details p {
     font-size: 14px;
     line-height: 1.65;
   }
-  .security-item p {
-    font-size: 12px;
-    line-height: 1.55;
-  }
-  .faq details p {
-    font-size: 12px;
-    line-height: 1.6;
-  }
   .cta-copy p {
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
   }
   .footer-brand p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  footer .footer-grid > div:not(:first-child) {
+    gap: 14px;
+    font-size: 14px;
+  }
+  footer .footer-grid > div > b {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  footer .copyright {
     font-size: 12px;
-    line-height: 1.65;
   }
 }
 
@@ -1839,27 +1853,35 @@ footer .footer-brand img {
 @media (min-width: 901px) {
   .about-hero-copy > p:last-of-type,
   .contact-intro > p:last-child {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.7;
   }
   .about-mission > div:first-child > p:last-child,
   .about-story > p:last-of-type {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.75;
   }
   .value-grid p,
   .contact-trust p,
   .reach-list p,
   .milestone-grid p {
-    font-size: 12px;
-    line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.65;
   }
   .panel-heading p,
   .help-banner p {
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 15px;
+    line-height: 1.65;
   }
   .response-note {
-    font-size: 11px;
+    font-size: 12px;
+  }
+  .contact-form label {
+    font-size: 12px;
+  }
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    font-size: 14px;
   }
 }
