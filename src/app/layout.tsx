@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   description: "Manage all your bills, pay early, and earn rewards with Vuior.",
   icons: {
     icon: "/favicon.png",
+    shortcut: "/favicon.png",
     apple: "/favicon.png",
   },
 };
