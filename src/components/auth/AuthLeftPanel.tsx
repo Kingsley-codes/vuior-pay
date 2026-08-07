@@ -5,7 +5,7 @@ export function AuthLeftPanel() {
   return (
     <section className="relative hidden min-h-screen overflow-hidden bg-[#004c3d] lg:block">
       <Image
-        src="/images/auth/auth-green-background.png"
+        src="/auth-green-background.png"
         alt=""
         fill
         priority
@@ -13,43 +13,41 @@ export function AuthLeftPanel() {
         className="object-cover"
       />
 
-      <div className="relative z-10 flex min-h-screen flex-col px-[7%] py-[42px]">
-        <div className="flex items-center gap-4">
-          <div className="relative h-[42px] w-[48px]">
-            <span className="absolute left-[3px] top-0 h-[40px] w-[22px] -rotate-[32deg] rounded-full bg-[#15ce89]" />
-            <span className="absolute right-[3px] top-0 h-[40px] w-[22px] rotate-[32deg] rounded-full bg-[#00996e]" />
-          </div>
+      <div className="relative z-10 flex min-h-screen flex-col px-[7.1%] py-[42px]">
+        <Image
+          src="/vuiorLogo.png"
+          alt="Vuior"
+          width={156}
+          height={57}
+          priority
+          className="h-auto w-[156px] brightness-0 invert"
+        />
 
-          <span className="text-[25px] font-semibold tracking-[0.25em] text-white">
-            VUIOR
-          </span>
-        </div>
-
-        <div className="mt-[52px]">
-          <h1 className="text-[46px] font-bold leading-[1.25] tracking-[-0.03em] text-white">
+        <div className="mt-[54px]">
+          <h1 className="text-[48px] font-bold leading-[1.25] text-white">
             Welcome back
             <br />
             to Vuior
           </h1>
 
-          <p className="mt-4 max-w-[430px] text-[18px] leading-7 text-white/90">
+          <p className="mt-4 max-w-[440px] text-[18px] leading-7 text-white/90">
             Manage bills, pay early, and earn credits that put more back in your
             pocket.
           </p>
         </div>
 
-        <div className="relative mt-4 h-[470px] w-full">
+        <div className="relative mt-6 h-[470px] w-[calc(100%+18px)] translate-x-[36px]">
           <Image
-            src="/images/auth/auth-dashboard-mockup.png"
+            src="/auth-dashboard-mockup.png"
             alt="Vuior dashboard preview"
             fill
             priority
             sizes="50vw"
-            className="object-contain object-left"
+            className="object-contain object-left-top"
           />
         </div>
 
-        <div className="mt-auto space-y-4 pb-1">
+        <div className="mt-auto space-y-4 pb-1 pl-[38px]">
           <Feature
             icon={<FileText size={24} strokeWidth={1.8} />}
             title="Track bills"

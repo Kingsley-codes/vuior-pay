@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { LockKeyhole } from "lucide-react";
 import { AuthLeftPanel } from "@/components/auth/AuthLeftPanel";
 
 export default function AuthLayout({
