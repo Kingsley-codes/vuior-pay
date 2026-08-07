@@ -1,36 +1,108 @@
 "use client";
 
+import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { Eye, LockKeyhole, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
+import { continueWithGoogle, login } from "@/auth/authService";
+import { getAuthErrorMessage } from "@/auth/authErrors";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
 import GoogleButton from "@/components/auth/GoogleButton";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [socialSubmitting, setSocialSubmitting] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+
+    if (!email.trim()) {
+      setError("Please enter your email.");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Please enter your password.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await login(email.trim(), password);
+      router.replace("/dashboard");
+    } catch (loginError) {
+      setError(getAuthErrorMessage(loginError));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleGoogle() {
+    setError("");
+    setSocialSubmitting(true);
+    try {
+      await continueWithGoogle();
+      router.replace("/dashboard");
+    } catch (googleError) {
+      setError(getAuthErrorMessage(googleError));
+    } finally {
+      setSocialSubmitting(false);
+    }
+  }
+
   return (
     <AuthFormShell
       title="Log in"
       description="Access your bills, payments, and credits."
     >
-      <form className="space-y-7" onSubmit={(event) => event.preventDefault()}>
+      <form className="space-y-7" onSubmit={handleSubmit}>
+        {error ? (
+          <div className="rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-4 py-3 text-[14px] text-[#be123c]">
+            {error}
+          </div>
+        ) : null}
+
         <AuthInput
           label="Email address"
           type="email"
           name="email"
-          placeholder="you@example.com"
+          placeholder="Enter your email"
           autoComplete="email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
           icon={<Mail size={21} strokeWidth={1.8} />}
           required
         />
 
         <AuthInput
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           name="password"
           placeholder="Enter your password"
           autoComplete="current-password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
           icon={<LockKeyhole size={21} strokeWidth={1.8} />}
-          trailingIcon={<Eye size={21} strokeWidth={1.8} />}
+          trailingIcon={
+            <button
+              type="button"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              onClick={() => setShowPassword((current) => !current)}
+            >
+              {showPassword ? (
+                <EyeOff size={21} strokeWidth={1.8} />
+              ) : (
+                <Eye size={21} strokeWidth={1.8} />
+              )}
+            </button>
+          }
           required
         />
 
@@ -50,9 +122,10 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="h-13.5 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[16px] font-semibold text-white shadow-[0_8px_20px_rgba(0,157,98,0.18)] transition hover:brightness-[0.98] active:scale-[0.995]"
+          disabled={isSubmitting || socialSubmitting}
+          className="h-13.5 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[16px] font-semibold text-white shadow-[0_8px_20px_rgba(0,157,98,0.18)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          Log in
+          {isSubmitting ? "Logging in..." : "Log in"}
         </button>
 
         <div className="flex items-center gap-5">
@@ -61,7 +134,11 @@ export default function LoginPage() {
           <div className="h-px flex-1 bg-[#dfe3eb]" />
         </div>
 
-        <GoogleButton />
+        <GoogleButton
+          disabled={isSubmitting || socialSubmitting}
+          label={socialSubmitting ? "Connecting..." : "Continue with Google"}
+          onClick={handleGoogle}
+        />
 
         <p className="pt-2 text-center text-[14px] text-[#33405f]">
           Don&apos;t have an account?{" "}

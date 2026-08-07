@@ -1,14 +1,20 @@
 type GoogleButtonProps = {
   label?: string;
+  disabled?: boolean;
+  onClick?: () => void;
 };
 
 export default function GoogleButton({
   label = "Continue with Google",
+  disabled = false,
+  onClick,
 }: GoogleButtonProps) {
   return (
     <button
       type="button"
-      className="flex h-13.5 w-full items-center justify-center gap-4 rounded-lg border border-[#d8dde7] bg-white text-[15px] font-semibold text-[#18254d] transition hover:bg-[#f8fafc] active:scale-[0.995]"
+      disabled={disabled}
+      onClick={onClick}
+      className="flex h-13.5 w-full items-center justify-center gap-4 rounded-lg border border-[#d8dde7] bg-white text-[15px] font-semibold text-[#18254d] transition hover:bg-[#f8fafc] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
     >
       <svg width="23" height="23" viewBox="0 0 24 24" aria-hidden="true">
         <path

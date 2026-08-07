@@ -4,19 +4,37 @@ import { ClipboardEvent, KeyboardEvent, useRef, useState } from "react";
 
 const OTP_LENGTH = 6;
 
-export default function OtpInput() {
-  const [digits, setDigits] = useState<string[]>(Array(OTP_LENGTH).fill(""));
+type OtpInputProps = {
+  value?: string;
+  onChange?: (value: string) => void;
+};
+
+export default function OtpInput({ value, onChange }: OtpInputProps) {
+  const [internalDigits, setInternalDigits] = useState<string[]>(
+    Array(OTP_LENGTH).fill(""),
+  );
+  const digits =
+    value !== undefined
+    ? Array.from({ length: OTP_LENGTH }, (_, index) => value[index] || "")
+    : internalDigits;
 
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+
+  function setDigits(next: string[]) {
+    if (onChange) {
+      onChange(next.join(""));
+      return;
+    }
+
+    setInternalDigits(next);
+  }
 
   function updateDigit(index: number, value: string) {
     const digit = value.replace(/\D/g, "").slice(-1);
 
-    setDigits((current) => {
-      const next = [...current];
-      next[index] = digit;
-      return next;
-    });
+    const next = [...digits];
+    next[index] = digit;
+    setDigits(next);
 
     if (digit && index < OTP_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
@@ -51,15 +69,12 @@ export default function OtpInput() {
 
     if (!pastedDigits.length) return;
 
-    setDigits((current) => {
-      const next = [...current];
-
-      pastedDigits.forEach((digit, index) => {
-        next[index] = digit;
-      });
-
-      return next;
+    const next = [...digits];
+    pastedDigits.forEach((digit, index) => {
+      next[index] = digit;
     });
+
+    setDigits(next);
 
     const focusIndex = Math.min(pastedDigits.length, OTP_LENGTH - 1);
 
