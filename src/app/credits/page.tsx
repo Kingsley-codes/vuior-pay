@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   CalendarDays, ChevronLeft, ChevronRight, CircleDollarSign, Copy, Gift,
-  Share2, Sparkles, UserRound, UsersRound,
+  Send, Share2, Sparkles, UserRound, UsersRound, WalletCards,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
@@ -49,7 +49,7 @@ export default function CreditsPage() {
   }
 
   return <DashboardShell><div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
-    <div><h1 className="text-[29px] font-bold tracking-[-.035em]">Credits</h1><p className="mt-1 text-[13px] text-[#596885]">Track your earned credits, rewards, and redemption activity.</p></div>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div><h1 className="text-[29px] font-bold tracking-[-.035em]">Credits</h1><p className="mt-1 text-[13px] text-[#596885]">Track your earned credits, rewards, and redemption activity.</p></div><div className="flex gap-2"><Link href="/dashboard/credits/wallet?tab=send" className="flex h-10 items-center gap-2 rounded-md border border-[#009b67] px-4 text-[10px] font-semibold text-[#009b67]"><Send size={15}/> Send credits</Link><Link href="/dashboard/credits/wallet?tab=add" className="flex h-10 items-center gap-2 rounded-md bg-[#009b67] px-4 text-[10px] font-semibold text-white"><WalletCards size={15}/> Add funds</Link></div></div>
     <section className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       {[["Available Credits", credits.toLocaleString(), `≈ ${money.format(credits / 100)} value`, CircleDollarSign], ["Credits Earned This Month", `+${earned.toLocaleString()}`, "From eligible payments", Sparkles], ["Redeemed This Month", `-${redeemed.toLocaleString()}`, "Applied to bill payments", Gift], ["Referral Bonus", `+${referral.toLocaleString()}`, "Total earned", UsersRound]].map(([label, value, note, Icon]) => { const I = Icon as typeof Gift; return <article key={String(label)} className="flex min-h-[110px] items-center rounded-xl border border-[#e1e8e5] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,.035)]"><div className="flex-1"><p className="text-[11px] font-medium">{label as string}</p><strong className="mt-2 block text-[23px]">{value as string}</strong><p className="mt-2 text-[10px] text-[#00a36a]">{note as string}</p></div><span className="grid h-11 w-11 place-items-center rounded-xl bg-[#edf8f4] text-[#009b67]"><I size={23}/></span></article>; })}
     </section>

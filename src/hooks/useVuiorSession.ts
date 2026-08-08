@@ -14,6 +14,7 @@ export type VuiorUser = {
   availableCredits?: number;
   referralCode?: string;
   referralBonus?: number;
+  stripeCustomerId?: string;
 };
 
 export function useVuiorSession() {
@@ -46,6 +47,7 @@ export function useVuiorSession() {
             availableCredits: Number(data.availableCredits ?? 0),
             referralCode: String(data.referralCode ?? data.referral_code ?? ""),
             referralBonus: Number(data.referralBonus ?? data.referralEarnings ?? 0),
+            stripeCustomerId: String(data.stripeCustomerId ?? ""),
           });
           setLoading(false);
         },
@@ -59,6 +61,7 @@ export function useVuiorSession() {
             availableCredits: 0,
             referralCode: "",
             referralBonus: 0,
+            stripeCustomerId: "",
           });
           setLoading(false);
         },

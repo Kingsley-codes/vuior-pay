@@ -28,7 +28,7 @@ import { useVuiorSession } from "@/hooks/useVuiorSession";
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
   { label: "Bills", href: "/dashboard/bills", icon: FileText },
-  { label: "Payments", href: "#", icon: WalletCards },
+  { label: "Pay Bills", href: "/dashboard/pay", icon: WalletCards },
   { label: "Credits", href: "/dashboard/credits", icon: Coins },
   { label: "Transactions", href: "#", icon: SlidersHorizontal },
   { label: "Referrals", href: "#", icon: UsersRound },
