@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -15,6 +15,14 @@ import AuthFormShell from "@/components/auth/AuthFormShell";
 import OtpInput from "@/components/auth/OtpInput";
 
 export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<AuthFormShell title="Verify your email" description="Loading your verification session…"><div className="h-48 animate-pulse rounded-lg bg-[#f3f6f5]" /></AuthFormShell>}>
+      <VerifyOtpForm />
+    </Suspense>
+  );
+}
+
+function VerifyOtpForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";

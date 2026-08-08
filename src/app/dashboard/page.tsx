@@ -1,456 +1,125 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
 import {
-  BarChart3,
-  Calendar,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  CreditCard,
-  Eye,
+  ArrowDownLeft,
+  ArrowRight,
+  ArrowUpRight,
+  CalendarCheck2,
+  CircleDollarSign,
+  Coins,
+  FilePlus2,
   FileText,
-  Home,
-  Landmark,
-  Moon,
-  Search,
-  Settings,
-  Share2,
-  Sun,
-  TrendingDown,
+  History,
+  Lightbulb,
+  Plus,
+  RefreshCcw,
+  ShieldCheck,
   TrendingUp,
-  Users,
+  UsersRound,
   WalletCards,
 } from "lucide-react";
+import DashboardShell from "@/components/dashboard/DashboardShell";
+import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
 
-const navItems = [
-  { label: "Dashboard", icon: Home },
-  { label: "Users", icon: Users },
-  { label: "Transactions", icon: Share2, active: true },
-  { label: "Analytics", icon: BarChart3 },
-  { label: "Promo Codes", icon: FileText },
-  { label: "Referrals", icon: Users },
-  { label: "Knowledgebase", icon: FileText },
-  { label: "Settings", icon: Settings },
-];
+const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
-const summaryCards = [
-  {
-    title: "Total Transactions",
-    value: "12,481",
-    delta: "18.6% vs yesterday",
-    tone: "green",
-    icon: WalletCards,
-    chart: "M2 22 C18 19 22 17 35 15 S53 5 64 8 78 2 92 10 104 0",
-  },
-  {
-    title: "Failed Transactions",
-    value: "17",
-    delta: "5.6% vs yesterday",
-    tone: "rose",
-    icon: TrendingDown,
-    chart: "M2 20 C15 10 22 15 35 9 S52 0 64 8 78 16 91 3 104 13",
-  },
-  {
-    title: "Success Rate",
-    value: "98.4%",
-    delta: "1.2% vs yesterday",
-    tone: "violet",
-    icon: TrendingUp,
-    chart: "M2 24 C18 22 24 18 36 20 S54 13 66 16 80 8 92 10 104 2",
-  },
-];
+function daysUntil(value: string) {
+  const due = new Date(value);
+  if (Number.isNaN(due.getTime())) return 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+  return Math.ceil((due.getTime() - today.getTime()) / 86400000);
+}
 
-const transactions = [
-  ["TXN-12485", "Stanley Agbam", "Electricity", "Duke Energy", "$85.50", "Bank Transfer", "Success", "Jun 23, 2026 10:45 AM"],
-  ["TXN-12484", "Alice Johnson", "Mobile Top-up", "T-Mobile", "$20.00", "Card **** 4242", "Success", "Jun 23, 2026 10:30 AM"],
-  ["TXN-12483", "Robert Smith", "Internet", "Comcast", "$55.00", "Bank Transfer", "Failed", "Jun 23, 2026 09:15 AM"],
-  ["TXN-12482", "Linda Martinez", "Water Bill", "Aqua Water", "$31.20", "Card **** 1111", "Success", "Jun 23, 2026 08:50 AM"],
-  ["TXN-12481", "James Anderson", "Cable TV", "Spectrum", "$60.00", "Wallet Balance", "Success", "Jun 23, 2026 08:20 AM"],
-];
-
-const chartPoints = [
-  438, 438, 528, 574, 404, 412, 366, 480, 520, 368, 384, 512, 426, 480, 624,
-  560, 480, 506, 586, 624, 520, 520, 574,
-];
-
-function linePath() {
-  return chartPoints
-    .map((point, index) => {
-      const x = 24 + index * 39;
-      const y = 218 - (point / 1000) * 180;
-      return `${index === 0 ? "M" : "L"} ${x} ${y}`;
-    })
-    .join(" ");
+function BillIcon({ bill }: { bill: Bill }) {
+  const palette = bill.category.toLowerCase().includes("internet")
+    ? "bg-[#f2eaff] text-[#8849ef]"
+    : bill.category.toLowerCase().includes("water")
+      ? "bg-[#e8f3ff] text-[#2c82ef]"
+      : bill.category.toLowerCase().includes("insurance")
+        ? "bg-[#e9f9f1] text-[#00a96b]"
+        : "bg-[#fff3df] text-[#f59e0b]";
+  return <span className={`grid h-9 w-9 place-items-center rounded-full ${palette}`}><FileText size={17} /></span>;
 }
 
 export default function DashboardPage() {
+  const { user } = useVuiorSession();
+  const { activeBills, transactions, walletBalance } = useVuiorData(user?.id);
+  const upcoming = [...activeBills].sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
+  const unpaidTotal = activeBills.reduce((sum, bill) => sum + bill.amount, 0);
+  const credits = Number(user?.availableCredits ?? 0);
+  const successfulPayments = transactions.filter((item) => ["success", "successful", "completed", "paid"].includes(item.status.toLowerCase()));
+  const firstName = user?.firstName || "there";
+
+  const stats = [
+    { title: "Available Balance", value: money.format(walletBalance), note: "Your Vuior wallet", icon: WalletCards },
+    { title: "Total Unpaid Bills", value: money.format(unpaidTotal), note: `${activeBills.length} active bill${activeBills.length === 1 ? "" : "s"}`, icon: FileText },
+    { title: "Available Credits", value: credits.toLocaleString(), note: "Ready to redeem", icon: Coins },
+    { title: "Payments This Month", value: String(successfulPayments.length), note: successfulPayments.length ? "Completed successfully" : "No payments yet", icon: CalendarCheck2 },
+  ];
+
   return (
-    <main className="min-h-screen bg-[#fbfcfd] text-[#07142d] lg:grid lg:grid-cols-[250px_1fr]">
-      <aside className="hidden border-r border-[#e5e9f0] bg-white px-5 py-8 lg:flex lg:min-h-screen lg:flex-col">
-        <Image
-          src="/vuiorLogo.png"
-          alt="Vuior"
-          width={132}
-          height={49}
-          className="h-auto w-[132px]"
-          priority
-        />
+    <DashboardShell>
+      <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
+        <div><h1 className="text-[27px] font-bold tracking-[-0.035em] text-[#0d1b42] sm:text-[30px]">Dashboard</h1><p className="mt-1.5 text-[13px] text-[#596885]">Welcome back, {firstName}. Track your bills, payments, credits, and savings in one place.</p></div>
 
-        <p className="mt-12 text-[12px] font-semibold uppercase tracking-[0.08em] text-[#6b7280]">
-          Main Menu
-        </p>
+        <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {stats.map(({ title, value, note, icon: Icon }) => (
+            <article key={title} className="flex min-h-[136px] items-center gap-4 rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.045)]">
+              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><Icon size={27} strokeWidth={1.8} /></span>
+              <div><p className="text-[12px] text-[#53637f]">{title}</p><strong className="mt-2 block text-[25px] tracking-[-0.035em]">{value}</strong><p className="mt-2 text-[11px] text-[#61708a]">{note}</p></div>
+            </article>
+          ))}
+        </section>
 
-        <nav className="mt-6 space-y-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <a
-                key={item.label}
-                href="#"
-                className={`flex h-12 items-center gap-4 rounded-lg px-4 text-[14px] font-medium transition ${
-                  item.active
-                    ? "bg-[#e8f8f2] text-[#009d62]"
-                    : "text-[#263454] hover:bg-[#f8fafc]"
-                }`}
-              >
-                <Icon size={19} strokeWidth={1.8} />
-                {item.label}
-              </a>
-            );
-          })}
-        </nav>
-
-        <div className="mt-auto flex items-center gap-3 rounded-lg border border-[#e1e5ec] p-3">
-          <div className="h-10 w-10 overflow-hidden rounded-full bg-[#e8f8f2]">
-            <Image
-              src="https://ui-avatars.com/api/?name=Admin+User&background=00a968&color=fff"
-              alt="Admin User"
-              width={40}
-              height={40}
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-semibold">Admin User</p>
-            <p className="truncate text-[11px] text-[#6b7280]">
-              admin@vuior.com
-            </p>
-          </div>
-          <ChevronDown size={16} />
-        </div>
-      </aside>
-
-      <section className="min-w-0 px-5 py-6 sm:px-8 lg:px-9">
-        <header className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
-          <div>
-            <h1 className="text-[28px] font-bold tracking-[-0.02em] sm:text-[32px]">
-              Transaction Management
-            </h1>
-            <p className="mt-2 text-[14px] text-[#647185]">
-              Monitor, review, and track all transactions across the Vuior
-              platform.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <label className="flex h-11 w-full items-center rounded-lg border border-[#dfe3eb] bg-white px-4 text-[#8590aa] sm:w-[360px]">
-              <input
-                placeholder="Search by transaction ID, user, service, status..."
-                className="min-w-0 flex-1 bg-transparent text-[13px] text-[#142047] outline-none placeholder:text-[#7b8499]"
-              />
-              <Search size={19} />
-            </label>
-
-            <div className="flex h-11 items-center rounded-lg border border-[#dfe3eb] bg-white p-1 text-[13px] font-semibold">
-              {["Today", "Daily", "Monthly", "Yearly", "Custom"].map((item) => (
-                <button
-                  key={item}
-                  className={`h-9 rounded-md px-4 ${
-                    item === "Daily"
-                      ? "bg-[#009d62] text-white shadow-sm"
-                      : "text-[#263454]"
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-              <Calendar size={18} className="mx-2 text-[#647185]" />
-            </div>
-
-            <div className="flex h-11 items-center gap-3 rounded-full border border-[#e5e9f0] bg-white px-3">
-              <Sun size={17} />
-              <Moon size={17} />
-              <Image
-                src="https://ui-avatars.com/api/?name=Admin+User&background=101d4b&color=fff"
-                alt="Admin User"
-                width={32}
-                height={32}
-                className="rounded-full"
-              />
-              <ChevronDown size={15} />
-            </div>
-          </div>
-        </header>
-
-        <div className="mt-8 grid gap-6 xl:grid-cols-3">
-          {summaryCards.map((card) => {
-            const Icon = card.icon;
-            const color =
-              card.tone === "green"
-                ? "#00a968"
-                : card.tone === "rose"
-                  ? "#f43f5e"
-                  : "#7c3aed";
-
-            return (
-              <article
-                key={card.title}
-                className="rounded-xl border border-[#e5e9f0] bg-white p-7 shadow-[0_18px_45px_rgba(35,47,77,0.04)]"
-              >
-                <div className="flex items-start justify-between gap-5">
-                  <div className="flex items-center gap-5">
-                    <div
-                      className="flex h-13 w-13 items-center justify-center rounded-lg"
-                      style={{ backgroundColor: `${color}16`, color }}
-                    >
-                      <Icon size={25} strokeWidth={1.9} />
-                    </div>
-                    <div>
-                      <p className="text-[13px] text-[#526080]">{card.title}</p>
-                      <p className="mt-2 text-[30px] font-bold tracking-[-0.03em]">
-                        {card.value}
-                      </p>
-                    </div>
-                  </div>
-                  <svg viewBox="0 0 112 32" className="mt-16 h-9 w-32">
-                    <path
-                      d={card.chart}
-                      fill="none"
-                      stroke={color}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2.5"
-                    />
-                  </svg>
-                </div>
-                <p className="mt-7 flex items-center gap-2 text-[13px] text-[#647185]">
-                  <TrendingUp size={16} className="text-[#00a968]" />
-                  <span style={{ color }}>{card.delta.split(" ")[0]}</span>
-                  {card.delta.replace(card.delta.split(" ")[0], "")}
-                </p>
-              </article>
-            );
-          })}
-        </div>
-
-        <section className="mt-7 rounded-xl border border-[#e5e9f0] bg-white p-7 shadow-[0_18px_45px_rgba(35,47,77,0.04)]">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-[18px] font-bold">Transaction Volume Trend</h2>
-            <button className="flex h-10 items-center gap-8 rounded-lg border border-[#dfe3eb] px-4 text-[13px] font-medium">
-              Daily
-              <ChevronDown size={16} />
-            </button>
-          </div>
-
-          <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_230px]">
-            <div className="min-w-0 overflow-x-auto">
-              <svg viewBox="0 0 920 250" className="h-[250px] min-w-[860px]">
-                {[0, 1, 2, 3, 4, 5].map((line) => (
-                  <line
-                    key={line}
-                    x1="24"
-                    x2="890"
-                    y1={30 + line * 38}
-                    y2={30 + line * 38}
-                    stroke="#e9edf3"
-                  />
-                ))}
-                <path
-                  d={`${linePath()} L 882 218 L 24 218 Z`}
-                  fill="url(#trendFill)"
-                />
-                <path
-                  d={linePath()}
-                  fill="none"
-                  stroke="#00a968"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="3"
-                />
-                {chartPoints.map((point, index) => (
-                  <circle
-                    key={`${point}-${index}`}
-                    cx={24 + index * 39}
-                    cy={218 - (point / 1000) * 180}
-                    r="4"
-                    fill="#fff"
-                    stroke="#00a968"
-                    strokeWidth="3"
-                  />
-                ))}
-                <g>
-                  <rect
-                    x="480"
-                    y="26"
-                    width="135"
-                    height="68"
-                    rx="8"
-                    fill="#fff"
-                    stroke="#e5e9f0"
-                  />
-                  <text x="493" y="52" fontSize="12" fill="#07142d">
-                    Jun 10, 2026
-                  </text>
-                  <circle cx="496" cy="74" r="5" fill="#00a968" />
-                  <text x="508" y="78" fontSize="12" fill="#526080">
-                    Transactions: 624
-                  </text>
-                </g>
-                <defs>
-                  <linearGradient id="trendFill" x1="0" x2="0" y1="0" y2="1">
-                    <stop stopColor="#00a968" stopOpacity="0.18" />
-                    <stop offset="1" stopColor="#00a968" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
-
-            <div className="grid gap-6 border-[#e5e9f0] xl:border-l xl:pl-6">
-              {[
-                ["Highest Volume", "624", "Jun 10, 2026", TrendingUp, "#00a968"],
-                ["Lowest Volume", "312", "Jun 04, 2026", TrendingDown, "#f43f5e"],
-                ["Average Volume", "456", "per day", BarChart3, "#2587e8"],
-              ].map(([label, value, detail, Icon, color]) => (
-                <div key={label as string} className="flex items-center gap-4">
-                  <div
-                    className="flex h-11 w-11 items-center justify-center rounded-lg"
-                    style={{
-                      backgroundColor: `${color}14`,
-                      color: color as string,
-                    }}
-                  >
-                    <Icon size={22} />
-                  </div>
-                  <div>
-                    <p className="text-[12px] text-[#647185]">{label as string}</p>
-                    <p className="mt-1 text-[22px] font-bold">{value as string}</p>
-                    <p className="text-[12px] text-[#647185]">{detail as string}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <section className="mt-5 rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
+          <h2 className="text-[16px] font-bold">Quick Actions</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {[{ label: "Add Funds", href: "/dashboard/credits", icon: Plus }, { label: "Pay Bills", href: "/dashboard/bills", icon: CircleDollarSign }, { label: "Create Bill", href: "/dashboard/bills/add-bills", icon: FilePlus2 }, { label: "Transactions", href: "/dashboard/credits", icon: History }].map(({ label, href, icon: Icon }) => (
+              <Link key={label} href={href} className="flex h-[74px] items-center justify-center gap-5 rounded-lg border border-[#dfe6e4] text-[13px] font-semibold transition hover:border-[#00a96b] hover:bg-[#f5fcf9]"><Icon className="text-[#00a96b]" size={27} />{label}</Link>
+            ))}
           </div>
         </section>
 
-        <section className="mt-7 overflow-hidden rounded-xl border border-[#e5e9f0] bg-white shadow-[0_18px_45px_rgba(35,47,77,0.04)]">
-          <div className="flex flex-col gap-4 border-b border-[#e5e9f0] p-6 xl:flex-row xl:items-end xl:justify-between">
-            <h2 className="text-[18px] font-bold">Payment History</h2>
-            <div className="grid gap-3 sm:grid-cols-2 xl:flex">
-              {["All Status", "All Services", "All Providers", "Last 30 Days"].map(
-                (item) => (
-                  <button
-                    key={item}
-                    className="flex h-10 items-center justify-between gap-8 rounded-lg border border-[#dfe3eb] px-4 text-[13px] font-medium text-[#263454]"
-                  >
-                    {item}
-                    <ChevronDown size={15} />
-                  </button>
-                ),
-              )}
+        <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_1.12fr_.85fr]">
+          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
+            <div className="flex items-center justify-between"><h2 className="text-[15px] font-bold">Upcoming Bills</h2><Link className="text-[12px] font-semibold text-[#00a96b]" href="/dashboard/bills">View all</Link></div>
+            <div className="mt-3 divide-y divide-[#edf1ef]">
+              {upcoming.slice(0, 4).map((bill) => { const days = daysUntil(bill.dueDate); return (
+                <div key={bill.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 py-3.5"><BillIcon bill={bill} /><div className="min-w-0"><p className="truncate text-[12px] font-semibold">{bill.name}</p><p className="mt-1 text-[10px] text-[#758199]">{days < 0 ? `${Math.abs(days)} days overdue` : days === 0 ? "Due today" : `Due in ${days} days`}</p></div><div className="text-right"><p className="text-[12px] font-semibold">{money.format(bill.amount)}</p><span className={`mt-1 inline-block rounded px-2 py-1 text-[9px] ${days <= 3 ? "bg-[#fff1e5] text-[#e87912]" : "bg-[#e9f8f1] text-[#009a61]"}`}>{days <= 3 ? "Due soon" : "Upcoming"}</span></div></div>
+              ); })}
+              {!upcoming.length ? <Empty message="No upcoming bills. Add your first bill to begin." /> : null}
             </div>
-          </div>
+            {upcoming.length ? <Link href="/dashboard/bills" className="ml-auto mt-4 flex h-9 w-fit items-center justify-center rounded-md bg-[#00a96b] px-6 text-[11px] font-semibold text-white">Pay bills</Link> : null}
+          </section>
 
-          <div className="overflow-x-auto">
-            <table className="min-w-[1050px] w-full text-left text-[13px]">
-              <thead className="bg-[#f8fafc] text-[#526080]">
-                <tr>
-                  {[
-                    "Transaction ID",
-                    "User",
-                    "Service",
-                    "Provider",
-                    "Amount",
-                    "Payment Method",
-                    "Status",
-                    "Date & Time",
-                    "Action",
-                  ].map((heading) => (
-                    <th key={heading} className="px-6 py-4 font-semibold">
-                      {heading}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map((transaction) => (
-                  <tr
-                    key={transaction[0]}
-                    className="border-t border-[#edf0f5] text-[#142047]"
-                  >
-                    {transaction.map((cell, index) => (
-                      <td key={`${transaction[0]}-${cell}`} className="px-6 py-4">
-                        {index === 5 ? (
-                          <span className="flex items-center gap-2">
-                            {cell.includes("Bank") ? (
-                              <Landmark size={16} />
-                            ) : cell.includes("Card") ? (
-                              <CreditCard size={16} />
-                            ) : (
-                              <WalletCards size={16} />
-                            )}
-                            {cell}
-                          </span>
-                        ) : index === 6 ? (
-                          <span
-                            className={`rounded-md px-2.5 py-1 text-[12px] font-semibold ${
-                              cell === "Success"
-                                ? "bg-[#dcfce7] text-[#039855]"
-                                : "bg-[#ffe4e6] text-[#e11d48]"
-                            }`}
-                          >
-                            {cell}
-                          </span>
-                        ) : (
-                          cell
-                        )}
-                      </td>
-                    ))}
-                    <td className="px-6 py-4">
-                      <Eye size={18} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex flex-col gap-4 border-t border-[#e5e9f0] p-5 text-[13px] text-[#647185] sm:flex-row sm:items-center sm:justify-between">
-            <p>Showing 1 to 10 of 1,248 transactions</p>
-            <div className="flex items-center gap-2">
-              <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#dfe3eb]">
-                <ChevronLeft size={16} />
-              </button>
-              {[1, 2, 3].map((page) => (
-                <button
-                  key={page}
-                  className={`h-9 w-9 rounded-lg border text-[13px] font-semibold ${
-                    page === 1
-                      ? "border-[#009d62] bg-[#009d62] text-white"
-                      : "border-[#dfe3eb] text-[#263454]"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-              <span className="px-2">...</span>
-              <button className="h-9 rounded-lg border border-[#dfe3eb] px-3 font-semibold text-[#263454]">
-                125
-              </button>
-              <button className="flex h-9 w-9 items-center justify-center rounded-lg border border-[#dfe3eb]">
-                <ChevronRight size={16} />
-              </button>
+          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
+            <div className="flex items-center justify-between"><h2 className="text-[15px] font-bold">Recent Transactions</h2><span className="text-[12px] font-semibold text-[#00a96b]">Latest activity</span></div>
+            <div className="mt-3 divide-y divide-[#edf1ef]">
+              {transactions.slice(0, 5).map((item) => { const incoming = item.type.toLowerCase().includes("fund") || item.amount < 0; const ok = ["success", "successful", "completed", "paid"].includes(item.status.toLowerCase()); return (
+                <div key={item.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 py-3.5"><span className="grid h-8 w-8 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">{incoming ? <ArrowDownLeft size={15} /> : <ArrowUpRight size={15} />}</span><div className="min-w-0"><p className="truncate text-[11px] font-semibold">{item.label}</p><p className="mt-1 text-[9px] text-[#78849a]">{item.date.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })}</p></div><div className="text-right"><p className="text-[11px] font-semibold">{incoming ? "+" : "-"}{money.format(Math.abs(item.amount))}</p><span className={`mt-1 inline-block rounded px-2 py-1 text-[9px] ${ok ? "bg-[#e9f8f1] text-[#009a61]" : "bg-[#ffe9e9] text-[#e04444]"}`}>{ok ? "Success" : item.status}</span></div></div>
+              ); })}
+              {!transactions.length ? <Empty message="Your completed payments will appear here." /> : null}
             </div>
+          </section>
+
+          <div className="space-y-5">
+            <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><TrendingUp size={20} /></span><h2 className="text-[14px] font-bold">Maximize Your Savings</h2></div><p className="mt-4 text-[11px] leading-5 text-[#65728a]">Pay early and earn credits on eligible bills.</p><div className="mt-3 divide-y divide-[#edf1ef]">{[["1 – 3 days early", "+2%"], ["4 – 7 days early", "+5%"], ["8 – 14 days early", "+10%"], ["15+ days early", "+15%"]].map(([label, reward]) => <div key={label} className="flex items-center gap-3 py-3"><span className="grid h-7 w-7 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><CalendarCheck2 size={14} /></span><span className="flex-1 text-[11px] font-medium">{label}</span><strong className="text-[14px] text-[#00a96b]">{reward}</strong></div>)}</div></section>
+            <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><div className="flex items-center gap-3"><RefreshCcw className="text-[#00a96b]" size={19} /><h2 className="text-[14px] font-bold">Autopay</h2></div><div className="mt-4 space-y-2.5 text-[10px] text-[#66738b]"><p className="flex gap-2"><ShieldCheck size={14} className="text-[#00a96b]" /> Secure and convenient</p><p className="flex gap-2"><Lightbulb size={14} className="text-[#00a96b]" /> Turn it on or off anytime</p></div><Link href="/dashboard/bills" className="mt-4 flex h-9 items-center justify-center rounded-md border border-[#00a96b] text-[10px] font-semibold text-[#00a96b]">Manage Autopay <ArrowRight size={13} className="ml-2" /></Link></section>
           </div>
-        </section>
-      </section>
-    </main>
+        </div>
+        <div className="mt-5 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
+          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><div className="flex items-center justify-between"><div><h2 className="text-[14px] font-bold">Spending Overview <span className="font-normal text-[#65728a]">(Last 30 Days)</span></h2><div className="mt-3 flex gap-6 text-[9px]"><span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[#00a96b]"/> Payments</span><span className="flex items-center gap-2"><i className="h-px w-5 bg-[#71d3ae]"/> Added Funds</span></div></div><span className="rounded-md border border-[#dfe6e4] px-3 py-2 text-[9px]">Monthly</span></div><svg viewBox="0 0 760 150" className="mt-2 h-[150px] w-full" role="img" aria-label="Monthly spending overview"><defs><linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#00a96b" stopOpacity=".22"/><stop offset="1" stopColor="#00a96b" stopOpacity="0"/></linearGradient></defs>{[30,70,110].map(y => <line key={y} x1="30" x2="745" y1={y} y2={y} stroke="#edf1ef"/>)}<path d="M30 125 C100 120 115 120 145 78 S205 93 245 62 S310 45 355 21 S405 16 435 72 S495 113 545 110 S630 119 745 123 L745 140 L30 140Z" fill="url(#spendFill)"/><path d="M30 125 C100 120 115 120 145 78 S205 93 245 62 S310 45 355 21 S405 16 435 72 S495 113 545 110 S630 119 745 123" fill="none" stroke="#00a96b" strokeWidth="2.5"/><path d="M30 100 C75 75 115 110 155 82 S220 105 285 103 S360 108 420 100 S500 42 545 84 S625 60 680 87 S720 90 745 91" fill="none" stroke="#75d3b0" strokeDasharray="9 8" strokeWidth="2"/></svg></section>
+          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><h2 className="text-[14px] font-bold">Referral & Credits</h2><div className="mt-5 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><UsersRound size={27}/></span><div className="flex-1"><p className="text-[9px] text-[#65728a]">Your Referral Code</p><div className="mt-2 rounded-md bg-[#eaf8f2] px-4 py-2 text-[15px] font-bold text-[#00a96b]">{user?.referralCode || `VUIOR-${(user?.firstName || "USER").toUpperCase()}`}</div></div></div><div className="mt-5 flex items-end justify-between"><div><p className="text-[9px] text-[#65728a]">Total Referral Bonus</p><strong className="mt-1 block text-[16px] text-[#00a96b]">{money.format(Number(user?.referralBonus ?? 0))}</strong></div><Link href="/dashboard/credits" className="flex h-9 items-center rounded-md border border-[#00a96b] px-5 text-[10px] font-semibold text-[#00a96b]">Share code</Link></div></section>
+        </div>
+      </div>
+    </DashboardShell>
   );
+}
+
+function Empty({ message }: { message: string }) {
+  return <div className="flex min-h-[150px] flex-col items-center justify-center text-center"><FileText className="mb-3 text-[#c8d3cf]" size={30} /><p className="max-w-[220px] text-[11px] leading-5 text-[#7a879c]">{message}</p></div>;
 }

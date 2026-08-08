@@ -15,7 +15,7 @@ export function SiteFooter() {
         </div>
         <div><b>Product</b><Link href="/#how-it-works">How it works</Link><Link href="/#rewards">Rewards</Link><Link href="/#features">Features</Link><Link href="/#providers">Bill providers</Link></div>
         <div><b>Company</b><Link href="/about">About us</Link><a href="#">Careers</a><a href="#">Blog</a><Link href="/contact">Contact us</Link></div>
-        <div><b>Support</b><a href="#">Help center</a><Link href="/contact">Contact support</Link><Link href="/#faq">FAQs</Link></div>
+        <div><b>Support</b><Link href="/help">Help center</Link><Link href="/contact">Contact support</Link><Link href="/help">FAQs</Link></div>
         <div><b>Legal</b><a href="#">Privacy policy</a><a href="#">Terms of service</a><a href="#">Cookie policy</a></div>
       </div>
       <p className="copyright">© 2026 Vuior. All rights reserved.</p>

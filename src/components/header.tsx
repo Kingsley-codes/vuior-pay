@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export function Header({ active }: { active?: "about" | "contact" }) {
+export function Header({ active }: { active?: "about" | "contact" | "how" }) {
   return (
     <header className="site-header">
       <Link href="/" className="brand" aria-label="Vuior home">
@@ -14,16 +14,11 @@ export function Header({ active }: { active?: "about" | "contact" }) {
         />
       </Link>
       <nav className="desktop-nav" aria-label="Main navigation">
-        <Link href="/#how-it-works">How it works</Link>
+        <Link className={active === "how" ? "active" : undefined} href="/how-it-works">How it works</Link>
         <Link href="/#rewards">Rewards</Link>
         <Link href="/#features">Features</Link>
         <Link href="/#providers">Bill providers</Link>
-        <Link
-          className={active === "about" ? "active" : undefined}
-          href="/about"
-        >
-          About us
-        </Link>
+        <Link href="/help">Help</Link>
       </nav>
       <div className="nav-actions">
         <a href="/login" className="login-link">

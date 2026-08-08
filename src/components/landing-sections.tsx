@@ -385,9 +385,9 @@ export function FaqSection() {
     <section className="faq" id="faq">
       <div className="faq-heading">
         <h2>Frequently asked questions</h2>
-        <a href="#">
+        <Link href="/help">
           View all FAQs <Icon name="arrow" />
-        </a>
+        </Link>
       </div>
       <div className="faq-grid">
         {faqs.map((faq, i) => (
@@ -454,9 +454,9 @@ export function Footer() {
         </div>
         <div>
           <b>Support</b>
-          <a href="#">Help center</a>
+          <Link href="/help">Help center</Link>
           <Link href="/contact">Contact support</Link>
-          <a href="#faq">FAQs</a>
+          <Link href="/help">FAQs</Link>
         </div>
         <div>
           <b>Legal</b>
