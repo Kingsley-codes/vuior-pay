@@ -4,6 +4,7 @@ const SERVICE_ID = "service_j17uiar";
 const TEMPLATE_ID = "template_2rsiv8q";
 const PUBLIC_KEY = "O6aIOujSd28u6JbI0";
 const OTP_STORAGE_KEY = "vuior_pending_otp";
+const PASSWORD_CHANGE_KEY = "vuior_pending_password_change";
 
 type OtpRecord = {
   code: string;
@@ -92,4 +93,26 @@ export function verifyOTP(email: string, code: string) {
     message: "Email verified successfully.",
     flow: currentOtp.flow,
   };
+}
+
+export function setPendingPasswordChange(email: string, newPassword: string) {
+  sessionStorage.setItem(
+    PASSWORD_CHANGE_KEY,
+    JSON.stringify({ email: email.toLowerCase().trim(), newPassword }),
+  );
+}
+
+export function getPendingPasswordChange(): { email: string; newPassword: string } | null {
+  const value = sessionStorage.getItem(PASSWORD_CHANGE_KEY);
+  if (!value) return null;
+  try {
+    return JSON.parse(value) as { email: string; newPassword: string };
+  } catch {
+    sessionStorage.removeItem(PASSWORD_CHANGE_KEY);
+    return null;
+  }
+}
+
+export function clearPendingPasswordChange() {
+  sessionStorage.removeItem(PASSWORD_CHANGE_KEY);
 }

@@ -31,10 +31,10 @@ const navItems = [
   { label: "Pay Bills", href: "/dashboard/pay", icon: WalletCards },
   { label: "Credits", href: "/dashboard/credits", icon: Coins },
   { label: "Transactions", href: "#", icon: SlidersHorizontal },
-  { label: "Referrals", href: "#", icon: UsersRound },
+  { label: "Referrals", href: "/dashboard/referrals", icon: UsersRound },
   { label: "Help & Support", href: "/help", icon: CircleHelp },
-  { label: "Profile", href: "#", icon: UserRound },
-  { label: "Settings", href: "#", icon: Settings },
+  { label: "Profile", href: "/dashboard/profile", icon: UserRound },
+  { label: "Settings", href: "/dashboard/security", icon: Settings },
 ];
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {

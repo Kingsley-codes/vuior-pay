@@ -11,6 +11,9 @@ export type VuiorUser = {
   firstName: string;
   lastName: string;
   avatar?: string;
+  phoneNo?: string;
+  dob?: string;
+  address?: string;
   availableCredits?: number;
   referralCode?: string;
   referralBonus?: number;
@@ -44,6 +47,9 @@ export function useVuiorSession() {
             firstName: String(data.firstName ?? nextUser.displayName?.split(" ")[0] ?? "User"),
             lastName: String(data.lastName ?? ""),
             avatar: String(data.avatar ?? nextUser.photoURL ?? ""),
+            phoneNo: String(data.phoneNo ?? ""),
+            dob: String(data.dob ?? ""),
+            address: String(data.address ?? ""),
             availableCredits: Number(data.availableCredits ?? 0),
             referralCode: String(data.referralCode ?? data.referral_code ?? ""),
             referralBonus: Number(data.referralBonus ?? data.referralEarnings ?? 0),
@@ -58,6 +64,9 @@ export function useVuiorSession() {
             firstName: nextUser.displayName?.split(" ")[0] ?? "User",
             lastName: nextUser.displayName?.split(" ").slice(1).join(" ") ?? "",
             avatar: nextUser.photoURL ?? "",
+            phoneNo: "",
+            dob: "",
+            address: "",
             availableCredits: 0,
             referralCode: "",
             referralBonus: 0,

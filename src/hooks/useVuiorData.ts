@@ -47,6 +47,7 @@ export function useVuiorData(userId?: string) {
   const [bills, setBills] = useState<Bill[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [totalBillPaymentsThisYear, setTotalBillPaymentsThisYear] = useState(0);
 
   useEffect(() => {
     if (!userId) return;
@@ -104,6 +105,7 @@ export function useVuiorData(userId?: string) {
       (snapshot) => {
         const data = snapshot.docs[0]?.data();
         setWalletBalance(Number(data?.availableBalance ?? data?.walletBalance ?? data?.balance ?? 0));
+        setTotalBillPaymentsThisYear(Number(data?.totalBillPaymentsThisYear ?? 0));
       },
     );
 
@@ -119,5 +121,5 @@ export function useVuiorData(userId?: string) {
     [bills],
   );
 
-  return { bills, activeBills, transactions, walletBalance };
+  return { bills, activeBills, transactions, walletBalance, totalBillPaymentsThisYear };
 }
