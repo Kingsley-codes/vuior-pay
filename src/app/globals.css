@@ -1916,8 +1916,8 @@ footer .footer-brand img {
 }
 
 .auth-checkbox {
-  width: 19px;
-  height: 19px;
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
   cursor: pointer;
   appearance: none;

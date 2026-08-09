@@ -13,30 +13,30 @@ export function AuthLeftPanel() {
         className="object-cover"
       />
 
-      <div className="relative z-10 flex min-h-screen flex-col px-[7.1%] py-[42px]">
+      <div className="relative z-10 flex min-h-screen flex-col px-[7.5%] py-8">
         <Image
           src="/vuiorLogo.png"
           alt="Vuior"
-          width={156}
+          width={132}
           height={57}
           priority
-          className="h-auto w-[156px] brightness-0 invert"
+          className="h-auto w-[132px] brightness-0 invert"
         />
 
-        <div className="mt-[54px]">
-          <h1 className="text-[48px] font-bold leading-[1.25] text-white">
+        <div className="mt-9">
+          <h1 className="text-[38px] font-bold leading-[1.2] text-white">
             Welcome back
             <br />
             to Vuior
           </h1>
 
-          <p className="mt-4 max-w-[440px] text-[18px] leading-7 text-white/90">
+          <p className="mt-3 max-w-[390px] text-[15px] leading-6 text-white/90">
             Manage bills, pay early, and earn credits that put more back in your
             pocket.
           </p>
         </div>
 
-        <div className="relative mt-6 h-[470px] w-[calc(100%+18px)] translate-x-[36px]">
+        <div className="relative mt-4 h-[360px] w-[calc(100%+18px)] translate-x-7">
           <Image
             src="/auth-dashboard-mockup.png"
             alt="Vuior dashboard preview"
@@ -47,7 +47,7 @@ export function AuthLeftPanel() {
           />
         </div>
 
-        <div className="mt-auto space-y-4 pb-1 pl-[38px]">
+        <div className="mt-auto space-y-3 pb-1 pl-7">
           <Feature
             icon={<FileText size={24} strokeWidth={1.8} />}
             title="Track bills"
@@ -81,15 +81,15 @@ export function Feature({
   description: string;
 }) {
   return (
-    <div className="flex items-center gap-5">
-      <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#10d988] to-[#00945f] text-white">
+    <div className="flex items-center gap-4">
+      <div className="flex h-11 w-11 shrink-0 scale-90 items-center justify-center rounded-full bg-gradient-to-br from-[#10d988] to-[#00945f] text-white">
         {icon}
       </div>
 
       <div>
-        <h3 className="text-[18px] font-semibold text-white">{title}</h3>
+        <h3 className="text-[15px] font-semibold text-white">{title}</h3>
 
-        <p className="mt-1 text-[14px] leading-5 text-white/85">
+        <p className="mt-0.5 text-[12px] leading-4 text-white/85">
           {description}
         </p>
       </div>

@@ -62,9 +62,9 @@ export default function LoginPage() {
       title="Log in"
       description="Access your bills, payments, and credits."
     >
-      <form className="space-y-7" onSubmit={handleSubmit}>
+      <form className="space-y-5" onSubmit={handleSubmit}>
         {error ? (
-          <div className="rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-4 py-3 text-[14px] text-[#be123c]">
+          <div className="rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-3.5 py-2.5 text-[12px] text-[#be123c]">
             {error}
           </div>
         ) : null}
@@ -106,7 +106,7 @@ export default function LoginPage() {
           required
         />
 
-        <div className="flex items-center justify-between gap-4 text-[14px]">
+        <div className="flex items-center justify-between gap-4 text-[12px]">
           <label className="flex cursor-pointer items-center gap-3 text-[#263454]">
             <input type="checkbox" defaultChecked className="auth-checkbox" />
             <span>Remember me</span>
@@ -123,14 +123,14 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isSubmitting || socialSubmitting}
-          className="h-13.5 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[16px] font-semibold text-white shadow-[0_8px_20px_rgba(0,157,98,0.18)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
+          className="h-12 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[14px] font-semibold text-white shadow-[0_7px_17px_rgba(0,157,98,0.16)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Logging in..." : "Log in"}
         </button>
 
         <div className="flex items-center gap-5">
           <div className="h-px flex-1 bg-[#dfe3eb]" />
-          <span className="text-[14px] text-[#78829c]">or</span>
+          <span className="text-[12px] text-[#78829c]">or</span>
           <div className="h-px flex-1 bg-[#dfe3eb]" />
         </div>
 
@@ -140,7 +140,7 @@ export default function LoginPage() {
           onClick={handleGoogle}
         />
 
-        <p className="pt-2 text-center text-[14px] text-[#33405f]">
+        <p className="pt-1 text-center text-[12px] text-[#33405f]">
           Don&apos;t have an account?{" "}
           <Link
             href="/signup"

@@ -6,13 +6,13 @@ export default function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="min-h-screen bg-[#f8f9fb] lg:grid lg:grid-cols-2">
+    <main className="min-h-screen bg-[#f8f9fb] lg:grid lg:grid-cols-[44%_56%]">
       <AuthLeftPanel />
 
-      <section className="auth-content relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-10 sm:px-8 lg:px-12">
+      <section className="auth-content relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-7 sm:px-7 lg:px-10">
         <div className="auth-page-glow" />
 
-        <div className="relative z-10 flex w-full max-w-[610px] flex-col items-center">
+        <div className="relative z-10 flex w-full max-w-[520px] flex-col items-center">
           {children}
         </div>
       </section>

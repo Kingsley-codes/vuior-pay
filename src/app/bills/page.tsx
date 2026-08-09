@@ -86,13 +86,33 @@ export default function BillsPage() {
                 <Link href="/dashboard/bills/add-bills" className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#00a96b] px-5 text-[11px] font-semibold text-white"><Plus size={17} /> Add Bill</Link>
               </div>
 
-              <div className="overflow-x-auto">
+              <div>
+                <div className="divide-y divide-[#e9eeec] lg:hidden">
+                  {visibleBills.map((bill) => {
+                    const days = dueDays(bill.dueDate);
+                    const reward = rewardFor(days);
+                    return <article key={bill.id} className="p-4">
+                      <div className="flex items-start gap-3">
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]"><FileText size={17}/></span>
+                        <div className="min-w-0 flex-1"><p className="truncate text-[12px] font-semibold">{bill.name}</p><p className="mt-1 text-[10px] text-[#7b879b]">{bill.category}</p></div>
+                        <div className="text-right"><p className="text-[12px] font-bold">{money.format(bill.amount)}</p><span className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}>{days < 0 ? "Overdue" : bill.status}</span></div>
+                      </div>
+                      <div className="mt-4 grid grid-cols-2 gap-3 rounded-lg bg-[#f8faf9] p-3">
+                        <div><p className="text-[9px] uppercase tracking-wide text-[#8a95a6]">Due date</p><p className="mt-1 text-[11px] font-medium">{bill.dueDate ? new Date(bill.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}</p><p className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}>{days < 0 ? `${Math.abs(days)} days overdue` : days === 0 ? "Due today" : `In ${days} days`}</p></div>
+                        <div><p className="text-[9px] uppercase tracking-wide text-[#8a95a6]">Early-pay reward</p>{reward ? <><p className="mt-1 text-[11px] font-medium">Up to {money.format(bill.amount * reward / 100)}</p><p className="mt-1 text-[9px] text-[#00a96b]">{reward}% reward</p></> : <p className="mt-1 text-[10px] text-[#7b879b]">Not eligible</p>}</div>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between"><button onClick={() => toggleAutopay(bill.id, !bill.autoPay)} aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`} className="flex items-center gap-2 text-[10px] font-medium text-[#53617a]"><span className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}><span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition ${bill.autoPay ? "left-[18px]" : "left-0.5"}`}/></span>Autopay {bill.autoPay ? "on" : "off"}</button><button className="h-9 rounded-md bg-[#00a96b] px-4 text-[10px] font-semibold text-white">Pay now</button></div>
+                    </article>;
+                  })}
+                </div>
+                <div className="hidden overflow-x-auto lg:block">
                 <table className="w-full min-w-[820px] border-collapse text-left">
                   <thead className="bg-[#f7f9f8] text-[10px] text-[#34425d]"><tr>{["Bill & Category", "Due Date", "Amount", "Autopay", "Early-Pay Reward", "Status", "Actions"].map((head) => <th key={head} className="px-4 py-3.5 font-semibold">{head}</th>)}</tr></thead>
                   <tbody className="divide-y divide-[#e9eeec]">
                     {visibleBills.map((bill) => { const days = dueDays(bill.dueDate); const reward = rewardFor(days); return <tr key={bill.id} className="text-[11px] hover:bg-[#fbfdfc]"><td className="px-4 py-3"><div className="flex items-center gap-3"><span className="grid h-9 w-9 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]"><FileText size={16} /></span><div><p className="font-semibold">{bill.name}</p><p className="mt-1 text-[9px] text-[#7b879b]">{bill.category}</p></div></div></td><td className="px-4 py-3"><p className="font-medium">{bill.dueDate ? new Date(bill.dueDate).toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }) : "—"}</p><p className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}>{days < 0 ? `${Math.abs(days)} days overdue` : days === 0 ? "Due today" : `In ${days} days`}</p></td><td className="px-4 py-3 font-semibold">{money.format(bill.amount)}</td><td className="px-4 py-3"><button onClick={() => toggleAutopay(bill.id, !bill.autoPay)} aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`} className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}><span className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition ${bill.autoPay ? "left-[18px]" : "left-0.5"}`} /></button><span className="ml-2 text-[9px]">{bill.autoPay ? "On" : "Off"}</span></td><td className="px-4 py-3">{reward ? <><p>Up to {money.format(bill.amount * reward / 100)}</p><p className="mt-1 text-[9px] text-[#00a96b]">({reward}%)</p></> : <span className="text-[#7b879b]">Not eligible</span>}</td><td className="px-4 py-3"><span className={`rounded px-2.5 py-1.5 text-[9px] capitalize ${days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}>{days < 0 ? "Overdue" : bill.status}</span></td><td className="px-4 py-3"><button className="h-8 rounded-md border border-[#bfe9d8] px-3 text-[9px] font-semibold text-[#00a96b]">Pay now</button></td></tr>; })}
                   </tbody>
                 </table>
+                </div>
                 {!visibleBills.length ? <div className="grid min-h-[250px] place-items-center p-8 text-center"><div><FileText className="mx-auto text-[#c8d3cf]" size={34} /><h3 className="mt-3 text-[13px] font-semibold">No {tab.toLowerCase()} bills</h3><p className="mt-2 text-[11px] text-[#7a879c]">Adjust your filters or add a new bill.</p><Link href="/dashboard/bills/add-bills" className="mx-auto mt-4 flex h-9 w-fit items-center rounded-md bg-[#00a96b] px-4 text-[10px] font-semibold text-white"><Plus className="mr-2" size={15} /> Add Bill</Link></div></div> : null}
               </div>
               <div className="flex items-center justify-between border-t border-[#e7ecea] px-4 py-3 text-[10px] text-[#718097]"><span>Showing {visibleBills.length} of {bills.length} bills</span><div className="flex items-center gap-2"><button className="grid h-8 w-8 place-items-center rounded border border-[#dfe5e7]"><ChevronLeft size={14} /></button><span className="grid h-8 w-8 place-items-center rounded bg-[#00a96b] text-white">1</span><button className="grid h-8 w-8 place-items-center rounded border border-[#dfe5e7]"><ChevronRight size={14} /></button></div></div>

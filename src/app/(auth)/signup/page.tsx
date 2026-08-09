@@ -198,15 +198,15 @@ export default function SignupPage() {
       title="Create account"
       description="Join Vuior and start saving by paying bills early."
     >
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         {errors.form ? (
-          <div className="rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-4 py-3 text-[14px] text-[#be123c]">
+          <div className="rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-3.5 py-2.5 text-[12px] text-[#be123c]">
             {errors.form}
           </div>
         ) : null}
 
         <div>
-          <span className="mb-3 block text-[15px] font-semibold text-[#16234c]">
+          <span className="mb-2 block text-[13px] font-semibold text-[#16234c]">
             Account type
           </span>
           <div className="grid grid-cols-2 overflow-hidden rounded-[9px] border border-[#d8dde7] bg-white">
@@ -215,7 +215,7 @@ export default function SignupPage() {
                 key={accountType}
                 type="button"
                 onClick={() => updateAccountType(accountType)}
-                className={`h-12 text-[14px] font-semibold capitalize transition ${
+                className={`h-10 text-[12px] font-semibold capitalize transition ${
                   form.accountType === accountType
                     ? "bg-[#009d62] text-white"
                     : "text-[#526080] hover:bg-[#f8fafc]"
@@ -317,7 +317,7 @@ export default function SignupPage() {
           required
         />
 
-        <p className="-mt-4 text-[12px] text-[#78829c]">
+        <p className="-mt-2 text-[11px] text-[#78829c]">
           At least 8 characters with a number and symbol.
         </p>
 
@@ -351,7 +351,7 @@ export default function SignupPage() {
           required
         />
 
-        <label className="flex cursor-pointer items-start gap-3 text-[14px] leading-5 text-[#526080]">
+        <label className="flex cursor-pointer items-start gap-2.5 text-[12px] leading-5 text-[#526080]">
           <input
             type="checkbox"
             checked={agreed}
@@ -392,14 +392,14 @@ export default function SignupPage() {
         <button
           type="submit"
           disabled={isSubmitting || socialSubmitting}
-          className="h-13.5 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[16px] font-semibold text-white shadow-[0_8px_20px_rgba(0,157,98,0.18)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
+          className="h-12 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[14px] font-semibold text-white shadow-[0_7px_17px_rgba(0,157,98,0.16)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSubmitting ? "Sending code..." : "Sign Up"}
         </button>
 
         <div className="flex items-center gap-5">
           <div className="h-px flex-1 bg-[#dfe3eb]" />
-          <span className="text-[14px] text-[#78829c]">or</span>
+          <span className="text-[12px] text-[#78829c]">or</span>
           <div className="h-px flex-1 bg-[#dfe3eb]" />
         </div>
 
@@ -409,7 +409,7 @@ export default function SignupPage() {
           onClick={handleGoogle}
         />
 
-        <p className="pt-1 text-center text-[14px] text-[#33405f]">
+        <p className="text-center text-[12px] text-[#33405f]">
           Already have an account?{" "}
           <Link
             href="/login"

@@ -14,9 +14,9 @@ export default function GoogleButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="flex h-13.5 w-full items-center justify-center gap-4 rounded-lg border border-[#d8dde7] bg-white text-[15px] font-semibold text-[#18254d] transition hover:bg-[#f8fafc] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
+      className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-[#d8dde7] bg-white text-[13px] font-semibold text-[#18254d] transition hover:bg-[#f8fafc] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
     >
-      <svg width="23" height="23" viewBox="0 0 24 24" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
         <path
           fill="#4285F4"
           d="M21.6 12.227c0-.71-.064-1.395-.182-2.045H12v3.868h5.382a4.6 4.6 0 0 1-1.995 3.018v2.51h3.232c1.891-1.741 2.981-4.305 2.981-7.35Z"
