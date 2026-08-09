@@ -15,12 +15,12 @@ export function AuthLeftPanel() {
 
       <div className="relative z-10 flex min-h-screen flex-col px-[7.5%] py-8">
         <Image
-          src="/vuiorLogo.png"
+          src="/logo-light.png"
           alt="Vuior"
-          width={132}
-          height={57}
+          width={202}
+          height={50}
           priority
-          className="h-auto w-[132px] brightness-0 invert"
+          className="h-auto w-[132px]"
         />
 
         <div className="mt-9">
