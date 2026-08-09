@@ -12,6 +12,7 @@ import { db } from "@/auth/firebase";
 
 export type Bill = {
   id: string;
+  billId: string;
   name: string;
   category: string;
   amount: number;
@@ -27,6 +28,8 @@ export type Bill = {
   paidAt?: Date;
   paymentSubmittedAt?: Date;
   paidWith?: string;
+  paymentId?: string;
+  amountPaid?: number;
 };
 
 export type Transaction = {
@@ -39,6 +42,14 @@ export type Transaction = {
   type: string;
   credits: number;
   reference?: string;
+  transactionId: string;
+  paymentId?: string;
+  billIds: string[];
+  billPublicIds: string[];
+  paymentMethod?: string;
+  creditsApplied: number;
+  pendingCredits: number;
+  rewardStatus?: string;
 };
 
 function asDate(value: unknown): Date | null {
@@ -71,6 +82,7 @@ export function useVuiorData(userId?: string) {
             const data = item.data();
             return {
               id: item.id,
+              billId: String(data.bill_ID ?? data.billId ?? "Not recorded"),
               name: String(data.name ?? data.billerName ?? "Bill"),
               category: String(data.category ?? data.billerName ?? "Other"),
               amount: Number(data.amount ?? 0),
@@ -92,6 +104,10 @@ export function useVuiorData(userId?: string) {
               paidAt: asDate(data.paidAt) ?? undefined,
               paymentSubmittedAt: asDate(data.paymentSubmittedAt) ?? undefined,
               paidWith: data.paidWith ? String(data.paidWith) : undefined,
+              paymentId: data.payment_ID ?? data.paymentId ?? data.earlyPaymentReward?.paymentTransactionId
+                ? String(data.payment_ID ?? data.paymentId ?? data.earlyPaymentReward?.paymentTransactionId)
+                : undefined,
+              amountPaid: data.amountPaid == null ? undefined : Number(data.amountPaid),
             };
           }),
         );
@@ -119,6 +135,14 @@ export function useVuiorData(userId?: string) {
             type: String(data.type ?? "bill_payment"),
             credits: Number(data.credits ?? 0),
             reference: data.reference ? String(data.reference) : undefined,
+            transactionId: String(data.transaction_ID ?? data.payment_ID ?? data.reference ?? item.id),
+            paymentId: data.payment_ID ? String(data.payment_ID) : undefined,
+            billIds: Array.isArray(data.billIds) ? data.billIds.map(String) : [],
+            billPublicIds: Array.isArray(data.bill_IDs) ? data.bill_IDs.map(String) : [],
+            paymentMethod: data.paymentMethod ? String(data.paymentMethod) : undefined,
+            creditsApplied: Number(data.creditsApplied ?? data.creditApplied ?? 0),
+            pendingCredits: Number(data.pendingCredits ?? 0),
+            rewardStatus: data.rewardStatus ? String(data.rewardStatus) : undefined,
           };
         });
         next.sort((a, b) => b.date.getTime() - a.date.getTime());

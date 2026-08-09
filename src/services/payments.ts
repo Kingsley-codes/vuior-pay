@@ -67,10 +67,10 @@ export async function payBillsWithCredits(userId: string, bills: Bill[]) {
     });
     bills.forEach((bill, index) => {
       const credits = billReward(bill);
-      transaction.update(billRefs[index], { status: "in review", paymentSubmittedAt: now, paidWith: "credits", amountPaid: bill.amount, earlyPaymentReward: credits ? { billId: bill.id, billAmount: bill.amount, credits, paymentTransactionId: transactionId, paymentMethod: "credits", calculatedAt: now, status: "pending" } : null, updatedAt: now });
+      transaction.update(billRefs[index], { status: "in review", payment_ID: transactionId, paymentSubmittedAt: now, paidWith: "credits", amountPaid: bill.amount, earlyPaymentReward: credits ? { billId: bill.id, billAmount: bill.amount, credits, paymentTransactionId: transactionId, paymentMethod: "credits", calculatedAt: now, status: "pending" } : null, updatedAt: now });
     });
     transaction.update(userRef, { availableCredits: currentBalance - total, lastCreditUsage: now, totalCreditsUsed: increment(total) });
-    transaction.set(doc(collection(db, "transactionHistory")), { transaction_ID: transactionId, userId, billIds: bills.map(b => b.id), amount: total, totalAmount: total, credits: -total, paymentMethod: "credits", status: "Completed", date: now, type: "Bill Payment", category: "Bill Transactions", pendingCredits: reward, rewardStatus: reward > 0 ? "pending" : "none" });
+    transaction.set(doc(collection(db, "transactionHistory")), { transaction_ID: transactionId, payment_ID: transactionId, userId, billIds: bills.map(b => b.id), bill_IDs: bills.map(b => b.billId), amount: total, totalAmount: total, credits: -total, paymentMethod: "credits", status: "Completed", date: now, type: "Bill Payment", category: "Bill Transactions", pendingCredits: reward, rewardStatus: reward > 0 ? "pending" : "none" });
   });
   return { total, reward };
 }

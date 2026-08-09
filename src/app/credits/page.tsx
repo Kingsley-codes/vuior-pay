@@ -20,8 +20,9 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 import WalletModal, {
   type WalletAction,
 } from "@/components/credits/WalletModal";
+import TransactionDetailsModal from "@/components/transactions/TransactionDetailsModal";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
-import { useVuiorData } from "@/hooks/useVuiorData";
+import { type Transaction, useVuiorData } from "@/hooks/useVuiorData";
 
 type Filter = "All" | "Earned" | "Redeemed" | "Referral";
 const money = new Intl.NumberFormat("en-US", {
@@ -45,10 +46,11 @@ function creditKind(type: string, amount: number) {
 
 export default function CreditsPage() {
   const { user } = useVuiorSession();
-  const { transactions } = useVuiorData(user?.id);
+  const { bills, transactions } = useVuiorData(user?.id);
   const [filter, setFilter] = useState<Filter>("All");
   const [copied, setCopied] = useState(false);
   const [walletAction, setWalletAction] = useState<WalletAction | null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   useEffect(() => {
     const action = new URLSearchParams(window.location.search).get("wallet");
@@ -216,7 +218,7 @@ export default function CreditsPage() {
               <div>
                 <div className="divide-y divide-[#ebefed] lg:hidden">
                   {visible.slice(0, 7).map((row) => (
-                    <article key={row.id} className="p-4">
+                    <article key={row.id} role="button" tabIndex={0} onClick={() => setSelectedTransaction(row)} onKeyDown={(event) => (event.key === "Enter" || event.key === " ") && setSelectedTransaction(row)} className="cursor-pointer p-4 hover:bg-[#f7fbf9]">
                       <div className="flex items-start gap-3">
                         <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a36a]">
                           {row.kind === "Referral" ? (
@@ -290,7 +292,7 @@ export default function CreditsPage() {
                     </thead>
                     <tbody className="divide-y divide-[#ebefed]">
                       {visible.slice(0, 7).map((row) => (
-                        <tr key={row.id} className="text-[10px]">
+                        <tr key={row.id} onClick={() => setSelectedTransaction(row)} className="cursor-pointer text-[10px] hover:bg-[#f7fbf9]">
                           <td className="px-5 py-3">
                             <div className="flex items-center gap-3">
                               <span className="grid h-8 w-8 place-items-center rounded-full bg-[#eef8f4] text-[#00a36a]">
@@ -337,7 +339,7 @@ export default function CreditsPage() {
                           <td className="px-5 py-3 text-[#008e61]">
                             Completed
                           </td>
-                          <td className="px-5 py-3 text-[#008e61]">View</td>
+                          <td className="px-5 py-3 text-[#008e61]">View details</td>
                         </tr>
                       ))}
                     </tbody>
@@ -514,6 +516,7 @@ export default function CreditsPage() {
           onClose={() => setWalletAction(null)}
         />
       ) : null}
+      {selectedTransaction ? <TransactionDetailsModal transaction={selectedTransaction} bills={bills} onClose={() => setSelectedTransaction(null)} /> : null}
     </DashboardShell>
   );
 }

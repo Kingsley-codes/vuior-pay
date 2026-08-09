@@ -279,9 +279,10 @@ export default function BillModal({
     }
   }
 
-  const isPaid = ["in review", "paid", "completed"].includes(
-    normalizedStatus(bill?.status),
-  );
+  const currentStatus = normalizedStatus(bill?.status);
+  const isInReview = currentStatus === "in review";
+  const isPaid = ["paid", "completed"].includes(currentStatus);
+  const isPaymentSubmitted = isInReview || isPaid;
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#07142d]/60 p-3 backdrop-blur-[2px]"
@@ -328,7 +329,7 @@ export default function BillModal({
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] text-white/60">
-                    {isPaid ? "Payment amount" : "Amount due"}
+                    {isPaymentSubmitted ? "Payment amount" : "Amount due"}
                   </p>
                   <strong className="mt-2 block text-[32px]">
                     {money.format(bill.amount)}
@@ -345,12 +346,12 @@ export default function BillModal({
                   </p>
                 </div>
                 <span
-                  className={`rounded-full px-3 py-1.5 text-[10px] font-semibold ${isPaid ? "bg-[#dcfce7] text-[#08764f]" : "bg-white/12 text-white"}`}
+                  className={`rounded-full px-3 py-1.5 text-[10px] font-semibold ${isPaid ? "bg-[#dcfce7] text-[#08764f]" : isInReview ? "bg-[#fff6df] text-[#9a6700]" : "bg-white/12 text-white"}`}
                 >
-                  {isPaid ? (
+                  {isPaymentSubmitted ? (
                     <CheckCircle2 className="mr-1.5 inline" size={13} />
                   ) : null}
-                  {isPaid ? "Paid" : bill.status}
+                  {isInReview ? "In review" : isPaid ? "Paid" : bill.status}
                 </span>
               </div>
             </div>

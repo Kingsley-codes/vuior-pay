@@ -42,6 +42,13 @@ function rewardFor(days: number) {
   return days >= 15 ? 15 : days >= 8 ? 10 : days >= 4 ? 5 : days >= 1 ? 2 : 0;
 }
 
+function displayStatus(bill: Bill) {
+  const value = bill.status.trim().toLowerCase().replaceAll("_", " ");
+  if (value === "in review") return { label: "In review", className: "bg-[#fff6df] text-[#9a6700]" };
+  if (["paid", "completed"].includes(value)) return { label: "Paid", className: "bg-[#e9f8f1] text-[#009a61]" };
+  return { label: bill.status, className: "bg-[#e9f8f1] text-[#009a61]" };
+}
+
 export default function BillsPage() {
   const { user } = useVuiorSession();
   const { bills, activeBills } = useVuiorData(user?.id);
@@ -254,6 +261,7 @@ export default function BillsPage() {
                   {visibleBills.map((bill) => {
                     const days = dueDays(bill.dueDate);
                     const reward = rewardFor(days);
+                    const shownStatus = displayStatus(bill);
                     return (
                       <article
                         key={bill.id}
@@ -283,10 +291,10 @@ export default function BillsPage() {
                               {money.format(bill.amount)}
                             </p>
                             <span
-                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${tab === "Paid" ? "bg-[#e9f8f1] text-[#009a61]" : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
+                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${tab === "Paid" ? shownStatus.className : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
                             >
                               {tab === "Paid"
-                                ? "Paid"
+                                ? shownStatus.label
                                 : days < 0
                                   ? "Overdue"
                                   : bill.status}
@@ -321,8 +329,8 @@ export default function BillsPage() {
                                     : `In ${days} days`}
                               </p>
                             ) : (
-                              <p className="mt-1 text-[9px] text-[#009a61]">
-                                Payment submitted
+                              <p className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}>
+                                {shownStatus.label === "In review" ? "Payment submitted for review" : "Payment completed"}
                               </p>
                             )}
                           </div>
@@ -402,6 +410,7 @@ export default function BillsPage() {
                       {visibleBills.map((bill) => {
                         const days = dueDays(bill.dueDate);
                         const reward = rewardFor(days);
+                        const shownStatus = displayStatus(bill);
                         return (
                           <tr
                             key={bill.id}
@@ -445,8 +454,8 @@ export default function BillsPage() {
                                       : `In ${days} days`}
                                 </p>
                               ) : (
-                                <p className="mt-1 text-[9px] text-[#009a61]">
-                                  Payment submitted
+                                <p className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}>
+                                  {shownStatus.label === "In review" ? "Payment submitted for review" : "Payment completed"}
                                 </p>
                               )}
                             </td>
@@ -489,10 +498,10 @@ export default function BillsPage() {
                             </td>
                             <td className="px-4 py-3">
                               <span
-                                className={`rounded px-2.5 py-1.5 text-[9px] capitalize ${tab === "Paid" ? "bg-[#e9f8f1] text-[#009a61]" : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
+                                className={`rounded px-2.5 py-1.5 text-[9px] capitalize ${tab === "Paid" ? shownStatus.className : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
                               >
                                 {tab === "Paid"
-                                  ? "Paid"
+                                  ? shownStatus.label
                                   : days < 0
                                     ? "Overdue"
                                     : bill.status}
