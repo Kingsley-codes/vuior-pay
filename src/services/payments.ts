@@ -25,7 +25,7 @@ export function sendCredits(userId: string, recipientEmail: string, creditToSend
 
 export function createCreditsCheckout(userId: string, credits: number) {
   const base = window.location.origin;
-  return post<{ sessionId: string; url?: string }>(endpoints.addCredits, { userId, credits, success_url: `${base}/dashboard/credits?checkout=success`, cancel_url: `${base}/dashboard/credits/wallet?tab=add&checkout=cancelled` });
+  return post<{ sessionId: string; url?: string }>(endpoints.addCredits, { userId, credits, success_url: `${base}/dashboard/credits?checkout=success`, cancel_url: `${base}/dashboard/credits?wallet=add&checkout=cancelled` });
 }
 
 export function createBillsCheckout(params: { userId: string; bills: Bill[]; creditsApplied: number; savings: number; customerId?: string }) {

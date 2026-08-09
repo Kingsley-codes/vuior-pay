@@ -78,7 +78,7 @@ export default function DashboardPage() {
         <section className="mt-5 rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
           <h2 className="text-[16px] font-bold">Quick Actions</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            {[{ label: "Add Funds", href: "/dashboard/credits/wallet?tab=add", icon: Plus }, { label: "Pay Bills", href: "/dashboard/pay", icon: CircleDollarSign }, { label: "Create Bill", href: "/dashboard/bills/add-bills", icon: FilePlus2 }, { label: "Transactions", href: "/dashboard/credits", icon: History }].map(({ label, href, icon: Icon }) => (
+            {[{ label: "Add Funds", href: "/dashboard/credits?wallet=add", icon: Plus }, { label: "Pay Bills", href: "/dashboard/pay", icon: CircleDollarSign }, { label: "Create Bill", href: "/dashboard/bills?addBill=1", icon: FilePlus2 }, { label: "Transactions", href: "/dashboard/credits", icon: History }].map(({ label, href, icon: Icon }) => (
               <Link key={label} href={href} className="flex h-[74px] items-center justify-center gap-5 rounded-lg border border-[#dfe6e4] text-[13px] font-semibold transition hover:border-[#00a96b] hover:bg-[#f5fcf9]"><Icon className="text-[#00a96b]" size={27} />{label}</Link>
             ))}
           </div>
