@@ -69,7 +69,7 @@ function VerifyOtpForm() {
         await updatePassword(auth.currentUser, pending.newPassword);
         clearPendingPasswordChange();
         await logAuditEvent({ event: "password_change_success", userId: auth.currentUser.uid, email, method: "email" });
-        router.replace("/dashboard/security?password=updated");
+        router.replace("/dashboard/settings?tab=security&password=updated");
       } catch (updateError) {
         setError(getAuthErrorMessage(updateError));
         await logAuditEvent({ event: "password_change_failed", status: "failure", userId: auth.currentUser.uid, email, method: "email" });
@@ -164,7 +164,7 @@ function VerifyOtpForm() {
         </div>
 
         <Link
-          href={flow === "password_change" ? "/dashboard/security" : "/signup"}
+          href={flow === "password_change" ? "/dashboard/settings?tab=security" : "/signup"}
           className="mx-auto flex w-fit items-center gap-2 text-[14px] font-medium text-[#526080] hover:text-[#142047]"
         >
           <ArrowLeft size={17} />

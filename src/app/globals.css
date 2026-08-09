@@ -54,7 +54,7 @@ input {
 }
 .desktop-nav {
   display: flex;
-  gap: 49px;
+  gap: 31px;
   font-size: 13px;
   font-weight: 650;
 }

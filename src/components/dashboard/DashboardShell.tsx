@@ -5,23 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import {
-  Bell,
-  ChevronDown,
-  CircleHelp,
-  Coins,
-  FileText,
-  Home,
-  LogOut,
-  Menu,
-  Search,
-  Settings,
-  SlidersHorizontal,
-  UserRound,
-  UsersRound,
-  WalletCards,
-  X,
+  ChevronDown, ChevronLeft, ChevronRight, CircleHelp, Coins, FileText,
+  Home, LogOut, Menu, Settings, SlidersHorizontal, UsersRound, WalletCards, X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { auth } from "@/auth/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 
@@ -33,77 +20,67 @@ const navItems = [
   { label: "Transactions", href: "#", icon: SlidersHorizontal },
   { label: "Referrals", href: "/dashboard/referrals", icon: UsersRound },
   { label: "Help & Support", href: "/help", icon: CircleHelp },
-  { label: "Profile", href: "/dashboard/profile", icon: UserRound },
-  { label: "Settings", href: "/dashboard/security", icon: Settings },
 ];
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, firebaseUser, loading } = useVuiorSession();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => { if (!loading && !firebaseUser) router.replace("/login"); }, [firebaseUser, loading, router]);
   useEffect(() => {
-    if (!loading && !firebaseUser) router.replace("/login");
-  }, [firebaseUser, loading, router]);
+    if (!userMenuOpen) return;
+    const outside = (event: MouseEvent) => { if (!userMenuRef.current?.contains(event.target as Node)) setUserMenuOpen(false); };
+    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") setUserMenuOpen(false); };
+    document.addEventListener("mousedown", outside); document.addEventListener("keydown", escape);
+    return () => { document.removeEventListener("mousedown", outside); document.removeEventListener("keydown", escape); };
+  }, [userMenuOpen]);
 
   const name = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "Vuior User";
   const avatar = user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=101d4b&color=fff`;
 
   async function logout() {
-    await signOut(auth);
-    router.replace("/login");
+    setLoggingOut(true);
+    try { await signOut(auth); router.replace("/login"); } finally { setLoggingOut(false); }
   }
 
-  if (loading) {
-    return <div className="grid min-h-screen place-items-center bg-[#f9fbfa] text-sm text-[#65718c]">Loading your Vuior workspace…</div>;
-  }
-
+  if (loading) return <div className="grid min-h-screen place-items-center bg-[#f8faf9] text-sm text-[#65718c]">Loading your Vuior workspace…</div>;
   if (!firebaseUser) return null;
 
-  return (
-    <div className="min-h-screen bg-[#fbfcfc] text-[#0d1b42] lg:grid lg:grid-cols-[236px_minmax(0,1fr)]">
-      {menuOpen ? <button className="fixed inset-0 z-30 bg-[#07142d]/30 lg:hidden" aria-label="Close menu" onClick={() => setMenuOpen(false)} /> : null}
-      <aside className={`fixed inset-y-0 left-0 z-40 flex w-[236px] flex-col border-r border-[#e5eae8] bg-white px-4 py-6 transition-transform lg:sticky lg:top-0 lg:h-screen ${menuOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
-        <div className="flex items-center justify-between px-2">
-          <Image src="/vuiorLogo.png" alt="Vuior" width={132} height={49} priority className="h-auto w-[128px]" />
-          <button className="lg:hidden" onClick={() => setMenuOpen(false)} aria-label="Close menu"><X size={21} /></button>
-        </div>
-        <nav className="mt-9 space-y-1.5">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = item.href !== "#" && (item.href === "/dashboard" ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`));
-            return (
-              <Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)} className={`relative flex h-11 items-center gap-4 rounded-lg px-4 text-[13px] font-medium transition ${active ? "bg-[#eaf8f2] text-[#00a36a]" : "text-[#263b63] hover:bg-[#f5f8f7]"}`}>
-                {active ? <span className="absolute -left-4 h-7 w-[2px] rounded-r bg-[#00b874]" /> : null}
-                <Icon size={19} strokeWidth={1.8} />{item.label}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="mt-auto rounded-xl border border-[#e2e8e6] p-3 shadow-[0_7px_20px_rgba(26,62,51,0.04)]">
-          <div className="flex items-center gap-3">
-            <Image src={avatar} alt={name} width={38} height={38} unoptimized className="h-[38px] w-[38px] rounded-full object-cover" />
-            <div className="min-w-0 flex-1"><p className="truncate text-[13px] font-semibold">{name}</p><p className="truncate text-[10px] text-[#77839a]">{user?.email}</p></div>
-            <button onClick={logout} title="Log out" aria-label="Log out" className="text-[#64718b] hover:text-[#e11d48]"><LogOut size={16} /></button>
-          </div>
-        </div>
-      </aside>
-      <main className="min-w-0">
-        <header className="sticky top-0 z-20 flex h-[82px] items-center gap-4 border-b border-[#edf0ef] bg-white/95 px-5 backdrop-blur sm:px-7 lg:px-8">
-          <button className="lg:hidden" onClick={() => setMenuOpen(true)} aria-label="Open menu"><Menu size={23} /></button>
-          <label className="ml-auto hidden h-11 w-full max-w-[375px] items-center gap-3 rounded-lg border border-[#dfe5e7] bg-white px-4 text-[#75829a] sm:flex">
-            <input className="min-w-0 flex-1 bg-transparent text-[12px] outline-none placeholder:text-[#7b879d]" placeholder="Search bills, payments, or transactions…" />
-            <Search size={18} />
-          </label>
-          <button className="relative ml-auto grid h-11 w-11 place-items-center rounded-full border border-[#e3e8e7] text-[#263b63] sm:ml-2" aria-label="Notifications"><Bell size={19} /><span className="absolute right-1.5 top-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-[#00a96b]" /></button>
-          <div className="flex items-center gap-2.5">
-            <Image src={avatar} alt={name} width={38} height={38} unoptimized className="h-[38px] w-[38px] rounded-full object-cover" />
-            <span className="hidden text-[13px] font-semibold sm:inline">{user?.firstName || "User"}</span><ChevronDown size={15} />
-          </div>
-        </header>
-        {children}
-      </main>
-    </div>
-  );
+  return <main className="min-h-screen bg-[#f8faf9] text-[#0d1b42]">
+    {mobileOpen ? <button className="fixed inset-0 z-40 bg-[#07142d]/30 lg:hidden" aria-label="Close sidebar" onClick={() => setMobileOpen(false)}/> : null}
+    <aside className={`fixed left-0 top-0 z-50 flex h-screen w-[260px] flex-col border-r border-[#e2e8e6] bg-white px-3 py-5 transition-all duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 ${collapsed ? "lg:w-[76px]" : "lg:w-[260px]"}`}>
+      <button onClick={() => setMobileOpen(false)} className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] lg:hidden" aria-label="Close sidebar"><X size={16}/></button>
+      <button onClick={() => setCollapsed((value) => !value)} className="absolute -right-3 top-6 hidden h-6 w-6 place-items-center rounded-full border border-[#dfe6e4] bg-white text-[#627089] shadow-sm lg:grid" aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>{collapsed ? <ChevronRight size={14}/> : <ChevronLeft size={14}/>}</button>
+      <div className={`mb-8 flex h-16 items-center px-2 ${collapsed ? "lg:justify-center lg:px-0" : ""}`}>
+        <Image src="/favicon.png" alt="Vuior" width={50} height={50} priority className={`${collapsed ? "hidden lg:block" : "hidden"} h-10 w-10 object-contain`}/>
+        <Image src="/vuiorLogo.png" alt="Vuior" width={132} height={49} priority className={`${collapsed ? "lg:hidden" : ""} h-auto w-[128px]`}/>
+      </div>
+      <nav className="space-y-1">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active = item.href !== "#" && (item.href === "/dashboard" ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`));
+          return <Link key={item.label} href={item.href} title={collapsed ? item.label : undefined} onClick={() => setMobileOpen(false)} className={`flex h-10 items-center gap-3 rounded-md px-3 text-[13px] font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#eaf8f2] text-[#008f60]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}><Icon size={18} strokeWidth={1.8}/><span className={collapsed ? "lg:hidden" : ""}>{item.label}</span></Link>;
+        })}
+      </nav>
+      <div ref={userMenuRef} className="absolute bottom-5 left-3 right-3">
+        {userMenuOpen ? <div role="menu" className="absolute bottom-full right-0 mb-2 w-56 overflow-hidden rounded-lg border border-[#dfe6e4] bg-white p-1.5 shadow-[0_12px_35px_rgba(20,43,36,.14)]">
+          <Link href="/dashboard/settings" role="menuitem" onClick={() => { setUserMenuOpen(false); setMobileOpen(false); }} className="flex h-10 items-center gap-3 rounded-md px-3 text-[12px] text-[#53617a] transition hover:bg-[#f5f8f7]"><Settings size={17}/> Profile & settings</Link>
+          <button role="menuitem" type="button" disabled={loggingOut} onClick={logout} className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-[12px] text-[#dc3545] transition hover:bg-[#fff1f2] disabled:opacity-60"><LogOut size={17}/>{loggingOut ? "Logging out…" : "Log out"}</button>
+        </div> : null}
+        <button type="button" aria-label="Open user menu" aria-haspopup="menu" aria-expanded={userMenuOpen} onClick={() => setUserMenuOpen((value) => !value)} className={`flex w-full items-center gap-2 rounded-lg border border-[#dfe6e4] bg-white p-2 text-left transition hover:bg-[#f7f9f8] ${collapsed ? "lg:justify-center" : ""}`}>
+          <Image src={avatar} alt={name} width={34} height={34} unoptimized className="h-[34px] w-[34px] shrink-0 rounded-full object-cover"/>
+          <div className={collapsed ? "min-w-0 lg:hidden" : "min-w-0"}><p className="truncate text-[11px] font-semibold">{name}</p><p className="truncate text-[9px] text-[#7c889a]">{user?.email}</p></div>
+          <ChevronDown size={15} className={`${collapsed ? "lg:hidden" : ""} ml-auto shrink-0 text-[#8490a1] transition-transform ${userMenuOpen ? "rotate-180" : ""}`}/>
+        </button>
+      </div>
+    </aside>
+    <button type="button" aria-label="Open sidebar" onClick={() => setMobileOpen(true)} className="fixed left-4 top-4 z-30 grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] bg-white shadow-sm lg:hidden"><Menu size={20}/></button>
+    <div className={`min-h-screen pt-14 transition-[padding] duration-300 lg:pt-0 ${collapsed ? "lg:pl-[76px]" : "lg:pl-[260px]"}`}>{children}</div>
+  </main>;
 }

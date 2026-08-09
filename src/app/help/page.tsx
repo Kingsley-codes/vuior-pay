@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, CircleHelp, CreditCard, FileText, Headphones, Search, ShieldCheck, Sparkles } from "lucide-react";
-import DashboardShell from "@/components/dashboard/DashboardShell";
+import { Header } from "@/components/header";
 
 const topics = ["All Topics", "Getting Started", "Bills & Payments", "Credits & Rewards", "Account & Security", "Other"] as const;
 type Topic = typeof topics[number];
@@ -27,7 +27,7 @@ export default function HelpPage() {
   const [open, setOpen] = useState(0);
   const filtered = useMemo(() => faqs.filter(([question, answer, category]) => (topic === "All Topics" || category === topic) && `${question} ${answer}`.toLowerCase().includes(search.toLowerCase())), [topic, search]);
 
-  return <DashboardShell><div className="bg-white">
+  return <div className="inner-page bg-white"><Header active="faq"/>
     <section className="relative overflow-hidden border-b border-[#edf1ef] bg-linear-to-r from-white via-white to-[#f0faf6] px-5 py-10 sm:px-10 lg:px-12 lg:py-12">
       <div className="max-w-[1040px]"><p className="text-[12px] font-semibold text-[#009b67]">FAQ</p><h1 className="mt-3 text-[34px] font-bold tracking-[-.04em] sm:text-[38px]">Frequently asked questions</h1><p className="mt-4 max-w-[430px] text-[14px] leading-7 text-[#596885]">Find answers to the most common questions about using Vuior.</p><label className="mt-8 flex h-12 max-w-[550px] items-center gap-3 rounded-lg border border-[#dfe6e4] bg-white px-4 shadow-[0_8px_24px_rgba(25,55,47,.05)]"><Search size={18} className="text-[#63728d]"/><input value={search} onChange={e => setSearch(e.target.value)} className="min-w-0 flex-1 bg-transparent text-[12px] outline-none" placeholder="Search for answers..."/></label></div>
       <div className="pointer-events-none absolute right-[7%] top-8 hidden h-44 w-72 lg:block"><div className="absolute left-0 top-14 h-20 w-44 rounded-2xl border border-[#bce7d6] bg-white shadow-sm"/><div className="absolute right-0 top-8 h-28 w-40 rounded-2xl border border-[#bce7d6] bg-white shadow-sm"/><div className="absolute left-20 top-0 grid h-24 w-24 place-items-center rounded-full bg-linear-to-br from-[#00b97b] to-[#007c59] text-6xl font-bold text-white shadow-xl">?</div><div className="absolute bottom-0 right-0 grid h-14 w-14 place-items-center rounded-full bg-[#298b72] text-white">•••</div></div>
@@ -41,5 +41,5 @@ export default function HelpPage() {
       <section className="mt-12 flex flex-col gap-5 rounded-xl border border-[#d6ebe3] bg-linear-to-r from-[#f4fbf8] to-[#fbfefd] p-5 sm:flex-row sm:items-center"><span className="grid h-12 w-12 place-items-center rounded-full bg-white text-[#009b67] shadow-sm"><Headphones size={25}/></span><div className="flex-1"><h2 className="text-[14px] font-bold">Can’t find what you’re looking for?</h2><p className="mt-1 text-[11px] text-[#66738b]">Our support team is here to help you.</p></div><Link href="/contact" className="flex h-11 items-center justify-center rounded-md bg-[#009b67] px-7 text-[11px] font-semibold text-white">Contact support <span className="ml-3">→</span></Link></section>
     </div>
     <footer className="mt-8 border-t border-[#e7ecea] bg-white py-9 text-[#596885]"><div className="mx-auto grid max-w-[1100px] gap-7 px-7 sm:grid-cols-4"><div><b className="text-[#111d3d]">VUIOR</b><p className="mt-3 text-[10px] leading-5">Pay your bills early and earn credits for a smarter financial life.</p></div><div><b className="text-[11px] text-[#111d3d]">Product</b><p className="mt-3 text-[10px] leading-6">How it works<br/>Bills<br/>Rewards<br/>Bill providers</p></div><div><b className="text-[11px] text-[#111d3d]">Support</b><p className="mt-3 text-[10px] leading-6">Help center<br/>FAQs<br/>Contact support</p></div><div><b className="text-[11px] text-[#111d3d]">Legal</b><p className="mt-3 text-[10px] leading-6">Privacy policy<br/>Terms of service<br/>Cookie policy</p></div></div><p className="mt-8 text-center text-[9px]">© 2026 Vuior. All rights reserved.</p></footer>
-  </div></DashboardShell>;
+  </div>;
 }

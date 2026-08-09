@@ -8,12 +8,11 @@ import { useRouter } from "next/navigation";
 import { db } from "@/auth/firebase";
 import { logAuditEvent } from "@/auth/auditLog";
 import { sendOTP, setPendingPasswordChange } from "@/auth/otpService";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 
 const QUESTIONS = ["What was the name of your first school?","What was the name of your first pet?","In what city were you born?","What is your mother's maiden name?","What was the make of your first car?","What was your childhood nickname?"];
 
-export default function SecurityPage() {
+export function SecuritySettingsPanel() {
   const router = useRouter();
   const { user, firebaseUser } = useVuiorSession();
   const [passwords, setPasswords] = useState({ current: "", next: "", confirm: "" });
@@ -68,8 +67,7 @@ export default function SecurityPage() {
     finally { setBusy(null); }
   }
 
-  return <DashboardShell><div className="mx-auto max-w-[1060px] px-5 py-8 sm:px-8 lg:py-10">
-    <div><p className="text-[11px] font-bold uppercase tracking-[.16em] text-[#00a36a]">Settings</p><h1 className="mt-2 text-2xl font-bold tracking-[-.03em] sm:text-[30px]">Security</h1><p className="mt-2 text-[13px] text-[#68758d]">Manage your password and account recovery details.</p></div>
+  const content = <div>
     {feedback ? <div role="status" className={`mt-6 rounded-lg border px-4 py-3 text-[13px] ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}>{feedback.text}</div> : null}
     <div className="mt-7 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,.85fr)]">
       <form onSubmit={changePassword} className="rounded-2xl border border-[#e1e8e5] bg-white p-6 shadow-[0_8px_28px_rgba(25,55,47,.04)] sm:p-7">
@@ -82,7 +80,14 @@ export default function SecurityPage() {
         <div className="rounded-2xl bg-[#071a35] p-6 text-white"><span className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-[#2bd195]"><ShieldCheck size={20}/></span><h2 className="mt-4 text-[14px] font-bold">Your account is protected</h2><p className="mt-2 text-[11px] leading-5 text-[#a8b3c5]">Sensitive changes require recent authentication and email verification.</p></div>
       </div>
     </div>
-  </div></DashboardShell>;
+  </div>;
+  return content;
+}
+
+export default function SecurityPage() {
+  const router = useRouter();
+  useEffect(() => { router.replace("/dashboard/settings?tab=security"); }, [router]);
+  return null;
 }
 
 function CardHeading({ icon, title, copy }: { icon: React.ReactNode; title: string; copy: string }) { return <div className="flex items-start gap-3 border-b border-[#edf1ef] pb-5"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#eaf8f2] text-[#00a36a]">{icon}</span><div><h2 className="text-[15px] font-bold">{title}</h2><p className="mt-1 text-[11px] leading-5 text-[#7b8799]">{copy}</p></div></div> }

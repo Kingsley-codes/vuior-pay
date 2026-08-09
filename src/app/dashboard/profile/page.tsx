@@ -1,19 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { Camera, CheckCircle2, LockKeyhole, Mail, MapPin, Phone, UserRound } from "lucide-react";
+import { Camera, CheckCircle2, Mail, MapPin, Phone, UserRound } from "lucide-react";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/auth/firebase";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { formatUSPhone, parseUsAddress, US_STATES } from "@/utils/profile";
 
 const latestBirthDate = (() => { const date = new Date(); date.setFullYear(date.getFullYear() - 14); return date.toISOString().slice(0, 10); })();
 
-export default function ProfilePage() {
+export function ProfileSettingsPanel() {
   const { user } = useVuiorSession();
   const fileInput = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({ firstName: "", lastName: "", phoneNo: "", dob: "", addressLine: "", city: "", stateCode: "" });
@@ -90,10 +89,8 @@ export default function ProfilePage() {
   const displayName = [form.firstName, form.lastName].filter(Boolean).join(" ") || "Vuior User";
   const avatarUrl = avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=101d4b&color=fff`;
 
-  return (
-    <DashboardShell>
-      <div className="mx-auto max-w-[1060px] px-5 py-8 sm:px-8 lg:py-10">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end"><div><p className="text-[11px] font-bold uppercase tracking-[.16em] text-[#00a36a]">Account</p><h1 className="mt-2 text-2xl font-bold tracking-[-.03em] sm:text-[30px]">Edit profile</h1><p className="mt-2 text-[13px] text-[#68758d]">Keep your personal and billing details accurate.</p></div><Link href="/dashboard/security" className="flex h-10 w-fit items-center gap-2 rounded-lg border border-[#dbe4e1] bg-white px-4 text-[12px] font-semibold text-[#263b63]"><LockKeyhole size={16}/> Security settings</Link></div>
+  const content = (
+      <div>
 
         {feedback ? <div role="status" className={`mt-6 flex items-center gap-2 rounded-lg border px-4 py-3 text-[13px] ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}>{feedback.tone === "success" ? <CheckCircle2 size={17}/> : null}{feedback.text}</div> : null}
 
@@ -120,8 +117,14 @@ export default function ProfilePage() {
           </form>
         </div>
       </div>
-    </DashboardShell>
   );
+  return content;
+}
+
+export default function ProfilePage() {
+  const router = useRouter();
+  useEffect(() => { router.replace("/dashboard/settings"); }, [router]);
+  return null;
 }
 
 function Field({ label, icon, wide = false, children }: { label: string; icon?: React.ReactNode; wide?: boolean; children: React.ReactNode }) {
