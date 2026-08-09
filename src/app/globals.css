@@ -78,6 +78,12 @@ input {
   font-size: 13px;
   font-weight: 650;
 }
+.nav-auth-placeholder {
+  width: 164px;
+  height: 44px;
+  border-radius: 7px;
+  background: #edf4f1;
+}
 .button {
   height: 50px;
   padding: 0 30px;
@@ -655,29 +661,47 @@ input {
   margin-top: 8px;
 }
 .store-badge {
-  width: 130px;
-  height: 42px;
-  border-radius: 5px;
-  background: #050505;
+  min-width: 154px;
+  height: 50px;
+  border: 1px solid #27312e;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #171a19, #050606);
   color: #fff;
-  display: grid;
-  grid-template-columns: 32px 1fr;
-  grid-template-rows: 15px 18px;
-  padding: 5px 8px;
-  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  box-shadow: 0 7px 16px #10251d1c;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.store-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px #10251d29;
+}
+.store-icon {
+  width: 27px;
+  height: 30px;
+  flex: 0 0 auto;
+}
+.apple-icon {
+  width: 29px;
+}
+.store-badge span {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   line-height: 1;
 }
-.store-badge > i {
-  font-size: 7px;
-  font-style: normal;
-  align-self: end;
-}
-.store-badge > b {
-  font-size: 14px;
+.store-badge small {
+  margin-bottom: 4px;
+  font-size: 8px;
   font-weight: 500;
+  letter-spacing: 0.03em;
 }
-.playstore {
-  color: #fff;
+.store-badge strong {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 .security-strip {
   max-width: 1110px;
@@ -852,20 +876,20 @@ input {
 }
 
 footer {
-  background: var(--deep);
-  color: #fff;
+  background: #edf5f2;
+  color: #35574d;
   padding-top: 36px;
 }
 footer .footer-brand p,
 footer .footer-grid > div:not(:first-child) {
-  color: #bdd2cc;
+  color: #70877f;
 }
 footer .footer-grid > div > b {
-  color: #fff;
+  color: #36574e;
 }
 footer .footer-grid a:hover,
 footer .social-links a:hover {
-  color: #76e1bc;
+  color: #008a61;
 }
 footer .socials,
 footer .social-links {
@@ -1555,8 +1579,27 @@ footer .footer-brand img {
   align-self: end;
 }
 .inner-footer {
-  border-top: 1px solid #0d5c4d;
+  border-top: 1px solid #dbe9e4;
   padding-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-app [class~="text-[8px]"],
+  .dashboard-app [class~="text-[9px]"] {
+    font-size: 12px !important;
+  }
+  .dashboard-app [class~="text-[10px]"],
+  .dashboard-app [class~="text-[11px]"] {
+    font-size: 13px !important;
+  }
+  .dashboard-app [class~="text-[12px]"] {
+    font-size: 14px !important;
+  }
+  .dashboard-app table th,
+  .dashboard-app table td {
+    font-size: 13px;
+    line-height: 1.45;
+  }
 }
 .social-links {
   display: flex;

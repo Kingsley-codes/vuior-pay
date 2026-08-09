@@ -52,7 +52,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   if (loading) return <div className="grid min-h-screen place-items-center bg-[#f8faf9] text-sm text-[#65718c]">Loading your Vuior workspace…</div>;
   if (!firebaseUser) return null;
 
-  return <main className="min-h-screen bg-[#f8faf9] text-[#0d1b42]">
+  return <main className="dashboard-app min-h-screen bg-[#f8faf9] text-[#0d1b42]">
     {mobileOpen ? <button className="fixed inset-0 z-40 bg-[#07142d]/30 lg:hidden" aria-label="Close sidebar" onClick={() => setMobileOpen(false)}/> : null}
     <aside className={`fixed left-0 top-0 z-50 flex h-screen w-[260px] flex-col border-r border-[#e2e8e6] bg-white px-3 py-5 transition-all duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 ${collapsed ? "lg:w-[76px]" : "lg:w-[260px]"}`}>
       <button onClick={() => setMobileOpen(false)} className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] lg:hidden" aria-label="Close sidebar"><X size={16}/></button>

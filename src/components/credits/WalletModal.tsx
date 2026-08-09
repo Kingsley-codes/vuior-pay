@@ -18,6 +18,10 @@ import {
   createCreditsCheckout,
   sendCredits,
 } from "@/services/payments";
+import {
+  currencyInputNumber,
+  formatCurrencyInput,
+} from "@/utils/inputFormatting";
 
 export type WalletAction = "add" | "send";
 const money = new Intl.NumberFormat("en-US", {
@@ -43,7 +47,7 @@ export default function WalletModal({
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(
     null,
   );
-  const numeric = Number(amount);
+  const numeric = currencyInputNumber(amount);
 
   useEffect(() => {
     const close = (event: KeyboardEvent) => event.key === "Escape" && onClose();
@@ -190,7 +194,7 @@ export default function WalletModal({
                 autoFocus
                 value={amount}
                 onChange={(event) =>
-                  setAmount(event.target.value.replace(/[^0-9.]/g, ""))
+                  setAmount(formatCurrencyInput(event.target.value))
                 }
                 inputMode="decimal"
                 placeholder="0.00"
@@ -201,7 +205,7 @@ export default function WalletModal({
               {presets.map((value) => (
                 <button
                   type="button"
-                  onClick={() => setAmount(String(value))}
+                  onClick={() => setAmount(formatCurrencyInput(String(value)))}
                   key={value}
                   className={`h-9 rounded-lg border text-[10px] font-semibold ${numeric === value ? "border-[#00a36a] bg-[#eef9f5] text-[#009b67]" : "border-[#dfe6e4] text-[#53617a]"}`}
                 >

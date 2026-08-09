@@ -25,6 +25,10 @@ import {
 } from "lucide-react";
 import { db, storage } from "@/auth/firebase";
 import type { Bill } from "@/hooks/useVuiorData";
+import {
+  currencyInputNumber,
+  formatCurrencyInput,
+} from "@/utils/inputFormatting";
 
 type Mode = "add" | "details" | "edit";
 type FormState = {
@@ -128,7 +132,7 @@ export default function BillModal({
       ? {
           name: bill.name,
           category: bill.category || "Other",
-          amount: String(bill.amount),
+          amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
           accountNumber: bill.accountNumber || "",
           frequency: bill.frequency || "Monthly",
@@ -174,6 +178,9 @@ export default function BillModal({
             ...Object.fromEntries(
               Object.entries(result).filter(([, value]) => Boolean(value)),
             ),
+            ...(result.amount
+              ? { amount: formatCurrencyInput(String(result.amount)) }
+              : {}),
           }) as FormState,
       );
     } catch (cause) {
@@ -189,7 +196,7 @@ export default function BillModal({
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    const amount = Number(form.amount);
+    const amount = currencyInputNumber(form.amount);
     if (
       !form.name.trim() ||
       !amount ||
@@ -486,7 +493,7 @@ export default function BillModal({
                   inputMode="decimal"
                   value={form.amount}
                   onChange={(e) =>
-                    update("amount", e.target.value.replace(/[^0-9.]/g, ""))
+                    update("amount", formatCurrencyInput(e.target.value))
                   }
                   placeholder="0.00"
                 />

@@ -7,6 +7,7 @@ import { ArrowLeft, CalendarDays, CircleDollarSign, FileText, Hash, RefreshCcw, 
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import { db } from "@/auth/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { currencyInputNumber, formatCurrencyInput } from "@/utils/inputFormatting";
 
 function publicId() { return `VPB-${Math.random().toString(36).slice(2, 8).toUpperCase()}`; }
 
@@ -22,7 +23,7 @@ export default function AddBillPage() {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!user) return setError("Your session is still loading. Please try again.");
-    const amount = Number(form.amount);
+    const amount = currencyInputNumber(form.amount);
     if (!form.name.trim() || !amount || amount <= 0 || !form.dueDate || !form.accountNumber.trim()) return setError("Complete the required bill details.");
     setSaving(true);
     try {
@@ -47,7 +48,7 @@ export default function AddBillPage() {
       <div className="grid gap-6 sm:grid-cols-2">
         <Field label="Bill name" icon={<FileText size={18} />}><input required value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="e.g. Electricity" /></Field>
         <Field label="Category" icon={<Tag size={18} />}><select value={form.category} onChange={(e) => update("category", e.target.value)}>{["Utilities", "Internet", "Insurance", "Entertainment", "Housing", "Education", "Other"].map((item) => <option key={item}>{item}</option>)}</select></Field>
-        <Field label="Amount" icon={<CircleDollarSign size={18} />}><input required min="0.01" step="0.01" type="number" value={form.amount} onChange={(e) => update("amount", e.target.value)} placeholder="0.00" /></Field>
+        <Field label="Amount" icon={<CircleDollarSign size={18} />}><input required inputMode="decimal" value={form.amount} onChange={(e) => update("amount", formatCurrencyInput(e.target.value))} placeholder="0.00" /></Field>
         <Field label="Due date" icon={<CalendarDays size={18} />}><input required type="date" value={form.dueDate} min={new Date().toISOString().slice(0, 10)} onChange={(e) => update("dueDate", e.target.value)} /></Field>
         <Field label="Account number" icon={<Hash size={18} />}><input required value={form.accountNumber} onChange={(e) => update("accountNumber", e.target.value)} placeholder="From your bill" /></Field>
         <Field label="Frequency" icon={<RefreshCcw size={18} />}><select value={form.frequency} onChange={(e) => update("frequency", e.target.value)}>{["Weekly", "Monthly", "Quarterly", "Yearly", "One-time"].map((item) => <option key={item}>{item}</option>)}</select></Field>

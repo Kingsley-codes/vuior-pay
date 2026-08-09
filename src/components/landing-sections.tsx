@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./icons";
+import { MOBILE_FAQS } from "@/data/faqs";
 
 const ButtonPair = () => (
   <div className="button-row">
@@ -28,7 +29,6 @@ export function HeroSection() {
             Manage all your bills in one place, pay before the due date, and
             earn credits based on how early you pay.
           </p>
-          <ButtonPair />
           <div className="hero-benefits">
             <span>
               <Icon name="gift" />
@@ -317,17 +317,51 @@ export function DownloadSection() {
           control on the go.
         </p>
         <div className="store-row">
-          <span className="store-badge">
-            ● <i>Download on the</i>
-            <b>App Store</b>
-          </span>
-          <span className="store-badge playstore">
-            ▶ <i>GET IT ON</i>
-            <b>Google Play</b>
-          </span>
+          <StoreBadge store="apple" />
+          <StoreBadge store="google" />
         </div>
       </div>
     </section>
+  );
+}
+
+function StoreBadge({ store }: { store: "apple" | "google" }) {
+  const apple = store === "apple";
+  return (
+    <a
+      className="store-badge"
+      href="#"
+      aria-label={
+        apple ? "Download Vuior on the App Store" : "Get Vuior on Google Play"
+      }
+    >
+      {apple ? (
+        <svg
+          className="store-icon apple-icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            fill="currentColor"
+            d="M17.05 12.54c-.02-2.18 1.78-3.24 1.86-3.29a4 4 0 0 0-3.15-1.7c-1.32-.14-2.6.8-3.27.8-.69 0-1.73-.78-2.85-.76a4.2 4.2 0 0 0-3.54 2.16c-1.53 2.65-.39 6.55 1.08 8.69.74 1.05 1.6 2.23 2.72 2.19 1.1-.05 1.51-.7 2.83-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.05 2.63-2.1a8.6 8.6 0 0 0 1.2-2.45 3.78 3.78 0 0 1-2.35-3.52ZM14.9 6.15a3.83 3.83 0 0 0 .88-2.75 3.9 3.9 0 0 0-2.54 1.3 3.65 3.65 0 0 0-.9 2.65 3.22 3.22 0 0 0 2.56-1.2Z"
+          />
+        </svg>
+      ) : (
+        <svg className="store-icon" viewBox="0 0 28 31" aria-hidden="true">
+          <path fill="#00d6ff" d="M1 1.5 17 15.5 1 29.5Z" />
+          <path
+            fill="#ffdb00"
+            d="m17 15.5 4.2-3.7 5.2 3c.8.5.8 1.2 0 1.7l-5.3 3Z"
+          />
+          <path fill="#ff3a44" d="M1 29.5 17 15.5l4.1 4Z" />
+          <path fill="#00ef75" d="M1 1.5 21.2 11.8 17 15.5Z" />
+        </svg>
+      )}
+      <span>
+        <small>{apple ? "Download on the" : "GET IT ON"}</small>
+        <strong>{apple ? "App Store" : "Google Play"}</strong>
+      </span>
+    </a>
   );
 }
 
@@ -369,18 +403,8 @@ export function SecurityStrip() {
   );
 }
 
-const faqs = [
-  "How do Vuior credits work?",
-  "Which bills can I pay with Vuior?",
-  "How early do I need to pay to earn credits?",
-  "Can I set up autopay for my bills?",
-  "Is Vuior free to use?",
-  "Can I withdraw my credits?",
-  "What happens if a payment fails?",
-  "How does Vuior protect my account?",
-];
-
 export function FaqSection() {
+  const faqs = MOBILE_FAQS.slice(0, 8);
   return (
     <section className="faq" id="faq">
       <div className="faq-heading">
@@ -390,17 +414,13 @@ export function FaqSection() {
         </Link>
       </div>
       <div className="faq-grid">
-        {faqs.map((faq, i) => (
-          <details key={faq}>
+        {faqs.map((faq) => (
+          <details key={faq.value}>
             <summary>
-              {faq}
+              {faq.title}
               <Icon name="chevron" />
             </summary>
-            <p>
-              {i === 0
-                ? "Credits are earned automatically when eligible bills are paid before their due date."
-                : "Find quick answers and helpful guidance in the Vuior help center."}
-            </p>
+            <p>{faq.content}</p>
           </details>
         ))}
       </div>

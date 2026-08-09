@@ -20,11 +20,13 @@ import { sendOTP } from "@/auth/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
 import GoogleButton from "@/components/auth/GoogleButton";
+import { formatUSPhone, usPhoneDigits } from "@/utils/inputFormatting";
 
 type AccountType = "personal" | "business";
 
 type SignupForm = {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   dob: string;
@@ -35,7 +37,8 @@ type SignupForm = {
 };
 
 const initialForm: SignupForm = {
-  fullName: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
   dob: "",
@@ -48,11 +51,8 @@ const initialForm: SignupForm = {
 function validateForm(form: SignupForm) {
   const errors: Partial<Record<keyof SignupForm | "agreement", string>> = {};
 
-  if (!form.fullName.trim()) {
-    errors.fullName = "Full name is required";
-  } else if (form.fullName.trim().length < 2) {
-    errors.fullName = "Name must be at least 2 characters";
-  }
+  if (!form.firstName.trim()) errors.firstName = "First name is required";
+  if (!form.lastName.trim()) errors.lastName = "Last name is required";
 
   if (!form.email.trim()) {
     errors.email = "Email is required";
@@ -60,11 +60,11 @@ function validateForm(form: SignupForm) {
     errors.email = "Email is invalid";
   }
 
-  const phoneDigits = form.phone.replace(/\D/g, "");
+  const phoneDigits = usPhoneDigits(form.phone);
   if (!phoneDigits) {
     errors.phone = "Phone number is required";
-  } else if (!/^\d{10,15}$/.test(phoneDigits)) {
-    errors.phone = "Phone number must be 10-15 digits";
+  } else if (!/^\d{10}$/.test(phoneDigits)) {
+    errors.phone = "Enter a valid 10-digit U.S. phone number";
   }
 
   if (!form.dob.trim()) {
@@ -122,7 +122,11 @@ export default function SignupPage() {
 
   function updateField(field: keyof SignupForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
-    setErrors((current) => ({ ...current, [field]: undefined, form: undefined }));
+    setErrors((current) => ({
+      ...current,
+      [field]: undefined,
+      form: undefined,
+    }));
   }
 
   function updateAccountType(accountType: AccountType) {
@@ -153,14 +157,13 @@ export default function SignupPage() {
       return;
     }
 
-    const [firstName, ...lastNameParts] = form.fullName.trim().split(/\s+/);
     const email = form.email.trim();
 
     setIsSubmitting(true);
     try {
       setPendingRegistration({
-        firstName,
-        lastName: lastNameParts.join(" "),
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
         email,
         password: form.password,
         phoneCountry: "+1",
@@ -172,7 +175,9 @@ export default function SignupPage() {
           : {}),
       });
       await sendOTP(email, "register");
-      router.push(`/verify-otp?email=${encodeURIComponent(email)}&flow=register`);
+      router.push(
+        `/verify-otp?email=${encodeURIComponent(email)}&flow=register`,
+      );
     } catch (signupError) {
       setErrors({ form: getAuthErrorMessage(signupError) });
     } finally {
@@ -227,18 +232,32 @@ export default function SignupPage() {
           </div>
         </div>
 
-        <AuthInput
-          label="Full name"
-          type="text"
-          name="name"
-          placeholder="Enter your full name"
-          autoComplete="name"
-          value={form.fullName}
-          onChange={(event) => updateField("fullName", event.target.value)}
-          error={errors.fullName}
-          icon={<UserRound size={21} strokeWidth={1.8} />}
-          required
-        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <AuthInput
+            label="First name"
+            type="text"
+            name="firstName"
+            placeholder="First name"
+            autoComplete="given-name"
+            value={form.firstName}
+            onChange={(event) => updateField("firstName", event.target.value)}
+            error={errors.firstName}
+            icon={<UserRound size={21} strokeWidth={1.8} />}
+            required
+          />
+          <AuthInput
+            label="Last name"
+            type="text"
+            name="lastName"
+            placeholder="Last name"
+            autoComplete="family-name"
+            value={form.lastName}
+            onChange={(event) => updateField("lastName", event.target.value)}
+            error={errors.lastName}
+            icon={<UserRound size={21} strokeWidth={1.8} />}
+            required
+          />
+        </div>
 
         {form.accountType === "business" ? (
           <AuthInput
@@ -247,7 +266,9 @@ export default function SignupPage() {
             name="businessName"
             placeholder="Enter your business name"
             value={form.businessName}
-            onChange={(event) => updateField("businessName", event.target.value)}
+            onChange={(event) =>
+              updateField("businessName", event.target.value)
+            }
             error={errors.businessName}
             icon={<BriefcaseBusiness size={21} strokeWidth={1.8} />}
             required
@@ -271,10 +292,12 @@ export default function SignupPage() {
           label="Phone number"
           type="tel"
           name="phone"
-          placeholder="Enter your phone number"
+          placeholder="(555) 123-4567"
           autoComplete="tel"
           value={form.phone}
-          onChange={(event) => updateField("phone", event.target.value)}
+          onChange={(event) =>
+            updateField("phone", formatUSPhone(event.target.value))
+          }
           error={errors.phone}
           icon={<Phone size={21} strokeWidth={1.8} />}
           required
