@@ -48,7 +48,7 @@ export function SiteFooter() {
           <Link href="/help">FAQs</Link>
         </div>
         <div>
-          <b>Legaly</b>
+          <b>Legal</b>
           <Link href="/privacy-policy">Privacy policy</Link>
           <Link href="/terms-of-service">Terms of service</Link>
           <Link href="/cookies-policy">Cookies policy</Link>

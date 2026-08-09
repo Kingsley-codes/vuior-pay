@@ -1,9 +1,10 @@
 import { Header } from "@/components/header";
+import { SiteFooter } from "@/components/site-footer";
 import {
   DownloadSection,
   FaqSection,
   FeaturesSection,
-  Footer,
+  FinalCtaSection,
   HeroSection,
   HowItWorks,
   Providers,
@@ -23,7 +24,8 @@ export default function Home() {
       <DownloadSection />
       <SecurityStrip />
       <FaqSection />
-      <Footer />
+      <FinalCtaSection />
+      <SiteFooter />
     </main>
   );
 }

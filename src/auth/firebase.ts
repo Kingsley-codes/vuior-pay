@@ -1,7 +1,15 @@
 "use client";
 
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  browserPopupRedirectResolver,
+  browserSessionPersistence,
+  getAuth,
+  GoogleAuthProvider,
+  initializeAuth,
+  type Auth,
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -31,7 +39,27 @@ export const app: FirebaseApp = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
+function getClientAuth(): Auth {
+  if (typeof window === "undefined") {
+    return getAuth(app);
+  }
+
+  try {
+    return initializeAuth(app, {
+      persistence: [browserLocalPersistence, browserSessionPersistence],
+      popupRedirectResolver: browserPopupRedirectResolver,
+    });
+  } catch (error) {
+    // Fast Refresh can re-evaluate this module after Auth has been initialized.
+    if ((error as { code?: string }).code === "auth/already-initialized") {
+      return getAuth(app);
+    }
+
+    throw error;
+  }
+}
+
+export const auth = getClientAuth();
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 

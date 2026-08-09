@@ -428,64 +428,24 @@ export function FaqSection() {
   );
 }
 
-export function Footer() {
+export function FinalCtaSection() {
   return (
-    <footer>
-      <section className="final-cta" id="signup">
-        <Image
-          src="/rewards-gift.png"
-          alt="Vuior reward gift and coins"
-          fill
-          sizes="90vw"
-        />
-        <div className="cta-copy">
-          <h2>
-            Start getting more from
-            <br />
-            the bills you already pay
-          </h2>
-          <p>Join Vuior today and turn early payments into real rewards.</p>
-        </div>
-        <ButtonPair />
-      </section>
-      <div className="footer-grid">
-        <div className="footer-brand">
-          <Image src="/vuiorLogo.png" alt="Vuior" width={112} height={42} />
-          <p>
-            Pay your bills early and earn
-            <br />
-            credits for a smarter financial life.
-          </p>
-          <div className="socials">f　◎　𝕏　▶</div>
-        </div>
-        <div>
-          <b>Product</b>
-          <a href="#how-it-works">How it works</a>
-          <a href="#rewards">Rewards</a>
-          <a href="#features">Features</a>
-          <a href="#providers">Bill providers</a>
-        </div>
-        <div>
-          <b>Company</b>
-          <Link href="/about">About us</Link>
-          <a href="#">Careers</a>
-          <a href="#">Blog</a>
-          <Link href="/contact">Contact us</Link>
-        </div>
-        <div>
-          <b>Support</b>
-          <Link href="/help">Help center</Link>
-          <Link href="/contact">Contact support</Link>
-          <Link href="/help">FAQs</Link>
-        </div>
-        <div>
-          <b>Legal</b>
-          <a href="#">Privacy policy</a>
-          <a href="#">Terms of service</a>
-          <a href="#">Cookie policy</a>
-        </div>
+    <section className="final-cta" id="signup">
+      <Image
+        src="/rewards-gift.png"
+        alt="Vuior reward gift and coins"
+        fill
+        sizes="90vw"
+      />
+      <div className="cta-copy">
+        <h2>
+          Start getting more from
+          <br />
+          the bills you already pay
+        </h2>
+        <p>Join Vuior today and turn early payments into real rewards.</p>
       </div>
-      <p className="copyright">© 2026 Vuior. All rights reserved.</p>
-    </footer>
+      <ButtonPair />
+    </section>
   );
 }
