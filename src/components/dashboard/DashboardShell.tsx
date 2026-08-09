@@ -18,7 +18,7 @@ const navItems = [
   { label: "Pay Bills", href: "/dashboard/pay", icon: WalletCards },
   { label: "Credits", href: "/dashboard/credits", icon: Coins },
   { label: "Transactions", href: "#", icon: SlidersHorizontal },
-  { label: "Referrals", href: "/dashboard/referrals", icon: UsersRound },
+  { label: "Promo and Referrals", href: "/dashboard/referrals", icon: UsersRound },
   { label: "Help & Support", href: "/help", icon: CircleHelp },
 ];
 

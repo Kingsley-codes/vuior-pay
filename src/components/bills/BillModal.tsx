@@ -252,7 +252,9 @@ export default function BillModal({
       if (bill) {
         await updateDoc(billRef, {
           ...values,
-          status: ["paid", "completed"].includes(normalizedStatus(bill.status))
+          status: ["in review", "paid", "completed"].includes(
+            normalizedStatus(bill.status),
+          )
             ? normalizedStatus(bill.status)
             : "active",
         });
@@ -277,7 +279,9 @@ export default function BillModal({
     }
   }
 
-  const isPaid = ["paid", "completed"].includes(normalizedStatus(bill?.status));
+  const isPaid = ["in review", "paid", "completed"].includes(
+    normalizedStatus(bill?.status),
+  );
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#07142d]/60 p-3 backdrop-blur-[2px]"
@@ -323,7 +327,9 @@ export default function BillModal({
             <div className="rounded-2xl bg-linear-to-br from-[#063c33] to-[#075a49] p-6 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[11px] text-white/60">Amount due</p>
+                  <p className="text-[11px] text-white/60">
+                    {isPaid ? "Payment amount" : "Amount due"}
+                  </p>
                   <strong className="mt-2 block text-[32px]">
                     {money.format(bill.amount)}
                   </strong>
@@ -344,7 +350,7 @@ export default function BillModal({
                   {isPaid ? (
                     <CheckCircle2 className="mr-1.5 inline" size={13} />
                   ) : null}
-                  {bill.status}
+                  {isPaid ? "Paid" : bill.status}
                 </span>
               </div>
             </div>

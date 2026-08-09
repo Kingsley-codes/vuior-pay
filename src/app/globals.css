@@ -1600,6 +1600,13 @@ footer .footer-brand img {
     font-size: 13px;
     line-height: 1.45;
   }
+  .dashboard-app table td,
+  .dashboard-app table td * {
+    font-weight: 400 !important;
+  }
+  .dashboard-app table th {
+    font-weight: 600;
+  }
 }
 .social-links {
   display: flex;

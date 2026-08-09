@@ -91,7 +91,7 @@ export default function BillsPage() {
               : tab === "Scheduled"
                 ? bill.autoPay && ["active", "upcoming"].includes(billStatus)
                 : tab === "Paid"
-                  ? ["paid", "completed"].includes(billStatus)
+                  ? ["in review", "paid", "completed"].includes(billStatus)
                   : days < 0 && ["active", "upcoming"].includes(billStatus);
           return (
             matchesTab &&
@@ -233,7 +233,13 @@ export default function BillsPage() {
                 <Filter
                   value={status}
                   onChange={setStatus}
-                  options={["All Statuses", "Active", "Paid", "Completed"]}
+                  options={[
+                    "All Statuses",
+                    "Active",
+                    "In Review",
+                    "Paid",
+                    "Completed",
+                  ]}
                 />
                 <button
                   onClick={() => setModal({ mode: "add" })}
@@ -277,9 +283,13 @@ export default function BillsPage() {
                               {money.format(bill.amount)}
                             </p>
                             <span
-                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
+                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${tab === "Paid" ? "bg-[#e9f8f1] text-[#009a61]" : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
                             >
-                              {days < 0 ? "Overdue" : bill.status}
+                              {tab === "Paid"
+                                ? "Paid"
+                                : days < 0
+                                  ? "Overdue"
+                                  : bill.status}
                             </span>
                           </div>
                         </div>
@@ -300,15 +310,21 @@ export default function BillsPage() {
                                   )
                                 : "—"}
                             </p>
-                            <p
-                              className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
-                            >
-                              {days < 0
-                                ? `${Math.abs(days)} days overdue`
-                                : days === 0
-                                  ? "Due today"
-                                  : `In ${days} days`}
-                            </p>
+                            {tab !== "Paid" ? (
+                              <p
+                                className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                              >
+                                {days < 0
+                                  ? `${Math.abs(days)} days overdue`
+                                  : days === 0
+                                    ? "Due today"
+                                    : `In ${days} days`}
+                              </p>
+                            ) : (
+                              <p className="mt-1 text-[9px] text-[#009a61]">
+                                Payment submitted
+                              </p>
+                            )}
                           </div>
                           <div>
                             <p className="text-[9px] uppercase tracking-wide text-[#8a95a6]">
@@ -418,15 +434,21 @@ export default function BillsPage() {
                                     )
                                   : "—"}
                               </p>
-                              <p
-                                className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
-                              >
-                                {days < 0
-                                  ? `${Math.abs(days)} days overdue`
-                                  : days === 0
-                                    ? "Due today"
-                                    : `In ${days} days`}
-                              </p>
+                              {tab !== "Paid" ? (
+                                <p
+                                  className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                                >
+                                  {days < 0
+                                    ? `${Math.abs(days)} days overdue`
+                                    : days === 0
+                                      ? "Due today"
+                                      : `In ${days} days`}
+                                </p>
+                              ) : (
+                                <p className="mt-1 text-[9px] text-[#009a61]">
+                                  Payment submitted
+                                </p>
+                              )}
                             </td>
                             <td className="px-4 py-3 font-semibold">
                               {money.format(bill.amount)}
