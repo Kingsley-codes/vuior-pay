@@ -284,7 +284,7 @@ export default function CreditsPage() {
                   ))}
                 </div>
                 <div className="hidden overflow-x-auto lg:block">
-                  <table className="w-full min-w-[740px] border-collapse text-left">
+                  <table className="w-full min-w-185 border-collapse text-left">
                     <thead className="bg-[#f8faf9] text-[9px] text-[#53617a]">
                       <tr>
                         {[
