@@ -17,7 +17,12 @@ export function Header({
 
   return (
     <header className="site-header">
-      <Link href="/" className="brand" aria-label="Vuior home" onClick={closeMobileMenu}>
+      <Link
+        href="/"
+        className="brand"
+        aria-label="Vuior home"
+        onClick={closeMobileMenu}
+      >
         <Image
           src="/vuiorLogo.png"
           alt="Vuior"
@@ -74,7 +79,9 @@ export function Header({
       <button
         type="button"
         className="mobile-menu-toggle"
-        aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-label={
+          mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
+        }
         aria-expanded={mobileMenuOpen}
         aria-controls="mobile-navigation"
         onClick={() => setMobileMenuOpen((open) => !open)}
@@ -88,22 +95,62 @@ export function Header({
       >
         <p className="mobile-nav-label">Explore Vuior</p>
         <div className="mobile-nav-links">
-          <Link className={active === "how" ? "active" : undefined} href="/how-it-works" onClick={closeMobileMenu}>How it works <ChevronRight /></Link>
-          <Link className={active === "faq" ? "active" : undefined} href="/help" onClick={closeMobileMenu}>FAQs <ChevronRight /></Link>
-          <Link className={active === "about" ? "active" : undefined} href="/about" onClick={closeMobileMenu}>About us <ChevronRight /></Link>
-          <Link className={active === "contact" ? "active" : undefined} href="/contact" onClick={closeMobileMenu}>Contact <ChevronRight /></Link>
+          <Link
+            className={active === "how" ? "active" : undefined}
+            href="/how-it-works"
+            onClick={closeMobileMenu}
+          >
+            How it works <ChevronRight />
+          </Link>
+          <Link
+            className={active === "faq" ? "active" : undefined}
+            href="/help"
+            onClick={closeMobileMenu}
+          >
+            FAQs <ChevronRight />
+          </Link>
+          <Link
+            className={active === "about" ? "active" : undefined}
+            href="/about"
+            onClick={closeMobileMenu}
+          >
+            About us <ChevronRight />
+          </Link>
+          <Link
+            className={active === "contact" ? "active" : undefined}
+            href="/contact"
+            onClick={closeMobileMenu}
+          >
+            Contact <ChevronRight />
+          </Link>
         </div>
         <div className="mobile-nav-account">
           {loading ? (
             <span className="nav-auth-placeholder" aria-hidden="true" />
           ) : firebaseUser ? (
-            <Link href="/dashboard" className="button button-primary" onClick={closeMobileMenu}>
+            <Link
+              href="/dashboard"
+              className="button button-primary"
+              onClick={closeMobileMenu}
+            >
               <LayoutDashboard size={17} /> Go to dashboard
             </Link>
           ) : (
             <>
-              <Link href="/signup" className="button button-primary" onClick={closeMobileMenu}>Create free account</Link>
-              <Link href="/login" className="mobile-login-link" onClick={closeMobileMenu}>Log in to your account</Link>
+              <Link
+                href="/signup"
+                className="button button-primary"
+                onClick={closeMobileMenu}
+              >
+                Create free account
+              </Link>
+              <Link
+                href="/login"
+                className="mobile-login-link"
+                onClick={closeMobileMenu}
+              >
+                Log in to your account
+              </Link>
             </>
           )}
         </div>

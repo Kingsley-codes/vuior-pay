@@ -122,7 +122,7 @@ export default function CreditsPage() {
 
   return (
     <DashboardShell>
-      <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
+      <div className="mx-auto max-w-382.5 p-5 sm:p-7 lg:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-[29px] font-bold tracking-[-.035em]">
@@ -178,7 +178,7 @@ export default function CreditsPage() {
             return (
               <article
                 key={String(label)}
-                className="flex min-h-[110px] items-center rounded-xl border border-[#e1e8e5] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,.035)]"
+                className="flex min-h-27.5 items-center rounded-xl border border-[#e1e8e5] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,.035)]"
               >
                 <div className="flex-1">
                   <p className="text-[11px] font-medium">{label as string}</p>
@@ -363,7 +363,7 @@ export default function CreditsPage() {
                   </table>
                 </div>
                 {!visible.length && (
-                  <div className="grid min-h-[250px] place-items-center p-6 text-center">
+                  <div className="grid min-h-62.5 place-items-center p-6 text-center">
                     <div>
                       <Sparkles className="mx-auto text-[#b9cbc5]" />
                       <p className="mt-3 text-[12px] font-semibold">
@@ -411,7 +411,7 @@ export default function CreditsPage() {
               </div>
               <svg
                 viewBox="0 0 720 150"
-                className="mt-4 h-[155px] w-full"
+                className="mt-4 h-38.75 w-full"
                 role="img"
                 aria-label="Credits earned chart"
               >

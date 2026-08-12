@@ -1112,6 +1112,13 @@ footer .footer-brand img {
   .site-header {
     padding: 0 18px;
   }
+  .mobile-nav {
+    right: 12px;
+    left: 12px;
+    max-height: calc(100dvh - 88px);
+    overflow-y: auto;
+    padding: 20px;
+  }
   .login-link {
     display: none;
   }
