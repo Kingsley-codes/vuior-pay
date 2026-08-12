@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Menu, X } from "lucide-react";
+import { useState } from "react";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 
 export function Header({
@@ -11,9 +12,12 @@ export function Header({
   active?: "about" | "contact" | "how" | "faq";
 }) {
   const { firebaseUser, loading } = useVuiorSession();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
     <header className="site-header">
-      <Link href="/" className="brand" aria-label="Vuior home">
+      <Link href="/" className="brand" aria-label="Vuior home" onClick={closeMobileMenu}>
         <Image
           src="/vuiorLogo.png"
           alt="Vuior"
@@ -67,6 +71,26 @@ export function Header({
           </>
         )}
       </div>
+      <button
+        type="button"
+        className="mobile-menu-toggle"
+        aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+        aria-expanded={mobileMenuOpen}
+        aria-controls="mobile-navigation"
+        onClick={() => setMobileMenuOpen((open) => !open)}
+      >
+        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+      <nav
+        id="mobile-navigation"
+        className={`mobile-nav${mobileMenuOpen ? " is-open" : ""}`}
+        aria-label="Mobile navigation"
+      >
+        <Link className={active === "how" ? "active" : undefined} href="/how-it-works" onClick={closeMobileMenu}>How it works</Link>
+        <Link className={active === "faq" ? "active" : undefined} href="/help" onClick={closeMobileMenu}>FAQs</Link>
+        <Link className={active === "about" ? "active" : undefined} href="/about" onClick={closeMobileMenu}>About us</Link>
+        <Link className={active === "contact" ? "active" : undefined} href="/contact" onClick={closeMobileMenu}>Contact</Link>
+      </nav>
     </header>
   );
 }
