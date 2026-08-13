@@ -39,11 +39,11 @@ export default function HelpPage() {
       <Header active="faq" />
       <section className="relative overflow-hidden border-b border-[#edf1ef] bg-linear-to-r from-white via-white to-[#f0faf6] px-5 py-10 sm:px-10 lg:px-12 lg:py-12">
         <div className="mx-auto max-w-[1180px]">
-          <p className="text-[12px] font-semibold text-[#009b67]">FAQ</p>
+          <p className="text-[13px] font-semibold text-[#009b67]">FAQ</p>
           <h1 className="mt-3 text-[34px] font-bold tracking-[-.04em] sm:text-[38px]">
             Frequently asked questions
           </h1>
-          <p className="mt-4 max-w-[500px] text-[14px] leading-7 text-[#596885]">
+          <p className="mt-4 max-w-[500px] text-[16px] leading-7 text-[#596885]">
             Everything you need to know about accounts, bills, payments,
             credits, referrals, and security.
           </p>
@@ -52,7 +52,7 @@ export default function HelpPage() {
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
+              className="min-w-0 flex-1 bg-transparent text-[15px] outline-none"
               placeholder="Search for answers…"
             />
           </label>
@@ -64,7 +64,7 @@ export default function HelpPage() {
             <button
               key={item}
               onClick={() => setTopic(item)}
-              className={`rounded-full border px-4 py-2 text-[12px] font-semibold transition ${topic === item ? "border-[#009b67] bg-[#009b67] text-white" : "border-[#dfe6e4] bg-white text-[#53617a] hover:border-[#9ed7c5]"}`}
+              className={`rounded-full border px-4 py-2 text-[14px] font-semibold transition ${topic === item ? "border-[#009b67] bg-[#009b67] text-white" : "border-[#dfe6e4] bg-white text-[#53617a] hover:border-[#9ed7c5]"}`}
             >
               {item}
             </button>
@@ -96,7 +96,7 @@ export default function HelpPage() {
                       <CircleHelp size={17} />
                     )}
                   </span>
-                  <span className="flex-1 text-[14px] font-semibold text-[#172445]">
+                  <span className="flex-1 text-[16px] font-semibold text-[#172445]">
                     {faq.title}
                   </span>
                   <ChevronDown
@@ -106,10 +106,10 @@ export default function HelpPage() {
                 </button>
                 {open === faq.value ? (
                   <div className="px-5 pb-5 pl-[76px] sm:px-6 sm:pb-6 sm:pl-[84px]">
-                    <p className="whitespace-pre-line text-[13px] leading-6 text-[#65728a]">
+                    <p className="whitespace-pre-line text-[15px] leading-7 text-[#65728a]">
                       {faq.content}
                     </p>
-                    <span className="mt-3 inline-block rounded bg-[#f2f6f4] px-2 py-1 text-[10px] font-semibold text-[#527064]">
+                    <span className="mt-3 inline-block rounded bg-[#f2f6f4] px-2 py-1 text-[12px] font-semibold text-[#527064]">
                       {faq.category}
                     </span>
                   </div>
@@ -120,10 +120,10 @@ export default function HelpPage() {
               <div className="grid min-h-64 place-items-center p-8 text-center">
                 <div>
                   <Search className="mx-auto text-[#b6c4bf]" size={30} />
-                  <h2 className="mt-3 text-[14px] font-semibold">
+                  <h2 className="mt-3 text-[16px] font-semibold">
                     No answers found
                   </h2>
-                  <p className="mt-1 text-[12px] text-[#718097]">
+                  <p className="mt-1 text-[14px] text-[#718097]">
                     Try a different search or topic.
                   </p>
                 </div>
@@ -135,12 +135,12 @@ export default function HelpPage() {
               <Headphones size={22} />
             </span>
             <h2 className="mt-4 text-[15px] font-bold">Still need help?</h2>
-            <p className="mt-2 text-[12px] leading-6 text-[#66738b]">
+            <p className="mt-2 text-[14px] leading-6 text-[#66738b]">
               Our support team is available Monday–Friday, 9am–6pm EST.
             </p>
             <Link
               href="/contact"
-              className="mt-5 flex h-11 items-center justify-center rounded-md bg-[#009b67] px-5 text-[12px] font-semibold text-white"
+              className="mt-5 flex h-11 items-center justify-center rounded-md bg-[#009b67] px-5 text-[14px] font-semibold text-white"
             >
               Contact support
             </Link>

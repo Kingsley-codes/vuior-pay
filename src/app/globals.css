@@ -116,6 +116,23 @@ input {
   color: white;
   box-shadow: 0 8px 20px #008e6623;
 }
+/* Solid green is reserved for primary actions: its content must always be white. */
+:where(a, button)[class~="bg-[#008f64]"],
+:where(a, button)[class~="bg-[#009b67]"],
+:where(a, button)[class~="bg-[#009d62]"],
+:where(a, button)[class~="bg-[#00a36a]"],
+:where(a, button)[class~="bg-[#00a475]"],
+:where(a, button)[class~="bg-[#00a96b]"] {
+  color: #fff;
+}
+:where(a, button)[class~="bg-[#008f64]"] svg,
+:where(a, button)[class~="bg-[#009b67]"] svg,
+:where(a, button)[class~="bg-[#009d62]"] svg,
+:where(a, button)[class~="bg-[#00a36a]"] svg,
+:where(a, button)[class~="bg-[#00a475]"] svg,
+:where(a, button)[class~="bg-[#00a96b]"] svg {
+  color: currentColor;
+}
 .button-outline {
   border: 1px solid var(--green);
   color: #007f5d;
@@ -1283,6 +1300,50 @@ footer .footer-brand img {
   .copyright {
     margin-top: 30px;
   }
+
+  /* Public-site type scale: keep body copy and actions comfortably readable. */
+  .button,
+  .button-small,
+  .text-link {
+    font-size: 14px;
+  }
+  .eyebrow,
+  .providers > p,
+  .hero-benefits {
+    font-size: 12px !important;
+  }
+  .section-copy > p,
+  .rewards-copy > p,
+  .step p,
+  .download p,
+  .security-item p,
+  .faq details p,
+  .cta-copy p,
+  .footer-brand p,
+  .footer-grid > div:not(:first-child) {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .feature-list li,
+  .step b,
+  .security-item b,
+  .faq summary,
+  .faq-heading a,
+  .footer-grid > div > b,
+  .reward-tier b,
+  .reward-tier small,
+  .reward-example-copy > p,
+  .reward-example-copy > small {
+    font-size: 13px;
+  }
+  .faq summary {
+    min-height: 52px;
+    height: auto;
+    padding-block: 12px;
+  }
+  .copyright {
+    font-size: 12px;
+  }
 }
 
 @media (min-width: 901px) {
@@ -1351,7 +1412,7 @@ footer .footer-brand img {
     font-size: clamp(34px, 10vw, 39px);
   }
   .hero-copy > p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.65;
   }
   .hero-benefits {
@@ -2110,7 +2171,7 @@ footer .footer-brand img {
     font-size: 34px;
   }
   .legal-heading > div > p:last-child {
-    font-size: 13px;
+    font-size: 15px;
   }
   .legal-effective {
     position: static;
@@ -2146,6 +2207,31 @@ footer .footer-brand img {
   .legal-document-footer a {
     grid-column: 2;
     justify-self: start;
+  }
+  .legal-breadcrumbs,
+  .legal-effective span,
+  .legal-document-topline,
+  .legal-section-number {
+    font-size: 12px;
+  }
+  .legal-sidebar nav a,
+  .legal-help-card p,
+  .legal-help-card a,
+  .legal-notice strong,
+  .legal-notice p,
+  .legal-detail-list h3,
+  .legal-detail-list p,
+  .legal-document-footer p,
+  .legal-document-footer a {
+    font-size: 14px;
+  }
+  .legal-section-content h2 {
+    font-size: 20px;
+  }
+  .legal-section-content > p,
+  .legal-section-content > ul {
+    font-size: 16px;
+    line-height: 1.7;
   }
 }
 
@@ -2473,6 +2559,46 @@ footer .footer-brand img {
     border-bottom: 1px solid var(--line);
     padding: 0 0 20px;
   }
+  .inner-page .inner-eyebrow {
+    font-size: 12px;
+  }
+  .about-hero-copy > p:last-of-type,
+  .contact-intro > p:last-child,
+  .about-mission > div:first-child > p:last-child,
+  .about-story > p:last-of-type,
+  .value-grid p,
+  .contact-trust p,
+  .reach-list p,
+  .milestone-grid p,
+  .panel-heading p,
+  .help-banner p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  .about-actions .button,
+  .contact-submit,
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    font-size: 14px;
+  }
+  .about-mission h2,
+  .about-story h2,
+  .about-cta h2 {
+    font-size: 28px;
+  }
+  .value-grid h3,
+  .contact-trust h3,
+  .reach-list h3,
+  .panel-heading h2,
+  .contact-aside > h2,
+  .help-banner h2 {
+    font-size: 17px;
+  }
+  .contact-form label,
+  .response-note {
+    font-size: 13px;
+  }
 }
 
 @media (min-width: 901px) {
@@ -2583,5 +2709,32 @@ footer .footer-brand img {
 
   .auth-security-note {
     margin-top: 32px;
+  }
+}
+
+/* Utility-class pages use the same accessible type scale as the rest of the public site. */
+@media (max-width: 900px) {
+  .how-page [class~="text-[8px]"],
+  .how-page [class~="text-[9px]"],
+  .how-page [class~="text-[10px]"],
+  .how-page [class~="text-[11px]"],
+  .how-page [class~="text-[12px]"],
+  .auth-root [class~="text-[10px]"],
+  .auth-root [class~="text-[11px]"],
+  .auth-root [class~="text-[12px]"] {
+    font-size: 14px !important;
+  }
+
+  .how-page [class~="text-[13px]"],
+  .how-page [class~="text-[14px]"],
+  .auth-root [class~="text-[13px]"],
+  .auth-root [class~="text-[14px]"] {
+    font-size: 15px !important;
+  }
+
+  .how-page [class~="text-[20px]"],
+  .how-page [class~="text-[21px]"],
+  .how-page [class~="text-[22px]"] {
+    font-size: 24px !important;
   }
 }

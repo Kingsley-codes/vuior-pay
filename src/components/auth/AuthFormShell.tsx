@@ -16,7 +16,7 @@ export default function AuthFormShell({
           {title}
         </h1>
 
-        <p className="mt-2 text-[13px] leading-5 text-[#77819c] sm:text-[14px]">
+        <p className="mt-2 text-[15px] leading-6 text-[#77819c] sm:text-[16px]">
           {description}
         </p>
       </div>

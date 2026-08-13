@@ -17,7 +17,7 @@ export default function AuthInput({
 }: AuthInputProps) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[13px] font-semibold text-[#16234c]">
+      <span className="mb-2 block text-[14px] font-semibold text-[#16234c]">
         {label}
       </span>
 
@@ -34,7 +34,7 @@ export default function AuthInput({
 
         <input
           {...props}
-          className={`h-full min-w-0 flex-1 border-0 bg-transparent text-[13px] text-[#142047] outline-none placeholder:text-[#919ab1] ${className}`}
+          className={`h-full min-w-0 flex-1 border-0 bg-transparent text-[15px] text-[#142047] outline-none placeholder:text-[#919ab1] ${className}`}
         />
 
         {trailingIcon ? (
