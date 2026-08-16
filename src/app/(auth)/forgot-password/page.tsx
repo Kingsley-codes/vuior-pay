@@ -33,7 +33,9 @@ export default function ForgotPasswordPage() {
     setIsSubmitting(true);
     try {
       await forgotPassword(trimmedEmail);
-      setNotice("Check your email for reset instructions.");
+      setNotice(
+        "Check your email for reset instructions. If you don't see it in a few minutes, check your spam or junk folder.",
+      );
     } catch (resetError) {
       setError(getAuthErrorMessage(resetError));
     } finally {
@@ -48,7 +50,7 @@ export default function ForgotPasswordPage() {
     >
       <form className="space-y-7" onSubmit={handleSubmit}>
         {notice ? (
-          <div className="rounded-lg border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-3 text-[14px] text-[#047857]">
+          <div className="rounded-lg border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-3 text-[14px] leading-6 text-[#047857]">
             {notice}
           </div>
         ) : null}
