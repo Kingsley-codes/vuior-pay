@@ -21,7 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { auth } from "@/auth/firebase";
+import { auth } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 
 const navItems = [

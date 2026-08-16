@@ -71,16 +71,25 @@ export function verifyOTP(email: string, code: string) {
   const currentOtp = getStoredOtp();
 
   if (!currentOtp) {
-    return { valid: false, message: "No OTP was sent. Please request a new code." };
+    return {
+      valid: false,
+      message: "No OTP was sent. Please request a new code.",
+    };
   }
 
   if (currentOtp.email !== email.toLowerCase().trim()) {
-    return { valid: false, message: "Email does not match. Please request a new code." };
+    return {
+      valid: false,
+      message: "Email does not match. Please request a new code.",
+    };
   }
 
   if (Date.now() > currentOtp.expiresAt) {
     sessionStorage.removeItem(OTP_STORAGE_KEY);
-    return { valid: false, message: "OTP has expired. Please request a new code." };
+    return {
+      valid: false,
+      message: "OTP has expired. Please request a new code.",
+    };
   }
 
   if (currentOtp.code !== code.trim()) {
@@ -102,7 +111,10 @@ export function setPendingPasswordChange(email: string, newPassword: string) {
   );
 }
 
-export function getPendingPasswordChange(): { email: string; newPassword: string } | null {
+export function getPendingPasswordChange(): {
+  email: string;
+  newPassword: string;
+} | null {
   const value = sessionStorage.getItem(PASSWORD_CHANGE_KEY);
   if (!value) return null;
   try {

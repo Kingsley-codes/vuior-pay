@@ -3,8 +3,8 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Mail } from "lucide-react";
-import { forgotPassword } from "@/auth/authService";
-import { getAuthErrorMessage } from "@/auth/authErrors";
+import { forgotPassword } from "@/services/authService";
+import { getAuthErrorMessage } from "@/services/authErrors";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
 

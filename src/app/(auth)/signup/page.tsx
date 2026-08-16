@@ -13,10 +13,10 @@ import {
   Phone,
   UserRound,
 } from "lucide-react";
-import { continueWithGoogle } from "@/auth/authService";
-import { getAuthErrorMessage } from "@/auth/authErrors";
-import { setPendingRegistration } from "@/auth/pendingRegistration";
-import { sendOTP } from "@/auth/otpService";
+import { continueWithGoogle } from "@/services/authService";
+import { getAuthErrorMessage } from "@/services/authErrors";
+import { setPendingRegistration } from "@/services/pendingRegistration";
+import { sendOTP } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
 import GoogleButton from "@/components/auth/GoogleButton";

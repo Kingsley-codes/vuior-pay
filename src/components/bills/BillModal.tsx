@@ -23,7 +23,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-import { db, storage } from "@/auth/firebase";
+import { db, storage } from "@/services/firebase";
 import type { Bill } from "@/hooks/useVuiorData";
 import {
   currencyInputNumber,

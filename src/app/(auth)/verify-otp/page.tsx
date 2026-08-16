@@ -5,21 +5,35 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { updatePassword } from "firebase/auth";
-import { auth } from "@/auth/firebase";
+import { auth } from "@/services/firebase";
 import { logAuditEvent } from "@/auth/auditLog";
-import { getAuthErrorMessage } from "@/auth/authErrors";
-import { registerUser } from "@/auth/authService";
+import { getAuthErrorMessage } from "@/services/authErrors";
+import { registerUser } from "@/services/authService";
 import {
   clearPendingRegistration,
   getPendingRegistration,
-} from "@/auth/pendingRegistration";
-import { clearPendingPasswordChange, getPendingPasswordChange, sendOTP, verifyOTP } from "@/auth/otpService";
+} from "@/services/pendingRegistration";
+import {
+  clearPendingPasswordChange,
+  getPendingPasswordChange,
+  sendOTP,
+  verifyOTP,
+} from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import OtpInput from "@/components/auth/OtpInput";
 
 export default function VerifyOtpPage() {
   return (
-    <Suspense fallback={<AuthFormShell title="Verify your email" description="Loading your verification session…"><div className="h-48 animate-pulse rounded-lg bg-[#f3f6f5]" /></AuthFormShell>}>
+    <Suspense
+      fallback={
+        <AuthFormShell
+          title="Verify your email"
+          description="Loading your verification session…"
+        >
+          <div className="h-48 animate-pulse rounded-lg bg-[#f3f6f5]" />
+        </AuthFormShell>
+      }
+    >
       <VerifyOtpForm />
     </Suspense>
   );
@@ -60,20 +74,39 @@ function VerifyOtpForm() {
 
     if (flow === "password_change") {
       const pending = getPendingPasswordChange();
-      if (!pending || pending.email !== email.toLowerCase().trim() || !auth.currentUser) {
-        setError("Your password change session expired. Please start again from Security.");
+      if (
+        !pending ||
+        pending.email !== email.toLowerCase().trim() ||
+        !auth.currentUser
+      ) {
+        setError(
+          "Your password change session expired. Please start again from Security.",
+        );
         return;
       }
       setIsSubmitting(true);
       try {
         await updatePassword(auth.currentUser, pending.newPassword);
         clearPendingPasswordChange();
-        await logAuditEvent({ event: "password_change_success", userId: auth.currentUser.uid, email, method: "email" });
+        await logAuditEvent({
+          event: "password_change_success",
+          userId: auth.currentUser.uid,
+          email,
+          method: "email",
+        });
         router.replace("/dashboard/settings?tab=security&password=updated");
       } catch (updateError) {
         setError(getAuthErrorMessage(updateError));
-        await logAuditEvent({ event: "password_change_failed", status: "failure", userId: auth.currentUser.uid, email, method: "email" });
-      } finally { setIsSubmitting(false); }
+        await logAuditEvent({
+          event: "password_change_failed",
+          status: "failure",
+          userId: auth.currentUser.uid,
+          email,
+          method: "email",
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
       return;
     }
 
@@ -84,7 +117,9 @@ function VerifyOtpForm() {
 
     const pendingRegistration = getPendingRegistration();
     if (!pendingRegistration) {
-      setError("Registration expired. Please fill the registration form again.");
+      setError(
+        "Registration expired. Please fill the registration form again.",
+      );
       return;
     }
 
@@ -110,7 +145,10 @@ function VerifyOtpForm() {
     setError("");
     setNotice("");
     try {
-      await sendOTP(email, flow === "password_change" ? "password_reset" : "register");
+      await sendOTP(
+        email,
+        flow === "password_change" ? "password_reset" : "register",
+      );
       setCode("");
       setNotice("A new verification code has been sent to your email.");
     } catch (resendError) {
@@ -122,7 +160,11 @@ function VerifyOtpForm() {
 
   return (
     <AuthFormShell
-      title={flow === "password_change" ? "Verify password change" : "Verify your email"}
+      title={
+        flow === "password_change"
+          ? "Verify password change"
+          : "Verify your email"
+      }
       description={`Enter the 6-digit code sent to ${email || "your email"}.`}
     >
       <form className="space-y-8" onSubmit={handleSubmit}>
@@ -145,7 +187,13 @@ function VerifyOtpForm() {
           disabled={isSubmitting || isResending}
           className="h-13.5 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[16px] font-semibold text-white shadow-[0_8px_20px_rgba(0,157,98,0.18)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isSubmitting ? (flow === "password_change" ? "Updating password..." : "Creating account...") : (flow === "password_change" ? "Verify & change password" : "Verify email")}
+          {isSubmitting
+            ? flow === "password_change"
+              ? "Updating password..."
+              : "Creating account..."
+            : flow === "password_change"
+              ? "Verify & change password"
+              : "Verify email"}
         </button>
 
         <div className="text-center">
@@ -164,7 +212,11 @@ function VerifyOtpForm() {
         </div>
 
         <Link
-          href={flow === "password_change" ? "/dashboard/settings?tab=security" : "/signup"}
+          href={
+            flow === "password_change"
+              ? "/dashboard/settings?tab=security"
+              : "/signup"
+          }
           className="mx-auto flex w-fit items-center gap-2 text-[14px] font-medium text-[#526080] hover:text-[#142047]"
         >
           <ArrowLeft size={17} />

@@ -7,13 +7,7 @@ import {
   signInWithPopup,
   type User,
 } from "firebase/auth";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { extractErrorInfo } from "./authErrors";
 import { logAuditEvent } from "./auditLog";
 import { assertFirebaseConfig, auth, db, googleProvider } from "./firebase";

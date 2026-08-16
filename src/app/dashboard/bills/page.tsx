@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import BillModal from "@/components/bills/BillModal";
-import { db } from "@/auth/firebase";
+import { db } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
@@ -44,8 +44,10 @@ function rewardFor(days: number) {
 
 function displayStatus(bill: Bill) {
   const value = bill.status.trim().toLowerCase().replaceAll("_", " ");
-  if (value === "in review") return { label: "In review", className: "bg-[#fff6df] text-[#9a6700]" };
-  if (["paid", "completed"].includes(value)) return { label: "Paid", className: "bg-[#e9f8f1] text-[#009a61]" };
+  if (value === "in review")
+    return { label: "In review", className: "bg-[#fff6df] text-[#9a6700]" };
+  if (["paid", "completed"].includes(value))
+    return { label: "Paid", className: "bg-[#e9f8f1] text-[#009a61]" };
   return { label: bill.status, className: "bg-[#e9f8f1] text-[#009a61]" };
 }
 
@@ -329,8 +331,12 @@ export default function BillsPage() {
                                     : `In ${days} days`}
                               </p>
                             ) : (
-                              <p className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}>
-                                {shownStatus.label === "In review" ? "Payment submitted for review" : "Payment completed"}
+                              <p
+                                className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                              >
+                                {shownStatus.label === "In review"
+                                  ? "Payment submitted for review"
+                                  : "Payment completed"}
                               </p>
                             )}
                           </div>
@@ -454,8 +460,12 @@ export default function BillsPage() {
                                       : `In ${days} days`}
                                 </p>
                               ) : (
-                                <p className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}>
-                                  {shownStatus.label === "In review" ? "Payment submitted for review" : "Payment completed"}
+                                <p
+                                  className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                                >
+                                  {shownStatus.label === "In review"
+                                    ? "Payment submitted for review"
+                                    : "Payment completed"}
                                 </p>
                               )}
                             </td>

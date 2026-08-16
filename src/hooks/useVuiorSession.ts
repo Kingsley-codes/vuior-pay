@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
-import { auth, db } from "@/auth/firebase";
+import { auth, db } from "@/services/firebase";
 
 export type VuiorUser = {
   id: string;
@@ -44,7 +44,9 @@ export function useVuiorSession() {
           setUser({
             id: nextUser.uid,
             email: String(data.email ?? nextUser.email ?? ""),
-            firstName: String(data.firstName ?? nextUser.displayName?.split(" ")[0] ?? "User"),
+            firstName: String(
+              data.firstName ?? nextUser.displayName?.split(" ")[0] ?? "User",
+            ),
             lastName: String(data.lastName ?? ""),
             avatar: String(data.avatar ?? nextUser.photoURL ?? ""),
             phoneNo: String(data.phoneNo ?? ""),
@@ -52,7 +54,9 @@ export function useVuiorSession() {
             address: String(data.address ?? ""),
             availableCredits: Number(data.availableCredits ?? 0),
             referralCode: String(data.referralCode ?? data.referral_code ?? ""),
-            referralBonus: Number(data.referralBonus ?? data.referralEarnings ?? 0),
+            referralBonus: Number(
+              data.referralBonus ?? data.referralEarnings ?? 0,
+            ),
             stripeCustomerId: String(data.stripeCustomerId ?? ""),
           });
           setLoading(false);
