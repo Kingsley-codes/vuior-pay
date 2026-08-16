@@ -13,9 +13,9 @@ import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { db } from "@/services/firebase";
-import { logAuditEvent } from "@/auth/auditLog";
 import { sendOTP, setPendingPasswordChange } from "@/services/otpService";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { logAuditEvent } from "@/services/auditLog";
 
 const QUESTIONS = [
   "What was the name of your first school?",

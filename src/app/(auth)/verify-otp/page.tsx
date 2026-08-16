@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { updatePassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
-import { logAuditEvent } from "@/auth/auditLog";
 import { getAuthErrorMessage } from "@/services/authErrors";
 import { registerUser } from "@/services/authService";
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import OtpInput from "@/components/auth/OtpInput";
+import { logAuditEvent } from "@/services/auditLog";
 
 export default function VerifyOtpPage() {
   return (
