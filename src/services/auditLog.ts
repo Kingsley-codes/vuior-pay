@@ -9,11 +9,12 @@ type AuditEventType =
   | "signup_failed"
   | "social_login_success"
   | "social_signup_success"
-  | "logout"
+  | "logout_success"
   | "password_reset_requested"
   | "password_reset_failed"
   | "password_change_started"
   | "password_change_success"
+  | "logout_failed"
   | "password_change_failed";
 
 type LogEventOptions = {

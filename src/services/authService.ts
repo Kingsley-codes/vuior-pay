@@ -5,6 +5,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
   type User,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
@@ -24,6 +25,7 @@ function generatePublicId(prefix: string) {
 async function upsertSocialUser(user: User) {
   const userRef = doc(db, "users", user.uid);
   const snapshot = await getDoc(userRef);
+
   const [firstName = "", ...lastNameParts] = (user.displayName || "")
     .trim()
     .split(/\s+/);
@@ -52,6 +54,7 @@ async function upsertSocialUser(user: User) {
   }
 
   await updateDoc(userRef, { lastLogin: Timestamp.now() });
+
   return { isNewUser: false };
 }
 
@@ -60,6 +63,7 @@ export async function login(email: string, password: string) {
 
   try {
     const credential = await signInWithEmailAndPassword(auth, email, password);
+
     const userRef = doc(db, "users", credential.user.uid);
     const userDoc = await getDoc(userRef);
 
@@ -67,7 +71,10 @@ export async function login(email: string, password: string) {
       throw new Error("Your account profile could not be found.");
     }
 
-    await updateDoc(userRef, { lastLogin: Timestamp.now() });
+    await updateDoc(userRef, {
+      lastLogin: Timestamp.now(),
+    });
+
     await logAuditEvent({
       event: "login_success",
       userId: credential.user.uid,
@@ -76,6 +83,7 @@ export async function login(email: string, password: string) {
     });
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
+
     await logAuditEvent({
       event: "login_failed",
       status: "failure",
@@ -85,6 +93,7 @@ export async function login(email: string, password: string) {
       errorMessage: message,
       attachIdToken: false,
     });
+
     throw error;
   }
 }
@@ -126,10 +135,13 @@ export async function registerUser(payload: RegisterPayload) {
       userId: credential.user.uid,
       email: payload.email,
       method: "email",
-      metadata: { accountType: payload.accountType },
+      metadata: {
+        accountType: payload.accountType,
+      },
     });
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
+
     await logAuditEvent({
       event: "signup_failed",
       status: "failure",
@@ -139,6 +151,7 @@ export async function registerUser(payload: RegisterPayload) {
       errorMessage: message,
       attachIdToken: false,
     });
+
     throw error;
   }
 }
@@ -148,6 +161,7 @@ export async function forgotPassword(email: string) {
 
   try {
     await sendPasswordResetEmail(auth, email);
+
     await logAuditEvent({
       event: "password_reset_requested",
       email,
@@ -156,6 +170,7 @@ export async function forgotPassword(email: string) {
     });
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
+
     await logAuditEvent({
       event: "password_reset_failed",
       status: "failure",
@@ -165,6 +180,7 @@ export async function forgotPassword(email: string) {
       errorMessage: message,
       attachIdToken: false,
     });
+
     throw error;
   }
 }
@@ -184,6 +200,7 @@ export async function continueWithGoogle() {
     });
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
+
     await logAuditEvent({
       event: "login_failed",
       status: "failure",
@@ -192,6 +209,56 @@ export async function continueWithGoogle() {
       errorMessage: message,
       attachIdToken: false,
     });
+
+    throw error;
+  }
+}
+
+export async function refreshUser(): Promise<User | null> {
+  assertFirebaseConfig();
+
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    return null;
+  }
+
+  await currentUser.reload();
+
+  return auth.currentUser;
+}
+
+// Signs the current user out of Firebase Auth.
+export async function logout() {
+  assertFirebaseConfig();
+
+  try {
+    const currentUser = auth.currentUser;
+
+    await signOut(auth);
+
+    if (currentUser) {
+      await logAuditEvent({
+        event: "logout_success",
+        userId: currentUser.uid,
+        email: currentUser.email,
+        method: "email",
+      });
+    }
+  } catch (error) {
+    const { code, message } = extractErrorInfo(error);
+
+    await logAuditEvent({
+      event: "logout_failed",
+      status: "failure",
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      method: "email",
+      errorCode: code,
+      errorMessage: message,
+      attachIdToken: false,
+    });
+
     throw error;
   }
 }

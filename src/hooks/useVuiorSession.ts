@@ -18,6 +18,7 @@ export type VuiorUser = {
   referralCode?: string;
   referralBonus?: number;
   stripeCustomerId?: string;
+  mustChangePassword?: boolean;
 };
 
 export function useVuiorSession() {

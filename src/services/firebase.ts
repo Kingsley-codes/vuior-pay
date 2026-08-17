@@ -65,3 +65,55 @@ export const storage = getStorage(app);
 
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
+
+type ApiResponse<T> = {
+  success: boolean;
+  data: T;
+  message?: string;
+  pagination?: UsersPage["pagination"];
+};
+
+export type UsersPage = {
+  data: [];
+  pagination: {
+    page: number;
+    pageSize: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
+async function request<T>(
+  endpoint: string,
+  options: {
+    params?: URLSearchParams;
+    method?: "GET" | "POST";
+    body?: unknown;
+  } = {},
+): Promise<ApiResponse<T>> {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Your session has expired. Please sign in again.");
+  const token = await user.getIdToken();
+  const query = options.params?.toString();
+  const response = await fetch(`${endpoint}${query ? `?${query}` : ""}`, {
+    method: options.method || "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+  });
+  const payload = (await response.json()) as ApiResponse<T>;
+  if (!response.ok)
+    throw new Error(payload.message || "Unable to load user data.");
+  return payload;
+}
+
+export async function completeTemporaryPasswordChange(newPassword: string) {
+  return (
+    await request<{ mustChangePassword: false }>(
+      "https://us-central1-vuior-3c7ff.cloudfunctions.net/completeTemporaryPasswordChange",
+      { method: "POST", body: { newPassword } },
+    )
+  ).data;
+}

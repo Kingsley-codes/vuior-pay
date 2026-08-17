@@ -50,9 +50,19 @@ export default function DashboardShell({
   const [loggingOut, setLoggingOut] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
+  const passwordChangePath = "/dashboard/change-password";
+  const mustChangePassword = user?.mustChangePassword;
+
   useEffect(() => {
     if (!loading && !firebaseUser) router.replace("/login");
   }, [firebaseUser, loading, router]);
+
+  useEffect(() => {
+    if (mustChangePassword && pathname !== passwordChangePath) {
+      router.replace(passwordChangePath);
+    }
+  }, [mustChangePassword, pathname, router]);
+
   useEffect(() => {
     if (!userMenuOpen) return;
     const outside = (event: MouseEvent) => {
