@@ -19,7 +19,8 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
         <BackButton href={backHref} />
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col px-[7.5%] py-8">
+      <div className="relative z-10 flex min-h-screen flex-col px-[7.5%] pt-24 pb-8">
+        {" "}
         <div className="mb-6">
           <Image
             src="/logo-light.png"
@@ -27,10 +28,9 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
             width={202}
             height={50}
             priority
-            className="h-auto w-[132px]"
+            className="h-auto w-33"
           />
         </div>
-
         <div className="mt-9">
           <h1 className="text-[38px] font-bold leading-[1.2] text-white">
             Welcome back
@@ -38,13 +38,12 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
             to Vuior
           </h1>
 
-          <p className="mt-3 max-w-[390px] text-[15px] leading-6 text-white/90">
+          <p className="mt-3 max-w-97.5 text-[15px] leading-6 text-white/90">
             Manage bills, pay early, and earn credits that put more back in your
             pocket.
           </p>
         </div>
-
-        <div className="relative mt-4 h-[360px] w-[calc(100%+18px)] translate-x-7">
+        <div className="relative mt-4 h-90 w-[calc(100%+18px)] translate-x-7">
           <Image
             src="/auth-dashboard-mockup.png"
             alt="Vuior dashboard preview"
@@ -54,7 +53,6 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
             className="object-contain object-left-top"
           />
         </div>
-
         <div className="mt-auto space-y-3 pb-1 pl-7">
           <Feature
             icon={<FileText size={24} strokeWidth={1.8} />}
@@ -90,7 +88,7 @@ export function Feature({
 }) {
   return (
     <div className="flex items-center gap-4">
-      <div className="flex h-11 w-11 shrink-0 scale-90 items-center justify-center rounded-full bg-gradient-to-br from-[#10d988] to-[#00945f] text-white">
+      <div className="flex h-11 w-11 shrink-0 scale-90 items-center justify-center rounded-full bg-linear-to-br from-[#10d988] to-[#00945f] text-white">
         {icon}
       </div>
 
