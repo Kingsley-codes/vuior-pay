@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { CalendarDays, FileText, Star } from "lucide-react";
+import BackButton from "./BackButton";
 
-export function AuthLeftPanel() {
+export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
   return (
     <section className="relative hidden min-h-screen overflow-hidden bg-[#004c3d] lg:block">
       <Image
@@ -14,14 +15,18 @@ export function AuthLeftPanel() {
       />
 
       <div className="relative z-10 flex min-h-screen flex-col px-[7.5%] py-8">
-        <Image
-          src="/logo-light.png"
-          alt="Vuior"
-          width={202}
-          height={50}
-          priority
-          className="h-auto w-[132px]"
-        />
+        <div className="mb-6">
+          <Image
+            src="/logo-light.png"
+            alt="Vuior"
+            width={202}
+            height={50}
+            priority
+            className="h-auto w-[132px]"
+          />
+        </div>
+
+        <BackButton href={backHref} />
 
         <div className="mt-9">
           <h1 className="text-[38px] font-bold leading-[1.2] text-white">
