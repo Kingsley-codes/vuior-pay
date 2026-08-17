@@ -1,9 +1,7 @@
 "use client";
 
 import { FormEvent, Suspense, useState } from "react";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { updatePassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
 import { getAuthErrorMessage } from "@/services/authErrors";
@@ -210,18 +208,6 @@ function VerifyOtpForm() {
             {isResending ? "Sending..." : "Resend code"}
           </button>
         </div>
-
-        <Link
-          href={
-            flow === "password_change"
-              ? "/dashboard/settings?tab=security"
-              : "/signup"
-          }
-          className="mx-auto flex w-fit items-center gap-2 text-[14px] font-medium text-[#526080] hover:text-[#142047]"
-        >
-          <ArrowLeft size={17} />
-          {flow === "password_change" ? "Back to security" : "Back to signup"}
-        </Link>
       </form>
     </AuthFormShell>
   );

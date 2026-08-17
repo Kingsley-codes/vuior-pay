@@ -1,8 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import Link from "next/link";
-import { ArrowLeft, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { forgotPassword } from "@/services/authService";
 import { getAuthErrorMessage } from "@/services/authErrors";
 import AuthFormShell from "@/components/auth/AuthFormShell";
@@ -79,14 +78,6 @@ export default function ForgotPasswordPage() {
         >
           {isSubmitting ? "Sending..." : "Send Reset Link"}
         </button>
-
-        <Link
-          href="/login"
-          className="mx-auto flex w-fit items-center gap-2 text-[14px] font-medium text-[#526080] hover:text-[#142047]"
-        >
-          <ArrowLeft size={17} />
-          Back to login
-        </Link>
       </form>
     </AuthFormShell>
   );

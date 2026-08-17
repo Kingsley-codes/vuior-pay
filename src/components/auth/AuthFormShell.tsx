@@ -1,4 +1,3 @@
-import BackButton from "./BackButton";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -6,22 +5,15 @@ type AuthFormShellProps = {
   title: string;
   description: string;
   children: React.ReactNode;
-  backHref?: string;
 };
 
 export default function AuthFormShell({
   title,
   description,
   children,
-  backHref,
 }: AuthFormShellProps) {
   return (
     <div className="auth-card w-full rounded-xl border border-[#e1e5ec] bg-white px-5 py-7 shadow-[0_14px_42px_rgba(35,47,77,0.07)] sm:px-9 sm:py-8">
-      {/* Mobile back button and logo */}
-      <div className="lg:hidden mb-5">
-        <BackButton href={backHref} />
-      </div>
-
       {/* Mobile logo - only visible on small screens */}
       <div className="lg:hidden flex justify-center mb-6">
         <Link href="/" className="inline-block">

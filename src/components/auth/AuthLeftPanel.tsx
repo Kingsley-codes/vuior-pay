@@ -14,6 +14,11 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
         className="object-cover"
       />
 
+      {/* Desktop back button */}
+      <div className="absolute left-[7.5%] top-8 z-20">
+        <BackButton href={backHref} />
+      </div>
+
       <div className="relative z-10 flex min-h-screen flex-col px-[7.5%] py-8">
         <div className="mb-6">
           <Image
@@ -25,8 +30,6 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
             className="h-auto w-[132px]"
           />
         </div>
-
-        <BackButton href={backHref} />
 
         <div className="mt-9">
           <h1 className="text-[38px] font-bold leading-[1.2] text-white">

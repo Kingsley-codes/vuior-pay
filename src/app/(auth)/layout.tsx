@@ -10,11 +10,13 @@ export default function AuthLayout({
 }>) {
   return (
     <main className="min-h-screen bg-[#f8f9fb] lg:grid lg:grid-cols-[44%_56%]">
-      <AuthLeftPanel />
+      {/* Desktop left panel */}
+      <AuthLeftPanel backHref={backHref} />
 
+      {/* Right side */}
       <section className="auth-content relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-7 sm:px-7 lg:px-10">
-        {/* Mobile back button and logo */}
-        <div className="lg:hidden mb-5">
+        {/* Mobile back button — fixed to the page corner */}
+        <div className="absolute left-4 top-4 z-30 lg:hidden sm:left-7 sm:top-7">
           <BackButton href={backHref} />
         </div>
 
