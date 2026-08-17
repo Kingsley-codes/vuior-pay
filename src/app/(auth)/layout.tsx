@@ -14,7 +14,7 @@ export default function AuthLayout({
       <AuthLeftPanel backHref={backHref} />
 
       {/* Right side */}
-      <section className="auth-content relative flex min-h-screen items-center justify-center overflow-hidden px-4 pb-7 pt-24 sm:px-7 sm:pb-7 sm:pt-28 lg:px-10 lg:py-7">
+      <section className="auth-content relative flex min-h-screen items-center justify-center overflow-hidden px-4 pb-7 pt-18 sm:px-7 sm:pb-7 sm:pt-22 lg:px-10 lg:py-7">
         {/* Mobile back button — fixed to the page corner */}
         <div className="absolute left-4 top-4 z-30 lg:hidden sm:left-7 sm:top-7">
           <BackButton href={backHref} />

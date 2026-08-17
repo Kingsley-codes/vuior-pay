@@ -694,7 +694,9 @@ input {
   gap: 10px;
   padding: 6px 14px;
   box-shadow: 0 7px 16px #10251d1c;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 .store-badge:hover {
   transform: translateY(-2px);
@@ -1018,6 +1020,17 @@ footer .footer-brand img {
   }
   .mobile-nav-account .button {
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+  }
+
+  .mobile-nav-account .button-primary,
+  .mobile-nav-account .button-primary:hover,
+  .mobile-nav-account .button-primary:focus {
+    color: #fff;
   }
   .mobile-login-link {
     justify-content: center !important;
@@ -1768,7 +1781,11 @@ footer .footer-brand img {
   overflow: hidden;
   border-block: 1px solid #dfeae6;
   background:
-    radial-gradient(circle at 82% 24%, rgba(71, 203, 153, 0.18), transparent 25%),
+    radial-gradient(
+      circle at 82% 24%,
+      rgba(71, 203, 153, 0.18),
+      transparent 25%
+    ),
     linear-gradient(115deg, #f7fcfa 0%, #edf8f4 52%, #e5f5ef 100%);
 }
 .legal-hero::after {

@@ -15,7 +15,7 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
       />
 
       {/* Desktop back button */}
-      <div className="absolute left-[7.5%] top-8 z-20">
+      <div className="absolute left-[1.5%] top-8 z-20">
         <BackButton href={backHref} />
       </div>
 
