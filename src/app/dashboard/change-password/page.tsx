@@ -4,8 +4,9 @@ import { FormEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, LockKeyhole, ShieldCheck } from "lucide-react";
-import { completeTemporaryPasswordChange } from "@/services/firebase";
-import { refreshUser, logout } from "@/services/authService";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, completeTemporaryPasswordChange } from "@/services/firebase";
+import { logout } from "@/services/authService";
 
 export default function ChangeTemporaryPasswordPage() {
   const router = useRouter();
@@ -31,8 +32,16 @@ export default function ChangeTemporaryPasswordPage() {
 
     setSubmitting(true);
     try {
+      const currentEmail = auth.currentUser?.email;
       await completeTemporaryPasswordChange(passwords.next);
-      await refreshUser();
+      if (currentEmail) {
+        try {
+          await signInWithEmailAndPassword(auth, currentEmail, passwords.next);
+        } catch {
+          router.replace("/login");
+          return;
+        }
+      }
       router.replace("/dashboard");
     } catch (reason) {
       setError(
