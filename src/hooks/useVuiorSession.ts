@@ -59,6 +59,7 @@ export function useVuiorSession() {
               data.referralBonus ?? data.referralEarnings ?? 0,
             ),
             stripeCustomerId: String(data.stripeCustomerId ?? ""),
+            mustChangePassword: data.mustChangePassword === true,
           });
           setLoading(false);
         },
@@ -76,6 +77,7 @@ export function useVuiorSession() {
             referralCode: "",
             referralBonus: 0,
             stripeCustomerId: "",
+            mustChangePassword: false,
           });
           setLoading(false);
         },

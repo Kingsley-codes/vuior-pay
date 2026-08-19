@@ -17,6 +17,10 @@ import type { RegisterPayload } from "./pendingRegistration";
 const DEFAULT_AVATAR =
   "https://ui-avatars.com/api/?name=Vuior+User&background=00a968&color=fff";
 
+type LoginResult = {
+  mustChangePassword: boolean;
+};
+
 function generatePublicId(prefix: string) {
   const randomId = Math.random().toString(36).slice(2, 8).toUpperCase();
   return `${prefix}-${randomId}`;
@@ -58,7 +62,10 @@ async function upsertSocialUser(user: User) {
   return { isNewUser: false };
 }
 
-export async function login(email: string, password: string) {
+export async function login(
+  email: string,
+  password: string,
+): Promise<LoginResult> {
   assertFirebaseConfig();
 
   try {
@@ -81,6 +88,10 @@ export async function login(email: string, password: string) {
       email,
       method: "email",
     });
+
+    return {
+      mustChangePassword: userDoc.data()?.mustChangePassword === true,
+    };
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
 

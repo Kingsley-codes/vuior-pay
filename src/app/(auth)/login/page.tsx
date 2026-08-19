@@ -35,8 +35,10 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
-      await login(email.trim(), password);
-      router.replace("/dashboard");
+      const session = await login(email.trim(), password);
+      router.replace(
+        session.mustChangePassword ? "/dashboard/change-password" : "/dashboard",
+      );
     } catch (loginError) {
       setError(getAuthErrorMessage(loginError));
     } finally {

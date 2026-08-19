@@ -103,6 +103,14 @@ export default function DashboardShell({
       </div>
     );
   if (!firebaseUser) return null;
+  if (mustChangePassword && pathname !== passwordChangePath) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-[#f8faf9] text-sm text-[#65718c]">
+        Redirecting to password change...
+      </div>
+    );
+  }
+  if (mustChangePassword) return <>{children}</>;
 
   return (
     <main className="dashboard-app min-h-screen bg-[#f8faf9] text-[#0d1b42]">
