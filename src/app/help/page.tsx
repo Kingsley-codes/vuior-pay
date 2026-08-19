@@ -35,8 +35,8 @@ export default function HelpPage() {
   );
 
   return (
-    <div className="inner-page bg-white">
-      <Header active="faq" />
+    <div className="bg-white">
+      <Header active="faq" wide />
       <section className="relative overflow-hidden border-b border-[#edf1ef] bg-linear-to-r from-white via-white to-[#f0faf6] px-5 py-10 sm:px-10 lg:px-12 lg:py-12">
         <div className="mx-auto max-w-[1180px]">
           <p className="text-[13px] font-semibold text-[#009b67]">FAQ</p>

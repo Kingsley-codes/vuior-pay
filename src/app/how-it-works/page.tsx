@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 const tiers = [["1–3 days early", "+2%"], ["4–7 days early", "+5%"], ["8–14 days early", "+10%"], ["15+ days early", "+15%"]];
 
 export default function HowItWorksPage() {
-  return <main className="how-page bg-white text-[#07142d]">
+  return <main className="bg-white text-[#07142d]">
     <Header active="how" />
     <section className="overflow-hidden border-t border-[#edf1ef] bg-linear-to-br from-white via-white to-[#f4faf7]"><div className="mx-auto grid min-h-[370px] max-w-[1120px] items-center px-7 pt-8 lg:grid-cols-[52%_48%]">
       <div className="z-10 py-10"><h1 className="text-[44px] font-bold leading-[1.06] tracking-[-.05em] sm:text-[54px]">How Vuior works</h1><p className="mt-4 text-[17px] leading-7 text-[#596885]">Add your bills, pay early, and earn credits.<br/>The earlier you pay, the more you save.</p><div className="mt-7 flex flex-wrap gap-4"><Link href="/signup" className="flex h-12 items-center rounded-md bg-[#008f64] px-7 text-[12px] font-semibold text-white">Create free account</Link><a href="#rewards" className="flex h-12 items-center rounded-md border border-[#009b6b] px-7 text-[12px] font-semibold text-[#008f64]">See rewards</a></div><div className="mt-8 flex flex-wrap gap-7 text-[10px] font-semibold"><span className="flex items-center gap-2"><LockKeyhole size={18} className="text-[#00a36a]"/>Pay securely</span><span className="flex items-center gap-2"><CheckCircle2 size={18} className="text-[#00a36a]"/>No hidden fees</span><span className="flex items-center gap-2"><RefreshCcw size={18} className="text-[#00a36a]"/>Cancel anytime</span></div></div>

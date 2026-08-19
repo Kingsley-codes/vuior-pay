@@ -13,7 +13,7 @@ export default function AuthFormShell({
   children,
 }: AuthFormShellProps) {
   return (
-    <div className="auth-card w-full rounded-xl border border-[#e1e5ec] bg-white px-5 py-7 shadow-[0_14px_42px_rgba(35,47,77,0.07)] sm:px-9 sm:py-8">
+    <div className="w-full rounded-xl border border-[#e1e5ec] bg-white px-5 py-7 shadow-[0_14px_42px_rgba(35,47,77,0.07)] sm:px-9 sm:py-8 [@media(max-height:850px)_and_(min-width:1024px)]:py-8">
       {/* Mobile logo - only visible on small screens */}
       <div className="lg:hidden flex justify-center mb-6">
         <Link href="/" className="inline-block">

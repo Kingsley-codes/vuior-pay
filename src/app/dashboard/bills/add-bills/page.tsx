@@ -24,6 +24,9 @@ function publicId() {
   return `VPB-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
 }
 
+const checkboxClass =
+  "grid h-4 w-4 shrink-0 cursor-pointer appearance-none place-content-center rounded border-[1.5px] border-[#cfd5df] bg-white before:mt-[-2px] before:h-1.5 before:w-2.5 before:origin-center before:rotate-[-45deg] before:scale-0 before:border-b-2 before:border-l-2 before:border-white before:transition-transform before:duration-150 before:content-[''] checked:border-[#00a968] checked:bg-[#00a968] checked:before:scale-100 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[rgba(0,169,104,0.13)]";
+
 export default function AddBillPage() {
   const router = useRouter();
   const { user } = useVuiorSession();
@@ -205,7 +208,7 @@ export default function AddBillPage() {
             </span>
             <input
               type="checkbox"
-              className="auth-checkbox"
+              className={checkboxClass}
               checked={form.autoPay}
               onChange={(e) => update("autoPay", e.target.checked)}
             />
