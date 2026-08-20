@@ -98,13 +98,13 @@ export function Providers() {
         TRUSTED BY MILLIONS TO PAY BILLS FROM TOP PROVIDERS
       </p>
 
-      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-7 overflow-auto pb-2.5 max-[620px]:justify-start">
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-7 max-[620px]:flex-wrap max-[620px]:justify-center max-[620px]:gap-x-10 max-[620px]:gap-y-6">
         <Image
           src="/logos/att.png"
           alt="AT&T"
           width={80}
           height={35}
-          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+          className="h-3 w-auto shrink-0 object-contain md:h-[35px]"
         />
 
         <Image
@@ -112,7 +112,7 @@ export function Providers() {
           alt="Verizon"
           width={90}
           height={35}
-          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+          className="h-3 w-auto shrink-0 object-contain md:h-[35px]"
         />
 
         <Image
@@ -120,7 +120,7 @@ export function Providers() {
           alt="Duke Energy"
           width={80}
           height={40}
-          className="md:h-[40px] h-3 w-auto shrink-0 object-contain"
+          className="h-3 w-auto shrink-0 object-contain md:h-[40px]"
         />
 
         <Image
@@ -128,7 +128,7 @@ export function Providers() {
           alt="Comcast"
           width={100}
           height={35}
-          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+          className="h-3 w-auto shrink-0 object-contain md:h-[35px]"
         />
 
         <Image
@@ -136,7 +136,7 @@ export function Providers() {
           alt="Mastercard"
           width={105}
           height={35}
-          className="md:h-[40px] h-3 w-auto shrink-0 object-contain"
+          className="h-3 w-auto shrink-0 object-contain md:h-[40px]"
         />
 
         <Image
@@ -144,11 +144,13 @@ export function Providers() {
           alt="Exelon"
           width={80}
           height={35}
-          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+          className="h-3 w-auto shrink-0 object-contain md:h-[35px]"
         />
 
-        <strong className="text-xs md:text-base">
-          +100 <br /> <small>more</small>{" "}
+        <strong className="text-[9px] md:text-base">
+          +100
+          <br />
+          <small>more</small>
         </strong>
       </div>
     </section>
