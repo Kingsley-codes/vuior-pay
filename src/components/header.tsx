@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, LayoutDashboard, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 
 export function Header({
@@ -15,6 +15,21 @@ export function Header({
 }) {
   const { firebaseUser, loading } = useVuiorSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 900) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   const navLink = (item?: typeof active) =>
@@ -33,6 +48,7 @@ export function Header({
 
   const primaryButton =
     "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[14px] font-bold !text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+
   const smallPrimaryButton = `${primaryButton} h-11 px-[23px] max-[620px]:px-3.5`;
 
   return (
@@ -89,6 +105,7 @@ export function Header({
             >
               Log in
             </Link>
+
             <Link href="/signup" className={smallPrimaryButton}>
               <span className="max-[430px]:hidden">Create free account</span>
               <span className="hidden max-[430px]:inline">Sign up</span>
@@ -173,7 +190,7 @@ export function Header({
               </Link>
               <Link
                 href="/login"
-                className="flex justify-center p-1 text-[13px] text-[#176650]"
+                className="inline-flex h-[50px] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] items-center justify-center p-1 rounded-md border border-[#009268] text-[13px] font-bold text-[#176650]"
                 onClick={closeMobileMenu}
               >
                 Log in to your account
