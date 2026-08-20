@@ -104,7 +104,7 @@ export function Providers() {
           alt="AT&T"
           width={80}
           height={35}
-          className="h-3 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
+          className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
         />
 
         <Image
@@ -112,7 +112,7 @@ export function Providers() {
           alt="Verizon"
           width={90}
           height={35}
-          className="h-3 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
+          className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
         />
 
         <Image
@@ -120,7 +120,7 @@ export function Providers() {
           alt="Duke Energy"
           width={80}
           height={40}
-          className="h-3 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[40px]"
+          className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[40px]"
         />
 
         <Image
@@ -128,7 +128,7 @@ export function Providers() {
           alt="Comcast"
           width={100}
           height={35}
-          className="h-3 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
+          className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
         />
 
         <Image
@@ -136,7 +136,7 @@ export function Providers() {
           alt="Mastercard"
           width={105}
           height={35}
-          className="h-3 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[40px]"
+          className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[40px]"
         />
 
         <Image
@@ -144,10 +144,10 @@ export function Providers() {
           alt="Exelon"
           width={80}
           height={35}
-          className="h-3 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
+          className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
         />
 
-        <strong className="text-[9px] max-[620px]:justify-self-center md:text-base">
+        <strong className="text-[11px] max-[620px]:justify-self-center md:text-base">
           +100
           <br />
           <small>more</small>
