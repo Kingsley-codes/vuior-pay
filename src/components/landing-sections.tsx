@@ -5,12 +5,17 @@ import { MOBILE_FAQS } from "@/data/faqs";
 
 const buttonBase =
   "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md px-[30px] text-[14px] font-bold transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+
 const primaryButton = `${buttonBase} bg-linear-to-br from-[#00a475] to-[#007d5a] !text-white shadow-[0_8px_20px_#008e6623]`;
+
 const outlineButton = `${buttonBase} border border-[#009268] bg-white text-[#007f5d]`;
+
 const textLink =
   "inline-flex items-center gap-[9px] text-[13px] font-bold text-[#009268] max-[620px]:text-[14px] [&_svg]:w-[17px]";
+
 const eyebrow =
   "mb-6 text-[10px] font-extrabold leading-none tracking-[0.6px] text-[#009268] max-[620px]:text-[12px]";
+
 const sectionHeading =
   "mb-5 text-[30px] font-bold leading-[1.24] tracking-[-1px] max-[620px]:text-[26px]";
 
@@ -48,7 +53,7 @@ export function HeroSection() {
             <br />
             <span className="text-[#009268]">Get rewarded for it.</span>
           </h1>
-          <p className="mb-[33px] max-w-[560px] text-[18px] leading-[1.7] text-[#58677b] min-[901px]:text-[20px] max-[900px]:mx-auto max-[620px]:text-[15px] max-[430px]:text-[16px] max-[430px]:leading-[1.65]">
+          <p className="mb-[33px] max-w-140 text-[18px] leading-[1.7] text-[#58677b] min-[901px]:text-[20px] max-[900px]:mx-auto max-[620px]:text-[15px] max-[430px]:text-[16px] max-[430px]:leading-[1.65]">
             Manage all your bills in one place, pay before the due date, and
             earn credits based on how early you pay.
           </p>
@@ -92,23 +97,58 @@ export function Providers() {
       <p className="mb-[31px] text-[10px] font-extrabold tracking-[1.2px] text-[#718091] max-[620px]:text-[12px]">
         TRUSTED BY MILLIONS TO PAY BILLS FROM TOP PROVIDERS
       </p>
-      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-7 overflow-auto pb-2.5 text-[#344257] max-[620px]:justify-start [&_span]:text-[13px] [&_strong]:whitespace-nowrap [&_strong]:text-[18px] [&_strong]:leading-none max-[620px]:[&_strong]:text-[14px] [&_strong:nth-child(3)]:text-[12px] [&_strong:nth-child(3)]:font-semibold [&_strong:nth-child(7)]:text-[12px] [&_strong:nth-child(7)]:font-semibold">
-        <strong>◉ AT&amp;T</strong>
-        <strong>
-          verizon<span>✓</span>
-        </strong>
-        <strong>
-          ♞ DUKE
-          <br />
-          ENERGY
-        </strong>
-        <strong>✺ COMCAST</strong>
-        <strong>●● mastercard</strong>
-        <strong>⬡ exelon</strong>
-        <strong>
-          +100
-          <br />
-          <small>more</small>
+
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-7 overflow-auto pb-2.5 max-[620px]:justify-start">
+        <Image
+          src="/logos/att.png"
+          alt="AT&T"
+          width={80}
+          height={35}
+          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+        />
+
+        <Image
+          src="/logos/verizon.png"
+          alt="Verizon"
+          width={90}
+          height={35}
+          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+        />
+
+        <Image
+          src="/logos/duke-energy.png"
+          alt="Duke Energy"
+          width={80}
+          height={40}
+          className="md:h-[40px] h-3 w-auto shrink-0 object-contain"
+        />
+
+        <Image
+          src="/logos/comcast.png"
+          alt="Comcast"
+          width={100}
+          height={35}
+          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+        />
+
+        <Image
+          src="/logos/mastercard.png"
+          alt="Mastercard"
+          width={105}
+          height={35}
+          className="md:h-[40px] h-3 w-auto shrink-0 object-contain"
+        />
+
+        <Image
+          src="/logos/exelon.png"
+          alt="Exelon"
+          width={80}
+          height={35}
+          className="md:h-[35px] h-3 w-auto shrink-0 object-contain"
+        />
+
+        <strong className="text-xs md:text-base">
+          +100 <br /> <small>more</small>{" "}
         </strong>
       </div>
     </section>

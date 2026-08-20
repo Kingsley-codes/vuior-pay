@@ -85,7 +85,7 @@ export function Header({
           <>
             <Link
               href="/login"
-              className="transition hover:text-[#009268] max-[620px]:hidden"
+              className="inline-flex h-11 items-center justify-center hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] rounded-md border border-[#009268] px-[23px] text-[14px] font-bold text-[#009268] transition-colors duration-200 hover:text-[#007d5a]"
             >
               Log in
             </Link>
