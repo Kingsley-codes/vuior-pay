@@ -17,7 +17,7 @@ const eyebrow =
   "mb-6 text-[10px] font-extrabold leading-none tracking-[0.6px] text-[#009268] max-[620px]:text-[12px]";
 
 const sectionHeading =
-  "mb-5 text-[30px] font-bold leading-[1.24] tracking-[-1px] max-[620px]:text-[26px]";
+  "mb-5 text-[30px] font-bold leading-[1.24] tracking-[-1px] max-[620px]:text-2xl";
 
 const ButtonPair = ({ cta = false }: { cta?: boolean }) => (
   <div
@@ -147,7 +147,7 @@ export function Providers() {
           className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
         />
 
-        <strong className="text-[11px] max-[620px]:justify-self-center md:text-base">
+        <strong className="text-[11px] max-[620px]:justify-self-center md:text-2xl">
           +100
           <br />
           <small>more</small>
@@ -194,10 +194,10 @@ export function FeaturesSection() {
           <br />
           never miss a payment
         </h2>
-        <p className="max-w-[350px] text-[14px] leading-[1.55] text-[#58677b] min-[901px]:text-[17px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+        <p className="max-w-[350px] text-[16px] leading-[1.55] text-[#58677b] min-[901px]:text-[17px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[16px] max-[620px]:leading-[1.65]">
           Track due dates, set reminders, and manage payments with ease.
         </p>
-        <ul className="my-7 list-none p-0 max-[900px]:mx-auto max-[900px]:max-w-[330px] max-[900px]:text-left [&_li]:my-[15px] [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:text-[12px] max-[620px]:[&_li]:text-[13px] [&_svg]:w-[18px] [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[3px] [&_svg]:text-[#009268]">
+        <ul className="my-7 list-none p-0 max-[900px]:mx-auto max-[900px]:max-w-[330px] max-[900px]:text-left [&_li]:my-[15px] [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:text-[14px] max-[620px]:[&_li]:text-[15px] [&_svg]:w-[18px] [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[3px] [&_svg]:text-[#009268]">
           <li>
             <Icon name="calendar" />
             See all upcoming bills at a glance
