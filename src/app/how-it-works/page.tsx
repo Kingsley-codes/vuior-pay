@@ -129,11 +129,11 @@ export default function HowItWorksPage() {
                   <I size={28} className="text-[#00a36a]" />
                 </div>
 
-                <h3 className="mt-5 text-[17px] font-bold sm:text-[18px]">
+                <h3 className="mt-5 text-xl font-bold sm:text-2xl">
                   {String(title)}
                 </h3>
 
-                <p className="mt-3 max-w-[260px] text-[14px] leading-6 text-[#596885] sm:text-[15px]">
+                <p className="mt-3 max-w-[260px] text-[16px] leading-6 text-[#596885]">
                   {String(text)}
                 </p>
 
@@ -225,11 +225,11 @@ export default function HowItWorksPage() {
                 </div>
 
                 <div className="flex flex-col justify-center border-l-2 border-[#00a36a] px-6 py-5">
-                  <b className="text-[15px] font-bold sm:text-[16px]">
+                  <b className="text-lg font-semibold sm:text-xl">
                     {String(title)}
                   </b>
 
-                  <p className="mt-2 text-[13px] leading-5 text-[#596885] sm:text-[14px] sm:leading-6">
+                  <p className="mt-2 text-[16px] leading-5 text-[#596885] sm:leading-6">
                     {String(text)}
                   </p>
                 </div>
@@ -270,11 +270,11 @@ export default function HowItWorksPage() {
               <I size={27} className="shrink-0 text-[#00a36a]" />
 
               <span>
-                <b className="text-[14px] font-bold sm:text-[15px]">
+                <b className="text-xl font-semibold sm:text-2xl">
                   {String(title)}
                 </b>
 
-                <p className="mt-1.5 text-[13px] leading-5 text-[#596885] sm:text-[14px] sm:leading-6">
+                <p className="mt-1.5 text-[16px] leading-5 text-[#596885] sm:leading-6">
                   {String(text)}
                 </p>
               </span>
