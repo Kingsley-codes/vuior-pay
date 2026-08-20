@@ -25,47 +25,56 @@ export default function HowItWorksPage() {
   return (
     <main className="bg-white text-[#07142d]">
       <Header active="how" />
+
+      {/* Hero */}
       <section className="overflow-hidden border-t border-[#edf1ef] bg-linear-to-br from-white via-white to-[#f4faf7]">
-        <div className="mx-auto grid min-h-[370px] max-w-[1120px] items-center px-7 pt-8 lg:grid-cols-[52%_48%]">
-          <div className="z-10 py-10">
+        <div className="mx-auto grid min-h-[430px] max-w-[1120px] items-center px-6 pt-8 sm:px-7 lg:grid-cols-[52%_48%]">
+          <div className="z-10 py-10 sm:py-12">
             <h1 className="text-[44px] font-bold leading-[1.06] tracking-[-.05em] sm:text-[54px]">
               How Vuior works
             </h1>
-            <p className="mt-4 text-[17px] leading-7 text-[#596885]">
+
+            <p className="mt-5 text-[18px] leading-7 text-[#596885] sm:text-[19px]">
               Add your bills, pay early, and earn credits.
               <br />
               The earlier you pay, the more you save.
             </p>
-            <div className="mt-7 flex flex-wrap gap-4">
+
+            <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/signup"
-                className="flex h-12 items-center rounded-md bg-[#008f64] px-7 text-[12px] font-semibold text-white"
+                className="flex h-12 items-center rounded-md bg-[#008f64] px-7 text-[14px] font-semibold text-white transition-opacity hover:opacity-90 sm:text-[15px]"
               >
                 Create free account
               </Link>
+
               <a
                 href="#rewards"
-                className="flex h-12 items-center rounded-md border border-[#009b6b] px-7 text-[12px] font-semibold text-[#008f64]"
+                className="flex h-12 items-center rounded-md border border-[#009b6b] px-7 text-[14px] font-semibold text-[#008f64] transition-colors hover:bg-[#f1faf6] sm:text-[15px]"
               >
                 See rewards
               </a>
             </div>
-            <div className="mt-8 flex flex-wrap gap-7 text-[10px] font-semibold">
+
+            <div className="mt-8 flex flex-wrap gap-6 text-[13px] font-semibold sm:gap-7 sm:text-[14px]">
               <span className="flex items-center gap-2">
                 <LockKeyhole size={18} className="text-[#00a36a]" />
                 Pay securely
               </span>
+
               <span className="flex items-center gap-2">
                 <CheckCircle2 size={18} className="text-[#00a36a]" />
                 No hidden fees
               </span>
+
               <span className="flex items-center gap-2">
                 <RefreshCcw size={18} className="text-[#00a36a]" />
                 Cancel anytime
               </span>
             </div>
           </div>
-          <div className="relative hidden h-[360px] lg:block">
+
+          <div className="relative hidden h-[400px] lg:block">
             <Image
               src="/how-it-works.png"
               alt="Vuior app showing early bill payments and earned credits"
@@ -78,11 +87,13 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[960px] px-6 py-10">
-        <h2 className="text-center text-[22px] font-bold">
+      {/* Three Steps */}
+      <section className="mx-auto max-w-[960px] px-6 py-12 sm:py-14">
+        <h2 className="text-center text-[27px] font-bold sm:text-[30px]">
           Three simple steps
         </h2>
-        <div className="mt-7 grid gap-10 md:grid-cols-3">
+
+        <div className="mt-8 grid gap-6 md:grid-cols-3 md:gap-8">
           {[
             [
               "01",
@@ -104,23 +115,30 @@ export default function HowItWorksPage() {
             ],
           ].map(([number, Icon, title, text], i) => {
             const I = Icon as typeof Gift;
+
             return (
               <article
                 key={String(title)}
-                className="relative min-h-[205px] rounded-xl border border-[#dfe7e4] bg-white p-5 shadow-[0_6px_20px_rgba(25,55,47,.025)]"
+                className="relative min-h-[220px] rounded-xl border border-[#dfe7e4] bg-white p-6 shadow-[0_6px_20px_rgba(25,55,47,.025)]"
               >
                 <div className="flex items-center gap-5">
-                  <strong className="text-[28px] text-[#83dcbc]">
+                  <strong className="text-[30px] text-[#83dcbc]">
                     {String(number)}
                   </strong>
-                  <I size={27} className="text-[#00a36a]" />
+
+                  <I size={28} className="text-[#00a36a]" />
                 </div>
-                <h3 className="mt-4 text-[13px] font-bold">{String(title)}</h3>
-                <p className="mt-3 max-w-[195px] text-[10px] leading-5 text-[#596885]">
+
+                <h3 className="mt-5 text-[17px] font-bold sm:text-[18px]">
+                  {String(title)}
+                </h3>
+
+                <p className="mt-3 max-w-[260px] text-[14px] leading-6 text-[#596885] sm:text-[15px]">
                   {String(text)}
                 </p>
+
                 {i < 2 && (
-                  <span className="absolute -right-7 top-1/2 hidden text-[#aebbb7] md:block">
+                  <span className="absolute -right-7 top-1/2 hidden text-[22px] text-[#aebbb7] md:block">
                     ⇢
                   </span>
                 )}
@@ -130,39 +148,50 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
+      {/* Rewards */}
       <section
         id="rewards"
         className="bg-linear-to-r from-[#004a3e] to-[#003c34] text-white"
       >
-        <div className="mx-auto grid max-w-[1000px] gap-5 px-7 py-7 md:grid-cols-[210px_repeat(4,1fr)]">
-          <div>
-            <h2 className="text-[20px] font-bold leading-6">
+        <div className="mx-auto grid max-w-[1000px] gap-5 px-6 py-9 sm:px-7 md:grid-cols-[230px_repeat(4,1fr)]">
+          <div className="flex flex-col justify-center">
+            <h2 className="text-[24px] font-bold leading-7 sm:text-[26px]">
               The earlier you pay,
               <br />
               the more you earn
             </h2>
-            <p className="mt-3 text-[10px] leading-4 text-[#c7ded7]">
+
+            <p className="mt-3 text-[14px] leading-5 text-[#c7ded7] sm:text-[15px]">
               Earn credits on eligible bills when you pay early.
             </p>
           </div>
+
           {tiers.map(([days, reward]) => (
             <div
               key={days}
-              className="rounded-lg border border-[#ffffff24] bg-[#005647] p-4 text-center"
+              className="rounded-lg border border-[#ffffff24] bg-[#005647] p-5 text-center"
             >
-              <b className="text-[10px]">{days}</b>
-              <strong className="mt-4 block text-[27px]">{reward}</strong>
-              <small className="text-[9px]">in credits</small>
+              <b className="text-[13px] font-semibold sm:text-[14px]">{days}</b>
+
+              <strong className="mt-3 block text-[30px] sm:text-[32px]">
+                {reward}
+              </strong>
+
+              <small className="text-[12px] text-[#c7ded7] sm:text-[13px]">
+                in credits
+              </small>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-[820px] px-6 py-8">
-        <h2 className="text-center text-[20px] font-bold">
+      {/* What You Can Do */}
+      <section className="mx-auto max-w-[820px] px-6 py-12 sm:py-14">
+        <h2 className="text-center text-[26px] font-bold sm:text-[29px]">
           What you can do with Vuior
         </h2>
-        <div className="mt-5 space-y-2">
+
+        <div className="mt-7 space-y-3">
           {[
             [
               CalendarDays,
@@ -181,19 +210,26 @@ export default function HowItWorksPage() {
             ],
           ].map(([Icon, title, text], index) => {
             const I = Icon as typeof History;
+
             return (
               <article
                 key={String(title)}
-                className={`grid min-h-[74px] items-center overflow-hidden rounded-lg border border-[#e2e9e6] ${index % 2 ? "md:grid-cols-[1fr_1fr]" : "md:grid-cols-[1fr_1fr]"}`}
+                className="grid min-h-[100px] overflow-hidden rounded-lg border border-[#e2e9e6] md:grid-cols-2"
               >
                 <div
-                  className={`${index % 2 ? "md:order-2" : ""} flex h-full items-center justify-center bg-[#f5faf8]`}
+                  className={`${
+                    index % 2 ? "md:order-2" : ""
+                  } flex h-full min-h-[90px] items-center justify-center bg-[#f5faf8]`}
                 >
-                  <I className="text-[#00a36a]" size={25} />
+                  <I className="text-[#00a36a]" size={28} />
                 </div>
-                <div className="border-l-2 border-[#00a36a] px-5 py-3">
-                  <b className="text-[10px]">{String(title)}</b>
-                  <p className="mt-1 text-[9px] leading-4 text-[#596885]">
+
+                <div className="flex flex-col justify-center border-l-2 border-[#00a36a] px-6 py-5">
+                  <b className="text-[15px] font-bold sm:text-[16px]">
+                    {String(title)}
+                  </b>
+
+                  <p className="mt-2 text-[13px] leading-5 text-[#596885] sm:text-[14px] sm:leading-6">
                     {String(text)}
                   </p>
                 </div>
@@ -203,7 +239,8 @@ export default function HowItWorksPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[960px] gap-6 px-7 pb-7 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Benefits */}
+      <section className="mx-auto grid max-w-[960px] gap-8 px-6 pb-10 sm:grid-cols-2 lg:grid-cols-4">
         {[
           [
             LockKeyhole,
@@ -227,12 +264,17 @@ export default function HowItWorksPage() {
           ],
         ].map(([Icon, title, text]) => {
           const I = Icon as typeof ShieldCheck;
+
           return (
             <div key={String(title)} className="flex gap-3">
-              <I size={25} className="shrink-0 text-[#00a36a]" />
+              <I size={27} className="shrink-0 text-[#00a36a]" />
+
               <span>
-                <b className="text-[10px]">{String(title)}</b>
-                <p className="mt-1 text-[8px] leading-4 text-[#596885]">
+                <b className="text-[14px] font-bold sm:text-[15px]">
+                  {String(title)}
+                </b>
+
+                <p className="mt-1.5 text-[13px] leading-5 text-[#596885] sm:text-[14px] sm:leading-6">
                   {String(text)}
                 </p>
               </span>
@@ -241,32 +283,37 @@ export default function HowItWorksPage() {
         })}
       </section>
 
-      <section className="mx-auto mb-7 grid max-w-[800px] items-center gap-5 rounded-xl bg-linear-to-r from-[#004a3e] to-[#002f29] px-8 py-6 text-white sm:grid-cols-[1fr_auto]">
+      {/* CTA */}
+      <section className="mx-4 mb-8 grid max-w-[800px] items-center gap-6 rounded-xl bg-linear-to-r from-[#004a3e] to-[#002f29] px-7 py-8 text-white sm:mx-auto sm:px-8 sm:py-9 md:grid-cols-[1fr_auto]">
         <div>
-          <h2 className="text-[21px] font-bold leading-6">
+          <h2 className="text-[24px] font-bold leading-7 sm:text-[27px] sm:leading-8">
             Start getting more from
             <br />
             the bills you already pay
           </h2>
-          <p className="mt-2 text-[10px] text-[#c7ded7]">
+
+          <p className="mt-3 text-[14px] leading-5 text-[#c7ded7] sm:text-[15px]">
             Join Vuior today and earn credits every time you pay early.
           </p>
         </div>
-        <div className="flex gap-3">
+
+        <div className="flex flex-wrap gap-3">
           <Link
-            className="flex h-10 items-center rounded-md bg-[#00a36a] px-6 text-[10px] font-semibold !text-white"
+            className="flex h-11 items-center rounded-md bg-[#00a36a] px-6 text-[13px] font-semibold !text-white transition-opacity hover:opacity-90 sm:text-[14px]"
             href="/signup"
           >
             Create free account
           </Link>
+
           <Link
-            className="flex h-10 items-center rounded-md border border-[#9dc6b9] px-6 text-[10px] font-semibold text-white"
+            className="flex h-11 items-center rounded-md border border-[#9dc6b9] px-6 text-[13px] font-semibold text-white transition-colors hover:bg-white/10 sm:text-[14px]"
             href="/login"
           >
             Log in
           </Link>
         </div>
       </section>
+
       <SiteFooter />
     </main>
   );
