@@ -22,33 +22,9 @@ body {
   overflow-x: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 button,
 input {
   font: inherit;
-}
-
-/* Solid green is reserved for primary actions: its content must always be white. */
-:where(a, button)[class~="bg-[#008f64]"],
-:where(a, button)[class~="bg-[#009b67]"],
-:where(a, button)[class~="bg-[#009d62]"],
-:where(a, button)[class~="bg-[#00a36a]"],
-:where(a, button)[class~="bg-[#00a475]"],
-:where(a, button)[class~="bg-[#00a96b]"] {
-  color: #fff;
-}
-
-:where(a, button)[class~="bg-[#008f64]"] svg,
-:where(a, button)[class~="bg-[#009b67]"] svg,
-:where(a, button)[class~="bg-[#009d62]"] svg,
-:where(a, button)[class~="bg-[#00a36a]"] svg,
-:where(a, button)[class~="bg-[#00a475]"] svg,
-:where(a, button)[class~="bg-[#00a96b]"] svg {
-  color: currentColor;
 }
 
 @media (min-width: 1024px) {

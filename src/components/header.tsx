@@ -16,22 +16,29 @@ export function Header({
   const { firebaseUser, loading } = useVuiorSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const closeMobileMenu = () => setMobileMenuOpen(false);
+
   const navLink = (item?: typeof active) =>
-    `transition hover:text-[#009268] ${
+    `transition-colors duration-200 hover:text-[#009268] ${
       active === item
-        ? "text-[#009268] underline underline-offset-4"
-        : ""
+        ? "text-[#009268] underline decoration-2 underline-offset-4"
+        : "text-[#07142d]"
     }`;
+
   const mobileNavLink = (item?: typeof active) =>
-    `flex items-center justify-between rounded-lg border-b border-[#edf2ef] px-1 py-3.5 text-[15px] font-[650] transition hover:text-[#009268] [&_svg]:h-[18px] [&_svg]:w-[18px] [&_svg]:text-[#91a099] hover:[&_svg]:text-[#009268] ${
-      active === item ? "text-[#009268] [&_svg]:text-[#009268]" : ""
+    `flex items-center justify-between rounded-lg border-b border-[#edf2ef] px-1 py-3.5 text-[15px] font-[650] transition-colors duration-200 hover:text-[#009268] [&_svg]:h-[18px] [&_svg]:w-[18px] hover:[&_svg]:text-[#009268] ${
+      active === item
+        ? "text-[#009268] [&_svg]:text-[#009268]"
+        : "text-[#07142d] [&_svg]:text-[#91a099]"
     }`;
+
   const primaryButton =
-    "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[14px] font-bold text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+    "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[14px] font-bold !text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
   const smallPrimaryButton = `${primaryButton} h-11 px-[23px] max-[620px]:px-3.5`;
 
   return (
-    <header className={`relative z-30 mx-auto flex items-center justify-between gap-[30px] max-[900px]:h-[72px] max-[620px]:gap-3 max-[620px]:px-[18px] ${wide ? "h-20 max-w-[1440px] px-12 max-[900px]:px-6" : "h-[88px] max-w-[1240px] px-7"}`}>
+    <header
+      className={`relative z-30 mx-auto flex items-center justify-between gap-7.5 max-[900px]:h-18 max-[620px]:gap-3 max-[620px]:px-4.5 ${wide ? "h-20 max-w-360 px-12 max-[900px]:px-6" : "h-22 max-w-310 px-7"}`}
+    >
       <Link
         href="/"
         className="block"
@@ -44,46 +51,34 @@ export function Header({
           width={121}
           height={45}
           priority
-          className="block h-auto w-[122px] max-[620px]:w-[100px]"
+          className="block h-auto w-30.5 max-[620px]:w-25"
         />
       </Link>
       <nav
-        className={`flex text-[16px] font-[650] max-[900px]:hidden ${wide ? "gap-[45px]" : "gap-[31px]"}`}
+        className={`flex text-lg font-semibold max-[900px]:hidden ${wide ? "gap-11" : "gap-7.5"}`}
         aria-label="Main navigation"
       >
-        <Link
-          className={navLink("how")}
-          href="/how-it-works"
-        >
+        <Link className={navLink("how")} href="/how-it-works">
           How it works
         </Link>
         <Link className={navLink("faq")} href="/help">
           FAQs
         </Link>
-        <Link
-          className={navLink("about")}
-          href="/about"
-        >
+        <Link className={navLink("about")} href="/about">
           About us
         </Link>
-        <Link
-          className={navLink("contact")}
-          href="/contact"
-        >
+        <Link className={navLink("contact")} href="/contact">
           Contact
         </Link>
       </nav>
       <div className="flex items-center gap-9 text-[16px] font-[650] max-[900px]:hidden max-[430px]:gap-2">
         {loading ? (
           <span
-            className="h-11 w-[164px] rounded-[7px] bg-[#edf4f1]"
+            className="h-11 w-41 rounded-[7px] bg-[#edf4f1]"
             aria-hidden="true"
           />
         ) : firebaseUser ? (
-          <Link
-            href="/dashboard"
-            className={smallPrimaryButton}
-          >
+          <Link href="/dashboard" className={smallPrimaryButton}>
             <LayoutDashboard size={17} /> Dashboard
           </Link>
         ) : (
