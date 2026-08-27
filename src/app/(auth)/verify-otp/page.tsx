@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { updatePassword } from "firebase/auth";
 import { auth } from "@/services/firebase";
 import { getAuthErrorMessage } from "@/services/authErrors";
-import { registerUser } from "@/services/authService";
+import { login } from "@/services/authService";
 import {
   clearPendingRegistration,
   getPendingRegistration,
@@ -14,6 +14,7 @@ import {
   clearPendingPasswordChange,
   getPendingPasswordChange,
   sendOTP,
+  verifyRegistrationOTP,
   verifyOTP,
 } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
@@ -63,14 +64,14 @@ function VerifyOtpForm() {
       return;
     }
 
-    const result = verifyOTP(email, code);
-    if (!result.valid) {
-      setError(result.message);
-      setCode("");
-      return;
-    }
-
     if (flow === "password_change") {
+      const result = verifyOTP(email, code);
+      if (!result.valid) {
+        setError(result.message);
+        setCode("");
+        return;
+      }
+
       const pending = getPendingPasswordChange();
       if (
         !pending ||
@@ -123,7 +124,8 @@ function VerifyOtpForm() {
 
     setIsSubmitting(true);
     try {
-      await registerUser(pendingRegistration);
+      await verifyRegistrationOTP(email, code);
+      await login(pendingRegistration.email, pendingRegistration.password);
       clearPendingRegistration();
       router.replace("/dashboard");
     } catch (registerError) {
@@ -188,7 +190,7 @@ function VerifyOtpForm() {
           {isSubmitting
             ? flow === "password_change"
               ? "Updating password..."
-              : "Creating account..."
+              : "Verifying account..."
             : flow === "password_change"
               ? "Verify & change password"
               : "Verify email"}

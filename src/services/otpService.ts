@@ -5,6 +5,24 @@ const TEMPLATE_ID = "template_2rsiv8q";
 const PUBLIC_KEY = "O6aIOujSd28u6JbI0";
 const OTP_STORAGE_KEY = "vuior_pending_otp";
 const PASSWORD_CHANGE_KEY = "vuior_pending_password_change";
+const REQUEST_REGISTRATION_OTP_URL =
+  process.env.NEXT_PUBLIC_REQUEST_REGISTRATION_OTP_URL ||
+  "https://us-central1-vuior-3c7ff.cloudfunctions.net/requestRegistrationOtp";
+const VERIFY_REGISTRATION_OTP_URL =
+  process.env.NEXT_PUBLIC_VERIFY_REGISTRATION_OTP_URL ||
+  "https://us-central1-vuior-3c7ff.cloudfunctions.net/verifyRegistrationOtp";
+
+type RegistrationPayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phoneCountry: string;
+  phoneLocal: string;
+  dob: string;
+  accountType: "personal" | "business";
+  businessName?: string;
+};
 
 type OtpRecord = {
   code: string;
@@ -37,6 +55,11 @@ export async function sendOTP(
   email: string,
   flow: "register" | "password_reset" = "register",
 ): Promise<void> {
+  if (flow === "register") {
+    await postRegistrationOtp({ email });
+    return;
+  }
+
   const code = generateOTP();
   const normalizedEmail = email.toLowerCase().trim();
 
@@ -65,6 +88,27 @@ export async function sendOTP(
     const body = await response.text();
     throw new Error(body || "Unable to send OTP email.");
   }
+}
+
+async function postRegistrationOtp(body: Record<string, unknown>) {
+  const response = await fetch(REQUEST_REGISTRATION_OTP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.message || "Unable to send OTP email.");
+  }
+
+  return data;
+}
+
+export async function requestRegistrationOtp(
+  payload: RegistrationPayload,
+): Promise<void> {
+  await postRegistrationOtp(payload);
 }
 
 export function verifyOTP(email: string, code: string) {
@@ -102,6 +146,24 @@ export function verifyOTP(email: string, code: string) {
     message: "Email verified successfully.",
     flow: currentOtp.flow,
   };
+}
+
+export async function verifyRegistrationOTP(
+  email: string,
+  code: string,
+): Promise<{ success: boolean; message: string; userId?: string }> {
+  const response = await fetch(VERIFY_REGISTRATION_OTP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, code }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.message || "Unable to verify OTP.");
+  }
+
+  return data;
 }
 
 export function setPendingPasswordChange(email: string, newPassword: string) {

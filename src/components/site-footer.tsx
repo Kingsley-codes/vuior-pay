@@ -42,21 +42,7 @@ export function SiteFooter() {
             </a>
           </div>
         </div>
-        <div className={columnClass}>
-          <b className={headingClass}>Product</b>
-          <Link className={linkClass} href="/#how-it-works">
-            How it works
-          </Link>
-          <Link className={linkClass} href="/#rewards">
-            Rewards
-          </Link>
-          <Link className={linkClass} href="/#features">
-            Features
-          </Link>
-          <Link className={linkClass} href="/#providers">
-            Bill providers
-          </Link>
-        </div>
+
         <div className={columnClass}>
           <b className={headingClass}>Company</b>
           <Link className={linkClass} href="/about">
@@ -65,25 +51,24 @@ export function SiteFooter() {
           <a className={linkClass} href="#">
             Careers
           </a>
-          <a className={linkClass} href="#">
-            Blog
-          </a>
-          <Link className={linkClass} href="/contact">
-            Contact us
+          <Link className={linkClass} href="/how-it-works">
+            How it works
           </Link>
         </div>
+
         <div className={`${columnClass} max-[900px]:mt-2.5`}>
           <b className={headingClass}>Support</b>
           <Link className={linkClass} href="/help">
             Help center
           </Link>
           <Link className={linkClass} href="/contact">
-            Contact support
+            Contact us
           </Link>
           <Link className={linkClass} href="/help">
             FAQs
           </Link>
         </div>
+
         <div className={`${columnClass} max-[900px]:mt-2.5`}>
           <b className={headingClass}>Legal</b>
           <Link className={linkClass} href="/privacy-policy">

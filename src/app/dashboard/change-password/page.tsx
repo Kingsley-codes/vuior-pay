@@ -59,7 +59,7 @@ export default function ChangeTemporaryPasswordPage() {
       <section className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex justify-center">
           <Image
-            src="/signInLogo.png"
+            src="/vuiorLogo.png"
             alt="Vuior"
             width={842}
             height={313}

@@ -16,7 +16,7 @@ import {
 import { continueWithGoogle } from "@/services/authService";
 import { getAuthErrorMessage } from "@/services/authErrors";
 import { setPendingRegistration } from "@/services/pendingRegistration";
-import { sendOTP } from "@/services/otpService";
+import { requestRegistrationOtp } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
 import GoogleButton from "@/components/auth/GoogleButton";
@@ -164,7 +164,7 @@ export default function SignupPage() {
 
     setIsSubmitting(true);
     try {
-      setPendingRegistration({
+      const payload = {
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
         email,
@@ -176,8 +176,10 @@ export default function SignupPage() {
         ...(form.accountType === "business"
           ? { businessName: form.businessName.trim() }
           : {}),
-      });
-      await sendOTP(email, "register");
+      };
+
+      setPendingRegistration(payload);
+      await requestRegistrationOtp(payload);
       router.push(
         `/verify-otp?email=${encodeURIComponent(email)}&flow=register`,
       );
