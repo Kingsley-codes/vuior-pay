@@ -27,6 +27,40 @@ input {
   font: inherit;
 }
 
+.vuior-phone-input {
+  --react-international-phone-height: 43px;
+  --react-international-phone-border-radius: 5px;
+  --react-international-phone-border-color: #d9e4e1;
+  --react-international-phone-background-color: #fff;
+  --react-international-phone-text-color: #07142d;
+  --react-international-phone-font-size: 14px;
+  --react-international-phone-selected-dropdown-item-background-color: #edf9f5;
+  --react-international-phone-selected-dropdown-item-text-color: #07142d;
+  --react-international-phone-dropdown-shadow: 0 14px 35px #153c3020;
+  width: 100%;
+}
+
+.vuior-phone-input:focus-within {
+  border-radius: 5px;
+  box-shadow: 0 0 0 3px #00a47512;
+}
+
+.vuior-phone-input .react-international-phone-country-selector-button {
+  width: 64px;
+}
+
+.vuior-phone-input .react-international-phone-country-selector-dropdown {
+  z-index: 40;
+  border: 1px solid #dfe9e6;
+  border-radius: 8px;
+}
+
+.vuior-phone-input .react-international-phone-input {
+  width: 100%;
+  flex: 1;
+  padding-inline: 14px;
+}
+
 @media (min-width: 1024px) {
   .dashboard-app [class~="text-[8px]"],
   .dashboard-app [class~="text-[9px]"] {

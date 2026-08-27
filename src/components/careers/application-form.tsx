@@ -2,40 +2,20 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import {
-  AsYouType,
-  getCountries,
-  getCountryCallingCode,
-  parsePhoneNumberFromString,
-  type CountryCode,
-} from "libphonenumber-js";
+import { PhoneInput } from "react-international-phone";
 import type { JobDescription } from "@/data/jobs";
 
 const fieldClass =
   "w-full rounded-[5px] border border-[#d9e4e1] bg-white px-3.5 text-[11px] text-[#07142d] outline-none focus:border-[#009268] focus:shadow-[0_0_0_3px_#00a47512] min-[901px]:text-[14px] max-[620px]:text-[14px]";
-const countries = getCountries();
-
-function cleanPhoneInput(value: string) {
-  return value.replace(/[^\d()+\-.\s]/g, "");
-}
-
-function formatPhoneInput(value: string, country: CountryCode) {
-  return new AsYouType(country).input(cleanPhoneInput(value));
-}
 
 export function JobApplicationForm({ job }: { job: JobDescription }) {
   const [submitted, setSubmitted] = useState(false);
-  const [country, setCountry] = useState<CountryCode>("US");
   const [phone, setPhone] = useState("");
-
-  const phoneNumber = parsePhoneNumberFromString(phone, country);
-  const normalizedPhone = phoneNumber?.isPossible() ? phoneNumber.number : phone;
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
     event.currentTarget.reset();
-    setCountry("US");
     setPhone("");
   }
 
@@ -79,42 +59,20 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
 
       <div className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
         Phone number
-        <div className="grid grid-cols-[150px_1fr] gap-3 max-[620px]:grid-cols-1">
-          <select
-            className={`${fieldClass} h-[43px]`}
-            value={country}
-            onChange={(event) => {
-              const nextCountry = event.target.value as CountryCode;
-              setCountry(nextCountry);
-              setPhone((current) => formatPhoneInput(current, nextCountry));
-            }}
-            aria-label="Phone country"
-          >
-            {countries.map((item) => (
-              <option key={item} value={item}>
-                {item} +{getCountryCallingCode(item)}
-              </option>
-            ))}
-          </select>
-          <input
-            className={`${fieldClass} h-[43px]`}
-            inputMode="tel"
-            name="phoneDisplay"
-            onChange={(event) =>
-              setPhone(formatPhoneInput(event.target.value, country))
-            }
-            onKeyDown={(event) => {
-              if (event.key.length === 1 && !/[\d()+\-.\s]/.test(event.key)) {
-                event.preventDefault();
-              }
-            }}
-            placeholder={`+${getCountryCallingCode(country)}`}
-            required
-            type="tel"
-            value={phone}
-          />
-        </div>
-        <input name="phone" type="hidden" value={normalizedPhone} />
+        <PhoneInput
+          className="vuior-phone-input"
+          defaultCountry="us"
+          forceDialCode
+          inputProps={{
+            autoComplete: "tel",
+            inputMode: "tel",
+          }}
+          name="phone"
+          onChange={setPhone}
+          placeholder="Enter phone number"
+          required
+          value={phone}
+        />
       </div>
 
       <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
