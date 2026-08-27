@@ -8,7 +8,7 @@ export function SiteFooter() {
     "mb-1 text-[11px] text-white min-[901px]:mb-[5px] min-[901px]:text-[14px] max-[620px]:text-[13px]";
   const linkClass = "transition hover:text-[#76e1bc]";
   const socialLinkClass =
-    "grid h-5 w-5 place-items-center transition hover:text-[#76e1bc] [&_svg]:h-4 [&_svg]:w-4";
+    "grid h-6 w-6 place-items-center transition hover:text-[#76e1bc] min-[901px]:h-8 min-[901px]:w-8 [&_svg]:h-5 [&_svg]:w-5 min-[901px]:[&_svg]:h-6 min-[901px]:[&_svg]:w-6";
 
   return (
     <footer className="border-t border-[#dbe9e4] bg-[#003f35] pt-8 text-white">
