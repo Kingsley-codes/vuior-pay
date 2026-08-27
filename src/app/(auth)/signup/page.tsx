@@ -10,7 +10,6 @@ import {
   EyeOff,
   LockKeyhole,
   Mail,
-  Phone,
   UserRound,
 } from "lucide-react";
 import { continueWithGoogle } from "@/services/authService";
@@ -20,7 +19,8 @@ import { requestRegistrationOtp } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
 import GoogleButton from "@/components/auth/GoogleButton";
-import { formatUSPhone, usPhoneDigits } from "@/utils/inputFormatting";
+import PhoneNumberInput from "@/components/phone-number-input";
+import { hasCompletePhoneNumber } from "@/utils/inputFormatting";
 
 const checkboxClass =
   "grid h-4 w-4 shrink-0 cursor-pointer appearance-none place-content-center rounded border-[1.5px] border-[#cfd5df] bg-white before:mt-[-2px] before:h-1.5 before:w-2.5 before:origin-center before:rotate-[-45deg] before:scale-0 before:border-b-2 before:border-l-2 before:border-white before:transition-transform before:duration-150 before:content-[''] checked:border-[#00a968] checked:bg-[#00a968] checked:before:scale-100 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-[rgba(0,169,104,0.13)]";
@@ -63,11 +63,8 @@ function validateForm(form: SignupForm) {
     errors.email = "Email is invalid";
   }
 
-  const phoneDigits = usPhoneDigits(form.phone);
-  if (!phoneDigits) {
+  if (!hasCompletePhoneNumber(form.phone)) {
     errors.phone = "Phone number is required";
-  } else if (!/^\d{10}$/.test(phoneDigits)) {
-    errors.phone = "Enter a valid 10-digit U.S. phone number";
   }
 
   if (!form.dob.trim()) {
@@ -169,7 +166,7 @@ export default function SignupPage() {
         lastName: form.lastName.trim(),
         email,
         password: form.password,
-        phoneCountry: "+1",
+        phoneCountry: "",
         phoneLocal: form.phone,
         dob: form.dob,
         accountType: form.accountType,
@@ -293,20 +290,26 @@ export default function SignupPage() {
           required
         />
 
-        <AuthInput
-          label="Phone number"
-          type="tel"
-          name="phone"
-          placeholder="(555) 123-4567"
-          autoComplete="tel"
-          value={form.phone}
-          onChange={(event) =>
-            updateField("phone", formatUSPhone(event.target.value))
-          }
-          error={errors.phone}
-          icon={<Phone size={21} strokeWidth={1.8} />}
-          required
-        />
+        <label className="block">
+          <span className="mb-2 block text-[14px] font-semibold text-[#16234c]">
+            Phone number
+          </span>
+          <PhoneNumberInput
+            className={`vuior-phone-input--auth ${
+              errors.phone ? "vuior-phone-input--error" : ""
+            }`}
+            name="phone"
+            onChange={(value) => updateField("phone", value)}
+            placeholder="Enter phone number"
+            required
+            value={form.phone}
+          />
+          {errors.phone ? (
+            <span className="mt-1.5 block text-[11px] text-[#e11d48]">
+              {errors.phone}
+            </span>
+          ) : null}
+        </label>
 
         <AuthInput
           label="Date of birth"

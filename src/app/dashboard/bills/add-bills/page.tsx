@@ -9,15 +9,18 @@ import {
   CircleDollarSign,
   FileText,
   Hash,
+  Phone,
   RefreshCcw,
   Tag,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import PhoneNumberInput from "@/components/phone-number-input";
 import { db } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import {
   currencyInputNumber,
   formatCurrencyInput,
+  normalizeInternationalPhone,
 } from "@/utils/inputFormatting";
 
 function publicId() {
@@ -38,6 +41,7 @@ export default function AddBillPage() {
     amount: "",
     dueDate: "",
     accountNumber: "",
+    providerPhoneNumber: "",
     frequency: "Monthly",
     autoPay: false,
     notes: "",
@@ -78,6 +82,8 @@ export default function AddBillPage() {
         autoPay: form.autoPay,
         isDeleted: false,
         accountNumber: form.accountNumber.trim(),
+        providerPhoneNumber:
+          normalizeInternationalPhone(form.providerPhoneNumber) || null,
         frequency: form.frequency,
         notes: form.notes.trim() || null,
         created_at: Timestamp.now(),
@@ -175,6 +181,14 @@ export default function AddBillPage() {
                 value={form.accountNumber}
                 onChange={(e) => update("accountNumber", e.target.value)}
                 placeholder="From your bill"
+              />
+            </Field>
+            <Field label="Provider phone" icon={<Phone size={18} />}>
+              <PhoneNumberInput
+                className="vuior-phone-input--embedded"
+                value={form.providerPhoneNumber}
+                onChange={(value) => update("providerPhoneNumber", value)}
+                placeholder="Enter provider phone"
               />
             </Field>
             <Field label="Frequency" icon={<RefreshCcw size={18} />}>

@@ -23,11 +23,13 @@ import {
   Upload,
   X,
 } from "lucide-react";
+import PhoneNumberInput from "@/components/phone-number-input";
 import { db, storage } from "@/services/firebase";
 import type { Bill } from "@/hooks/useVuiorData";
 import {
   currencyInputNumber,
   formatCurrencyInput,
+  normalizeInternationalPhone,
 } from "@/utils/inputFormatting";
 
 type Mode = "add" | "details" | "edit";
@@ -37,6 +39,7 @@ type FormState = {
   amount: string;
   dueDate: string;
   accountNumber: string;
+  providerPhoneNumber: string;
   frequency: string;
   autoPay: boolean;
   notes: string;
@@ -51,6 +54,7 @@ const emptyForm: FormState = {
   amount: "",
   dueDate: "",
   accountNumber: "",
+  providerPhoneNumber: "",
   frequency: "Monthly",
   autoPay: false,
   notes: "",
@@ -135,6 +139,9 @@ export default function BillModal({
           amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
           accountNumber: bill.accountNumber || "",
+          providerPhoneNumber: normalizeInternationalPhone(
+            bill.providerPhoneNumber || "",
+          ),
           frequency: bill.frequency || "Monthly",
           autoPay: bill.autoPay,
           notes: bill.notes || "",
@@ -243,6 +250,8 @@ export default function BillModal({
         due_date: due,
         dueDate: due,
         accountNumber: form.accountNumber.trim(),
+        providerPhoneNumber:
+          normalizeInternationalPhone(form.providerPhoneNumber) || null,
         frequency: form.frequency,
         autoPay: form.autoPay,
         notes: form.notes.trim() || null,
@@ -519,6 +528,14 @@ export default function BillModal({
                   value={form.accountNumber}
                   onChange={(e) => update("accountNumber", e.target.value)}
                   placeholder="Account or reference number"
+                />
+              </Field>
+              <Field label="Provider phone">
+                <PhoneNumberInput
+                  className="vuior-phone-input--modal"
+                  value={form.providerPhoneNumber}
+                  onChange={(value) => update("providerPhoneNumber", value)}
+                  placeholder="Enter provider phone"
                 />
               </Field>
               <Field label="Frequency">

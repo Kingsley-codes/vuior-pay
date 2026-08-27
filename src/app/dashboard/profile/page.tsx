@@ -15,7 +15,12 @@ import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
-import { formatUSPhone, parseUsAddress, US_STATES } from "@/utils/profile";
+import PhoneNumberInput from "@/components/phone-number-input";
+import { parseUsAddress, US_STATES } from "@/utils/profile";
+import {
+  hasCompletePhoneNumber,
+  normalizeInternationalPhone,
+} from "@/utils/inputFormatting";
 
 const latestBirthDate = (() => {
   const date = new Date();
@@ -51,7 +56,7 @@ export function ProfileSettingsPanel() {
     setForm({
       firstName: user.firstName,
       lastName: user.lastName,
-      phoneNo: formatUSPhone(user.phoneNo || ""),
+      phoneNo: normalizeInternationalPhone(user.phoneNo || ""),
       dob: user.dob || "",
       ...address,
     });
@@ -118,11 +123,10 @@ export function ProfileSettingsPanel() {
       });
     if (!US_STATES.some(([code]) => code === form.stateCode))
       return setFeedback({ tone: "error", text: "Select a valid U.S. state." });
-    const phoneDigits = form.phoneNo.replace(/\D/g, "");
-    if (phoneDigits.length !== 10)
+    if (!hasCompletePhoneNumber(form.phoneNo))
       return setFeedback({
         tone: "error",
-        text: "Enter a valid 10-digit U.S. or Canadian phone number.",
+        text: "Enter a complete phone number.",
       });
     if (form.dob < "1930-01-01" || form.dob > latestBirthDate)
       return setFeedback({
@@ -135,7 +139,7 @@ export function ProfileSettingsPanel() {
       await updateDoc(doc(db, "users", user.id), {
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
-        phoneNo: `+1 ${phoneDigits}`,
+        phoneNo: normalizeInternationalPhone(form.phoneNo),
         dob: form.dob,
         address: `${form.addressLine.trim()}, ${form.city.trim()}, ${form.stateCode}`,
         addressUpdatedAt: serverTimestamp(),
@@ -253,13 +257,11 @@ export function ProfileSettingsPanel() {
               />
             </Field>
             <Field label="Phone number" icon={<Phone size={16} />}>
-              <input
+              <PhoneNumberInput
+                className="vuior-phone-input--embedded"
                 value={form.phoneNo}
-                onChange={(e) =>
-                  setField("phoneNo", formatUSPhone(e.target.value))
-                }
-                inputMode="tel"
-                placeholder="(555) 123-4567"
+                onChange={(value) => setField("phoneNo", value)}
+                placeholder="Enter phone number"
                 required
               />
             </Field>

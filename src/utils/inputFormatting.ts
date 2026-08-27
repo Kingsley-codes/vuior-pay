@@ -15,6 +15,22 @@ export function currencyInputNumber(value: string) {
   return Number(value.replace(/,/g, "")) || 0;
 }
 
+export function phoneDigits(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+export function hasCompletePhoneNumber(value: string) {
+  return phoneDigits(value).length >= 8;
+}
+
+export function normalizeInternationalPhone(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  const digits = phoneDigits(trimmed);
+  if (!digits) return "";
+  return trimmed.startsWith("+") ? `+${digits}` : digits;
+}
+
 export function formatUSPhone(value: string) {
   let digits = value.replace(/\D/g, "");
   if (digits.length > 10 && digits.startsWith("1")) digits = digits.slice(1);

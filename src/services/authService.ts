@@ -13,6 +13,7 @@ import { extractErrorInfo } from "./authErrors";
 import { logAuditEvent } from "./auditLog";
 import { assertFirebaseConfig, auth, db, googleProvider } from "./firebase";
 import type { RegisterPayload } from "./pendingRegistration";
+import { normalizeInternationalPhone } from "@/utils/inputFormatting";
 
 const DEFAULT_AVATAR =
   "https://ui-avatars.com/api/?name=Vuior+User&background=00a968&color=fff";
@@ -119,8 +120,11 @@ export async function registerUser(payload: RegisterPayload) {
       payload.password,
     );
 
-    const phoneNo =
-      `${payload.phoneCountry.trim()} ${payload.phoneLocal.replace(/\D/g, "")}`.trim();
+    const phoneNo = normalizeInternationalPhone(
+      payload.phoneLocal.trim().startsWith("+")
+        ? payload.phoneLocal
+        : `${payload.phoneCountry.trim()} ${payload.phoneLocal.trim()}`,
+    );
 
     await setDoc(doc(db, "users", credential.user.uid), {
       user_ID: generatePublicId("VPU"),
