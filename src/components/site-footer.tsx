@@ -26,10 +26,10 @@ export function SiteFooter() {
             <br />
             credits for a smarter financial life.
           </p>
-          <div
-            className="mt-4 flex items-center gap-[18px] text-white"
-            aria-label="Social media"
-          >
+          <p className="mt-4 mb-2 text-[10px] font-bold text-white min-[901px]:text-[13px] max-[620px]:text-[13px]">
+            Follow us on
+          </p>
+          <div className="flex items-center gap-[18px] text-white" aria-label="Social media">
             <a className={socialLinkClass} href="#" aria-label="Facebook">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M14 8.5V6.75c0-.5.4-.9.9-.9h1.6V3h-2.3C11.7 3 10 4.7 10 7.2v1.3H8v3h2V21h3.2v-9.5h2.5l.4-3H13.2Z" />
