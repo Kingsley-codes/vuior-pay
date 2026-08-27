@@ -7,14 +7,34 @@ import type { JobDescription } from "@/data/jobs";
 
 const fieldClass =
   "w-full rounded-[5px] border border-[#d9e4e1] bg-white px-3.5 text-[11px] text-[#07142d] outline-none focus:border-[#009268] focus:shadow-[0_0_0_3px_#00a47512] min-[901px]:text-[14px] max-[620px]:text-[14px]";
+type FormStatus = {
+  type: "success" | "error";
+  title: string;
+  message: string;
+};
 
 export function JobApplicationForm({ job }: { job: JobDescription }) {
-  const [submitted, setSubmitted] = useState(false);
   const [phone, setPhone] = useState("");
+  const [status, setStatus] = useState<FormStatus | null>(null);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+
+    if (phone.replace(/\D/g, "").length < 8) {
+      setStatus({
+        type: "error",
+        title: "Application not submitted",
+        message: "Please enter a complete phone number before submitting.",
+      });
+      return;
+    }
+
+    setStatus({
+      type: "success",
+      title: "Application submitted",
+      message:
+        "Thanks for applying. Our careers team will review your details. No confirmation email was sent.",
+    });
     event.currentTarget.reset();
     setPhone("");
   }
@@ -68,7 +88,12 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
             inputMode: "tel",
           }}
           name="phone"
-          onChange={setPhone}
+          onChange={(value) => {
+            setPhone(value);
+            if (status) {
+              setStatus(null);
+            }
+          }}
           placeholder="Enter phone number"
           required
           value={phone}
@@ -120,19 +145,32 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         </span>
       </label>
 
+      {status ? (
+        <div
+          className={`mt-6 rounded-[9px] border px-4 py-3 text-[13px] leading-6 ${
+            status.type === "success"
+              ? "border-[#b9e7d8] bg-[#f0fbf6] text-[#075b45]"
+              : "border-[#f0c9c9] bg-[#fff5f5] text-[#8a1f1f]"
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          <strong className="block text-[14px]">{status.title}</strong>
+          {status.message}
+        </div>
+      ) : null}
+
       <button
         className="mt-[24px] h-[44px] w-full cursor-pointer rounded-[5px] border-0 bg-linear-to-br from-[#00a475] to-[#00815c] text-[12px] font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] max-[620px]:text-[14px]"
         type="submit"
       >
-        {submitted ? "Application received" : "Submit application"}
+        Submit application
       </button>
       <p
         className="mt-4 text-center text-[9px] text-[#748093] min-[901px]:text-[12px] max-[620px]:text-[13px]"
         aria-live="polite"
       >
-        {submitted
-          ? "Thanks for applying. No confirmation email was sent."
-          : "Your information is reviewed by the Vuior careers team."}
+        Your information is reviewed by the Vuior careers team.
       </p>
     </form>
   );
