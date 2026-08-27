@@ -27,7 +27,7 @@ const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
-type Tab = "Upcoming" | "Scheduled" | "Paid" | "Overdue";
+type Tab = "Upcoming" | "Paid" | "Overdue";
 
 function dueDays(value: string) {
   const due = new Date(value);
@@ -56,13 +56,13 @@ export default function BillsPage() {
   const { bills, activeBills } = useVuiorData(user?.id);
   const [tab, setTab] = useState<Tab>("Upcoming");
   const [category, setCategory] = useState("All Categories");
-  const [frequency, setFrequency] = useState("All Frequencies");
   const [status, setStatus] = useState("All Statuses");
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState<{
     mode: "add" | "details";
     bill?: Bill;
   } | null>(null);
+  const [infoModal, setInfoModal] = useState<"savings" | "autopay" | null>(null);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("addBill") === "1") {
@@ -75,10 +75,6 @@ export default function BillsPage() {
   const categories = [
     "All Categories",
     ...Array.from(new Set(bills.map((bill) => bill.category))).filter(Boolean),
-  ];
-  const frequencies = [
-    "All Frequencies",
-    ...Array.from(new Set(bills.map((bill) => bill.frequency))).filter(Boolean),
   ];
   const now = new Date();
   const dueThisMonth = activeBills.filter((bill) => {
@@ -97,15 +93,12 @@ export default function BillsPage() {
           const matchesTab =
             tab === "Upcoming"
               ? ["active", "upcoming"].includes(billStatus) && days >= 0
-              : tab === "Scheduled"
-                ? bill.autoPay && ["active", "upcoming"].includes(billStatus)
-                : tab === "Paid"
+              : tab === "Paid"
                   ? ["in review", "paid", "completed"].includes(billStatus)
                   : days < 0 && ["active", "upcoming"].includes(billStatus);
           return (
             matchesTab &&
             (category === "All Categories" || bill.category === category) &&
-            (frequency === "All Frequencies" || bill.frequency === frequency) &&
             (status === "All Statuses" ||
               billStatus === status.toLowerCase()) &&
             `${bill.name} ${bill.category}`
@@ -114,7 +107,7 @@ export default function BillsPage() {
           );
         })
         .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate)),
-    [bills, category, frequency, search, status, tab],
+    [bills, category, search, status, tab],
   );
 
   async function toggleAutopay(id: string, enabled: boolean) {
@@ -194,7 +187,7 @@ export default function BillsPage() {
           })}
         </section>
 
-        <div className="mt-6 grid gap-5 xl:grid-cols-[minmax(0,1fr)_292px]">
+        <div className="mt-6">
           <div className="min-w-0 space-y-5">
             <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">
               <span className="grid h-12 w-12 place-items-center rounded-full border-[5px] border-[#a9e3cd] bg-white text-[#00a96b]">
@@ -209,14 +202,17 @@ export default function BillsPage() {
                   eligible bills.
                 </p>
               </div>
-              <button className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]">
+              <button onClick={() => setInfoModal("savings")} className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]">
                 How it works <ChevronRight className="ml-2 inline" size={14} />
+              </button>
+              <button onClick={() => setInfoModal("autopay")} className="h-10 rounded-md border border-[#d5e5df] bg-white px-5 text-[11px] font-semibold text-[#274b43]">
+                Autopay guide
               </button>
             </section>
 
             <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
               <div className="flex overflow-x-auto border-b border-[#e7ecea] px-3 sm:px-5">
-                {(["Upcoming", "Scheduled", "Paid", "Overdue"] as Tab[]).map(
+                {(["Upcoming", "Paid", "Overdue"] as Tab[]).map(
                   (item) => (
                     <button
                       key={item}
@@ -228,16 +224,11 @@ export default function BillsPage() {
                   ),
                 )}
               </div>
-              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_1fr_auto]">
+              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_auto]">
                 <Filter
                   value={category}
                   onChange={setCategory}
                   options={categories}
-                />
-                <Filter
-                  value={frequency}
-                  onChange={setFrequency}
-                  options={frequencies}
                 />
                 <Filter
                   value={status}
@@ -247,7 +238,6 @@ export default function BillsPage() {
                     "Active",
                     "In Review",
                     "Paid",
-                    "Completed",
                   ]}
                 />
                 <button
@@ -573,7 +563,7 @@ export default function BillsPage() {
             </section>
           </div>
 
-          <aside className="space-y-5">
+          <aside className="hidden">
             <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
               <div className="flex items-center gap-3">
                 <span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
@@ -639,8 +629,20 @@ export default function BillsPage() {
           onClose={() => setModal(null)}
         />
       ) : null}
+      {infoModal ? <InfoModal kind={infoModal} onClose={() => setInfoModal(null)} /> : null}
     </DashboardShell>
   );
+}
+
+function InfoModal({ kind, onClose }: { kind: "savings" | "autopay"; onClose: () => void }) {
+  const isSavings = kind === "savings";
+  return <div className="fixed inset-0 z-50 grid place-items-center bg-[#07142d]/55 p-4" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+    <section role="dialog" aria-modal="true" aria-labelledby="bills-info-title" className="w-full max-w-[460px] rounded-2xl bg-white p-6 shadow-2xl">
+      <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#009b67]">Bills guide</p><h2 id="bills-info-title" className="mt-1 text-[20px] font-bold">{isSavings ? "Maximize Your Savings" : "Autopay Made Simple"}</h2></div><button onClick={onClose} aria-label="Close" className="grid h-8 w-8 place-items-center rounded-full bg-[#f1f4f3]​">×</button></div>
+      {isSavings ? <><p className="mt-4 text-[12px] leading-5 text-[#65728a]">Pay eligible bills before their due date to earn Vuior credits.</p><div className="mt-4 divide-y divide-[#edf1ef]">{[["1–3 days early", "+2%"], ["4–7 days early", "+5%"], ["8–14 days early", "+10%"], ["15+ days early", "+15%"]].map(([label, reward]) => <div key={label} className="flex justify-between py-3 text-[12px]"><span>{label}</span><strong className="text-[#009b67]">{reward}</strong></div>)}</div></> : <><p className="mt-4 text-[12px] leading-5 text-[#65728a]">Enable autopay for an individual bill and Vuior will charge it on the due date using your saved payment method.</p><ul className="mt-4 space-y-3 text-[12px] text-[#53617a]"><li>• Turn it on or off anytime from the bill list.</li><li>• Your payment method and transaction remain securely recorded.</li><li>• Eligible early-pay rewards still apply when available.</li></ul></>}
+      <button onClick={onClose} className="mt-6 h-10 w-full rounded-lg bg-[#009b67] text-[12px] font-semibold text-white">Got it</button>
+    </section>
+  </div>;
 }
 
 function Filter({

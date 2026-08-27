@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   ArrowDownLeft,
-  ArrowRight,
   ArrowUpRight,
   CalendarCheck2,
   CircleDollarSign,
@@ -11,11 +10,7 @@ import {
   FilePlus2,
   FileText,
   History,
-  Lightbulb,
   Plus,
-  RefreshCcw,
-  ShieldCheck,
-  TrendingUp,
   UsersRound,
   WalletCards,
 } from "lucide-react";
@@ -106,14 +101,7 @@ export default function DashboardPage() {
             </div>
           </section>
 
-          <div className="space-y-5">
-            <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><TrendingUp size={20} /></span><h2 className="text-[14px] font-bold">Maximize Your Savings</h2></div><p className="mt-4 text-[11px] leading-5 text-[#65728a]">Pay early and earn credits on eligible bills.</p><div className="mt-3 divide-y divide-[#edf1ef]">{[["1 – 3 days early", "+2%"], ["4 – 7 days early", "+5%"], ["8 – 14 days early", "+10%"], ["15+ days early", "+15%"]].map(([label, reward]) => <div key={label} className="flex items-center gap-3 py-3"><span className="grid h-7 w-7 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><CalendarCheck2 size={14} /></span><span className="flex-1 text-[11px] font-medium">{label}</span><strong className="text-[14px] text-[#00a96b]">{reward}</strong></div>)}</div></section>
-            <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><div className="flex items-center gap-3"><RefreshCcw className="text-[#00a96b]" size={19} /><h2 className="text-[14px] font-bold">Autopay</h2></div><div className="mt-4 space-y-2.5 text-[10px] text-[#66738b]"><p className="flex gap-2"><ShieldCheck size={14} className="text-[#00a96b]" /> Secure and convenient</p><p className="flex gap-2"><Lightbulb size={14} className="text-[#00a96b]" /> Turn it on or off anytime</p></div><Link href="/dashboard/bills" className="mt-4 flex h-9 items-center justify-center rounded-md border border-[#00a96b] text-[10px] font-semibold text-[#00a96b]">Manage Autopay <ArrowRight size={13} className="ml-2" /></Link></section>
-          </div>
-        </div>
-        <div className="mt-5 grid gap-5 xl:grid-cols-[1.7fr_1fr]">
-          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><div className="flex items-center justify-between"><div><h2 className="text-[14px] font-bold">Spending Overview <span className="font-normal text-[#65728a]">(Last 30 Days)</span></h2><div className="mt-3 flex gap-6 text-[9px]"><span className="flex items-center gap-2"><i className="h-2 w-2 rounded-full bg-[#00a96b]"/> Payments</span><span className="flex items-center gap-2"><i className="h-px w-5 bg-[#71d3ae]"/> Added Funds</span></div></div><span className="rounded-md border border-[#dfe6e4] px-3 py-2 text-[9px]">Monthly</span></div><svg viewBox="0 0 760 150" className="mt-2 h-[150px] w-full" role="img" aria-label="Monthly spending overview"><defs><linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#00a96b" stopOpacity=".22"/><stop offset="1" stopColor="#00a96b" stopOpacity="0"/></linearGradient></defs>{[30,70,110].map(y => <line key={y} x1="30" x2="745" y1={y} y2={y} stroke="#edf1ef"/>)}<path d="M30 125 C100 120 115 120 145 78 S205 93 245 62 S310 45 355 21 S405 16 435 72 S495 113 545 110 S630 119 745 123 L745 140 L30 140Z" fill="url(#spendFill)"/><path d="M30 125 C100 120 115 120 145 78 S205 93 245 62 S310 45 355 21 S405 16 435 72 S495 113 545 110 S630 119 745 123" fill="none" stroke="#00a96b" strokeWidth="2.5"/><path d="M30 100 C75 75 115 110 155 82 S220 105 285 103 S360 108 420 100 S500 42 545 84 S625 60 680 87 S720 90 745 91" fill="none" stroke="#75d3b0" strokeDasharray="9 8" strokeWidth="2"/></svg></section>
-          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><h2 className="text-[14px] font-bold">Referral & Credits</h2><div className="mt-5 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><UsersRound size={27}/></span><div className="flex-1"><p className="text-[9px] text-[#65728a]">Your Referral Code</p><div className="mt-2 rounded-md bg-[#eaf8f2] px-4 py-2 text-[15px] font-bold text-[#00a96b]">{user?.referralCode || `VUIOR-${(user?.firstName || "USER").toUpperCase()}`}</div></div></div><div className="mt-5 flex items-end justify-between"><div><p className="text-[9px] text-[#65728a]">Total Referral Bonus</p><strong className="mt-1 block text-[16px] text-[#00a96b]">{money.format(Number(user?.referralBonus ?? 0))}</strong></div><Link href="/dashboard/referrals" className="flex h-9 items-center rounded-md border border-[#00a96b] px-5 text-[10px] font-semibold text-[#00a96b]">Share code</Link></div></section>
+          <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]"><h2 className="text-[14px] font-bold">Referral & Credits</h2><div className="mt-5 flex items-center gap-4"><span className="grid h-14 w-14 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><UsersRound size={27}/></span><div className="min-w-0 flex-1"><p className="text-[9px] text-[#65728a]">Your Referral Code</p><div className="mt-2 truncate rounded-md bg-[#eaf8f2] px-4 py-2 text-[15px] font-bold text-[#00a96b]">{user?.referralCode || `VUIOR-${(user?.firstName || "USER").toUpperCase()}`}</div></div></div><div className="mt-5 flex items-end justify-between"><div><p className="text-[9px] text-[#65728a]">Total Referral Bonus</p><strong className="mt-1 block text-[16px] text-[#00a96b]">{money.format(Number(user?.referralBonus ?? 0))}</strong></div><Link href="/dashboard/referrals" className="flex h-9 items-center rounded-md border border-[#00a96b] px-5 text-[10px] font-semibold text-[#00a96b]">Share code</Link></div></section>
         </div>
       </div>
     </DashboardShell>

@@ -40,7 +40,6 @@ type FormState = {
   dueDate: string;
   accountNumber: string;
   providerPhoneNumber: string;
-  frequency: string;
   autoPay: boolean;
   notes: string;
 };
@@ -55,7 +54,6 @@ const emptyForm: FormState = {
   dueDate: "",
   accountNumber: "",
   providerPhoneNumber: "",
-  frequency: "Monthly",
   autoPay: false,
   notes: "",
 };
@@ -142,7 +140,6 @@ export default function BillModal({
           providerPhoneNumber: normalizeInternationalPhone(
             bill.providerPhoneNumber || "",
           ),
-          frequency: bill.frequency || "Monthly",
           autoPay: bill.autoPay,
           notes: bill.notes || "",
         }
@@ -252,7 +249,6 @@ export default function BillModal({
         accountNumber: form.accountNumber.trim(),
         providerPhoneNumber:
           normalizeInternationalPhone(form.providerPhoneNumber) || null,
-        frequency: form.frequency,
         autoPay: form.autoPay,
         notes: form.notes.trim() || null,
         documentUrl,
@@ -491,28 +487,38 @@ export default function BillModal({
                 >
                   {[
                     "Utilities",
-                    "Internet",
+                    "Transportation",
+                    "Internet & Phone",
+                    "Loans",
+                    "Education",
+                    "Subscriptions",
                     "Insurance",
-                    "Entertainment",
-                    "Rent",
-                    "Phone",
-                    "Medical",
-                    "Other",
+                    "Business",
+                    "Housing",
+                    "Credit Card",
+                    "Healthcare",
+                    "Custom",
                   ].map((item) => (
                     <option key={item}>{item}</option>
                   ))}
                 </select>
               </Field>
               <Field label="Amount">
-                <input
-                  required
-                  inputMode="decimal"
-                  value={form.amount}
-                  onChange={(e) =>
-                    update("amount", formatCurrencyInput(e.target.value))
-                  }
-                  placeholder="0.00"
-                />
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-3 top-3 text-[12px] text-[#65728a]">
+                    $
+                  </span>
+                  <input
+                    required
+                    inputMode="decimal"
+                    value={form.amount}
+                    onChange={(e) =>
+                      update("amount", formatCurrencyInput(e.target.value))
+                    }
+                    placeholder="0.00"
+                    className="!pl-7"
+                  />
+                </div>
               </Field>
               <Field label="Due date">
                 <input
@@ -525,8 +531,11 @@ export default function BillModal({
               <Field label="Account number">
                 <input
                   required
+                  inputMode="numeric"
                   value={form.accountNumber}
-                  onChange={(e) => update("accountNumber", e.target.value)}
+                  onChange={(e) =>
+                    update("accountNumber", e.target.value.replace(/\D/g, ""))
+                  }
                   placeholder="Account or reference number"
                 />
               </Field>
@@ -537,18 +546,6 @@ export default function BillModal({
                   onChange={(value) => update("providerPhoneNumber", value)}
                   placeholder="Enter provider phone"
                 />
-              </Field>
-              <Field label="Frequency">
-                <select
-                  value={form.frequency}
-                  onChange={(e) => update("frequency", e.target.value)}
-                >
-                  {["Monthly", "Weekly", "Quarterly", "Yearly", "One-time"].map(
-                    (item) => (
-                      <option key={item}>{item}</option>
-                    ),
-                  )}
-                </select>
               </Field>
             </div>
             <Field label="Notes" wide>

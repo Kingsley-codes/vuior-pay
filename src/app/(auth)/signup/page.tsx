@@ -399,14 +399,14 @@ export default function SignupPage() {
           <span>
             I agree to the{" "}
             <Link
-              href="/terms"
+              href="/terms-of-service"
               className="font-medium text-[#009d62] hover:underline"
             >
               Terms of Service
             </Link>{" "}
             and{" "}
             <Link
-              href="/privacy"
+              href="/privacy-policy"
               className="font-medium text-[#009d62] hover:underline"
             >
               Privacy Policy

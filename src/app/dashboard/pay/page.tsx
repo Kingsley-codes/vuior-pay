@@ -333,7 +333,7 @@ export default function PayPage() {
             </div>
           </div>
         </section>
-        <div className="mt-5 inline-flex rounded-lg border border-[#dfe6e4] bg-white p-1">
+        <div className="mt-5 grid w-full grid-cols-2 rounded-lg border border-[#dfe6e4] bg-white p-1">
           {[
             ["bills", "Bills"],
             ["transactions", "Transaction history"],
@@ -341,7 +341,7 @@ export default function PayPage() {
             <button
               key={value}
               onClick={() => setView(value as typeof view)}
-              className={`h-10 rounded-md px-5 text-[12px] font-medium ${view === value ? "bg-[#063f35] text-white" : "text-[#53617a]"}`}
+              className={`h-10 w-full rounded-md px-5 text-[12px] font-medium ${view === value ? "bg-[#063f35] text-white" : "text-[#53617a]"}`}
             >
               {label}
             </button>
