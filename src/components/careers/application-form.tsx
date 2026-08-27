@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { PhoneInput } from "react-international-phone";
 import type { JobDescription } from "@/data/jobs";
@@ -16,6 +16,20 @@ type FormStatus = {
 export function JobApplicationForm({ job }: { job: JobDescription }) {
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<FormStatus | null>(null);
+
+  useEffect(() => {
+    if (!status) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setStatus(null);
+    }, 6500);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [status]);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,10 +54,49 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
   }
 
   return (
-    <form
-      className="rounded-[13px] border border-[#dfe9e6] bg-white/85 px-10 pt-[34px] pb-[25px] shadow-[0_7px_28px_#153c3010] max-[620px]:px-5 max-[620px]:py-7"
-      onSubmit={submit}
-    >
+    <>
+      {status ? (
+        <div
+          className={`fixed right-5 top-5 z-50 w-[min(380px,calc(100vw-40px))] rounded-[10px] border bg-white px-4 py-3 shadow-[0_18px_45px_#12332626] ${
+            status.type === "success"
+              ? "border-[#9edfc9]"
+              : "border-[#efb7b7]"
+          }`}
+          role="alert"
+          aria-live="assertive"
+        >
+          <div className="flex gap-3">
+            <span
+              className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white ${
+                status.type === "success" ? "bg-[#009268]" : "bg-[#c83f3f]"
+              }`}
+            >
+              {status.type === "success" ? "OK" : "!"}
+            </span>
+            <div className="min-w-0 flex-1">
+              <strong className="block text-[14px] text-[#07142d]">
+                {status.title}
+              </strong>
+              <p className="mt-1 text-[13px] leading-5 text-[#657386]">
+                {status.message}
+              </p>
+            </div>
+            <button
+              className="h-6 w-6 shrink-0 rounded text-[18px] leading-none text-[#7b8798] hover:bg-[#f2f6f4]"
+              type="button"
+              aria-label="Dismiss notification"
+              onClick={() => setStatus(null)}
+            >
+              x
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      <form
+        className="rounded-[13px] border border-[#dfe9e6] bg-white/85 px-10 pt-[34px] pb-[25px] shadow-[0_7px_28px_#153c3010] max-[620px]:px-5 max-[620px]:py-7"
+        onSubmit={submit}
+      >
       <div>
         <p className="mb-2 text-[11px] font-extrabold text-[#00895f] max-[620px]:text-[12px]">
           APPLICATION
@@ -172,6 +225,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
       >
         Your information is reviewed by the Vuior careers team.
       </p>
-    </form>
+      </form>
+    </>
   );
 }
