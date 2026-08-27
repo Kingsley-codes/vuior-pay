@@ -13,6 +13,11 @@ type FormStatus = {
   message: string;
 };
 
+function getFieldValue(formData: FormData, name: string) {
+  const value = formData.get(name);
+  return typeof value === "string" ? value.trim() : "";
+}
+
 export function JobApplicationForm({ job }: { job: JobDescription }) {
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<FormStatus | null>(null);
@@ -24,7 +29,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
 
     const timeout = window.setTimeout(() => {
       setStatus(null);
-    }, 6500);
+    }, 5000);
 
     return () => {
       window.clearTimeout(timeout);
@@ -33,6 +38,32 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const firstName = getFieldValue(formData, "firstName");
+    const lastName = getFieldValue(formData, "lastName");
+    const email = getFieldValue(formData, "email");
+    const source = getFieldValue(formData, "source");
+    const resume = formData.get("resume");
+    const hasResume = resume instanceof File && resume.size > 0;
+
+    if (!firstName || !lastName || !email || !source || !hasResume) {
+      setStatus({
+        type: "error",
+        title: "Application not submitted",
+        message: "Please complete all required fields before submitting.",
+      });
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setStatus({
+        type: "error",
+        title: "Application not submitted",
+        message: "Please enter a valid email address before submitting.",
+      });
+      return;
+    }
 
     if (phone.replace(/\D/g, "").length < 8) {
       setStatus({
@@ -49,7 +80,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
       message:
         "Thanks for applying. Our careers team will review your details. No confirmation email was sent.",
     });
-    event.currentTarget.reset();
+    form.reset();
     setPhone("");
   }
 
@@ -57,7 +88,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
     <>
       {status ? (
         <div
-          className={`fixed right-5 top-5 z-50 w-[min(380px,calc(100vw-40px))] rounded-[10px] border bg-white px-4 py-3 shadow-[0_18px_45px_#12332626] ${
+          className={`fixed right-5 top-5 z-[9999] w-[min(420px,calc(100vw-40px))] rounded-[10px] border bg-white px-4 py-3 shadow-[0_18px_45px_#12332626] max-[620px]:right-4 max-[620px]:top-4 max-[620px]:w-[calc(100vw-32px)] ${
             status.type === "success"
               ? "border-[#9edfc9]"
               : "border-[#efb7b7]"
@@ -95,6 +126,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
 
       <form
         className="rounded-[13px] border border-[#dfe9e6] bg-white/85 px-10 pt-[34px] pb-[25px] shadow-[0_7px_28px_#153c3010] max-[620px]:px-5 max-[620px]:py-7"
+        noValidate
         onSubmit={submit}
       >
       <div>
@@ -107,6 +139,20 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         <p className="mb-[25px] text-[11px] leading-[1.65] text-[#667487] min-[901px]:text-[15px] max-[620px]:text-[15px]">
           Share a few details and our team will review your application.
         </p>
+        {status ? (
+          <div
+            className={`mb-6 rounded-[9px] border px-4 py-3 text-[13px] leading-6 ${
+              status.type === "success"
+                ? "border-[#b9e7d8] bg-[#f0fbf6] text-[#075b45]"
+                : "border-[#f0c9c9] bg-[#fff5f5] text-[#8a1f1f]"
+            }`}
+            role="status"
+            aria-live="polite"
+          >
+            <strong className="block text-[14px]">{status.title}</strong>
+            {status.message}
+          </div>
+        ) : null}
       </div>
 
       <div className="grid grid-cols-2 gap-4 max-[620px]:grid-cols-1">
@@ -141,12 +187,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
             inputMode: "tel",
           }}
           name="phone"
-          onChange={(value) => {
-            setPhone(value);
-            if (status) {
-              setStatus(null);
-            }
-          }}
+          onChange={setPhone}
           placeholder="Enter phone number"
           required
           value={phone}
@@ -197,21 +238,6 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
           .
         </span>
       </label>
-
-      {status ? (
-        <div
-          className={`mt-6 rounded-[9px] border px-4 py-3 text-[13px] leading-6 ${
-            status.type === "success"
-              ? "border-[#b9e7d8] bg-[#f0fbf6] text-[#075b45]"
-              : "border-[#f0c9c9] bg-[#fff5f5] text-[#8a1f1f]"
-          }`}
-          role="status"
-          aria-live="polite"
-        >
-          <strong className="block text-[14px]">{status.title}</strong>
-          {status.message}
-        </div>
-      ) : null}
 
       <button
         className="mt-[24px] h-[44px] w-full cursor-pointer rounded-[5px] border-0 bg-linear-to-br from-[#00a475] to-[#00815c] text-[12px] font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] max-[620px]:text-[14px]"
