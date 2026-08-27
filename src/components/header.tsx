@@ -10,7 +10,7 @@ export function Header({
   active,
   wide = false,
 }: {
-  active?: "about" | "contact" | "how" | "faq";
+  active?: "about" | "careers" | "contact" | "how" | "faq";
   wide?: boolean;
 }) {
   const { firebaseUser, loading } = useVuiorSession();
@@ -82,6 +82,9 @@ export function Header({
         </Link>
         <Link className={navLink("about")} href="/about">
           About us
+        </Link>
+        <Link className={navLink("careers")} href="/careers">
+          Careers
         </Link>
         <Link className={navLink("contact")} href="/contact">
           Contact
@@ -156,6 +159,13 @@ export function Header({
             onClick={closeMobileMenu}
           >
             About us <ChevronRight />
+          </Link>
+          <Link
+            className={mobileNavLink("careers")}
+            href="/careers"
+            onClick={closeMobileMenu}
+          >
+            Careers <ChevronRight />
           </Link>
           <Link
             className={mobileNavLink("contact")}
