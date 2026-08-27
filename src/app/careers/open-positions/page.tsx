@@ -7,14 +7,15 @@ import { initialJobs } from "@/data/jobs";
 const selectClass =
   "h-11 rounded-[7px] border border-[#d9e4e1] bg-white px-3 text-[14px] font-semibold text-[#53617a] outline-none focus:border-[#009268]";
 
-export default function OpenPositionsPage({
+export default async function OpenPositionsPage({
   searchParams,
 }: {
-  searchParams?: { department?: string; location?: string; type?: string };
+  searchParams?: Promise<{ department?: string; location?: string; type?: string }>;
 }) {
-  const department = searchParams?.department || "all";
-  const location = searchParams?.location || "all";
-  const type = searchParams?.type || "all";
+  const resolvedSearchParams = await searchParams;
+  const department = resolvedSearchParams?.department || "all";
+  const location = resolvedSearchParams?.location || "all";
+  const type = resolvedSearchParams?.type || "all";
 
   const departments = Array.from(new Set(initialJobs.map((job) => job.department)));
   const locations = Array.from(new Set(initialJobs.map((job) => job.location)));

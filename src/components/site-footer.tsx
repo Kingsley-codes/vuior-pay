@@ -7,6 +7,8 @@ export function SiteFooter() {
   const headingClass =
     "mb-1 text-[11px] text-white min-[901px]:mb-[5px] min-[901px]:text-[14px] max-[620px]:text-[13px]";
   const linkClass = "transition hover:text-[#76e1bc]";
+  const socialLinkClass =
+    "grid h-5 w-5 place-items-center transition hover:text-[#76e1bc] [&_svg]:h-4 [&_svg]:w-4";
 
   return (
     <footer className="border-t border-[#dbe9e4] bg-[#003f35] pt-8 text-white">
@@ -25,20 +27,39 @@ export function SiteFooter() {
             credits for a smarter financial life.
           </p>
           <div
-            className="mt-4 flex gap-[18px] font-bold text-white"
+            className="mt-4 flex items-center gap-[18px] text-white"
             aria-label="Social media"
           >
-            <a className={linkClass} href="#" aria-label="Facebook">
-              f
+            <a className={socialLinkClass} href="#" aria-label="Facebook">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M14 8.5V6.75c0-.5.4-.9.9-.9h1.6V3h-2.3C11.7 3 10 4.7 10 7.2v1.3H8v3h2V21h3.2v-9.5h2.5l.4-3H13.2Z" />
+              </svg>
             </a>
-            <a className={linkClass} href="#" aria-label="Instagram">
-              o
+            <a className={socialLinkClass} href="#" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect
+                  x="4"
+                  y="4"
+                  width="16"
+                  height="16"
+                  rx="4.5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="3.4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <circle cx="16.8" cy="7.2" r="1.1" fill="currentColor" />
+              </svg>
             </a>
-            <a className={linkClass} href="#" aria-label="X">
-              X
-            </a>
-            <a className={linkClass} href="#" aria-label="YouTube">
-              ▶
+            <a className={socialLinkClass} href="#" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M15.2 3c.3 2.3 1.7 3.8 3.8 4v3.1a7 7 0 0 1-3.7-1.1v5.8c0 3.4-2.1 5.9-5.5 5.9A5.1 5.1 0 0 1 4.5 16c0-3 2.3-5.2 5.3-5.2.4 0 .8 0 1.1.1v3.2a3 3 0 0 0-1.1-.2c-1.3 0-2.2.9-2.2 2.1s.9 2.1 2.1 2.1c1.4 0 2.2-.8 2.2-2.5V3Z" />
+              </svg>
             </a>
           </div>
         </div>

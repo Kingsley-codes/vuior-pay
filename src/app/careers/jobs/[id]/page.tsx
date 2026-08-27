@@ -16,8 +16,13 @@ export function generateStaticParams() {
   return initialJobs.map((job) => ({ id: job.id }));
 }
 
-export default function JobDetailsPage({ params }: { params: { id: string } }) {
-  const job = getJobById(params.id);
+export default async function JobDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const job = getJobById(id);
 
   if (!job) {
     notFound();
