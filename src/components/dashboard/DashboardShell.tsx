@@ -182,9 +182,6 @@ export default function DashboardShell({
             );
           })}
         </nav>
-        <div className={`absolute bottom-[82px] right-3 ${collapsed ? "lg:right-[18px]" : ""}`}>
-          <NotificationsMenu userId={user?.id} />
-        </div>
         <div ref={userMenuRef} className="absolute bottom-5 left-3 right-3">
           {userMenuOpen ? (
             <div
@@ -243,17 +240,25 @@ export default function DashboardShell({
           </button>
         </div>
       </aside>
-      <button
-        type="button"
-        aria-label="Open sidebar"
-        onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-30 grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] bg-white shadow-sm lg:hidden"
-      >
-        <Menu size={20} />
-      </button>
       <div
-        className={`min-h-screen pt-14 transition-[padding] duration-300 lg:pt-0 ${collapsed ? "lg:pl-[76px]" : "lg:pl-[260px]"}`}
+        className={`min-h-screen transition-[padding] duration-300 ${collapsed ? "lg:pl-[76px]" : "lg:pl-[260px]"}`}
       >
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e2e8e6] bg-[#f8faf9]/95 px-5 backdrop-blur-sm sm:px-7 lg:px-8">
+          <button
+            type="button"
+            aria-label="Open sidebar"
+            onClick={() => setMobileOpen(true)}
+            className="grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] bg-white text-[#53617a] shadow-sm transition hover:bg-[#f5f8f7] lg:hidden"
+          >
+            <Menu size={20} />
+          </button>
+          <p className="hidden text-[13px] font-medium text-[#718097] lg:block">
+            Your Vuior workspace
+          </p>
+          <div className="ml-auto">
+            <NotificationsMenu userId={user?.id} />
+          </div>
+        </header>
         {children}
       </div>
     </main>
