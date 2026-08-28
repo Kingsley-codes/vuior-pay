@@ -51,6 +51,7 @@ export default function DashboardShell({
 
   const passwordChangePath = "/dashboard/change-password";
   const mustChangePassword = user?.mustChangePassword;
+  const showNotifications = pathname !== "/dashboard/referrals";
 
   useEffect(() => {
     if (!loading && !firebaseUser) router.replace("/login");
@@ -182,6 +183,11 @@ export default function DashboardShell({
             );
           })}
         </nav>
+        {showNotifications ? (
+          <div className="fixed right-5 top-4 z-30">
+            <NotificationsMenu userId={user?.id} />
+          </div>
+        ) : null}
         <div ref={userMenuRef} className="absolute bottom-5 left-3 right-3">
           {userMenuOpen ? (
             <div
@@ -240,26 +246,20 @@ export default function DashboardShell({
           </button>
         </div>
       </aside>
-      <div
-        className={`min-h-screen transition-[padding] duration-300 ${collapsed ? "lg:pl-[76px]" : "lg:pl-[260px]"}`}
+      <button
+        type="button"
+        aria-label="Open sidebar"
+        onClick={() => setMobileOpen(true)}
+        className="fixed left-4 top-4 z-30 grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] bg-white shadow-sm lg:hidden"
       >
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e2e8e6] bg-[#f8faf9]/95 px-5 backdrop-blur-sm sm:px-7 lg:px-8">
-          <button
-            type="button"
-            aria-label="Open sidebar"
-            onClick={() => setMobileOpen(true)}
-            className="grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] bg-white text-[#53617a] shadow-sm transition hover:bg-[#f5f8f7] lg:hidden"
-          >
-            <Menu size={20} />
-          </button>
-          <p className="hidden text-[13px] font-medium text-[#718097] lg:block">
-            Your Vuior workspace
-          </p>
-          <div className="ml-auto">
-            <NotificationsMenu userId={user?.id} />
-          </div>
-        </header>
-        {children}
+        <Menu size={20} />
+      </button>
+      <div
+        className={`min-h-screen pt-14 transition-[padding] duration-300 lg:pt-0 ${collapsed ? "lg:pl-[76px]" : "lg:pl-[260px]"}`}
+      >
+        <div className={showNotifications ? "lg:pr-20" : undefined}>
+          {children}
+        </div>
       </div>
     </main>
   );
