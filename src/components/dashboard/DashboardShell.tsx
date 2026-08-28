@@ -8,14 +8,12 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  CircleHelp,
   Coins,
   FileText,
   Home,
   LogOut,
   Menu,
   Settings,
-  SlidersHorizontal,
   UsersRound,
   WalletCards,
   X,
@@ -23,6 +21,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { auth } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
@@ -241,6 +240,9 @@ export default function DashboardShell({
           </button>
         </div>
       </aside>
+      <div className="fixed right-4 top-4 z-30 lg:right-7 lg:top-6">
+        <NotificationsMenu userId={user?.id} />
+      </div>
       <button
         type="button"
         aria-label="Open sidebar"
