@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import TransactionDetailsModal from "@/components/transactions/TransactionDetailsModal";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import {
@@ -294,12 +295,15 @@ export default function PayPage() {
               Pay bills, follow review progress, and inspect every transaction.
             </p>
           </div>
+          <div className="flex items-center gap-3">
           <Link
             href="/dashboard/bills?addBill=1"
-            className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#009b67] px-4 text-[12px] font-medium text-white sm:mr-16"
+            className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#009b67] px-4 text-[12px] font-medium text-white"
           >
             <Plus size={16} /> Add bill
           </Link>
+          <NotificationsMenu userId={user?.id} />
+          </div>
         </div>
         {result && (
           <div

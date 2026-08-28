@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { LockKeyhole, UserRound } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
+import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { ProfileSettingsPanel } from "@/app/dashboard/profile/page";
 import { SecuritySettingsPanel } from "@/app/dashboard/security/page";
 
@@ -16,6 +18,7 @@ export default function SettingsPage() {
 function SettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useVuiorSession();
   const tab: SettingsTab = searchParams.get("tab") === "security" ? "security" : "profile";
 
   function selectTab(next: SettingsTab) {
@@ -23,7 +26,7 @@ function SettingsContent() {
   }
 
   return <div className="mx-auto max-w-[1100px] px-5 py-8 sm:px-8 lg:py-10">
-    <div className="ml-12 sm:ml-0"><p className="text-[11px] font-bold uppercase tracking-[.16em] text-[#00a36a]">Account</p><h1 className="mt-2 text-2xl font-bold tracking-[-.03em] sm:text-[30px]">Settings</h1><p className="mt-2 text-[13px] text-[#68758d]">Manage your profile information and account security.</p></div>
+    <div className="flex items-start justify-between gap-4"><div className="ml-12 sm:ml-0"><p className="text-[11px] font-bold uppercase tracking-[.16em] text-[#00a36a]">Account</p><h1 className="mt-2 text-2xl font-bold tracking-[-.03em] sm:text-[30px]">Settings</h1><p className="mt-2 text-[13px] text-[#68758d]">Manage your profile information and account security.</p></div><NotificationsMenu userId={user?.id} /></div>
     <div className="mt-7 flex w-fit rounded-lg border border-[#dfe6e4] bg-white p-1 shadow-[0_5px_18px_rgba(25,55,47,.04)]" role="tablist" aria-label="Settings sections">
       <TabButton active={tab === "profile"} onClick={() => selectTab("profile")} icon={<UserRound size={16}/>}>Profile</TabButton>
       <TabButton active={tab === "security"} onClick={() => selectTab("security")} icon={<LockKeyhole size={16}/>}>Security</TabButton>

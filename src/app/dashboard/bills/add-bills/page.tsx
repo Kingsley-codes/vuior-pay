@@ -14,6 +14,7 @@ import {
   Tag,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import PhoneNumberInput from "@/components/phone-number-input";
 import { db } from "@/services/firebase";
 import { searchProviders, storeProvider, type Provider } from "@/services/providerService";
@@ -126,12 +127,15 @@ export default function AddBillPage() {
   return (
     <DashboardShell>
       <div className="mx-auto max-w-[920px] p-5 sm:p-8 lg:p-10">
+        <div className="flex items-center justify-between gap-4">
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-[12px] font-semibold text-[#53637f]"
         >
           <ArrowLeft size={17} /> Back to bills
         </button>
+        <NotificationsMenu userId={user?.id} />
+        </div>
         <div className="mt-6">
           <h1 className="text-[29px] font-bold tracking-[-0.035em]">
             Add a Bill

@@ -15,6 +15,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
 
@@ -59,7 +60,7 @@ export default function DashboardPage() {
   return (
     <DashboardShell>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
-        <div><h1 className="text-[27px] font-bold tracking-[-0.035em] text-[#0d1b42] sm:text-[30px]">Dashboard</h1><p className="mt-1.5 text-[13px] text-[#596885]">Welcome back, {firstName}. Track your bills, payments, credits, and savings in one place.</p></div>
+        <div className="flex items-start justify-between gap-4"><div><h1 className="text-[27px] font-bold tracking-[-0.035em] text-[#0d1b42] sm:text-[30px]">Dashboard</h1><p className="mt-1.5 text-[13px] text-[#596885]">Welcome back, {firstName}. Track your bills, payments, credits, and savings in one place.</p></div><NotificationsMenu userId={user?.id} /></div>
 
         <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map(({ title, value, note, icon: Icon }) => (

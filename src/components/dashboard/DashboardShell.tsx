@@ -21,7 +21,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { auth } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
-import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
@@ -51,7 +50,6 @@ export default function DashboardShell({
 
   const passwordChangePath = "/dashboard/change-password";
   const mustChangePassword = user?.mustChangePassword;
-  const showNotifications = pathname !== "/dashboard/referrals";
 
   useEffect(() => {
     if (!loading && !firebaseUser) router.replace("/login");
@@ -241,11 +239,6 @@ export default function DashboardShell({
           </button>
         </div>
       </aside>
-      {showNotifications ? (
-        <div className="fixed right-5 top-4 z-30">
-          <NotificationsMenu userId={user?.id} />
-        </div>
-      ) : null}
       <button
         type="button"
         aria-label="Open sidebar"

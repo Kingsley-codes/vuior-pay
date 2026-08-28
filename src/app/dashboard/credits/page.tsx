@@ -17,6 +17,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import WalletModal, {
   type WalletAction,
 } from "@/components/credits/WalletModal";
@@ -132,7 +133,8 @@ export default function CreditsPage() {
               Track your earned credits, rewards, and redemption activity.
             </p>
           </div>
-          <div className="flex gap-2 sm:mr-16">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-2">
             <button
               onClick={() => setWalletAction("send")}
               className="flex h-10 items-center gap-2 rounded-md border border-[#009b67] px-4 text-[10px] font-semibold text-[#009b67]"
@@ -145,6 +147,8 @@ export default function CreditsPage() {
             >
               <WalletCards size={15} /> Add funds
             </button>
+            </div>
+            <NotificationsMenu userId={user?.id} />
           </div>
         </div>
         <section className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

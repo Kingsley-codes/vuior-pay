@@ -17,6 +17,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import BillModal from "@/components/bills/BillModal";
 import { db } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
@@ -124,7 +125,8 @@ export default function BillsPage() {
               Manage your recurring bills, due dates, and early-payment rewards.
             </p>
           </div>
-          <label className="flex h-11 w-full max-w-[390px] items-center rounded-lg border border-[#dfe5e7] bg-white px-4 text-[#75829a] sm:mr-16">
+          <div className="flex w-full items-center gap-3 sm:w-auto">
+          <label className="flex h-11 min-w-0 flex-1 items-center rounded-lg border border-[#dfe5e7] bg-white px-4 text-[#75829a] sm:w-[390px] sm:flex-none">
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -133,6 +135,8 @@ export default function BillsPage() {
             />
             <Search size={18} />
           </label>
+          <NotificationsMenu userId={user?.id} />
+          </div>
         </div>
 
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
