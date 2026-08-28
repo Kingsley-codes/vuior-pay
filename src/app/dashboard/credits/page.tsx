@@ -132,7 +132,7 @@ export default function CreditsPage() {
               Track your earned credits, rewards, and redemption activity.
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 sm:mr-16">
             <button
               onClick={() => setWalletAction("send")}
               className="flex h-10 items-center gap-2 rounded-md border border-[#009b67] px-4 text-[10px] font-semibold text-[#009b67]"

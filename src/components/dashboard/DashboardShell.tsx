@@ -183,11 +183,6 @@ export default function DashboardShell({
             );
           })}
         </nav>
-        {showNotifications ? (
-          <div className="fixed right-5 top-4 z-30">
-            <NotificationsMenu userId={user?.id} />
-          </div>
-        ) : null}
         <div ref={userMenuRef} className="absolute bottom-5 left-3 right-3">
           {userMenuOpen ? (
             <div
@@ -246,6 +241,11 @@ export default function DashboardShell({
           </button>
         </div>
       </aside>
+      {showNotifications ? (
+        <div className="fixed right-5 top-4 z-30">
+          <NotificationsMenu userId={user?.id} />
+        </div>
+      ) : null}
       <button
         type="button"
         aria-label="Open sidebar"
@@ -257,9 +257,7 @@ export default function DashboardShell({
       <div
         className={`min-h-screen pt-14 transition-[padding] duration-300 lg:pt-0 ${collapsed ? "lg:pl-[76px]" : "lg:pl-[260px]"}`}
       >
-        <div className={showNotifications ? "lg:pr-20" : undefined}>
-          {children}
-        </div>
+        {children}
       </div>
     </main>
   );

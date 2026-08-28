@@ -296,7 +296,7 @@ export default function PayPage() {
           </div>
           <Link
             href="/dashboard/bills?addBill=1"
-            className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#009b67] px-4 text-[12px] font-medium text-white"
+            className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#009b67] px-4 text-[12px] font-medium text-white sm:mr-16"
           >
             <Plus size={16} /> Add bill
           </Link>

@@ -124,7 +124,7 @@ export default function BillsPage() {
               Manage your recurring bills, due dates, and early-payment rewards.
             </p>
           </div>
-          <label className="flex h-11 w-full max-w-[390px] items-center rounded-lg border border-[#dfe5e7] bg-white px-4 text-[#75829a]">
+          <label className="flex h-11 w-full max-w-[390px] items-center rounded-lg border border-[#dfe5e7] bg-white px-4 text-[#75829a] sm:mr-16">
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
