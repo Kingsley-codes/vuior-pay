@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { doc, collection, setDoc, Timestamp } from "firebase/firestore";
 import {
@@ -16,6 +16,7 @@ import {
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import PhoneNumberInput from "@/components/phone-number-input";
 import { db } from "@/services/firebase";
+import { searchProviders, storeProvider, type Provider } from "@/services/providerService";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import {
   currencyInputNumber,
@@ -35,6 +36,9 @@ export default function AddBillPage() {
   const { user } = useVuiorSession();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+  const [showProviders, setShowProviders] = useState(false);
   const [form, setForm] = useState({
     name: "",
     category: "Utilities",
@@ -51,6 +55,18 @@ export default function AddBillPage() {
     setForm((current) => ({ ...current, [key]: value }));
     setError("");
   }
+
+  useEffect(() => {
+    const term = form.name.trim();
+    if (!term) return void setProviders([]);
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      void searchProviders(term)
+        .then((matches) => !cancelled && setProviders(matches))
+        .catch(() => !cancelled && setProviders([]));
+    }, 250);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [form.name]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,11 +85,17 @@ export default function AddBillPage() {
     try {
       const billRef = doc(collection(db, "bills"));
       const due = new Date(`${form.dueDate}T12:00:00`).toISOString();
+      const providerId = await storeProvider(
+        form.name,
+        form.providerPhoneNumber,
+        form.category,
+        selectedProvider?.id,
+      );
       await setDoc(billRef, {
         bill_ID: publicId(),
         user_id: user.id,
         name: form.name.trim(),
-        provider_ID: null,
+        provider_ID: providerId,
         category: form.category,
         amount,
         due_date: due,
@@ -129,14 +151,35 @@ export default function AddBillPage() {
             </div>
           ) : null}
           <div className="grid gap-6 sm:grid-cols-2">
-            <Field label="Bill name" icon={<FileText size={18} />}>
-              <input
-                required
-                value={form.name}
-                onChange={(e) => update("name", e.target.value)}
-                placeholder="e.g. Electricity"
-              />
-            </Field>
+            <div className="relative">
+              <Field label="Service provider" icon={<FileText size={18} />}>
+                <input
+                  required
+                  value={form.name}
+                  onFocus={() => setShowProviders(true)}
+                  onChange={(e) => {
+                    update("name", e.target.value);
+                    setSelectedProvider(null);
+                    setShowProviders(true);
+                  }}
+                  placeholder="Enter your provider's name"
+                />
+              </Field>
+              {showProviders && providers.length ? (
+                <div className="absolute z-10 mt-1 w-full overflow-hidden rounded-lg border border-[#cfeade] bg-white shadow-lg">
+                  {providers.map((provider) => (
+                    <button key={provider.id} type="button" className="flex w-full items-center justify-between px-3 py-2.5 text-left text-[13px] hover:bg-[#f3fbf7]" onMouseDown={(event) => event.preventDefault()} onClick={() => {
+                      setSelectedProvider(provider);
+                      setForm((current) => ({ ...current, name: provider.name, providerPhoneNumber: provider.phoneNumbers[0] || current.providerPhoneNumber }));
+                      setShowProviders(false);
+                    }}>
+                      <span>{provider.name}</span>
+                      {provider.categories[0] ? <span className="text-[11px] text-[#718097]">{provider.categories[0]}</span> : null}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
             <Field label="Category" icon={<Tag size={18} />}>
               <select
                 value={form.category}

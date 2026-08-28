@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import PhoneNumberInput from "@/components/phone-number-input";
 import { db, storage } from "@/services/firebase";
+import { searchProviders, storeProvider, type Provider } from "@/services/providerService";
 import type { Bill } from "@/hooks/useVuiorData";
 import {
   currencyInputNumber,
@@ -150,6 +151,9 @@ export default function BillModal({
   const [working, setWorking] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [error, setError] = useState("");
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+  const [showProviders, setShowProviders] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -157,6 +161,18 @@ export default function BillModal({
     document.addEventListener("keydown", close);
     return () => document.removeEventListener("keydown", close);
   }, [onClose]);
+
+  useEffect(() => {
+    const term = form.name.trim();
+    if (!term) return void setProviders([]);
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      void searchProviders(term)
+        .then((matches) => !cancelled && setProviders(matches))
+        .catch(() => !cancelled && setProviders([]));
+    }, 250);
+    return () => { cancelled = true; window.clearTimeout(timer); };
+  }, [form.name]);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
@@ -254,9 +270,16 @@ export default function BillModal({
         documentUrl,
         updated_at: Timestamp.now(),
       };
+      const providerId = await storeProvider(
+        form.name,
+        form.providerPhoneNumber,
+        form.category,
+        selectedProvider?.id,
+      );
       if (bill) {
         await updateDoc(billRef, {
           ...values,
+          provider_ID: providerId,
           status: ["in review", "paid", "completed"].includes(
             normalizedStatus(bill.status),
           )
@@ -268,7 +291,7 @@ export default function BillModal({
           ...values,
           bill_ID: `VPB-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
           user_id: userId,
-          provider_ID: null,
+          provider_ID: providerId,
           status: "active",
           isDeleted: false,
           created_at: Timestamp.now(),
@@ -472,14 +495,35 @@ export default function BillModal({
               </p>
             ) : null}
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <Field label="Bill name">
-                <input
-                  required
-                  value={form.name}
-                  onChange={(e) => update("name", e.target.value)}
-                  placeholder="e.g. Duke Energy"
-                />
-              </Field>
+              <div className="relative">
+                <Field label="Service provider">
+                  <input
+                    required
+                    value={form.name}
+                    onFocus={() => setShowProviders(true)}
+                    onChange={(e) => {
+                      update("name", e.target.value);
+                      setSelectedProvider(null);
+                      setShowProviders(true);
+                    }}
+                    placeholder="e.g. Duke Energy"
+                  />
+                </Field>
+                {showProviders && providers.length ? (
+                  <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-[#cfeade] bg-white shadow-lg">
+                    {providers.map((provider) => (
+                      <button key={provider.id} type="button" className="flex w-full items-center justify-between px-3 py-2.5 text-left text-[12px] hover:bg-[#f3fbf7]" onMouseDown={(event) => event.preventDefault()} onClick={() => {
+                        setSelectedProvider(provider);
+                        setForm((current) => ({ ...current, name: provider.name, providerPhoneNumber: provider.phoneNumbers[0] || current.providerPhoneNumber }));
+                        setShowProviders(false);
+                      }}>
+                        <span>{provider.name}</span>
+                        {provider.categories[0] ? <span className="text-[10px] text-[#718097]">{provider.categories[0]}</span> : null}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
               <Field label="Category">
                 <select
                   value={form.category}
