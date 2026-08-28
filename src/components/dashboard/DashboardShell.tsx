@@ -182,6 +182,9 @@ export default function DashboardShell({
             );
           })}
         </nav>
+        <div className={`absolute bottom-[82px] right-3 ${collapsed ? "lg:right-[18px]" : ""}`}>
+          <NotificationsMenu userId={user?.id} />
+        </div>
         <div ref={userMenuRef} className="absolute bottom-5 left-3 right-3">
           {userMenuOpen ? (
             <div
@@ -240,9 +243,6 @@ export default function DashboardShell({
           </button>
         </div>
       </aside>
-      <div className="fixed right-4 top-4 z-30 lg:right-7 lg:top-6">
-        <NotificationsMenu userId={user?.id} />
-      </div>
       <button
         type="button"
         aria-label="Open sidebar"
