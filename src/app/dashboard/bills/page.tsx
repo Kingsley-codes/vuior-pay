@@ -96,7 +96,8 @@ export default function BillsPage() {
               ? ["active", "upcoming"].includes(billStatus) && days >= 0
               : tab === "Paid"
                   ? ["in review", "paid", "completed"].includes(billStatus)
-                  : days < 0 && ["active", "upcoming"].includes(billStatus);
+                  : billStatus === "overdue" ||
+                    (days < 0 && ["active", "upcoming"].includes(billStatus));
           return (
             matchesTab &&
             (category === "All Categories" || bill.category === category) &&

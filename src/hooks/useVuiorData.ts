@@ -61,6 +61,20 @@ function asDate(value: unknown): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
+function normalizedBillStatus(status: unknown, dueDate: unknown) {
+  const normalized = String(status ?? "active").trim().toLowerCase();
+  if (!["active", "pending", "approved", "unpaid"].includes(normalized))
+    return normalized;
+  const due = asDate(dueDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  if (due) {
+    due.setHours(0, 0, 0, 0);
+    if (due < today) return "overdue";
+  }
+  return normalized;
+}
+
 export function useVuiorData(userId?: string) {
   const [bills, setBills] = useState<Bill[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -87,7 +101,10 @@ export function useVuiorData(userId?: string) {
               category: String(data.category ?? data.billerName ?? "Other"),
               amount: Number(data.amount ?? 0),
               dueDate: String(data.dueDate ?? data.due_date ?? ""),
-              status: String(data.status ?? "active"),
+              status: normalizedBillStatus(
+                data.status,
+                data.dueDate ?? data.due_date,
+              ),
               autoPay: Boolean(data.autoPay),
               frequency: String(data.frequency ?? "Monthly"),
               accountNumber: data.accountNumber
