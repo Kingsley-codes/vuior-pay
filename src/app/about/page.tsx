@@ -47,10 +47,10 @@ export default function AboutPage() {
             financial habits.
           </p>
           <div className="mt-7 flex items-center gap-9 max-[900px]:justify-center">
-            <Link className={`${primaryButton} h-11 px-6 text-[12px] max-[620px]:text-[14px]`} href="/#signup">
+            <Link className={`${primaryButton} h-11 px-6 text-[12px] max-[620px]:text-[14px]`} href="/signup">
               Create free account
             </Link>
-            <Link className={textLink} href="/#how-it-works">
+            <Link className={textLink} href="/how-it-works">
               See how it works <Icon name="arrow" />
             </Link>
           </div>
@@ -163,10 +163,10 @@ export default function AboutPage() {
           </h2>
         </div>
         <div className="flex items-center gap-[30px] max-[620px]:flex-col max-[620px]:justify-center max-[620px]:gap-[18px]">
-          <Link className={`${primaryButton} h-11 px-[23px]`} href="/#signup">
+          <Link className={`${primaryButton} h-11 px-[23px]`} href="/signup">
             Create free account
           </Link>
-          <Link className={textLink} href="/#how-it-works">
+          <Link className={textLink} href="/how-it-works">
             See how it works <Icon name="arrow" />
           </Link>
         </div>

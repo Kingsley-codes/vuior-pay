@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ContactForm } from "@/components/contact-form";
 import { Header } from "@/components/header";
 import { Icon } from "@/components/icons";
@@ -73,9 +74,9 @@ export default function ContactPage() {
             rewards and more.
           </p>
         </div>
-        <a className={outlineButton} href="#">
+        <Link className={outlineButton} href="/help">
           Go to Help Center <Icon name="arrow" />
-        </a>
+        </Link>
       </section>
       <section className="mx-auto mt-6 mb-8 grid min-h-[122px] max-w-[1330px] grid-cols-3 gap-[30px] rounded-[13px] border border-[#dfe9e6] bg-white/80 px-8 py-6 shadow-[0_7px_28px_#153c3010] max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:grid-cols-1">
         {([

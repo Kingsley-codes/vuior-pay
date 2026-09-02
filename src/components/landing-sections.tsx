@@ -27,19 +27,19 @@ const ButtonPair = ({ cta = false }: { cta?: boolean }) => (
         : "max-[900px]:justify-center max-[620px]:flex-col"
     }`}
   >
-    <a
+    <Link
       className={`${primaryButton} ${cta ? "max-[620px]:w-[230px]" : "max-[620px]:w-full max-[620px]:max-w-[300px]"}`}
-      href="#signup"
+      href="/signup"
     >
       Create free account
-    </a>
-    <a
+    </Link>
+    <Link
       className={`${outlineButton} ${cta ? "border-[#b6d5cb] bg-white/5 text-white max-[620px]:w-[230px]" : "max-[620px]:w-full max-[620px]:max-w-[300px]"}`}
-      href="#how-it-works"
+      href="/how-it-works"
     >
       <Icon name="play" />
       See how it works
-    </a>
+    </Link>
   </div>
 );
 
@@ -211,9 +211,9 @@ export function FeaturesSection() {
             View payment history anytime
           </li>
         </ul>
-        <a className={textLink} href="#">
+        <Link className={textLink} href="/how-it-works">
           Explore features <Icon name="arrow" />
-        </a>
+        </Link>
       </div>
       <div className="grid h-[360px] grid-cols-[2fr_1fr] gap-2.5 max-[620px]:h-auto max-[620px]:grid-cols-1">
         <div className="rounded-xl border border-[#dfe9e6] bg-white p-6 shadow-[0_6px_25px_#133c3010] max-[620px]:p-[15px]">
@@ -242,9 +242,12 @@ export function FeaturesSection() {
                   {bill.state}
                 </small>
               </span>
-              <button className="h-[33px] rounded-[5px] border-0 bg-[#009268] text-[10px] font-bold text-white max-[620px]:min-h-10">
+              <Link
+                className="inline-flex h-[33px] items-center justify-center rounded-[5px] border-0 bg-[#009268] text-[10px] font-bold text-white max-[620px]:min-h-10"
+                href="/login"
+              >
                 Pay
-              </button>
+              </Link>
             </div>
           ))}
         </div>
@@ -283,9 +286,12 @@ export function FeaturesSection() {
                 </strong>
               </p>
             ))}
-            <a className="mt-[15px] block text-right text-[#009268]" href="#">
+            <Link
+              className="mt-[15px] block text-right text-[#009268]"
+              href="/login"
+            >
               View all
-            </a>
+            </Link>
           </div>
         </aside>
       </div>
@@ -305,19 +311,19 @@ export function RewardsSection() {
         <div className="pl-10 max-[900px]:px-0 max-[900px]:pt-5 max-[900px]:pb-[35px] max-[900px]:text-center">
           <p className={`${eyebrow} text-[#83e6c2]`}>◉ VUIOR REWARDS</p>
           <h2 className={`${sectionHeading} mb-[15px]`}>
-            The earlier you pay,
+            The earlier you pay
             <br />
-            the more you earn
+            The more you earn
           </h2>
           <p className="max-w-[290px] text-[13px] leading-[1.55] text-[#d3e4df] min-[901px]:text-[16px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
             Earn credits when you pay eligible bills before the due date.
           </p>
-          <a
+          <Link
             className="mt-2.5 inline-flex h-[39px] items-center justify-center rounded-md bg-white px-[19px] text-[11px] font-bold text-[#006b4f] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824]"
-            href="#"
+            href="/how-it-works"
           >
             View all rewards
-          </a>
+          </Link>
         </div>
         <div className="grid grid-cols-[repeat(3,1fr)_1.35fr] items-stretch max-[900px]:grid-cols-2 max-[620px]:grid-cols-1">
           {tiers.map((t) => (
@@ -442,12 +448,12 @@ export function DownloadSection() {
   );
 }
 
-function StoreBadge({ store }: { store: "apple" | "google" }) {
+export function StoreBadge({ store }: { store: "apple" | "google" }) {
   const apple = store === "apple";
   return (
-    <a
+    <Link
       className="flex h-[50px] min-w-[154px] items-center gap-2.5 rounded-[9px] border border-[#27312e] bg-linear-to-b from-[#171a19] to-[#050606] px-3.5 py-1.5 text-white shadow-[0_7px_16px_#10251d1c] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_#10251d29] max-[430px]:w-[150px]"
-      href="#"
+      href="/#"
       aria-label={
         apple ? "Download Vuior on the App Store" : "Get Vuior on Google Play"
       }
@@ -486,7 +492,7 @@ function StoreBadge({ store }: { store: "apple" | "google" }) {
           {apple ? "App Store" : "Google Play"}
         </strong>
       </span>
-    </a>
+    </Link>
   );
 }
 
