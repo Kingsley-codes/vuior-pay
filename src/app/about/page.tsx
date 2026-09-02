@@ -155,17 +155,19 @@ export default function AboutPage() {
       </section>
 
       <section className="mx-auto max-w-[1330px] px-12 pb-[42px] max-[900px]:px-[30px] max-[620px]:px-5">
-        <div className="grid overflow-hidden rounded-[16px] border border-[#dfe9e6] bg-[#fbfdfc] md:grid-cols-[1.08fr_.92fr]">
-          <div className="px-7 py-8 sm:px-10 sm:py-10">
-            <p className="text-[11px] font-extrabold tracking-[.14em] text-[#00895f]">BUILT FOR REAL LIFE</p>
-            <h2 className="mt-3 text-[27px] font-bold leading-[1.18] tracking-[-.8px] sm:text-[32px]">Better bill habits start with a tap.</h2>
-            <p className="mt-3 max-w-[520px] text-[14px] leading-[1.7] text-[#58677b] sm:text-[15px]">Make early payments part of your routine—and turn that consistency into rewards with Vuior in your pocket.</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href="/#" className="inline-flex h-11 items-center rounded-md bg-[#008f64] px-5 text-[13px] font-bold text-white shadow-[0_8px_18px_#008e6623] transition hover:-translate-y-0.5">Download for iOS</Link>
-              <Link href="/#" className="inline-flex h-11 items-center rounded-md border border-[#b6d7ca] bg-white px-5 text-[13px] font-bold text-[#007f5d] transition hover:border-[#008f64]">Download for Android</Link>
+        <div className="relative grid overflow-hidden rounded-[18px] bg-[#063f36] text-white md:grid-cols-[1.02fr_.98fr]">
+          <div className="absolute -top-24 left-[42%] h-72 w-72 rounded-full bg-[#0ab17d]/20 blur-3xl" />
+          <div className="relative px-7 py-9 sm:px-11 sm:py-11">
+            <p className="text-[11px] font-extrabold tracking-[.15em] text-[#92e0c0]">VUIOR, IN YOUR POCKET</p>
+            <h2 className="mt-3 max-w-[550px] text-[29px] font-bold leading-[1.15] tracking-[-1px] sm:text-[35px]">A calmer way to stay ahead of every bill.</h2>
+            <p className="mt-4 max-w-[510px] text-[14px] leading-[1.7] text-[#c9dfd7] sm:text-[15px]">Pay early, check your rewards, and keep the details that matter close at hand—where life happens.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href="/#" aria-label="Download Vuior on the App Store" className="inline-flex h-[50px] items-center gap-2 rounded-[9px] bg-white px-4 text-[#063f36] transition hover:-translate-y-0.5 hover:bg-[#e4f7ef]"><span className="text-[21px]">●</span><span className="flex flex-col leading-none"><small className="mb-1 text-[8px] font-bold">DOWNLOAD ON THE</small><strong className="text-[16px] font-semibold">App Store</strong></span></Link>
+              <Link href="/#" aria-label="Get Vuior on Google Play" className="inline-flex h-[50px] items-center gap-2 rounded-[9px] border border-white/25 bg-white/10 px-4 text-white transition hover:-translate-y-0.5 hover:bg-white/20"><span className="text-[21px] text-[#7cdebd]">▶</span><span className="flex flex-col leading-none"><small className="mb-1 text-[8px] font-bold">GET IT ON</small><strong className="text-[16px] font-semibold">Google Play</strong></span></Link>
             </div>
           </div>
-          <div className="relative min-h-[240px] overflow-hidden bg-[#eaf7f1] max-[620px]:min-h-[205px]">
+          <div className="relative min-h-[260px] overflow-hidden max-[620px]:min-h-[215px]">
+            <div className="absolute inset-0 z-[1] bg-linear-to-l from-[#0d5c4e] to-transparent" />
             <Image src="/app-phones.png" alt="Vuior mobile app screens" fill sizes="(max-width: 768px) 100vw, 42vw" className="object-cover object-left" />
           </div>
         </div>
