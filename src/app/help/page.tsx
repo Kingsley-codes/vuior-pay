@@ -132,7 +132,8 @@ export default function HelpPage() {
               </div>
             ) : null}
           </section>
-          <aside className="rounded-xl border border-[#d6ebe3] bg-[#f4fbf8] p-6">
+          <div className="flex flex-col gap-5 lg:items-stretch">
+            <aside className="rounded-xl border border-[#d6ebe3] bg-[#f4fbf8] p-6">
             <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#009b67] shadow-sm">
               <Headphones size={22} />
             </span>
@@ -146,7 +147,8 @@ export default function HelpPage() {
             >
               Contact support
             </Link>
-            <section className="mt-5 overflow-hidden rounded-xl border border-[#d9e9e3] bg-white shadow-[0_10px_22px_rgba(18,72,56,.06)]">
+            </aside>
+            <section className="mx-auto w-full max-w-[360px] overflow-hidden rounded-xl border border-[#d9e9e3] bg-white shadow-[0_10px_22px_rgba(18,72,56,.06)] lg:max-w-none">
               <div className="relative h-[178px] overflow-hidden bg-linear-to-br from-[#eaf8f3] via-[#f8fcfa] to-[#d8f1e7]">
                 <div className="absolute -top-8 -left-8 h-24 w-24 rounded-full border-[14px] border-white/65" />
                 <div className="absolute -right-7 -bottom-8 h-28 w-28 rounded-full bg-[#9de3c9]/35" />
@@ -168,13 +170,13 @@ export default function HelpPage() {
                 <p className="mt-2 text-[13px] leading-6 text-[#66738b]">
                   Stay on top of every payment wherever you are.
                 </p>
-                <div className="mt-4 flex flex-col gap-2 [&_a]:min-w-0 [&_a]:w-full">
+                <div className="mt-4 flex flex-col items-center gap-2 [&_a]:min-w-0 [&_a]:w-[210px]">
                   <StoreBadge store="apple" />
                   <StoreBadge store="google" />
                 </div>
               </div>
             </section>
-          </aside>
+          </div>
         </div>
       </main>
       <SiteFooter />
