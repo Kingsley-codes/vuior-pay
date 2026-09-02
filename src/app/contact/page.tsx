@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ContactForm } from "@/components/contact-form";
 import { Header } from "@/components/header";
@@ -69,6 +70,12 @@ export default function ContactPage() {
               </article>
             ))}
           </div>
+          <div className="mt-5 overflow-hidden rounded-[11px] bg-[#073f36] p-5 text-white shadow-[0_10px_24px_#153c3020]">
+            <p className="text-[10px] font-bold tracking-[.13em] text-[#9fe3c7]">VUIOR MOBILE</p>
+            <h3 className="mt-2 text-[18px] font-semibold">Help is always within reach.</h3>
+            <p className="mt-2 text-[12px] leading-5 text-[#c5ddd5]">Track a payment, view your credits, or get in touch from the app.</p>
+            <Link href="/#" className="mt-4 inline-flex h-10 items-center rounded-md bg-white px-4 text-[12px] font-bold text-[#047b5b] transition hover:bg-[#ddf6ea]">Get the Vuior app</Link>
+          </div>
         </aside>
       </section>
       <section className="mx-auto mt-6 flex min-h-[100px] max-w-[1330px] items-center justify-between rounded-[13px] border border-[#dfe9e6] bg-white/80 px-9 py-6 shadow-[0_7px_28px_#153c3010] max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:flex-col max-[620px]:items-start max-[620px]:gap-[18px]">
@@ -84,6 +91,31 @@ export default function ContactPage() {
         <Link className={outlineButton} href="/help">
           Go to FAQs <Icon name="arrow" />
         </Link>
+      </section>
+      <section className="mx-auto mt-6 grid max-w-[1330px] overflow-hidden rounded-[13px] border border-[#cfe9de] bg-[#f8fcfa] md:grid-cols-[1fr_310px] max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:grid-cols-1">
+        <div className="px-8 py-8 max-[620px]:px-6">
+          <div className="flex items-center gap-3">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-[#009268] text-[17px] text-white">✓</span>
+            <p className="m-0 text-[11px] font-extrabold tracking-[.12em] text-[#00895f]">SUPPORT, WHEREVER YOU ARE</p>
+          </div>
+          <h2 className="mt-4 text-[26px] font-bold tracking-[-.7px] max-[620px]:text-[28px]">Take Vuior with you.</h2>
+          <p className="mt-2 max-w-[580px] text-[14px] leading-[1.7] text-[#586f68] max-[620px]:text-[15px]">
+            Manage payments and get help straight from the app. Download it now, then contact us whenever you need a hand.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            <Link href="/#" className="inline-flex h-11 items-center rounded-md bg-[#009268] px-5 text-[13px] font-bold text-white shadow-[0_8px_18px_#008e6623] transition hover:-translate-y-0.5">Download the app</Link>
+            <span className="inline-flex h-11 items-center rounded-md border border-[#cfe2d9] bg-white px-5 text-[13px] font-semibold text-[#516c63]">Available on iOS & Android</span>
+          </div>
+        </div>
+        <div className="relative min-h-[205px] overflow-hidden bg-[#dff3e9] max-[620px]:min-h-[165px]">
+          <Image
+            src="/app-phones.png"
+            alt="Vuior app screens for managing bills on the go"
+            fill
+            sizes="(max-width: 620px) 100vw, 310px"
+            className="object-cover object-left"
+          />
+        </div>
       </section>
       <section className="mx-auto mt-6 mb-8 grid min-h-[122px] max-w-[1330px] grid-cols-3 gap-[30px] rounded-[13px] border border-[#dfe9e6] bg-white/80 px-8 py-6 shadow-[0_7px_28px_#153c3010] max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:grid-cols-1">
         {(

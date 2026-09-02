@@ -154,6 +154,23 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-[1330px] px-12 pb-[42px] max-[900px]:px-[30px] max-[620px]:px-5">
+        <div className="grid overflow-hidden rounded-[16px] border border-[#dfe9e6] bg-[#fbfdfc] md:grid-cols-[1.08fr_.92fr]">
+          <div className="px-7 py-8 sm:px-10 sm:py-10">
+            <p className="text-[11px] font-extrabold tracking-[.14em] text-[#00895f]">BUILT FOR REAL LIFE</p>
+            <h2 className="mt-3 text-[27px] font-bold leading-[1.18] tracking-[-.8px] sm:text-[32px]">Better bill habits start with a tap.</h2>
+            <p className="mt-3 max-w-[520px] text-[14px] leading-[1.7] text-[#58677b] sm:text-[15px]">Make early payments part of your routine—and turn that consistency into rewards with Vuior in your pocket.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/#" className="inline-flex h-11 items-center rounded-md bg-[#008f64] px-5 text-[13px] font-bold text-white shadow-[0_8px_18px_#008e6623] transition hover:-translate-y-0.5">Download for iOS</Link>
+              <Link href="/#" className="inline-flex h-11 items-center rounded-md border border-[#b6d7ca] bg-white px-5 text-[13px] font-bold text-[#007f5d] transition hover:border-[#008f64]">Download for Android</Link>
+            </div>
+          </div>
+          <div className="relative min-h-[240px] overflow-hidden bg-[#eaf7f1] max-[620px]:min-h-[205px]">
+            <Image src="/app-phones.png" alt="Vuior mobile app screens" fill sizes="(max-width: 768px) 100vw, 42vw" className="object-cover object-left" />
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto mb-5 grid h-[150px] max-w-[1330px] grid-cols-[1fr_auto_260px] items-center overflow-hidden rounded-[15px] border border-[#dfe9e6] bg-linear-to-r from-[#f3faf7] to-[#fbfdfc] px-[42px] max-[900px]:mx-6 max-[900px]:h-auto max-[900px]:grid-cols-[1fr_auto] max-[900px]:p-8 max-[620px]:grid-cols-1 max-[620px]:gap-[25px] max-[620px]:text-center">
         <div>
           <h2 className={`${sectionHeading} m-0`}>
