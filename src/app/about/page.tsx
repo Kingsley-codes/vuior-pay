@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Apple, Play } from "lucide-react";
 import { Header } from "@/components/header";
 import { Icon } from "@/components/icons";
+import { StoreBadge } from "@/components/landing-sections";
 import { SiteFooter } from "@/components/site-footer";
 
 const values = [
@@ -163,8 +163,8 @@ export default function AboutPage() {
             <h2 className="mt-3 max-w-[550px] text-[29px] font-bold leading-[1.15] tracking-[-1px] sm:text-[35px]">A calmer way to stay ahead of every bill.</h2>
             <p className="mt-4 max-w-[510px] text-[14px] leading-[1.7] text-[#c9dfd7] sm:text-[15px]">Pay early, check your rewards, and keep the details that matter close at hand—where life happens.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/#" aria-label="Download Vuior on the App Store" className="inline-flex h-[50px] items-center gap-2 rounded-[9px] bg-white px-4 text-[#063f36] transition hover:-translate-y-0.5 hover:bg-[#e4f7ef]"><Apple size={22} /><span className="flex flex-col leading-none"><small className="mb-1 text-[8px] font-bold">DOWNLOAD ON THE</small><strong className="text-[16px] font-semibold">App Store</strong></span></Link>
-              <Link href="/#" aria-label="Get Vuior on Google Play" className="inline-flex h-[50px] items-center gap-2 rounded-[9px] border border-white/25 bg-white/10 px-4 text-white transition hover:-translate-y-0.5 hover:bg-white/20"><Play size={21} className="fill-[#7cdebd] text-[#7cdebd]" /><span className="flex flex-col leading-none"><small className="mb-1 text-[8px] font-bold">GET IT ON</small><strong className="text-[16px] font-semibold">Google Play</strong></span></Link>
+              <StoreBadge store="apple" />
+              <StoreBadge store="google" />
             </div>
           </div>
           <div className="relative min-h-[260px] overflow-hidden max-[620px]:min-h-[215px]">
