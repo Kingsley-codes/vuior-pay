@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/site-footer";
 const reach = [
   { icon: "✉", title: "Email support", lines: ["support@vuior.com"] },
   {
-    icon: "□",
+    icon: "❓",
     title: "Frequently asked questions",
     lines: ["Browse answers to common", "questions"],
   },
@@ -24,7 +24,7 @@ const outlineButton =
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-linear-to-br from-white from-30% to-[#fbfdfc] text-[#07142d]">
-      <Header />
+      <Header active="contact" />
       <section className="mx-auto max-w-[1330px] px-12 pt-[70px] pb-[42px] max-[900px]:px-[30px] max-[900px]:pt-[55px] max-[900px]:pb-[35px] max-[620px]:px-5 max-[620px]:text-center">
         <p className="mb-[18px] text-[11px] font-extrabold text-[#00895f] max-[620px]:text-[12px]">
           CONTACT US
@@ -82,7 +82,7 @@ export default function ContactPage() {
           </p>
         </div>
         <Link className={outlineButton} href="/help">
-          Go to Help Center <Icon name="arrow" />
+          Go to FAQs <Icon name="arrow" />
         </Link>
       </section>
       <section className="mx-auto mt-6 mb-8 grid min-h-[122px] max-w-[1330px] grid-cols-3 gap-[30px] rounded-[13px] border border-[#dfe9e6] bg-white/80 px-8 py-6 shadow-[0_7px_28px_#153c3010] max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:grid-cols-1">

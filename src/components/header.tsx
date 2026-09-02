@@ -42,7 +42,7 @@ export function Header({
   const mobileNavLink = (item?: typeof active) =>
     `flex items-center justify-between rounded-lg border-b border-[#edf2ef] px-1 py-3.5 text-[15px] font-[650] transition-colors duration-200 hover:text-[#009268] [&_svg]:h-[18px] [&_svg]:w-[18px] hover:[&_svg]:text-[#009268] ${
       active === item
-        ? "text-[#009268] [&_svg]:text-[#009268]"
+        ? "border-[#009268] text-[#009268] [&_svg]:text-[#009268]"
         : "text-[#07142d] [&_svg]:text-[#91a099]"
     }`;
 

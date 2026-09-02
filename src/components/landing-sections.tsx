@@ -75,7 +75,7 @@ export function HeroSection() {
         </div>
         <div className="relative ml-[-25px] h-[570px] w-[760px] max-[900px]:m-0 max-[900px]:h-[460px] max-[900px]:w-full max-[620px]:mt-[18px] max-[620px]:h-[340px] max-[430px]:ml-0 max-[430px]:h-[280px]">
           <Image
-            src="/hero-phone.png"
+            src="/hero-phone2.png"
             alt="Vuior app showing bills, balance and rewards"
             fill
             sizes="(max-width: 800px) 100vw, 58vw"
