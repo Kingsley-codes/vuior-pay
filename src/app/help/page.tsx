@@ -146,37 +146,36 @@ export default function HelpPage() {
             >
               Contact support
             </Link>
+            <section className="mt-5 overflow-hidden rounded-xl border border-[#d9e9e3] bg-white shadow-[0_10px_22px_rgba(18,72,56,.06)]">
+              <div className="relative h-[178px] overflow-hidden bg-linear-to-br from-[#eaf8f3] via-[#f8fcfa] to-[#d8f1e7]">
+                <div className="absolute -top-8 -left-8 h-24 w-24 rounded-full border-[14px] border-white/65" />
+                <div className="absolute -right-7 -bottom-8 h-28 w-28 rounded-full bg-[#9de3c9]/35" />
+                <Image
+                  src="/images/help-app-support.png"
+                  alt="Vuior app with customer support and secure payment indicators"
+                  fill
+                  sizes="(max-width: 1024px) 290px, 242px"
+                  className="object-contain object-center p-2"
+                />
+              </div>
+              <div className="p-5">
+                <p className="text-[10px] font-bold tracking-[.1em] text-[#008b60]">
+                  VUIOR MOBILE APP
+                </p>
+                <h3 className="mt-2 text-[17px] font-bold leading-6 text-[#172445]">
+                  Your bills, rewards, and support in one place.
+                </h3>
+                <p className="mt-2 text-[13px] leading-6 text-[#66738b]">
+                  Stay on top of every payment wherever you are.
+                </p>
+                <div className="mt-4 flex flex-col gap-2 [&_a]:min-w-0 [&_a]:w-full">
+                  <StoreBadge store="apple" />
+                  <StoreBadge store="google" />
+                </div>
+              </div>
+            </section>
           </aside>
         </div>
-        <section className="isolate relative mt-12 overflow-hidden rounded-2xl bg-[#003f35] px-6 py-8 text-white shadow-[0_18px_45px_rgba(0,63,53,.16)] sm:px-10 sm:py-10 lg:grid lg:min-h-[300px] lg:grid-cols-[minmax(0,1fr)_360px] lg:items-center lg:gap-8 lg:px-14">
-          <div className="absolute -top-28 -left-16 h-64 w-64 rounded-full bg-[#009b67]/20 blur-3xl" />
-          <div className="absolute right-12 bottom-0 h-40 w-40 rounded-full bg-[#6de4bd]/10 blur-3xl" />
-          <div className="relative z-10 max-w-[550px]">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-bold tracking-[.08em] text-[#a7efd0]">
-              <Headphones size={14} /> VUIOR ON THE GO
-            </span>
-            <h2 className="mt-4 text-[27px] font-bold leading-tight tracking-[-.04em] sm:text-[34px]">
-              Help is always within reach
-            </h2>
-            <p className="mt-3 max-w-[480px] text-[15px] leading-7 text-[#c9ded7]">
-              Download the Vuior app to manage bills, track rewards, and get
-              answers wherever life takes you.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <StoreBadge store="apple" />
-              <StoreBadge store="google" />
-            </div>
-          </div>
-          <div className="relative z-10 mt-6 h-[230px] sm:h-[270px] lg:order-2 lg:mt-0 lg:h-[300px]">
-            <Image
-              src="/images/help-app-support.png"
-              alt="Vuior mobile app with support chat and secure payment indicators"
-              fill
-              sizes="(max-width: 1024px) 100vw, 360px"
-              className="object-contain object-center lg:object-right"
-            />
-          </div>
-        </section>
       </main>
       <SiteFooter />
     </div>

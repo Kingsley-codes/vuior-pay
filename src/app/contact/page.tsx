@@ -6,9 +6,16 @@ import { SiteFooter } from "@/components/site-footer";
 
 const reach = [
   { icon: "✉", title: "Email support", lines: ["support@vuior.com"] },
-  { icon: "○", title: "Live chat", lines: ["Available in the app and", "dashboard"] },
-  { icon: "□", title: "Help center", lines: ["Browse answers to common", "questions"] },
-  { icon: "☎", title: "Call us", lines: ["+234 800 123 4567", "Mon - Fri, 9am - 5pm (WAT)"] },
+  {
+    icon: "□",
+    title: "Frequently asked questions",
+    lines: ["Browse answers to common", "questions"],
+  },
+  {
+    icon: "☎",
+    title: "Call us",
+    lines: ["+234 800 123 4567", "Mon - Fri, 9am - 5pm (WAT)"],
+  },
 ];
 
 const outlineButton =
@@ -70,8 +77,8 @@ export default function ContactPage() {
             Looking for quick answers?
           </h2>
           <p className="m-0 text-[11px] text-[#667487] min-[901px]:text-[15px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
-            Visit our Help Center for articles on managing bills, payments,
-            rewards and more.
+            Visit our FAQs for articles on managing bills, payments, rewards and
+            more.
           </p>
         </div>
         <Link className={outlineButton} href="/help">
@@ -79,11 +86,28 @@ export default function ContactPage() {
         </Link>
       </section>
       <section className="mx-auto mt-6 mb-8 grid min-h-[122px] max-w-[1330px] grid-cols-3 gap-[30px] rounded-[13px] border border-[#dfe9e6] bg-white/80 px-8 py-6 shadow-[0_7px_28px_#153c3010] max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:grid-cols-1">
-        {([
-          ["clock" as const, "Response time", "We aim to respond to all", "inquiries within 24 hours."],
-          ["shield" as const, "Secure & private", "Your information is safe with us.", "We never share your data."],
-          ["support" as const, "Here to help", "Our support team is friendly", "and ready to assist."],
-        ] as const).map(([icon, title, line1, line2], index) => (
+        {(
+          [
+            [
+              "clock" as const,
+              "Response time",
+              "We aim to respond to all",
+              "inquiries within 24 hours.",
+            ],
+            [
+              "shield" as const,
+              "Secure & private",
+              "Your information is safe with us.",
+              "We never share your data.",
+            ],
+            [
+              "support" as const,
+              "Here to help",
+              "Our support team is friendly",
+              "and ready to assist.",
+            ],
+          ] as const
+        ).map(([icon, title, line1, line2], index) => (
           <article
             className={`grid grid-cols-[56px_1fr] items-center gap-3.5 pr-[25px] ${
               index === 2 ? "border-0" : "border-r border-[#dfe9e6]"
