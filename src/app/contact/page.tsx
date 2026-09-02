@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Apple, Play } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { Header } from "@/components/header";
 import { Icon } from "@/components/icons";
@@ -75,8 +76,8 @@ export default function ContactPage() {
             <h3 className="mt-2 text-[18px] font-semibold">Help is always within reach.</h3>
             <p className="mt-2 text-[12px] leading-5 text-[#c5ddd5]">Track a payment, view your credits, or get in touch from the app.</p>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <Link href="/#" aria-label="Download Vuior on the App Store" className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-white px-2 text-[11px] font-bold text-[#073f36] transition hover:bg-[#ddf6ea]"><span className="text-[17px]">●</span>App Store</Link>
-              <Link href="/#" aria-label="Get Vuior on Google Play" className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-white/25 bg-white/10 px-2 text-[11px] font-bold text-white transition hover:bg-white/20"><span className="text-[17px] text-[#7cdebd]">▶</span>Google Play</Link>
+              <Link href="/#" aria-label="Download Vuior on the App Store" className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md bg-white px-2 text-[11px] font-bold text-[#073f36] transition hover:bg-[#ddf6ea]"><Apple size={16} />App Store</Link>
+              <Link href="/#" aria-label="Get Vuior on Google Play" className="inline-flex h-10 items-center justify-center gap-1.5 rounded-md border border-white/25 bg-white/10 px-2 text-[11px] font-bold text-white transition hover:bg-white/20"><Play size={15} className="fill-[#7cdebd] text-[#7cdebd]" />Google Play</Link>
             </div>
           </div>
         </aside>
@@ -106,8 +107,8 @@ export default function ContactPage() {
             Manage payments and get help straight from the app. Download it now, then contact us whenever you need a hand.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <Link href="/#" aria-label="Download Vuior on the App Store" className="inline-flex h-11 items-center gap-2 rounded-md bg-[#101817] px-4 text-white shadow-[0_8px_18px_rgba(7,20,45,.16)] transition hover:-translate-y-0.5"><span className="text-[20px]">●</span><span className="flex flex-col leading-none"><small className="mb-1 text-[7px]">Download on the</small><b className="text-[13px]">App Store</b></span></Link>
-            <Link href="/#" aria-label="Get Vuior on Google Play" className="inline-flex h-11 items-center gap-2 rounded-md bg-[#101817] px-4 text-white shadow-[0_8px_18px_rgba(7,20,45,.16)] transition hover:-translate-y-0.5"><span className="text-[20px] text-[#75dcb8]">▶</span><span className="flex flex-col leading-none"><small className="mb-1 text-[7px]">GET IT ON</small><b className="text-[13px]">Google Play</b></span></Link>
+            <Link href="/#" aria-label="Download Vuior on the App Store" className="inline-flex h-11 items-center gap-2 rounded-md bg-[#101817] px-4 text-white shadow-[0_8px_18px_rgba(7,20,45,.16)] transition hover:-translate-y-0.5"><Apple size={20} /><span className="flex flex-col leading-none"><small className="mb-1 text-[7px]">Download on the</small><b className="text-[13px]">App Store</b></span></Link>
+            <Link href="/#" aria-label="Get Vuior on Google Play" className="inline-flex h-11 items-center gap-2 rounded-md bg-[#101817] px-4 text-white shadow-[0_8px_18px_rgba(7,20,45,.16)] transition hover:-translate-y-0.5"><Play size={18} className="fill-[#75dcb8] text-[#75dcb8]" /><span className="flex flex-col leading-none"><small className="mb-1 text-[7px]">GET IT ON</small><b className="text-[13px]">Google Play</b></span></Link>
           </div>
         </div>
         <div className="relative min-h-[205px] overflow-hidden bg-[#dff3e9] max-[620px]:min-h-[165px]">
