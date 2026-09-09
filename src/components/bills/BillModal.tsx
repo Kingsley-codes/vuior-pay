@@ -47,7 +47,7 @@ type FormState = {
 };
 const emptyForm: FormState = {
   name: "",
-  category: "Utilities",
+  category: "",
   amount: "",
   dueDate: "",
   accountNumber: "",
@@ -55,6 +55,20 @@ const emptyForm: FormState = {
   autoPay: false,
   notes: "",
 };
+const categories = [
+  "Utilities",
+  "Transportation",
+  "Internet & Phone",
+  "Loans",
+  "Education",
+  "Subscriptions",
+  "Insurance",
+  "Business",
+  "Housing",
+  "Credit Card",
+  "Healthcare",
+  "Custom",
+];
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -90,7 +104,7 @@ export default function BillModal({
     bill
       ? {
           name: bill.name,
-          category: bill.category || "Other",
+          category: bill.category || "",
           amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
           accountNumber: bill.accountNumber || "",
@@ -175,13 +189,14 @@ export default function BillModal({
     const amount = currencyInputNumber(form.amount);
     if (
       !form.name.trim() ||
+      !form.category ||
       !amount ||
       amount <= 0 ||
       !form.dueDate ||
       !form.accountNumber.trim()
     )
       return setError(
-        "Complete the bill name, amount, due date, and account number.",
+        "Complete the bill name, category, amount, due date, and account number.",
       );
     if (mode === "add" && !file)
       return setError("Attach an image of the bill before saving.");
@@ -473,7 +488,14 @@ export default function BillModal({
                     {providers.map((provider) => (
                       <button key={provider.id} type="button" className="flex w-full items-center justify-between px-3 py-2.5 text-left text-[12px] hover:bg-[#f3fbf7]" onMouseDown={(event) => event.preventDefault()} onClick={() => {
                         setSelectedProvider(provider);
-                        setForm((current) => ({ ...current, name: provider.name, providerPhoneNumber: provider.phoneNumbers[0] || current.providerPhoneNumber }));
+                        setForm((current) => ({
+                          ...current,
+                          name: provider.name,
+                          category: provider.categories[0] || current.category,
+                          providerPhoneNumber:
+                            provider.phoneNumbers[0] ||
+                            current.providerPhoneNumber,
+                        }));
                         setShowProviders(false);
                       }}>
                         <span>{provider.name}</span>
@@ -485,23 +507,17 @@ export default function BillModal({
               </div>
               <Field label="Category">
                 <select
+                  required
                   value={form.category}
                   onChange={(e) => update("category", e.target.value)}
                 >
-                  {[
-                    "Utilities",
-                    "Transportation",
-                    "Internet & Phone",
-                    "Loans",
-                    "Education",
-                    "Subscriptions",
-                    "Insurance",
-                    "Business",
-                    "Housing",
-                    "Credit Card",
-                    "Healthcare",
-                    "Custom",
-                  ].map((item) => (
+                  <option value="" disabled>
+                    Select category
+                  </option>
+                  {form.category && !categories.includes(form.category) ? (
+                    <option value={form.category}>{form.category}</option>
+                  ) : null}
+                  {categories.map((item) => (
                     <option key={item}>{item}</option>
                   ))}
                 </select>
