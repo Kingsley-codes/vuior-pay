@@ -11,6 +11,7 @@ import {
   type Auth,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -62,6 +63,10 @@ function getClientAuth(): Auth {
 export const auth = getClientAuth();
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+export const functions = getFunctions(
+  app,
+  process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_REGION || "us-central1",
+);
 
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });

@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import PhoneNumberInput from "@/components/phone-number-input";
 import { db, storage } from "@/services/firebase";
+import { extractBillFromImage } from "@/services/billExtraction";
 import { searchProviders, storeProvider, type Provider } from "@/services/providerService";
 import type { Bill } from "@/hooks/useVuiorData";
 import {
@@ -44,10 +45,6 @@ type FormState = {
   autoPay: boolean;
   notes: string;
 };
-type Extracted = Partial<
-  Pick<FormState, "name" | "amount" | "accountNumber" | "dueDate">
->;
-
 const emptyForm: FormState = {
   name: "",
   category: "Utilities",
@@ -75,47 +72,6 @@ function normalizedStatus(value?: string) {
   return String(value || "active")
     .trim()
     .toLowerCase();
-}
-
-async function extractBill(file: File): Promise<Extracted> {
-  const key = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
-  if (!key || !file.type.startsWith("image/")) return {};
-  const dataUrl = await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      max_tokens: 500,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: "Extract the service provider name, total amount due, account number, and due date from this bill. Return only compact JSON with keys name, amount, accountNumber, dueDate. Use a numeric amount and YYYY-MM-DD date.",
-            },
-            { type: "image_url", image_url: { url: dataUrl } },
-          ],
-        },
-      ],
-    }),
-  });
-  if (!response.ok)
-    throw new Error("The document could not be read automatically.");
-  const data = (await response.json()) as {
-    choices?: { message?: { content?: string } }[];
-  };
-  const match = data.choices?.[0]?.message?.content?.match(/\{[\s\S]*\}/);
-  return match ? (JSON.parse(match[0]) as Extracted) : {};
 }
 
 export default function BillModal({
@@ -190,7 +146,7 @@ export default function BillModal({
     setError("");
     setExtracting(true);
     try {
-      const result = await extractBill(next);
+      const result = await extractBillFromImage(next);
       setForm(
         (current) =>
           ({
