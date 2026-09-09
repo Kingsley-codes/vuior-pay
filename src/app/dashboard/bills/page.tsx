@@ -113,7 +113,13 @@ export default function BillsPage() {
   );
 
   async function toggleAutopay(id: string, enabled: boolean) {
-    await updateDoc(doc(db, "bills", id), { autoPay: enabled });
+    const bill = bills.find((item) => item.id === id);
+    await updateDoc(doc(db, "bills", id), {
+      autoPay: enabled,
+      ...(enabled && !bill?.autopayId
+        ? { autopayId: crypto.randomUUID() }
+        : {}),
+    });
   }
 
   return (

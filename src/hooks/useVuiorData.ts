@@ -19,6 +19,8 @@ export type Bill = {
   dueDate: string;
   status: string;
   autoPay: boolean;
+  autopayId?: string;
+  nextPaymentDate?: string;
   frequency: string;
   accountNumber?: string;
   documentUrl?: string;
@@ -106,6 +108,14 @@ export function useVuiorData(userId?: string) {
                 data.dueDate ?? data.due_date,
               ),
               autoPay: Boolean(data.autoPay),
+              autopayId: data.autopayId
+                ? String(data.autopayId)
+                : data.autoPayId
+                  ? String(data.autoPayId)
+                  : undefined,
+              nextPaymentDate: data.nextPaymentDate
+                ? String(data.nextPaymentDate)
+                : undefined,
               frequency: String(data.frequency ?? "Monthly"),
               accountNumber: data.accountNumber
                 ? String(data.accountNumber)

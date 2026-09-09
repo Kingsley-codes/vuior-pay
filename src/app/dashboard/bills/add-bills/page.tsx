@@ -103,6 +103,7 @@ export default function AddBillPage() {
         dueDate: due,
         status: "active",
         autoPay: form.autoPay,
+        ...(form.autoPay ? { autopayId: crypto.randomUUID() } : {}),
         isDeleted: false,
         accountNumber: form.accountNumber.trim(),
         providerPhoneNumber:

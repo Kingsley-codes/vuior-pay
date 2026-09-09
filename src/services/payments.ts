@@ -84,7 +84,6 @@ export function createBillsCheckout(params: {
     successUrl: `${base}/dashboard/pay?payment=success`,
     cancelUrl: `${base}/dashboard/pay?payment=cancelled`,
     sessionType: "billsPayment",
-    autoPayIds: [],
     customerId: params.customerId || null,
   });
 }
@@ -99,6 +98,16 @@ function rewardPercent(dueDate: string) {
 
 export function billReward(bill: Bill) {
   return Number(((bill.amount * rewardPercent(bill.dueDate)) / 100).toFixed(2));
+}
+
+function nextAutopayDueDate(bill: Bill) {
+  const current = new Date(bill.dueDate);
+  const scheduled = bill.nextPaymentDate ? new Date(bill.nextPaymentDate) : null;
+  if (scheduled && !Number.isNaN(scheduled.getTime()) && scheduled > current)
+    return scheduled.toISOString();
+  const next = new Date(current);
+  next.setUTCMonth(next.getUTCMonth() + 1);
+  return next.toISOString();
 }
 
 export async function payBillsWithCredits(userId: string, bills: Bill[]) {
@@ -138,6 +147,10 @@ export async function payBillsWithCredits(userId: string, bills: Bill[]) {
     });
     bills.forEach((bill, index) => {
       const credits = billReward(bill);
+      const source = billSnapshots[index].data() || {};
+      const autopayId = bill.autopayId || crypto.randomUUID();
+      const recurringRef = bill.autoPay ? doc(collection(db, "bills")) : null;
+      const recurringDueDate = bill.autoPay ? nextAutopayDueDate(bill) : null;
       transaction.update(billRefs[index], {
         status: "in review",
         payment_ID: transactionId,
@@ -156,7 +169,30 @@ export async function payBillsWithCredits(userId: string, bills: Bill[]) {
             }
           : null,
         updatedAt: now,
+        ...(bill.autoPay
+          ? { autopayId, nextRecurringBillId: recurringRef!.id }
+          : {}),
       });
+      if (recurringRef) {
+        const recurringBill = {
+          ...source,
+          bill_ID: `VPB-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
+          status: "active",
+          autoPay: true,
+          autopayId,
+          dueDate: recurringDueDate!,
+          due_date: recurringDueDate!,
+          nextPaymentDate: recurringDueDate!,
+          sourceBillId: bill.id,
+          isDeleted: false,
+          createdAt: now,
+          created_at: now,
+          updatedAt: now,
+          updated_at: now,
+        };
+        ["paidAt", "paidBy", "paidDate", "paidWith", "amountPaid", "paymentSubmittedAt", "earlyPaymentReward", "nextRecurringBillId"].forEach((field) => delete (recurringBill as Record<string, unknown>)[field]);
+        transaction.set(recurringRef, recurringBill);
+      }
     });
     transaction.update(userRef, {
       availableCredits: currentBalance - total,

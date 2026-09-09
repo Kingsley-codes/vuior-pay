@@ -266,6 +266,9 @@ export default function BillModal({
         providerPhoneNumber:
           normalizeInternationalPhone(form.providerPhoneNumber) || null,
         autoPay: form.autoPay,
+        ...(form.autoPay && !bill?.autopayId
+          ? { autopayId: crypto.randomUUID() }
+          : {}),
         notes: form.notes.trim() || null,
         documentUrl,
         updated_at: Timestamp.now(),
