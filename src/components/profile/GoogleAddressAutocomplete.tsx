@@ -4,7 +4,13 @@ import { useEffect, useRef } from "react";
 
 type PlaceResult = {
   formatted_address?: string;
+  address_components?: {
+    long_name: string;
+    types: string[];
+  }[];
 };
+
+export type SelectedAddress = { address: string; zipCode: string };
 
 type MapsListener = { remove: () => void };
 type PlacesAutocomplete = {
@@ -78,7 +84,7 @@ export default function GoogleAddressAutocomplete({
 }: {
   value: string;
   onChange: (value: string) => void;
-  onAddressSelected: (address: string) => void;
+  onAddressSelected: (address: SelectedAddress) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const selectionHandlerRef = useRef(onAddressSelected);
@@ -89,7 +95,7 @@ export default function GoogleAddressAutocomplete({
 
   useEffect(() => {
     const input = inputRef.current;
-    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
     if (!input || !apiKey) return;
 
     let listener: MapsListener | undefined;
@@ -99,15 +105,19 @@ export default function GoogleAddressAutocomplete({
       .then(({ Autocomplete }) => {
         if (disposed) return;
         const autocomplete = new Autocomplete(input, {
-          fields: ["formatted_address"],
+          fields: ["formatted_address", "address_components"],
           types: ["address"],
         });
 
         listener = autocomplete.addListener("place_changed", () => {
-          const formattedAddress = autocomplete
-            .getPlace()
-            .formatted_address?.trim();
-          if (formattedAddress) selectionHandlerRef.current(formattedAddress);
+          const place = autocomplete.getPlace();
+          const formattedAddress = place.formatted_address?.trim();
+          if (!formattedAddress) return;
+          const zipCode =
+            place.address_components?.find((component) =>
+              component.types.includes("postal_code"),
+            )?.long_name || "";
+          selectionHandlerRef.current({ address: formattedAddress, zipCode });
         });
       })
       .catch((error: unknown) => {

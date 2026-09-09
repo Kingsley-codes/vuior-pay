@@ -14,6 +14,7 @@ export type VuiorUser = {
   phoneNo?: string;
   dob?: string;
   address?: string;
+  zipCode?: string;
   availableCredits?: number;
   referralCode?: string;
   referralBonus?: number;
@@ -53,6 +54,7 @@ export function useVuiorSession() {
             phoneNo: String(data.phoneNo ?? ""),
             dob: String(data.dob ?? ""),
             address: String(data.address ?? ""),
+            zipCode: String(data.zipCode ?? data.postalCode ?? ""),
             availableCredits: Number(data.availableCredits ?? 0),
             referralCode: String(data.referralCode ?? data.referral_code ?? ""),
             referralBonus: Number(
@@ -73,6 +75,7 @@ export function useVuiorSession() {
             phoneNo: "",
             dob: "",
             address: "",
+            zipCode: "",
             availableCredits: 0,
             referralCode: "",
             referralBonus: 0,

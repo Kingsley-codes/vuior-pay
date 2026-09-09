@@ -37,6 +37,7 @@ export function ProfileSettingsPanel() {
     phoneNo: "",
     dob: "",
     address: "",
+    zipCode: "",
   });
   const [avatar, setAvatar] = useState("");
   const [saving, setSaving] = useState(false);
@@ -56,6 +57,7 @@ export function ProfileSettingsPanel() {
       phoneNo: normalizeInternationalPhone(user.phoneNo || ""),
       dob: user.dob || "",
       address: user.address || "",
+      zipCode: user.zipCode || "",
     });
     setAvatar(user.avatar || "");
   }, [user]);
@@ -137,6 +139,7 @@ export function ProfileSettingsPanel() {
         phoneNo: normalizeInternationalPhone(form.phoneNo),
         dob: form.dob,
         address: form.address.trim(),
+        zipCode: form.zipCode.trim(),
         addressUpdatedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -274,7 +277,17 @@ export function ProfileSettingsPanel() {
               <GoogleAddressAutocomplete
                 value={form.address}
                 onChange={(value) => setField("address", value)}
-                onAddressSelected={(address) => setField("address", address)}
+                onAddressSelected={({ address, zipCode }) =>
+                  setForm((current) => ({ ...current, address, zipCode }))
+                }
+              />
+            </Field>
+            <Field label="ZIP / postal code">
+              <input
+                value={form.zipCode}
+                onChange={(event) => setField("zipCode", event.target.value)}
+                autoComplete="postal-code"
+                required
               />
             </Field>
           </div>
