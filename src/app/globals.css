@@ -27,6 +27,15 @@ input {
   font: inherit;
 }
 
+/* Google Places renders its suggestions in a portal attached to <body>. */
+.pac-container {
+  z-index: 1000;
+  border: 1px solid #dce4e2;
+  border-radius: 8px;
+  font-family: var(--font-hanken-grotesk), Arial, Helvetica, sans-serif;
+  box-shadow: 0 14px 35px #153c3020;
+}
+
 .vuior-phone-input {
   --react-international-phone-height: 43px;
   --react-international-phone-border-radius: 5px;

@@ -16,7 +16,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import PhoneNumberInput from "@/components/phone-number-input";
-import { parseUsAddress, US_STATES } from "@/utils/profile";
+import GoogleAddressAutocomplete from "@/components/profile/GoogleAddressAutocomplete";
 import {
   hasCompletePhoneNumber,
   normalizeInternationalPhone,
@@ -36,9 +36,7 @@ export function ProfileSettingsPanel() {
     lastName: "",
     phoneNo: "",
     dob: "",
-    addressLine: "",
-    city: "",
-    stateCode: "",
+    address: "",
   });
   const [avatar, setAvatar] = useState("");
   const [saving, setSaving] = useState(false);
@@ -50,7 +48,6 @@ export function ProfileSettingsPanel() {
 
   useEffect(() => {
     if (!user) return;
-    const address = parseUsAddress(user.address || "");
     // The profile arrives asynchronously from Firestore and seeds this editable draft.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setForm({
@@ -58,7 +55,7 @@ export function ProfileSettingsPanel() {
       lastName: user.lastName,
       phoneNo: normalizeInternationalPhone(user.phoneNo || ""),
       dob: user.dob || "",
-      ...address,
+      address: user.address || "",
     });
     setAvatar(user.avatar || "");
   }, [user]);
@@ -121,8 +118,6 @@ export function ProfileSettingsPanel() {
         tone: "error",
         text: "Complete every required profile field.",
       });
-    if (!US_STATES.some(([code]) => code === form.stateCode))
-      return setFeedback({ tone: "error", text: "Select a valid U.S. state." });
     if (!hasCompletePhoneNumber(form.phoneNo))
       return setFeedback({
         tone: "error",
@@ -141,7 +136,7 @@ export function ProfileSettingsPanel() {
         lastName: form.lastName.trim(),
         phoneNo: normalizeInternationalPhone(form.phoneNo),
         dob: form.dob,
-        address: `${form.addressLine.trim()}, ${form.city.trim()}, ${form.stateCode}`,
+        address: form.address.trim(),
         addressUpdatedAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -275,33 +270,11 @@ export function ProfileSettingsPanel() {
                 required
               />
             </Field>
-            <Field label="State">
-              <select
-                value={form.stateCode}
-                onChange={(e) => setField("stateCode", e.target.value)}
-                required
-              >
-                <option value="">Select state</option>
-                {US_STATES.map(([code, name]) => (
-                  <option value={code} key={code}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Street address" icon={<MapPin size={16} />} wide>
-              <input
-                value={form.addressLine}
-                onChange={(e) => setField("addressLine", e.target.value)}
-                placeholder="123 Main Street"
-                required
-              />
-            </Field>
-            <Field label="City">
-              <input
-                value={form.city}
-                onChange={(e) => setField("city", e.target.value)}
-                required
+            <Field label="Address" icon={<MapPin size={16} />} wide>
+              <GoogleAddressAutocomplete
+                value={form.address}
+                onChange={(value) => setField("address", value)}
+                onAddressSelected={(address) => setField("address", address)}
               />
             </Field>
           </div>
