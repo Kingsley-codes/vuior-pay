@@ -23,6 +23,7 @@ import { db } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
+import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -54,7 +55,7 @@ function displayStatus(bill: Bill) {
 
 export default function BillsPage() {
   const { user } = useVuiorSession();
-  const { bills, activeBills } = useVuiorData(user?.id);
+  const { bills, activeBills, loading } = useVuiorData(user?.id);
   const [tab, setTab] = useState<Tab>("Upcoming");
   const [category, setCategory] = useState("All Categories");
   const [status, setStatus] = useState("All Statuses");
@@ -121,6 +122,8 @@ export default function BillsPage() {
         : {}),
     });
   }
+
+  if (loading) return <DashboardShell><BillsSkeleton /></DashboardShell>;
 
   return (
     <DashboardShell>

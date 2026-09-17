@@ -291,10 +291,18 @@ function ContactPanel({ user, onSubmitted }: { user: ReturnType<typeof useVuiorS
 
 function TicketsPanel({ tickets, loading, refreshing, updatingId, onRefresh, onCreate, onResolve, onReopen }: { tickets: Ticket[]; loading: boolean; refreshing: boolean; updatingId: string | null; onRefresh: () => void; onCreate: () => void; onResolve: (ticket: Ticket) => void; onReopen: (ticket: Ticket) => void }) {
   const [renderedAt] = useState(Date.now);
-  if (loading) return <div className="grid min-h-[360px] place-items-center rounded-xl border border-[#e2e8e6] bg-white"><LoaderCircle className="animate-spin text-[#00a96b]" size={28} /></div>;
+  if (loading) return <TicketsSkeleton />;
   return <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,.04)]">
     <div className="flex flex-col gap-3 border-b border-[#e7ecea] p-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 className="text-[16px] font-bold">My support tickets</h2><p className="mt-1 text-[10px] text-[#738097]">{tickets.length} ticket{tickets.length === 1 ? "" : "s"} · {tickets.filter((item) => item.status === "open" || item.status === "in-progress").length} active</p></div><div className="flex gap-2"><button onClick={onRefresh} disabled={refreshing} className="grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] text-[#66748a]" aria-label="Refresh tickets"><RefreshCw size={15} className={refreshing ? "animate-spin" : ""} /></button><button onClick={onCreate} className="flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[11px] font-semibold text-white"><Plus size={15} />New ticket</button></div></div>
     {!tickets.length ? <div className="grid min-h-[360px] place-items-center p-8 text-center"><div><span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]"><TicketIcon size={34} /></span><h3 className="mt-4 text-[15px] font-bold">No tickets yet</h3><p className="mt-2 text-[11px] text-[#738097]">When you contact support, your requests will appear here.</p><button onClick={onCreate} className="mt-5 h-10 rounded-lg bg-[#00a96b] px-5 text-[11px] font-semibold text-white">Create a ticket</button></div></div> : <div className="divide-y divide-[#edf1ef]">{tickets.map((ticket) => <TicketRow key={ticket.id} ticket={ticket} renderedAt={renderedAt} updating={updatingId === ticket.id} onResolve={() => onResolve(ticket)} onReopen={() => onReopen(ticket)} />)}</div>}
+  </section>;
+}
+
+function TicketsSkeleton() {
+  return <section role="status" aria-label="Loading support tickets" className="animate-pulse overflow-hidden rounded-xl border border-[#e2e8e6] bg-white">
+    <div className="flex items-center justify-between border-b border-[#e7ecea] p-5"><div><div className="h-4 w-36 rounded bg-[#e2e8e6]"/><div className="mt-2 h-2.5 w-24 rounded bg-[#edf1ef]"/></div><div className="h-10 w-32 rounded-lg bg-[#e2e8e6]"/></div>
+    <div className="divide-y divide-[#edf1ef]">{Array.from({ length: 4 }, (_, index) => <div key={index} className="p-5 sm:p-6"><div className="flex items-start justify-between gap-5"><div className="flex-1"><div className="h-3.5 w-2/5 rounded bg-[#e2e8e6]"/><div className="mt-2 h-2.5 w-1/4 rounded bg-[#edf1ef]"/><div className="mt-5 h-3 w-full rounded bg-[#edf1ef]"/><div className="mt-2 h-3 w-4/5 rounded bg-[#edf1ef]"/></div><div className="h-9 w-28 rounded-lg bg-[#e2e8e6]"/></div></div>)}</div>
+    <span className="sr-only">Loading…</span>
   </section>;
 }
 

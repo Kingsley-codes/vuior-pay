@@ -22,6 +22,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { auth } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { DashboardLoadingScreen } from "@/components/dashboard/DashboardSkeletons";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
@@ -96,12 +97,7 @@ export default function DashboardShell({
     }
   }
 
-  if (loading)
-    return (
-      <div className="grid min-h-screen place-items-center bg-[#f8faf9] text-sm text-[#65718c]">
-        Loading your Vuior workspace…
-      </div>
-    );
+  if (loading) return <DashboardLoadingScreen />;
   if (!firebaseUser) return null;
   if (mustChangePassword && pathname !== passwordChangePath) {
     return (

@@ -18,6 +18,7 @@ import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
+import { DashboardHomeSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
@@ -43,7 +44,7 @@ function BillIcon({ bill }: { bill: Bill }) {
 
 export default function DashboardPage() {
   const { user } = useVuiorSession();
-  const { activeBills, transactions, walletBalance } = useVuiorData(user?.id);
+  const { activeBills, transactions, walletBalance, loading } = useVuiorData(user?.id);
   const upcoming = [...activeBills].sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
   const unpaidTotal = activeBills.reduce((sum, bill) => sum + bill.amount, 0);
   const credits = Number(user?.availableCredits ?? 0);
@@ -56,6 +57,8 @@ export default function DashboardPage() {
     { title: "Available Credits", value: credits.toLocaleString(), note: "Ready to redeem", icon: Coins },
     { title: "Payments This Month", value: String(successfulPayments.length), note: successfulPayments.length ? "Completed successfully" : "No payments yet", icon: CalendarCheck2 },
   ];
+
+  if (loading) return <DashboardShell><DashboardHomeSkeleton /></DashboardShell>;
 
   return (
     <DashboardShell>

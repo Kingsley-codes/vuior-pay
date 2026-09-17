@@ -82,9 +82,16 @@ export function useVuiorData(userId?: string) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [walletBalance, setWalletBalance] = useState(0);
   const [totalBillPaymentsThisYear, setTotalBillPaymentsThisYear] = useState(0);
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) return;
+    let active = true;
+    const pending = new Set(["bills", "transactions", "stats"]);
+    const markReady = (source: string) => {
+      pending.delete(source);
+      if (active && pending.size === 0) setLoadedFor(userId);
+    };
 
     const unsubscribeBills = onSnapshot(
       query(
@@ -146,7 +153,9 @@ export function useVuiorData(userId?: string) {
             };
           }),
         );
+        markReady("bills");
       },
+      () => markReady("bills"),
     );
 
     const unsubscribeTransactions = onSnapshot(
@@ -197,7 +206,9 @@ export function useVuiorData(userId?: string) {
         });
         next.sort((a, b) => b.date.getTime() - a.date.getTime());
         setTransactions(next);
+        markReady("transactions");
       },
+      () => markReady("transactions"),
     );
 
     const unsubscribeStats = onSnapshot(
@@ -212,10 +223,13 @@ export function useVuiorData(userId?: string) {
         setTotalBillPaymentsThisYear(
           Number(data?.totalBillPaymentsThisYear ?? 0),
         );
+        markReady("stats");
       },
+      () => markReady("stats"),
     );
 
     return () => {
+      active = false;
       unsubscribeBills();
       unsubscribeTransactions();
       unsubscribeStats();
@@ -229,6 +243,7 @@ export function useVuiorData(userId?: string) {
       ),
     [bills],
   );
+  const loading = !userId || loadedFor !== userId;
 
   return {
     bills,
@@ -236,5 +251,6 @@ export function useVuiorData(userId?: string) {
     transactions,
     walletBalance,
     totalBillPaymentsThisYear,
+    loading,
   };
 }

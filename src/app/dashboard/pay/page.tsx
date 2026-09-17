@@ -26,6 +26,7 @@ import {
   type Transaction,
   useVuiorData,
 } from "@/hooks/useVuiorData";
+import { PayBillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import {
   billReward,
   checkoutUrl,
@@ -144,7 +145,7 @@ function BillDetails({
 
 export default function PayPage() {
   const { user } = useVuiorSession();
-  const { bills, transactions } = useVuiorData(user?.id);
+  const { bills, transactions, loading } = useVuiorData(user?.id);
   const [view, setView] = useState<"bills" | "transactions">("bills");
   const [billTab, setBillTab] = useState<"due" | "paid">("due");
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -282,6 +283,8 @@ export default function PayPage() {
       setProcessing(false);
     }
   }
+
+  if (loading) return <DashboardShell><PayBillsSkeleton /></DashboardShell>;
 
   return (
     <DashboardShell>

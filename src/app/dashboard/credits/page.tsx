@@ -24,6 +24,7 @@ import WalletModal, {
 import TransactionDetailsModal from "@/components/transactions/TransactionDetailsModal";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Transaction, useVuiorData } from "@/hooks/useVuiorData";
+import { CreditsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
 type Filter = "All" | "Earned" | "Redeemed" | "Referral";
 const money = new Intl.NumberFormat("en-US", {
@@ -47,7 +48,7 @@ function creditKind(type: string, amount: number) {
 
 export default function CreditsPage() {
   const { user } = useVuiorSession();
-  const { bills, transactions } = useVuiorData(user?.id);
+  const { bills, transactions, loading } = useVuiorData(user?.id);
   const [filter, setFilter] = useState<Filter>("All");
   const [copied, setCopied] = useState(false);
   const [walletAction, setWalletAction] = useState<WalletAction | null>(null);
@@ -120,6 +121,8 @@ export default function CreditsPage() {
     if (navigator.share) await navigator.share({ title: "Join Vuior", text });
     else await navigator.clipboard.writeText(text);
   }
+
+  if (loading) return <DashboardShell><CreditsSkeleton /></DashboardShell>;
 
   return (
     <DashboardShell>

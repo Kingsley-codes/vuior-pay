@@ -8,11 +8,12 @@ import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { ProfileSettingsPanel } from "@/app/dashboard/profile/page";
 import { SecuritySettingsPanel } from "@/app/dashboard/security/page";
+import { SettingsSkeleton as SettingsPageSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
 type SettingsTab = "profile" | "security";
 
 export default function SettingsPage() {
-  return <DashboardShell><Suspense fallback={<SettingsSkeleton/>}><SettingsContent/></Suspense></DashboardShell>;
+  return <DashboardShell><Suspense fallback={<SettingsPageSkeleton/>}><SettingsContent/></Suspense></DashboardShell>;
 }
 
 function SettingsContent() {
@@ -38,5 +39,3 @@ function SettingsContent() {
 function TabButton({ active, onClick, icon, children }: { active: boolean; onClick: () => void; icon: React.ReactNode; children: React.ReactNode }) {
   return <button type="button" role="tab" aria-selected={active} onClick={onClick} className={`flex h-10 items-center gap-2 rounded-md px-5 text-[12px] font-semibold transition ${active ? "bg-[#eaf8f2] text-[#008f60]" : "text-[#66748a] hover:bg-[#f7f9f8]"}`}>{icon}{children}</button>;
 }
-
-function SettingsSkeleton() { return <div className="mx-auto max-w-[1100px] animate-pulse px-5 py-10 sm:px-8"><div className="h-8 w-40 rounded bg-[#e7ecea]"/><div className="mt-3 h-3 w-72 rounded bg-[#eef2f0]"/><div className="mt-8 h-12 w-56 rounded-lg bg-[#e7ecea]"/><div className="mt-6 h-96 rounded-2xl bg-white"/></div> }

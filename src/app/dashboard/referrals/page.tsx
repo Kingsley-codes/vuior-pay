@@ -20,6 +20,7 @@ import {
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { ReferralsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import { redeemPromoCode, redeemReferralCode } from "@/services/referrals";
 
 type Feedback = { tone: "success" | "error"; text: string } | null;
@@ -30,7 +31,7 @@ const money = new Intl.NumberFormat("en-US", {
 
 export default function ReferralsPage() {
   const { user } = useVuiorSession();
-  const { transactions, totalBillPaymentsThisYear } = useVuiorData(user?.id);
+  const { transactions, totalBillPaymentsThisYear, loading } = useVuiorData(user?.id);
   const [referralCode, setReferralCode] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [redeeming, setRedeeming] = useState<"referral" | "promo" | null>(null);
@@ -134,6 +135,8 @@ export default function ReferralsPage() {
       setRedeeming(null);
     }
   }
+
+  if (loading) return <DashboardShell><ReferralsSkeleton /></DashboardShell>;
 
   return (
     <DashboardShell>
