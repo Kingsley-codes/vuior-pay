@@ -11,6 +11,7 @@ import {
   Coins,
   FileText,
   Home,
+  LifeBuoy,
   LogOut,
   Menu,
   Settings,
@@ -32,6 +33,7 @@ const navItems = [
     href: "/dashboard/referrals",
     icon: UsersRound,
   },
+  { label: "Support", href: "/dashboard/support", icon: LifeBuoy },
 ];
 
 export default function DashboardShell({
