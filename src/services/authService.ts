@@ -17,6 +17,8 @@ import { normalizeInternationalPhone } from "@/utils/inputFormatting";
 
 const DEFAULT_AVATAR =
   "https://ui-avatars.com/api/?name=Vuior+User&background=00a968&color=fff";
+const DELETE_ACCOUNT_ENDPOINT =
+  "https://us-central1-vuior-3c7ff.cloudfunctions.net/deleteAccount";
 
 type LoginResult = {
   mustChangePassword: boolean;
@@ -58,6 +60,11 @@ async function upsertSocialUser(user: User) {
     return { isNewUser: true };
   }
 
+  if (snapshot.data()?.isDeleted === true) {
+    await signOut(auth);
+    throw new Error("This account is no longer available.");
+  }
+
   await updateDoc(userRef, { lastLogin: Timestamp.now() });
 
   return { isNewUser: false };
@@ -77,6 +84,11 @@ export async function login(
 
     if (!userDoc.exists()) {
       throw new Error("Your account profile could not be found.");
+    }
+
+    if (userDoc.data()?.isDeleted === true) {
+      await signOut(auth);
+      throw new Error("This account is no longer available.");
     }
 
     await updateDoc(userRef, {
@@ -241,6 +253,40 @@ export async function refreshUser(): Promise<User | null> {
   await currentUser.reload();
 
   return auth.currentUser;
+}
+
+export async function deleteAccount(userId: string) {
+  const currentUser = auth.currentUser;
+  if (!currentUser || currentUser.uid !== userId) {
+    throw new Error("Your session has expired. Please sign in again.");
+  }
+
+  const token = await currentUser.getIdToken();
+  const response = await fetch(DELETE_ACCOUNT_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId }),
+  });
+
+  let payload: {
+    success?: boolean;
+    message?: string;
+    data?: { userId: string; softDeleted: boolean };
+  } = {};
+  try {
+    payload = await response.json();
+  } catch {
+    /* The error below covers non-JSON responses. */
+  }
+
+  if (!response.ok || payload.data?.softDeleted !== true) {
+    throw new Error(payload.message || "Unable to delete your account.");
+  }
+
+  return payload.data;
 }
 
 // Signs the current user out of Firebase Auth.

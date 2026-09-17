@@ -16,6 +16,8 @@ export function getAuthErrorMessage(error: unknown) {
       return "Invalid email or password.";
     case "auth/invalid-email":
       return "Please enter a valid email address.";
+    case "auth/user-disabled":
+      return "This account is no longer available.";
     case "auth/weak-password":
       return "Please choose a stronger password.";
     case "auth/popup-closed-by-user":

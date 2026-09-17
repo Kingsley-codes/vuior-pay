@@ -126,7 +126,8 @@ export async function payBillsWithCredits(userId: string, bills: Bill[]) {
       transaction.get(userRef),
       ...billRefs.map((ref) => transaction.get(ref)),
     ]);
-    if (!userSnapshot.exists()) throw new Error("User not found.");
+    if (!userSnapshot.exists() || userSnapshot.data().isDeleted === true)
+      throw new Error("User not found.");
     const currentBalance = Number(userSnapshot.data().availableCredits ?? 0);
     if (currentBalance < total)
       throw new Error(

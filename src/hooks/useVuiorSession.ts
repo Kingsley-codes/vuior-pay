@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signOut,
+  type User as FirebaseUser,
+} from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "@/services/firebase";
 
@@ -43,6 +47,16 @@ export function useVuiorSession() {
         doc(db, "users", nextUser.uid),
         (snapshot) => {
           const data = snapshot.data() ?? {};
+          if (data.isDeleted === true) {
+            setUser(null);
+            setFirebaseUser(null);
+            setLoading(false);
+            void signOut(auth).catch((error) => {
+              console.warn("Unable to sign out deleted account:", error);
+            });
+            return;
+          }
+
           setUser({
             id: nextUser.uid,
             email: String(data.email ?? nextUser.email ?? ""),

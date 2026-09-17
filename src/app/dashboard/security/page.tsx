@@ -8,14 +8,21 @@ import {
   KeyRound,
   LockKeyhole,
   ShieldCheck,
+  Trash2,
+  X,
 } from "lucide-react";
-import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  signOut,
+} from "firebase/auth";
 import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { db } from "@/services/firebase";
+import { auth, db } from "@/services/firebase";
 import { sendOTP, setPendingPasswordChange } from "@/services/otpService";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { logAuditEvent } from "@/services/auditLog";
+import { deleteAccount } from "@/services/authService";
 
 const QUESTIONS = [
   "What was the name of your first school?",
@@ -41,7 +48,10 @@ export function SecuritySettingsPanel() {
   });
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  const [busy, setBusy] = useState<"password" | "question" | null>(null);
+  const [busy, setBusy] = useState<"password" | "question" | "delete" | null>(
+    null,
+  );
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [feedback, setFeedback] = useState<{
     tone: "success" | "error";
     text: string;
@@ -66,6 +76,16 @@ export function SecuritySettingsPanel() {
       });
     }
   }, []);
+  useEffect(() => {
+    if (!showDeleteDialog) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && busy !== "delete") {
+        setShowDeleteDialog(false);
+      }
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [busy, showDeleteDialog]);
 
   async function changePassword(event: FormEvent) {
     event.preventDefault();
@@ -172,6 +192,29 @@ export function SecuritySettingsPanel() {
       setFeedback({
         tone: "error",
         text: "We couldn’t save your security question.",
+      });
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    if (!user?.id || busy) return;
+
+    setBusy("delete");
+    setFeedback(null);
+    try {
+      await deleteAccount(user.id);
+      await signOut(auth).catch(() => undefined);
+      router.replace("/login");
+    } catch (error) {
+      setShowDeleteDialog(false);
+      setFeedback({
+        tone: "error",
+        text:
+          error instanceof Error
+            ? error.message
+            : "We couldn't delete your account. Please try again.",
       });
     } finally {
       setBusy(null);
@@ -296,8 +339,90 @@ export function SecuritySettingsPanel() {
               verification.
             </p>
           </div>
+          <div className="rounded-2xl border border-[#fecdd3] bg-white p-6 shadow-[0_8px_28px_rgba(25,55,47,.04)]">
+            <span className="grid h-10 w-10 place-items-center rounded-full bg-[#fff1f2] text-[#dc3545]">
+              <Trash2 size={19} />
+            </span>
+            <h2 className="mt-4 text-[14px] font-bold text-[#9f1239]">
+              Delete account
+            </h2>
+            <p className="mt-2 text-[11px] leading-5 text-[#7b5964]">
+              This is permanent. Your account will be deactivated. All your data
+              will be deleted and cannot be recovered.
+            </p>
+            <button
+              type="button"
+              disabled={busy !== null}
+              onClick={() => setShowDeleteDialog(true)}
+              className="mt-5 h-11 w-full rounded-lg border border-[#e11d48] text-[11px] font-bold text-[#be123c] transition hover:bg-[#fff1f2] disabled:opacity-60"
+            >
+              Delete account
+            </button>
+          </div>
         </div>
       </div>
+      {showDeleteDialog ? (
+        <div
+          className="fixed inset-0 z-[80] grid place-items-center bg-[#07142d]/60 p-4 backdrop-blur-[2px]"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && busy !== "delete") {
+              setShowDeleteDialog(false);
+            }
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-account-title"
+            className="w-full max-w-[460px] rounded-2xl bg-white p-6 shadow-2xl sm:p-7"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#fff1f2] text-[#dc2626]">
+                <Trash2 size={22} />
+              </span>
+              <button
+                type="button"
+                disabled={busy === "delete"}
+                onClick={() => setShowDeleteDialog(false)}
+                aria-label="Close delete account dialog"
+                className="grid h-9 w-9 place-items-center rounded-lg text-[#7a8799] transition hover:bg-[#f5f7f6] disabled:opacity-50"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <h2
+              id="delete-account-title"
+              className="mt-5 text-[19px] font-bold text-[#111d39]"
+            >
+              Delete your account?
+            </h2>
+            <p className="mt-2 text-[12px] leading-6 text-[#66748a]">
+              Your account will be deactivated. This is permanent. You will be
+              signed out and all your data will be deleted and cannot be
+              recovered.
+            </p>
+
+            <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                disabled={busy === "delete"}
+                onClick={() => setShowDeleteDialog(false)}
+                className="h-11 rounded-lg border border-[#dce4e2] px-5 text-[11px] font-bold text-[#53617a] disabled:opacity-50"
+              >
+                Keep account
+              </button>
+              <button
+                type="button"
+                disabled={busy === "delete"}
+                onClick={() => void handleDeleteAccount()}
+                className="h-11 rounded-lg bg-[#dc2626] px-5 text-[11px] font-bold text-white transition hover:bg-[#b91c1c] disabled:opacity-60"
+              >
+                {busy === "delete" ? "Deleting account..." : "Delete account"}
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   );
   return content;
