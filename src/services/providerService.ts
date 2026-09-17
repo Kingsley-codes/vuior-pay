@@ -7,13 +7,12 @@ import {
   limit,
   orderBy,
   query,
-  runTransaction,
   setDoc,
   startAt,
   Timestamp,
   where,
 } from "firebase/firestore";
-import { db } from "@/services/firebase";
+import { auth, db } from "@/services/firebase";
 import { normalizeInternationalPhone } from "@/utils/inputFormatting";
 
 export type Provider = {
@@ -79,34 +78,29 @@ export async function storeProvider(
   const phone = normalizeInternationalPhone(phoneNumber || "");
   const categoryName = category?.trim() || "";
 
-  const merge = async (providerRef: ReturnType<typeof doc>) => runTransaction(db, async (transaction) => {
-    const snapshot = await transaction.get(providerRef);
+  const existingId = async (providerRef: ReturnType<typeof doc>) => {
+    const snapshot = await getDoc(providerRef);
     if (!snapshot.exists()) throw new Error("The selected provider no longer exists.");
-    const data = snapshot.data();
-    const providerId = typeof data.provider_ID === "string" && data.provider_ID.trim() ? data.provider_ID : providerPublicId();
-    transaction.set(providerRef, {
-      provider_ID: providerId,
-      phoneNumber: unique([...strings(data.phoneNumber).map(normalizeInternationalPhone).filter(Boolean), ...(phone ? [phone] : [])]),
-      category: unique([...strings(data.category), ...(categoryName ? [categoryName] : [])]),
-      updatedAt: Timestamp.now(),
-    }, { merge: true });
-    return providerId;
-  });
+    const value = snapshot.data().provider_ID;
+    if (typeof value !== "string" || !value.trim()) throw new Error("The selected provider is invalid.");
+    return value;
+  };
 
   if (selectedProviderId) {
     const selected = doc(db, "providers", selectedProviderId);
     const snapshot = await getDoc(selected);
-    if (snapshot.exists() && normalizeProviderName(String(snapshot.data().name || "")) === searchName) return merge(selected);
+    if (snapshot.exists() && normalizeProviderName(String(snapshot.data().name || "")) === searchName) return existingId(selected);
   }
   const existing = await getDocs(query(collection(db, "providers"), where("searchName", "==", searchName), limit(1)));
-  if (existing.docs[0]) return merge(existing.docs[0].ref);
+  if (existing.docs[0]) return existingId(existing.docs[0].ref);
 
   const providerRef = doc(collection(db, "providers"));
   const providerId = providerPublicId();
   await setDoc(providerRef, {
     provider_ID: providerId, name: displayName, searchName,
     phoneNumber: phone ? [phone] : [], category: categoryName ? [categoryName] : [],
-    status: "active", createdAt: Timestamp.now(), updatedAt: Timestamp.now(),
+    status: "pending", submittedBy: auth.currentUser?.uid || null,
+    createdAt: Timestamp.now(), updatedAt: Timestamp.now(),
   });
   return providerId;
 }

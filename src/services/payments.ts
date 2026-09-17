@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  collection,
-  doc,
-  increment,
-  runTransaction,
-  Timestamp,
-} from "firebase/firestore";
-import { auth, db } from "@/services/firebase";
+import { auth } from "@/services/firebase";
 import type { Bill } from "@/hooks/useVuiorData";
 
 const endpoints = {
@@ -15,6 +8,8 @@ const endpoints = {
   addCredits: "https://createcheckoutsession-5risxnudva-uc.a.run.app",
   payBills:
     "https://us-central1-vuior-3c7ff.cloudfunctions.net/createBillsCheckoutSession",
+  payBillsWithCredits:
+    "https://us-central1-vuior-3c7ff.cloudfunctions.net/payBillsWithCredits",
 };
 
 async function post<T>(url: string, body: Record<string, unknown>): Promise<T> {
@@ -100,125 +95,12 @@ export function billReward(bill: Bill) {
   return Number(((bill.amount * rewardPercent(bill.dueDate)) / 100).toFixed(2));
 }
 
-function nextAutopayDueDate(bill: Bill) {
-  const current = new Date(bill.dueDate);
-  const scheduled = bill.nextPaymentDate ? new Date(bill.nextPaymentDate) : null;
-  if (scheduled && !Number.isNaN(scheduled.getTime()) && scheduled > current)
-    return scheduled.toISOString();
-  const next = new Date(current);
-  next.setUTCMonth(next.getUTCMonth() + 1);
-  return next.toISOString();
-}
-
 export async function payBillsWithCredits(userId: string, bills: Bill[]) {
-  const total = Number(
-    bills.reduce((sum, bill) => sum + bill.amount, 0).toFixed(2),
-  );
-  const reward = Number(
-    bills.reduce((sum, bill) => sum + billReward(bill), 0).toFixed(2),
-  );
-  const now = Timestamp.now();
-  const transactionId = `VPT-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
-  await runTransaction(db, async (transaction) => {
-    const userRef = doc(db, "users", userId);
-    const billRefs = bills.map((bill) => doc(db, "bills", bill.id));
-    const [userSnapshot, ...billSnapshots] = await Promise.all([
-      transaction.get(userRef),
-      ...billRefs.map((ref) => transaction.get(ref)),
-    ]);
-    if (!userSnapshot.exists() || userSnapshot.data().isDeleted === true)
-      throw new Error("User not found.");
-    const currentBalance = Number(userSnapshot.data().availableCredits ?? 0);
-    if (currentBalance < total)
-      throw new Error(
-        `Insufficient credits. You need ${total - currentBalance} more credits.`,
-      );
-    billSnapshots.forEach((snapshot, index) => {
-      const data = snapshot.data();
-      if (
-        !snapshot.exists() ||
-        String(data?.user_id ?? data?.userId ?? "") !== userId ||
-        !["active", "upcoming"].includes(
-          String(data?.status ?? "").toLowerCase(),
-        )
-      )
-        throw new Error(
-          `${bills[index].name} is no longer available for payment.`,
-        );
-    });
-    bills.forEach((bill, index) => {
-      const credits = billReward(bill);
-      const source = billSnapshots[index].data() || {};
-      const autopayId = bill.autopayId || crypto.randomUUID();
-      const recurringRef = bill.autoPay ? doc(collection(db, "bills")) : null;
-      const recurringDueDate = bill.autoPay ? nextAutopayDueDate(bill) : null;
-      transaction.update(billRefs[index], {
-        status: "in review",
-        payment_ID: transactionId,
-        paymentSubmittedAt: now,
-        paidWith: "credits",
-        amountPaid: bill.amount,
-        earlyPaymentReward: credits
-          ? {
-              billId: bill.id,
-              billAmount: bill.amount,
-              credits,
-              paymentTransactionId: transactionId,
-              paymentMethod: "credits",
-              calculatedAt: now,
-              status: "pending",
-            }
-          : null,
-        updatedAt: now,
-        ...(bill.autoPay
-          ? { autopayId, nextRecurringBillId: recurringRef!.id }
-          : {}),
-      });
-      if (recurringRef) {
-        const recurringBill = {
-          ...source,
-          bill_ID: `VPB-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
-          status: "active",
-          autoPay: true,
-          autopayId,
-          dueDate: recurringDueDate!,
-          due_date: recurringDueDate!,
-          nextPaymentDate: recurringDueDate!,
-          sourceBillId: bill.id,
-          isDeleted: false,
-          createdAt: now,
-          created_at: now,
-          updatedAt: now,
-          updated_at: now,
-        };
-        ["paidAt", "paidBy", "paidDate", "paidWith", "amountPaid", "paymentSubmittedAt", "earlyPaymentReward", "nextRecurringBillId"].forEach((field) => delete (recurringBill as Record<string, unknown>)[field]);
-        transaction.set(recurringRef, recurringBill);
-      }
-    });
-    transaction.update(userRef, {
-      availableCredits: currentBalance - total,
-      lastCreditUsage: now,
-      totalCreditsUsed: increment(total),
-    });
-    transaction.set(doc(collection(db, "transactionHistory")), {
-      transaction_ID: transactionId,
-      payment_ID: transactionId,
-      userId,
-      billIds: bills.map((b) => b.id),
-      bill_IDs: bills.map((b) => b.billId),
-      amount: total,
-      totalAmount: total,
-      credits: -total,
-      paymentMethod: "credits",
-      status: "Completed",
-      date: now,
-      type: "Bill Payment",
-      category: "Bill Transactions",
-      pendingCredits: reward,
-      rewardStatus: reward > 0 ? "pending" : "none",
-    });
+  return post<{ total: number; reward: number }>(endpoints.payBillsWithCredits, {
+    userId,
+    billIds: bills.map((bill) => bill.id),
+    requestId: crypto.randomUUID().replaceAll("-", ""),
   });
-  return { total, reward };
 }
 
 export function checkoutUrl(result: { sessionId: string; url?: string }) {

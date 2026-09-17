@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { continueWithGoogle } from "@/services/authService";
 import { getAuthErrorMessage } from "@/services/authErrors";
-import { setPendingRegistration } from "@/services/pendingRegistration";
 import { requestRegistrationOtp } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import AuthInput from "@/components/auth/AuthInput";
@@ -175,7 +174,6 @@ export default function SignupPage() {
           : {}),
       };
 
-      setPendingRegistration(payload);
       await requestRegistrationOtp(payload);
       router.push(
         `/verify-otp?email=${encodeURIComponent(email)}&flow=register`,

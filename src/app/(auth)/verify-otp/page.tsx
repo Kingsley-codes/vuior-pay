@@ -2,24 +2,14 @@
 
 import { FormEvent, Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { updatePassword } from "firebase/auth";
-import { auth } from "@/services/firebase";
 import { getAuthErrorMessage } from "@/services/authErrors";
-import { login } from "@/services/authService";
+import { completeVerifiedRegistration } from "@/services/authService";
 import {
-  clearPendingRegistration,
-  getPendingRegistration,
-} from "@/services/pendingRegistration";
-import {
-  clearPendingPasswordChange,
-  getPendingPasswordChange,
-  sendOTP,
+  resendRegistrationOtp,
   verifyRegistrationOTP,
-  verifyOTP,
 } from "@/services/otpService";
 import AuthFormShell from "@/components/auth/AuthFormShell";
 import OtpInput from "@/components/auth/OtpInput";
-import { logAuditEvent } from "@/services/auditLog";
 
 export default function VerifyOtpPage() {
   return (
@@ -64,69 +54,15 @@ function VerifyOtpForm() {
       return;
     }
 
-    if (flow === "password_change") {
-      const result = verifyOTP(email, code);
-      if (!result.valid) {
-        setError(result.message);
-        setCode("");
-        return;
-      }
-
-      const pending = getPendingPasswordChange();
-      if (
-        !pending ||
-        pending.email !== email.toLowerCase().trim() ||
-        !auth.currentUser
-      ) {
-        setError(
-          "Your password change session expired. Please start again from Security.",
-        );
-        return;
-      }
-      setIsSubmitting(true);
-      try {
-        await updatePassword(auth.currentUser, pending.newPassword);
-        clearPendingPasswordChange();
-        await logAuditEvent({
-          event: "password_change_success",
-          userId: auth.currentUser.uid,
-          email,
-          method: "email",
-        });
-        router.replace("/dashboard/settings?tab=security&password=updated");
-      } catch (updateError) {
-        setError(getAuthErrorMessage(updateError));
-        await logAuditEvent({
-          event: "password_change_failed",
-          status: "failure",
-          userId: auth.currentUser.uid,
-          email,
-          method: "email",
-        });
-      } finally {
-        setIsSubmitting(false);
-      }
-      return;
-    }
-
     if (flow !== "register") {
       router.replace("/login");
       return;
     }
 
-    const pendingRegistration = getPendingRegistration();
-    if (!pendingRegistration) {
-      setError(
-        "Registration expired. Please fill the registration form again.",
-      );
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-      await verifyRegistrationOTP(email, code);
-      await login(pendingRegistration.email, pendingRegistration.password);
-      clearPendingRegistration();
+      const verified = await verifyRegistrationOTP(email, code);
+      await completeVerifiedRegistration(verified.customToken);
       router.replace("/dashboard");
     } catch (registerError) {
       setError(getAuthErrorMessage(registerError));
@@ -145,10 +81,7 @@ function VerifyOtpForm() {
     setError("");
     setNotice("");
     try {
-      await sendOTP(
-        email,
-        flow === "password_change" ? "password_reset" : "register",
-      );
+      await resendRegistrationOtp(email);
       setCode("");
       setNotice("A new verification code has been sent to your email.");
     } catch (resendError) {
@@ -160,11 +93,7 @@ function VerifyOtpForm() {
 
   return (
     <AuthFormShell
-      title={
-        flow === "password_change"
-          ? "Verify password change"
-          : "Verify your email"
-      }
+      title="Verify your email"
       description={`Enter the 6-digit code sent to ${email || "your email"}.`}
     >
       <form className="space-y-8" onSubmit={handleSubmit}>
@@ -187,13 +116,7 @@ function VerifyOtpForm() {
           disabled={isSubmitting || isResending}
           className="h-13.5 w-full rounded-lg bg-linear-to-r from-[#00955c] to-[#00aa6a] text-[16px] font-semibold text-white shadow-[0_8px_20px_rgba(0,157,98,0.18)] transition hover:brightness-[0.98] active:scale-[0.995] disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isSubmitting
-            ? flow === "password_change"
-              ? "Updating password..."
-              : "Verifying account..."
-            : flow === "password_change"
-              ? "Verify & change password"
-              : "Verify email"}
+          {isSubmitting ? "Verifying account..." : "Verify email"}
         </button>
 
         <div className="text-center">

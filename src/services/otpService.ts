@@ -1,18 +1,22 @@
 "use client";
 
-const SERVICE_ID = "service_j17uiar";
-const TEMPLATE_ID = "template_2rsiv8q";
-const PUBLIC_KEY = "O6aIOujSd28u6JbI0";
-const OTP_STORAGE_KEY = "vuior_pending_otp";
-const PASSWORD_CHANGE_KEY = "vuior_pending_password_change";
+import { auth } from "@/services/firebase";
+
+const FUNCTIONS_BASE_URL = (
+  process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_BASE_URL ||
+  "https://us-central1-vuior-3c7ff.cloudfunctions.net"
+).replace(/\/$/, "");
+
 const REQUEST_REGISTRATION_OTP_URL =
   process.env.NEXT_PUBLIC_REQUEST_REGISTRATION_OTP_URL ||
-  "https://us-central1-vuior-3c7ff.cloudfunctions.net/requestRegistrationOtp";
+  `${FUNCTIONS_BASE_URL}/requestRegistrationOtp`;
 const VERIFY_REGISTRATION_OTP_URL =
   process.env.NEXT_PUBLIC_VERIFY_REGISTRATION_OTP_URL ||
-  "https://us-central1-vuior-3c7ff.cloudfunctions.net/verifyRegistrationOtp";
+  `${FUNCTIONS_BASE_URL}/verifyRegistrationOtp`;
+const REQUEST_PASSWORD_CHANGE_OTP_URL = `${FUNCTIONS_BASE_URL}/requestPasswordChangeOtp`;
+const CONFIRM_PASSWORD_CHANGE_URL = `${FUNCTIONS_BASE_URL}/confirmPasswordChange`;
 
-type RegistrationPayload = {
+export type RegistrationPayload = {
   firstName: string;
   lastName: string;
   email: string;
@@ -24,85 +28,25 @@ type RegistrationPayload = {
   businessName?: string;
 };
 
-type OtpRecord = {
-  code: string;
-  email: string;
-  expiresAt: number;
-  flow: "register" | "password_reset";
-};
-
-function generateOTP(): string {
-  return String(Math.floor(100000 + Math.random() * 900000));
-}
-
-function storeOtp(record: OtpRecord) {
-  sessionStorage.setItem(OTP_STORAGE_KEY, JSON.stringify(record));
-}
-
-function getStoredOtp(): OtpRecord | null {
-  const rawRecord = sessionStorage.getItem(OTP_STORAGE_KEY);
-  if (!rawRecord) return null;
-
-  try {
-    return JSON.parse(rawRecord) as OtpRecord;
-  } catch {
-    sessionStorage.removeItem(OTP_STORAGE_KEY);
-    return null;
-  }
-}
-
-export async function sendOTP(
-  email: string,
-  flow: "register" | "password_reset" = "register",
-): Promise<void> {
-  if (flow === "register") {
-    await postRegistrationOtp({ email });
-    return;
-  }
-
-  const code = generateOTP();
-  const normalizedEmail = email.toLowerCase().trim();
-
-  storeOtp({
-    code,
-    email: normalizedEmail,
-    expiresAt: Date.now() + 15 * 60 * 1000,
-    flow,
-  });
-
-  const response = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      service_id: SERVICE_ID,
-      template_id: TEMPLATE_ID,
-      user_id: PUBLIC_KEY,
-      template_params: {
-        email: email.trim(),
-        passcode: code,
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(body || "Unable to send OTP email.");
-  }
+async function responseJson(response: Response) {
+  const data = (await response.json().catch(() => ({}))) as {
+    success?: boolean;
+    message?: string;
+    userId?: string;
+    customToken?: string;
+  };
+  if (!response.ok) throw new Error(data.message || "Request failed.");
+  return data;
 }
 
 async function postRegistrationOtp(body: Record<string, unknown>) {
-  const response = await fetch(REQUEST_REGISTRATION_OTP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(data.message || "Unable to send OTP email.");
-  }
-
-  return data;
+  return responseJson(
+    await fetch(REQUEST_REGISTRATION_OTP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }),
+  );
 }
 
 export async function requestRegistrationOtp(
@@ -111,82 +55,63 @@ export async function requestRegistrationOtp(
   await postRegistrationOtp(payload);
 }
 
-export function verifyOTP(email: string, code: string) {
-  const currentOtp = getStoredOtp();
-
-  if (!currentOtp) {
-    return {
-      valid: false,
-      message: "No OTP was sent. Please request a new code.",
-    };
-  }
-
-  if (currentOtp.email !== email.toLowerCase().trim()) {
-    return {
-      valid: false,
-      message: "Email does not match. Please request a new code.",
-    };
-  }
-
-  if (Date.now() > currentOtp.expiresAt) {
-    sessionStorage.removeItem(OTP_STORAGE_KEY);
-    return {
-      valid: false,
-      message: "OTP has expired. Please request a new code.",
-    };
-  }
-
-  if (currentOtp.code !== code.trim()) {
-    return { valid: false, message: "Invalid OTP. Please try again." };
-  }
-
-  sessionStorage.removeItem(OTP_STORAGE_KEY);
-  return {
-    valid: true,
-    message: "Email verified successfully.",
-    flow: currentOtp.flow,
-  };
+export async function resendRegistrationOtp(email: string): Promise<void> {
+  await postRegistrationOtp({ email });
 }
 
 export async function verifyRegistrationOTP(
   email: string,
   code: string,
-): Promise<{ success: boolean; message: string; userId?: string }> {
-  const response = await fetch(VERIFY_REGISTRATION_OTP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, code }),
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(data.message || "Unable to verify OTP.");
+): Promise<{
+  success: boolean;
+  message: string;
+  userId: string;
+  customToken: string;
+}> {
+  const data = await responseJson(
+    await fetch(VERIFY_REGISTRATION_OTP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, code }),
+    }),
+  );
+  if (!data.userId || !data.customToken) {
+    throw new Error("The verification response was incomplete.");
   }
-
-  return data;
+  return {
+    success: true,
+    message: data.message || "Email verified.",
+    userId: data.userId,
+    customToken: data.customToken,
+  };
 }
 
-export function setPendingPasswordChange(email: string, newPassword: string) {
-  sessionStorage.setItem(
-    PASSWORD_CHANGE_KEY,
-    JSON.stringify({ email: email.toLowerCase().trim(), newPassword }),
+async function authenticatedPost(
+  url: string,
+  body: Record<string, unknown> = {},
+) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Please sign in again to continue.");
+  const token = await user.getIdToken(true);
+  return responseJson(
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }),
   );
 }
 
-export function getPendingPasswordChange(): {
-  email: string;
-  newPassword: string;
-} | null {
-  const value = sessionStorage.getItem(PASSWORD_CHANGE_KEY);
-  if (!value) return null;
-  try {
-    return JSON.parse(value) as { email: string; newPassword: string };
-  } catch {
-    sessionStorage.removeItem(PASSWORD_CHANGE_KEY);
-    return null;
-  }
+export async function requestPasswordChangeOtp(): Promise<void> {
+  await authenticatedPost(REQUEST_PASSWORD_CHANGE_OTP_URL);
 }
 
-export function clearPendingPasswordChange() {
-  sessionStorage.removeItem(PASSWORD_CHANGE_KEY);
+export async function confirmPasswordChange(
+  code: string,
+  newPassword: string,
+): Promise<void> {
+  await authenticatedPost(CONFIRM_PASSWORD_CHANGE_URL, { code, newPassword });
 }

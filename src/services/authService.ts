@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  signInWithCustomToken,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -12,8 +12,6 @@ import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { extractErrorInfo } from "./authErrors";
 import { logAuditEvent } from "./auditLog";
 import { assertFirebaseConfig, auth, db, googleProvider } from "./firebase";
-import type { RegisterPayload } from "./pendingRegistration";
-import { normalizeInternationalPhone } from "@/utils/inputFormatting";
 
 const DEFAULT_AVATAR =
   "https://ui-avatars.com/api/?name=Vuior+User&background=00a968&color=fff";
@@ -122,65 +120,17 @@ export async function login(
   }
 }
 
-export async function registerUser(payload: RegisterPayload) {
+export async function completeVerifiedRegistration(customToken: string) {
   assertFirebaseConfig();
-
-  try {
-    const credential = await createUserWithEmailAndPassword(
-      auth,
-      payload.email,
-      payload.password,
-    );
-
-    const phoneNo = normalizeInternationalPhone(
-      payload.phoneLocal.trim().startsWith("+")
-        ? payload.phoneLocal
-        : `${payload.phoneCountry.trim()} ${payload.phoneLocal.trim()}`,
-    );
-
-    await setDoc(doc(db, "users", credential.user.uid), {
-      user_ID: generatePublicId("VPU"),
-      email: payload.email,
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      role: "user",
-      status: "active",
-      phoneNo,
-      avatar: DEFAULT_AVATAR,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      dob: payload.dob,
-      accountType: payload.accountType,
-      businessName: payload.businessName || null,
-      emailVerified: true,
-      createdAt: Timestamp.now(),
-      availableCredits: 0,
-      lastLogin: Timestamp.now(),
-    });
-
-    await logAuditEvent({
-      event: "signup_success",
-      userId: credential.user.uid,
-      email: payload.email,
-      method: "email",
-      metadata: {
-        accountType: payload.accountType,
-      },
-    });
-  } catch (error) {
-    const { code, message } = extractErrorInfo(error);
-
-    await logAuditEvent({
-      event: "signup_failed",
-      status: "failure",
-      email: payload.email,
-      method: "email",
-      errorCode: code,
-      errorMessage: message,
-      attachIdToken: false,
-    });
-
-    throw error;
-  }
+  const credential = await signInWithCustomToken(auth, customToken);
+  const userRef = doc(db, "users", credential.user.uid);
+  await updateDoc(userRef, { lastLogin: Timestamp.now() });
+  await logAuditEvent({
+    event: "signup_success",
+    userId: credential.user.uid,
+    email: credential.user.email,
+    method: "email",
+  });
 }
 
 export async function forgotPassword(email: string) {
