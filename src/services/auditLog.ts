@@ -1,6 +1,7 @@
 "use client";
 
 import { auth } from "./firebase";
+import { appCheckFetch } from "./appCheckFetch";
 
 type AuditEventType =
   | "login_success"
@@ -50,7 +51,7 @@ export async function logAuditEvent({
         ? await auth.currentUser.getIdToken().catch(() => undefined)
         : undefined;
 
-    const response = await fetch(LOG_EVENT_URL, {
+    const response = await appCheckFetch(LOG_EVENT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

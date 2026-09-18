@@ -2,7 +2,12 @@
 
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import {
-  browserLocalPersistence,
+  getToken as getAppCheckTokenResult,
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+  type AppCheck,
+} from "firebase/app-check";
+import {
   browserPopupRedirectResolver,
   browserSessionPersistence,
   getAuth,
@@ -40,6 +45,37 @@ export const app: FirebaseApp = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
+let appCheck: AppCheck | null = null;
+
+function getClientAppCheck(): AppCheck {
+  if (typeof window === "undefined") {
+    throw new Error("App Check tokens are only available in the browser.");
+  }
+  if (appCheck) return appCheck;
+
+  const siteKey = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY;
+  if (!siteKey) {
+    throw new Error("Missing NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY.");
+  }
+  if (process.env.NODE_ENV !== "production") {
+    const debugToken = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_DEBUG_TOKEN;
+    if (debugToken) {
+      (globalThis as typeof globalThis & {
+        FIREBASE_APPCHECK_DEBUG_TOKEN?: string;
+      }).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+    }
+  }
+  appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaEnterpriseProvider(siteKey),
+    isTokenAutoRefreshEnabled: true,
+  });
+  return appCheck;
+}
+
+export async function getAppCheckToken(): Promise<string> {
+  return (await getAppCheckTokenResult(getClientAppCheck(), false)).token;
+}
+
 function getClientAuth(): Auth {
   if (typeof window === "undefined") {
     return getAuth(app);
@@ -47,7 +83,7 @@ function getClientAuth(): Auth {
 
   try {
     return initializeAuth(app, {
-      persistence: [browserLocalPersistence, browserSessionPersistence],
+      persistence: browserSessionPersistence,
       popupRedirectResolver: browserPopupRedirectResolver,
     });
   } catch (error) {
@@ -99,11 +135,13 @@ async function request<T>(
   const user = auth.currentUser;
   if (!user) throw new Error("Your session has expired. Please sign in again.");
   const token = await user.getIdToken();
+  const appCheckToken = await getAppCheckToken();
   const query = options.params?.toString();
   const response = await fetch(`${endpoint}${query ? `?${query}` : ""}`, {
     method: options.method || "GET",
     headers: {
       Authorization: `Bearer ${token}`,
+      "X-Firebase-AppCheck": appCheckToken,
       ...(options.body ? { "Content-Type": "application/json" } : {}),
     },
     body: options.body ? JSON.stringify(options.body) : undefined,

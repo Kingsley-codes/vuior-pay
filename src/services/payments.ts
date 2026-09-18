@@ -1,6 +1,7 @@
 "use client";
 
 import { auth } from "@/services/firebase";
+import { appCheckFetch } from "@/services/appCheckFetch";
 import type { Bill } from "@/hooks/useVuiorData";
 
 const endpoints = {
@@ -15,7 +16,7 @@ const endpoints = {
 async function post<T>(url: string, body: Record<string, unknown>): Promise<T> {
   const token = await auth.currentUser?.getIdToken();
   if (!token) throw new Error("Authentication required. Please sign in again.");
-  const response = await fetch(url, {
+  const response = await appCheckFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

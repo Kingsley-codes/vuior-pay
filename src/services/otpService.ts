@@ -1,6 +1,7 @@
 "use client";
 
 import { auth } from "@/services/firebase";
+import { appCheckFetch } from "@/services/appCheckFetch";
 
 const FUNCTIONS_BASE_URL = (
   process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_BASE_URL ||
@@ -41,7 +42,7 @@ async function responseJson(response: Response) {
 
 async function postRegistrationOtp(body: Record<string, unknown>) {
   return responseJson(
-    await fetch(REQUEST_REGISTRATION_OTP_URL, {
+    await appCheckFetch(REQUEST_REGISTRATION_OTP_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -69,7 +70,7 @@ export async function verifyRegistrationOTP(
   customToken: string;
 }> {
   const data = await responseJson(
-    await fetch(VERIFY_REGISTRATION_OTP_URL, {
+    await appCheckFetch(VERIFY_REGISTRATION_OTP_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, code }),
@@ -94,7 +95,7 @@ async function authenticatedPost(
   if (!user) throw new Error("Please sign in again to continue.");
   const token = await user.getIdToken(true);
   return responseJson(
-    await fetch(url, {
+    await appCheckFetch(url, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

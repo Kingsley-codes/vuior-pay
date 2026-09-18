@@ -1,7 +1,7 @@
 "use client";
 
 import { httpsCallable } from "firebase/functions";
-import { functions } from "@/services/firebase";
+import { functions, getAppCheckToken } from "@/services/firebase";
 
 export type ExtractedBillFields = {
   name?: string;
@@ -21,6 +21,7 @@ function fileAsDataUrl(file: File) {
 
 export async function extractBillFromImage(file: File) {
   const imageDataUrl = await fileAsDataUrl(file);
+  await getAppCheckToken();
   const extractBill = httpsCallable<
     { imageDataUrl: string },
     ExtractedBillFields

@@ -16,7 +16,7 @@ import {
   reauthenticateWithCredential,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/services/firebase";
 import {
@@ -26,6 +26,7 @@ import {
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { logAuditEvent } from "@/services/auditLog";
 import { deleteAccount } from "@/services/authService";
+import { updateSecurityQuestion } from "@/services/securityQuestionService";
 
 const QUESTIONS = [
   "What was the name of your first school?",
@@ -213,18 +214,7 @@ export function SecuritySettingsPanel() {
       return setFeedback({ tone: "error", text: "Please provide an answer." });
     setBusy("question");
     try {
-      const digest = await crypto.subtle.digest(
-        "SHA-256",
-        new TextEncoder().encode(normalized),
-      );
-      const hash = Array.from(new Uint8Array(digest), (byte) =>
-        byte.toString(16).padStart(2, "0"),
-      ).join("");
-      await updateDoc(doc(db, "users", user.id), {
-        securityQuestion: question,
-        securityAnswerHash: hash,
-        securityQuestionUpdatedAt: serverTimestamp(),
-      });
+      await updateSecurityQuestion(question, normalized);
       setAnswer("");
       setFeedback({
         tone: "success",

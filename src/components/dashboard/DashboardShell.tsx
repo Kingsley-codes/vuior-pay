@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
 import { auth } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { DashboardLoadingScreen } from "@/components/dashboard/DashboardSkeletons";
+import { clearAuthenticatedActivity, useIdleLogout } from "@/hooks/useIdleLogout";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
@@ -53,6 +54,7 @@ export default function DashboardShell({
 
   const passwordChangePath = "/dashboard/change-password";
   const mustChangePassword = user?.mustChangePassword;
+  useIdleLogout(Boolean(firebaseUser));
 
   useEffect(() => {
     if (!loading && !firebaseUser) router.replace("/login");
@@ -90,6 +92,7 @@ export default function DashboardShell({
   async function logout() {
     setLoggingOut(true);
     try {
+      clearAuthenticatedActivity();
       await signOut(auth);
       router.replace("/login");
     } finally {

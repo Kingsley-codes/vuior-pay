@@ -1,5 +1,7 @@
 "use client";
 
+import { appCheckFetch } from "@/services/appCheckFetch";
+
 import {
   sendPasswordResetEmail,
   signInWithCustomToken,
@@ -12,6 +14,7 @@ import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { extractErrorInfo } from "./authErrors";
 import { logAuditEvent } from "./auditLog";
 import { assertFirebaseConfig, auth, db, googleProvider } from "./firebase";
+import { clearAuthenticatedActivity, markAuthenticatedActivity } from "@/hooks/useIdleLogout";
 
 const DEFAULT_AVATAR =
   "https://ui-avatars.com/api/?name=Vuior+User&background=00a968&color=fff";
@@ -100,6 +103,8 @@ export async function login(
       method: "email",
     });
 
+    markAuthenticatedActivity();
+
     return {
       mustChangePassword: userDoc.data()?.mustChangePassword === true,
     };
@@ -131,6 +136,7 @@ export async function completeVerifiedRegistration(customToken: string) {
     email: credential.user.email,
     method: "email",
   });
+  markAuthenticatedActivity();
 }
 
 export async function forgotPassword(email: string) {
@@ -175,6 +181,7 @@ export async function continueWithGoogle() {
       email: result.user.email,
       method: "google",
     });
+    markAuthenticatedActivity();
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
 
@@ -212,7 +219,7 @@ export async function deleteAccount(userId: string) {
   }
 
   const token = await currentUser.getIdToken();
-  const response = await fetch(DELETE_ACCOUNT_ENDPOINT, {
+  const response = await appCheckFetch(DELETE_ACCOUNT_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -247,6 +254,7 @@ export async function logout() {
     const currentUser = auth.currentUser;
 
     await signOut(auth);
+    clearAuthenticatedActivity();
 
     if (currentUser) {
       await logAuditEvent({

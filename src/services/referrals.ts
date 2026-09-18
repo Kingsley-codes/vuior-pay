@@ -1,6 +1,7 @@
 "use client";
 
 import { auth } from "@/services/firebase";
+import { appCheckFetch } from "@/services/appCheckFetch";
 
 const ENDPOINTS = {
   referral: "https://redeemreferralcode-5risxnudva-uc.a.run.app",
@@ -14,7 +15,7 @@ async function postJson<T>(
   const token = await auth.currentUser?.getIdToken();
   if (!token) throw new Error("Please sign in again to continue.");
 
-  const response = await fetch(url, {
+  const response = await appCheckFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
