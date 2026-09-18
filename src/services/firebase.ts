@@ -1,12 +1,14 @@
 "use client";
 
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
-import {
-  getToken as getAppCheckTokenResult,
-  initializeAppCheck,
-  ReCaptchaEnterpriseProvider,
-  type AppCheck,
-} from "firebase/app-check";
+// TODO(App Check): Restore the firebase/app-check imports when App Check is
+// configured for the web app.
+// import {
+//   getToken as getAppCheckTokenResult,
+//   initializeAppCheck,
+//   ReCaptchaEnterpriseProvider,
+//   type AppCheck,
+// } from "firebase/app-check";
 import {
   browserPopupRedirectResolver,
   browserSessionPersistence,
@@ -45,36 +47,38 @@ export const app: FirebaseApp = getApps().length
   ? getApp()
   : initializeApp(firebaseConfig);
 
-let appCheck: AppCheck | null = null;
-
-function getClientAppCheck(): AppCheck {
-  if (typeof window === "undefined") {
-    throw new Error("App Check tokens are only available in the browser.");
-  }
-  if (appCheck) return appCheck;
-
-  const siteKey = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY;
-  if (!siteKey) {
-    throw new Error("Missing NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY.");
-  }
-  if (process.env.NODE_ENV !== "production") {
-    const debugToken = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_DEBUG_TOKEN;
-    if (debugToken) {
-      (globalThis as typeof globalThis & {
-        FIREBASE_APPCHECK_DEBUG_TOKEN?: string;
-      }).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
-    }
-  }
-  appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaEnterpriseProvider(siteKey),
-    isTokenAutoRefreshEnabled: true,
-  });
-  return appCheck;
-}
-
-export async function getAppCheckToken(): Promise<string> {
-  return (await getAppCheckTokenResult(getClientAppCheck(), false)).token;
-}
+// TODO(App Check): Restore this initialization after registering the web app
+// with Firebase App Check and configuring its reCAPTCHA Enterprise site key.
+// let appCheck: AppCheck | null = null;
+//
+// function getClientAppCheck(): AppCheck {
+//   if (typeof window === "undefined") {
+//     throw new Error("App Check tokens are only available in the browser.");
+//   }
+//   if (appCheck) return appCheck;
+//
+//   const siteKey = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY;
+//   if (!siteKey) {
+//     throw new Error("Missing NEXT_PUBLIC_FIREBASE_APP_CHECK_SITE_KEY.");
+//   }
+//   if (process.env.NODE_ENV !== "production") {
+//     const debugToken = process.env.NEXT_PUBLIC_FIREBASE_APP_CHECK_DEBUG_TOKEN;
+//     if (debugToken) {
+//       (globalThis as typeof globalThis & {
+//         FIREBASE_APPCHECK_DEBUG_TOKEN?: string;
+//       }).FIREBASE_APPCHECK_DEBUG_TOKEN = debugToken;
+//     }
+//   }
+//   appCheck = initializeAppCheck(app, {
+//     provider: new ReCaptchaEnterpriseProvider(siteKey),
+//     isTokenAutoRefreshEnabled: true,
+//   });
+//   return appCheck;
+// }
+//
+// export async function getAppCheckToken(): Promise<string> {
+//   return (await getAppCheckTokenResult(getClientAppCheck(), false)).token;
+// }
 
 function getClientAuth(): Auth {
   if (typeof window === "undefined") {
@@ -135,13 +139,15 @@ async function request<T>(
   const user = auth.currentUser;
   if (!user) throw new Error("Your session has expired. Please sign in again.");
   const token = await user.getIdToken();
-  const appCheckToken = await getAppCheckToken();
+  // TODO(App Check): Restore token acquisition and the X-Firebase-AppCheck
+  // request header when App Check is re-enabled.
+  // const appCheckToken = await getAppCheckToken();
   const query = options.params?.toString();
   const response = await fetch(`${endpoint}${query ? `?${query}` : ""}`, {
     method: options.method || "GET",
     headers: {
       Authorization: `Bearer ${token}`,
-      "X-Firebase-AppCheck": appCheckToken,
+      // "X-Firebase-AppCheck": appCheckToken,
       ...(options.body ? { "Content-Type": "application/json" } : {}),
     },
     body: options.body ? JSON.stringify(options.body) : undefined,

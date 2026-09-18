@@ -1,7 +1,9 @@
 "use client";
 
 import { httpsCallable } from "firebase/functions";
-import { functions, getAppCheckToken } from "@/services/firebase";
+import { functions } from "@/services/firebase";
+// TODO(App Check): Restore getAppCheckToken when backend enforcement is enabled.
+// import { functions, getAppCheckToken } from "@/services/firebase";
 
 export type ExtractedBillFields = {
   name?: string;
@@ -21,7 +23,8 @@ function fileAsDataUrl(file: File) {
 
 export async function extractBillFromImage(file: File) {
   const imageDataUrl = await fileAsDataUrl(file);
-  await getAppCheckToken();
+  // TODO(App Check): Restore this preflight token request when App Check is enabled.
+  // await getAppCheckToken();
   const extractBill = httpsCallable<
     { imageDataUrl: string; fileName: string },
     ExtractedBillFields
