@@ -44,6 +44,20 @@ function rewardFor(days: number) {
   return days >= 15 ? 15 : days >= 8 ? 10 : days >= 4 ? 5 : days >= 1 ? 2 : 0;
 }
 
+function monthKey(value: Date | string) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function monthLabel(value: string) {
+  const [year, month] = value.split("-").map(Number);
+  return new Date(year, month - 1).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+}
+
 function displayStatus(bill: Bill) {
   const value = bill.status.trim().toLowerCase().replaceAll("_", " ");
   if (value === "in review")
@@ -58,7 +72,7 @@ export default function BillsPage() {
   const { bills, activeBills, loading } = useVuiorData(user?.id);
   const [tab, setTab] = useState<Tab>("Upcoming");
   const [category, setCategory] = useState("All Categories");
-  const [status, setStatus] = useState("All Statuses");
+  const [paidMonth, setPaidMonth] = useState("All Months");
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState<{
     mode: "add" | "details";
@@ -86,6 +100,25 @@ export default function BillsPage() {
     );
   });
 
+  const paidMonthOptions = useMemo(() => {
+    const months = bills
+      .filter((bill) =>
+        ["in review", "paid", "completed"].includes(
+          bill.status.trim().toLowerCase().replaceAll("_", " "),
+        ),
+      )
+      .map((bill) =>
+        monthKey(bill.paidAt ?? bill.paymentSubmittedAt ?? bill.dueDate),
+      )
+      .filter(Boolean);
+    return [
+      "All Months",
+      ...Array.from(new Set(months))
+        .sort((a, b) => b.localeCompare(a))
+        .map(monthLabel),
+    ];
+  }, [bills]);
+
   const visibleBills = useMemo(
     () =>
       bills
@@ -102,15 +135,20 @@ export default function BillsPage() {
           return (
             matchesTab &&
             (category === "All Categories" || bill.category === category) &&
-            (status === "All Statuses" ||
-              billStatus === status.toLowerCase()) &&
+            (tab !== "Paid" ||
+              paidMonth === "All Months" ||
+              monthLabel(
+                monthKey(
+                  bill.paidAt ?? bill.paymentSubmittedAt ?? bill.dueDate,
+                ),
+              ) === paidMonth) &&
             `${bill.name} ${bill.category}`
               .toLowerCase()
               .includes(search.toLowerCase())
           );
         })
         .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate)),
-    [bills, category, search, status, tab],
+    [bills, category, paidMonth, search, tab],
   );
 
   async function toggleAutopay(id: string, enabled: boolean) {
@@ -136,16 +174,13 @@ export default function BillsPage() {
             </p>
           </div>
           <div className="flex w-full items-center gap-3 sm:w-auto">
-          <label className="flex h-11 min-w-0 flex-1 items-center rounded-lg border border-[#dfe5e7] bg-white px-4 text-[#75829a] sm:w-[390px] sm:flex-none">
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search bills by name or category…"
-              className="min-w-0 flex-1 bg-transparent text-[12px] outline-none"
-            />
-            <Search size={18} />
-          </label>
-          <NotificationsMenu userId={user?.id} />
+            <button
+              onClick={() => setModal({ mode: "add" })}
+              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-5 text-[11px] font-semibold text-white sm:flex-none"
+            >
+              <Plus size={17} /> Add Bill
+            </button>
+            <NotificationsMenu userId={user?.id} />
           </div>
         </div>
 
@@ -217,28 +252,28 @@ export default function BillsPage() {
                   ),
                 )}
               </div>
-              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_auto]">
+              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)]">
+                <label className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white px-3 text-[#75829a]">
+                  <Search size={16} />
+                  <input
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Search bills by name or category…"
+                    className="ml-2 min-w-0 flex-1 bg-transparent text-[11px] outline-none"
+                  />
+                </label>
                 <Filter
                   value={category}
                   onChange={setCategory}
                   options={categories}
                 />
-                <Filter
-                  value={status}
-                  onChange={setStatus}
-                  options={[
-                    "All Statuses",
-                    "Active",
-                    "In Review",
-                    "Paid",
-                  ]}
-                />
-                <button
-                  onClick={() => setModal({ mode: "add" })}
-                  className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#00a96b] px-5 text-[11px] font-semibold text-white"
-                >
-                  <Plus size={17} /> Add Bill
-                </button>
+                {tab === "Paid" ? (
+                  <Filter
+                    value={paidMonth}
+                    onChange={setPaidMonth}
+                    options={paidMonthOptions}
+                  />
+                ) : null}
               </div>
 
               <div>
