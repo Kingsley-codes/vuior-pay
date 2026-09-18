@@ -151,12 +151,16 @@ export default function BillModal({
 
   async function chooseFile(next: File | undefined) {
     if (!next) return;
-    if (!next.type.startsWith("image/"))
-      return setError("Choose a JPG, PNG, or WEBP image of the bill.");
+    const isSupportedImage = ["image/jpeg", "image/png", "image/webp"].includes(
+      next.type,
+    );
+    const isPdf = next.type === "application/pdf";
+    if (!isSupportedImage && !isPdf)
+      return setError("Choose a JPG, PNG, WEBP, or PDF bill document.");
     if (next.size > 10 * 1024 * 1024)
       return setError("The document must be smaller than 10 MB.");
     setFile(next);
-    setPreview(URL.createObjectURL(next));
+    setPreview(isSupportedImage ? URL.createObjectURL(next) : "");
     setError("");
     setExtracting(true);
     try {
@@ -199,7 +203,7 @@ export default function BillModal({
         "Complete the bill name, category, amount, due date, and account number.",
       );
     if (mode === "add" && !file)
-      return setError("Attach an image of the bill before saving.");
+      return setError("Attach a bill document before saving.");
     setWorking(true);
     setError("");
     try {
@@ -438,11 +442,11 @@ export default function BillModal({
                     ? file.name
                     : bill?.documentUrl
                       ? "Replace attached document"
-                      : "Upload a bill image"}
+                      : "Upload a bill document"}
                 </b>
                 <small className="mt-1.5 block text-[10px] leading-5 text-[#657a72]">
-                  JPG, PNG or WEBP up to 10 MB. Vuior AI will fill in the bill
-                  details automatically.
+                  JPG, PNG, WEBP or PDF up to 10 MB. Vuior AI will fill in the
+                  bill details automatically.
                 </small>
                 {extracting ? (
                   <span className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-[#009b67]">
@@ -460,7 +464,7 @@ export default function BillModal({
               ref={inputRef}
               hidden
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
               onChange={(event) => chooseFile(event.target.files?.[0])}
             />
             {error ? (

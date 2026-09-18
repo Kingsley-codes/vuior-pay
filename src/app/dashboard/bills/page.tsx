@@ -203,27 +203,6 @@ export default function BillsPage() {
 
         <div className="mt-6">
           <div className="min-w-0 space-y-5">
-            <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">
-              <span className="grid h-12 w-12 place-items-center rounded-full border-[5px] border-[#a9e3cd] bg-white text-[#00a96b]">
-                <CircleDollarSign size={23} />
-              </span>
-              <div className="flex-1">
-                <h2 className="text-[14px] font-bold">
-                  Earn credits when you pay early
-                </h2>
-                <p className="mt-1 text-[11px] text-[#64718a]">
-                  Pay up to 15 days early and earn up to 15% in credits on
-                  eligible bills.
-                </p>
-              </div>
-              <button onClick={() => setInfoModal("savings")} className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]">
-                How it works <ChevronRight className="ml-2 inline" size={14} />
-              </button>
-              <button onClick={() => setInfoModal("autopay")} className="h-10 rounded-md border border-[#d5e5df] bg-white px-5 text-[11px] font-semibold text-[#274b43]">
-                Autopay guide
-              </button>
-            </section>
-
             <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
               <div className="flex overflow-x-auto border-b border-[#e7ecea] px-3 sm:px-5">
                 {(["Upcoming", "Paid", "Overdue"] as Tab[]).map(
@@ -574,6 +553,27 @@ export default function BillsPage() {
                   </button>
                 </div>
               </div>
+            </section>
+
+            <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">
+              <span className="grid h-12 w-12 place-items-center rounded-full border-[5px] border-[#a9e3cd] bg-white text-[#00a96b]">
+                <CircleDollarSign size={23} />
+              </span>
+              <div className="flex-1">
+                <h2 className="text-[14px] font-bold">
+                  Earn credits when you pay early
+                </h2>
+                <p className="mt-1 text-[11px] text-[#64718a]">
+                  Pay up to 15 days early and earn up to 15% in credits on
+                  eligible bills.
+                </p>
+              </div>
+              <button onClick={() => setInfoModal("savings")} className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]">
+                How it works <ChevronRight className="ml-2 inline" size={14} />
+              </button>
+              <button onClick={() => setInfoModal("autopay")} className="h-10 rounded-md border border-[#d5e5df] bg-white px-5 text-[11px] font-semibold text-[#274b43]">
+                Autopay guide
+              </button>
             </section>
           </div>
 
