@@ -9,9 +9,7 @@ import {
   CircleDollarSign,
   CreditCard,
   FileText,
-  Filter,
   Plus,
-  Search,
   ShieldCheck,
   Sparkles,
   WalletCards,
@@ -19,11 +17,9 @@ import {
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
-import TransactionDetailsModal from "@/components/transactions/TransactionDetailsModal";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import {
   type Bill,
-  type Transaction,
   useVuiorData,
 } from "@/hooks/useVuiorData";
 import { PayBillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
@@ -146,15 +142,9 @@ function BillDetails({
 export default function PayPage() {
   const { user } = useVuiorSession();
   const { bills, transactions, loading } = useVuiorData(user?.id);
-  const [view, setView] = useState<"bills" | "transactions">("bills");
   const [billTab, setBillTab] = useState<"due" | "paid">("due");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("All");
-  const [statusFilter, setStatusFilter] = useState("All");
   const [checkout, setCheckout] = useState(false);
   const [applyCredits, setApplyCredits] = useState(false);
   const [creditAmount, setCreditAmount] = useState("");
@@ -175,33 +165,6 @@ export default function PayPage() {
         .sort((a, b) => +new Date(b.dueDate) - +new Date(a.dueDate)),
     [bills, billTab],
   );
-  const transactionTypes = useMemo(
-    () => Array.from(new Set(transactions.map((item) => item.type))).sort(),
-    [transactions],
-  );
-  const transactionStatuses = useMemo(
-    () => Array.from(new Set(transactions.map((item) => item.status))).sort(),
-    [transactions],
-  );
-  const filteredTransactions = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    return transactions.filter(
-      (item) =>
-        (typeFilter === "All" || item.type === typeFilter) &&
-        (statusFilter === "All" || item.status === statusFilter) &&
-        (!query ||
-          [
-            item.label,
-            item.transactionId,
-            item.paymentId,
-            item.reference,
-            item.category,
-            ...item.billPublicIds,
-          ]
-            .filter(Boolean)
-            .some((value) => String(value).toLowerCase().includes(query))),
-    );
-  }, [transactions, search, typeFilter, statusFilter]);
   function paymentIdForBill(bill: Bill) {
     if (bill.paymentId) return bill.paymentId;
     return transactions.find((item) => item.billIds.includes(bill.id))
@@ -295,7 +258,7 @@ export default function PayPage() {
               Pay Bills
             </h1>
             <p className="mt-1 text-[13px] text-[#596885]">
-              Pay bills, follow review progress, and inspect every transaction.
+              Pay your bills and follow their review progress.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -340,22 +303,6 @@ export default function PayPage() {
             </div>
           </div>
         </section>
-        <div className="mt-5 grid w-full grid-cols-2 rounded-lg border border-[#dfe6e4] bg-white p-1">
-          {[
-            ["bills", "Bills"],
-            ["transactions", "Transaction history"],
-          ].map(([value, label]) => (
-            <button
-              key={value}
-              onClick={() => setView(value as typeof view)}
-              className={`h-10 w-full rounded-md px-5 text-[12px] font-medium ${view === value ? "bg-[#063f35] text-white" : "text-[#53617a]"}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {view === "bills" ? (
           <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
             <section className="overflow-hidden rounded-xl border border-[#e1e8e5] bg-white">
               <div className="flex items-center justify-between p-5">
@@ -602,108 +549,7 @@ export default function PayPage() {
               </div>
             </aside>
           </div>
-        ) : (
-          <section className="mt-5 overflow-hidden rounded-xl border border-[#e1e8e5] bg-white">
-            <div className="flex flex-col gap-4 border-b border-[#e7ecea] p-5 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h2 className="text-[16px] font-semibold">
-                  Transaction history
-                </h2>
-                <p className="mt-1 text-[11px] text-[#718097]">
-                  All wallet, credit, referral, and bill-payment activity.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <label className="flex h-10 min-w-[240px] items-center gap-2 rounded-md border border-[#dfe6e4] px-3">
-                  <Search size={15} className="text-[#718097]" />
-                  <input
-                    aria-label="Search transactions"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search IDs or descriptions"
-                    className="min-w-0 flex-1 text-[12px] outline-none"
-                  />
-                </label>
-                <label className="flex h-10 items-center gap-2 rounded-md border border-[#dfe6e4] px-3">
-                  <Filter size={14} />
-                  <select
-                    aria-label="Filter by transaction type"
-                    value={typeFilter}
-                    onChange={(event) => setTypeFilter(event.target.value)}
-                    className="bg-transparent text-[12px] outline-none"
-                  >
-                    <option>All</option>
-                    {transactionTypes.map((type) => (
-                      <option key={type}>{type}</option>
-                    ))}
-                  </select>
-                </label>
-                <select
-                  aria-label="Filter by status"
-                  value={statusFilter}
-                  onChange={(event) => setStatusFilter(event.target.value)}
-                  className="h-10 rounded-md border border-[#dfe6e4] bg-white px-3 text-[12px] outline-none"
-                >
-                  <option>All</option>
-                  {transactionStatuses.map((status) => (
-                    <option key={status}>{status}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[900px] text-left">
-                <thead className="bg-[#f8faf9] text-[11px] text-[#53617a]">
-                  <tr>
-                    {[
-                      "Transaction ID",
-                      "Description",
-                      "Type",
-                      "Amount",
-                      "Method",
-                      "Status",
-                      "Date",
-                    ].map((heading) => (
-                      <th key={heading} className="px-5 py-3 font-medium">
-                        {heading}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#edf1ef]">
-                  {filteredTransactions.map((item) => (
-                    <tr
-                      key={item.id}
-                      onClick={() => setSelectedTransaction(item)}
-                      className="cursor-pointer text-[13px] hover:bg-[#f7fbf9]"
-                    >
-                      <td className="px-5 py-4 text-[#009b67]">
-                        {item.transactionId}
-                      </td>
-                      <td className="px-5 py-4">{item.label}</td>
-                      <td className="px-5 py-4 text-[#53617a]">{item.type}</td>
-                      <td className="px-5 py-4">{money.format(item.amount)}</td>
-                      <td className="px-5 py-4 capitalize text-[#53617a]">
-                        {item.paymentMethod || "Not recorded"}
-                      </td>
-                      <td className="px-5 py-4">{item.status}</td>
-                      <td className="px-5 py-4 text-[#53617a]">
-                        {item.date.toLocaleDateString("en-US", {
-                          dateStyle: "medium",
-                        })}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {!filteredTransactions.length && (
-                <div className="grid min-h-64 place-items-center text-[13px] text-[#718097]">
-                  No transactions match these filters.
-                </div>
-              )}
-            </div>
-          </section>
-        )}
+
       </div>
       {selectedBill && (
         <BillDetails
@@ -712,13 +558,6 @@ export default function PayPage() {
           onClose={() => setSelectedBill(null)}
         />
       )}{" "}
-      {selectedTransaction && (
-        <TransactionDetailsModal
-          transaction={selectedTransaction}
-          bills={bills}
-          onClose={() => setSelectedTransaction(null)}
-        />
-      )}
       {checkout && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-[#07142d]/55 p-4">
           <div className="w-full max-w-[520px] rounded-2xl bg-white p-6 shadow-2xl">

@@ -13,6 +13,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useNotifications, type AppNotification } from "@/hooks/useNotifications";
 
+import { usePushNotifications } from "@/components/PushNotificationsProvider";
+
 function relativeTime(date: Date | null) {
   if (!date) return "Just now";
   const minutes = Math.max(0, Math.round((Date.now() - date.getTime()) / 60000));
@@ -34,6 +36,7 @@ function NotificationIcon({ kind }: { kind: AppNotification["kind"] }) {
 }
 
 export default function NotificationsMenu({ userId }: { userId?: string }) {
+  const push = usePushNotifications();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { notifications, unreadCount, markRead, markAllRead, remove, clearAll } =
@@ -74,6 +77,10 @@ export default function NotificationsMenu({ userId }: { userId?: string }) {
               {notifications.length ? <button type="button" onClick={() => void clearAll()} className="grid h-8 w-8 place-items-center rounded-md text-[#a9404b] hover:bg-[#fff1f2]" aria-label="Clear all notifications"><Trash2 size={16} /></button> : null}
             </div>
           </header>
+          {push ? <div className="border-b border-[#edf1ef] px-4 py-3 text-xs text-[#66748b]">
+            {push.status === "available" || push.status === "enabled" ? <button type="button" disabled={push.busy} onClick={() => void (push.status === "enabled" ? push.disable() : push.enable())} className="font-semibold text-[#008f60] disabled:opacity-50">{push.busy ? "Updating notifications?" : push.status === "enabled" ? "Turn off push on this browser" : "Enable push notifications"}</button> : <p>{push.status === "blocked" ? "Notifications are blocked. Allow them in your browser settings to enable push." : push.status === "unsupported" ? "Push is unavailable in this browser. On iPhone or iPad, open the app from your Home Screen." : push.status === "unconfigured" ? "Push notifications will be available soon." : "Checking push notifications?"}</p>}
+            {push.error ? <p role="alert" className="mt-2 text-[#a9404b]">{push.error}</p> : null}
+          </div> : null}
           <div className="max-h-[min(32rem,calc(100vh-8rem))] overflow-y-auto">
             {notifications.length ? notifications.map((item) => (
               <article key={item.id} className={`group flex gap-3 border-b border-[#edf1ef] px-4 py-3 transition last:border-0 ${item.read ? "bg-white" : "bg-[#f2fbf7]"}`}>
@@ -88,7 +95,7 @@ export default function NotificationsMenu({ userId }: { userId?: string }) {
                   <button type="button" onClick={() => void remove(item.id)} className="grid h-7 w-7 place-items-center rounded-md text-[#8b96a7] hover:bg-[#fff1f2] hover:text-[#c2414d]" aria-label={`Delete ${item.title}`}><Trash2 size={14} /></button>
                 </div>
               </article>
-            )) : <div className="px-6 py-12 text-center"><span className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-[#eaf8f2] text-[#009b67]"><Bell size={20} /></span><p className="mt-3 text-[13px] font-semibold text-[#16254b]">No notifications yet</p><p className="mt-1 text-[11px] leading-4 text-[#718097]">Autopay activity and credit gifts will appear here.</p></div>}
+            )) : <div className="px-6 py-12 text-center"><span className="mx-auto grid h-11 w-11 place-items-center rounded-full bg-[#eaf8f2] text-[#009b67]"><Bell size={20} /></span><p className="mt-3 text-[13px] font-semibold text-[#16254b]">No notifications yet</p><p className="mt-1 text-[11px] leading-4 text-[#718097]">Bill payments, reminders, autopay activity and credit gifts will appear here.</p></div>}
           </div>
         </section>
       ) : null}

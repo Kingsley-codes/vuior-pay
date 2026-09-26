@@ -2,10 +2,14 @@
 
 import { CreditCard, FileText, X } from "lucide-react";
 import type { Bill, Transaction } from "@/hooks/useVuiorData";
+import { categoriesForTransaction, displayName, normalize, transactionKind } from "@/utils/transactions";
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
 export default function TransactionDetailsModal({ transaction, bills = [], onClose }: { transaction: Transaction; bills?: Bill[]; onClose: () => void }) {
+  const isCredit = transactionKind(transaction) === "credit";
+  const rawCredits = transaction.credits || transaction.amount;
+  const credits = normalize(transaction.type).includes("sent") ? -Math.abs(rawCredits) : rawCredits;
   const publicBillIds = transaction.billPublicIds.length
     ? transaction.billPublicIds
     : transaction.billIds.map((id) => bills.find((bill) => bill.id === id)?.billId || "Not recorded");
@@ -13,8 +17,8 @@ export default function TransactionDetailsModal({ transaction, bills = [], onClo
     ["Transaction ID", transaction.transactionId],
     ["Payment ID", transaction.paymentId || transaction.transactionId],
     ["Bill ID", publicBillIds.join(", ") || "Not applicable"],
-    ["Type", transaction.type],
-    ["Category", transaction.category],
+    ["Type", displayName(transaction.type)],
+    ["Category", categoriesForTransaction(transaction, bills).join(", ")],
     ["Payment method", transaction.paymentMethod || "Not recorded"],
     ["Status", transaction.status],
     ["Date", transaction.date.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })],
@@ -28,7 +32,7 @@ export default function TransactionDetailsModal({ transaction, bills = [], onClo
         <button aria-label="Close transaction details" onClick={onClose} className="grid h-9 w-9 place-items-center rounded-full bg-[#f1f4f3]"><X size={17}/></button>
       </div>
       <div className="p-6">
-        <div className="rounded-xl bg-[#f6faf8] p-5"><p className="text-[11px] uppercase tracking-[.12em] text-[#718097]">Amount</p><p className="mt-2 text-[28px] font-semibold">{money.format(transaction.amount)}</p>{transaction.credits !== 0 && <p className="mt-2 text-[12px] text-[#009b67]">Credits: {transaction.credits > 0 ? "+" : ""}{transaction.credits.toFixed(2)}</p>}</div>
+        <div className="rounded-xl bg-[#f6faf8] p-5"><p className="text-[11px] uppercase tracking-[.12em] text-[#718097]">{isCredit ? "Credits" : "Amount"}</p><p className="mt-2 text-[28px] font-semibold">{isCredit ? `${credits > 0 ? "+" : ""}${credits.toLocaleString(undefined, { maximumFractionDigits: 2 })} credits` : money.format(transaction.amount)}</p>{!isCredit && transaction.credits !== 0 && <p className="mt-2 text-[12px] text-[#009b67]">Credits: {transaction.credits > 0 ? "+" : ""}{transaction.credits.toFixed(2)}</p>}</div>
         <dl className="mt-5 divide-y divide-[#edf1ef]">{rows.map(([label, value]) => <div key={label} className="grid gap-1 py-3 sm:grid-cols-[150px_1fr]"><dt className="text-[12px] text-[#718097]">{label}</dt><dd className="break-all text-[13px] text-[#17213b]">{value}</dd></div>)}</dl>
         {(transaction.creditsApplied || transaction.pendingCredits) ? <div className="mt-5 rounded-xl border border-[#dce9e4] p-4"><p className="flex items-center gap-2 text-[13px] font-medium"><FileText size={16} className="text-[#009b67]"/> Credits summary</p>{transaction.creditsApplied ? <p className="mt-3 flex justify-between text-[12px]"><span className="text-[#718097]">Credits applied</span><span>{transaction.creditsApplied.toFixed(2)}</span></p> : null}{transaction.pendingCredits ? <p className="mt-2 flex justify-between text-[12px]"><span className="text-[#718097]">Pending reward</span><span>{transaction.pendingCredits.toFixed(2)} ({transaction.rewardStatus || "pending"})</span></p> : null}</div> : null}
       </div>

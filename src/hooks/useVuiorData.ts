@@ -169,7 +169,7 @@ export function useVuiorData(userId?: string) {
           return {
             id: item.id,
             label: String(
-              data.billName ?? data.name ?? data.description ?? "Bill payment",
+              data.billName ?? data.name ?? data.description ?? data.type ?? "Bill payment",
             ),
             category: String(data.category ?? "Payment"),
             amount: Number(data.amount ?? data.amountPaid ?? 0),

@@ -34,7 +34,8 @@ function asDate(value: unknown): Date | null {
 }
 
 export function useNotifications(userId?: string) {
-  const [notifications, setNotifications] = useState<AppNotification[]>([]);
+  const [inbox, setInbox] = useState<{ userId?: string; notifications: AppNotification[] }>({ notifications: [] });
+  const notifications = useMemo(() => inbox.userId === userId ? inbox.notifications : [], [inbox, userId]);
 
   useEffect(() => {
     if (!userId) {
@@ -47,7 +48,7 @@ export function useNotifications(userId?: string) {
       query(collection(db, "notifications"), where("userId", "==", userId)),
       (snapshot) => {
         const now = Date.now();
-        setNotifications(
+        setInbox({ userId, notifications:
           snapshot.docs
             .map((item) => {
               const data = item.data();
@@ -74,9 +75,9 @@ export function useNotifications(userId?: string) {
               read,
               createdAt,
             })),
-        );
+        });
       },
-      () => setNotifications([]),
+      () => setInbox({ userId, notifications: [] }),
     );
   }, [userId]);
 

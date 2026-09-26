@@ -39,7 +39,7 @@ export function PayBillsSkeleton() {
 }
 
 export function CreditsSkeleton() {
-  return <SkeletonPage className="max-w-[1530px]"><PageHeading/><div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{Array.from({length:4},(_,i)=><Card key={i} className="h-32"><Bone className="h-3 w-28"/><Bone className="mt-5 h-8 w-24"/><Bone className="mt-4 h-2.5 w-32"/></Card>)}</div><div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_385px]"><Card><Bone className="h-5 w-32"/><Bone className="mt-5 h-11"/><Rows count={6}/></Card><div className="space-y-5">{Array.from({length:3},(_,i)=><Card key={i} className="h-44"><Bone className="h-4 w-32"/><Bone className="mt-5 h-16 w-full"/><Bone className="mt-4 h-3 w-3/4"/></Card>)}</div></div></SkeletonPage>;
+  return <SkeletonPage className="max-w-[1530px]"><PageHeading/><div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{Array.from({length:4},(_,i)=><Card key={i} className="h-32"><Bone className="h-3 w-28"/><Bone className="mt-5 h-8 w-24"/><Bone className="mt-4 h-2.5 w-32"/></Card>)}</div><Card className="mt-5"><Bone className="h-5 w-40"/><div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{Array.from({length:4},(_,i)=><Bone key={i} className="h-10"/>)}</div><Rows count={8}/></Card><Bone className="mt-5 h-24 w-full rounded-xl"/></SkeletonPage>;
 }
 
 export function ReferralsSkeleton() {
@@ -71,7 +71,7 @@ function skeletonFor(pathname: string) {
   if (pathname.includes("add-bills")) return <AddBillSkeleton/>;
   if (pathname.startsWith("/dashboard/pay")) return <PayBillsSkeleton/>;
   if (pathname.startsWith("/dashboard/bills")) return <BillsSkeleton/>;
-  if (pathname.startsWith("/dashboard/credits")) return <CreditsSkeleton/>;
+  if ((pathname.startsWith("/dashboard/credits") || pathname.startsWith("/dashboard/transactions"))) return <CreditsSkeleton/>;
   if (pathname.startsWith("/dashboard/referrals")) return <ReferralsSkeleton/>;
   if (pathname.startsWith("/dashboard/support")) return <SupportSkeleton/>;
   if (pathname.includes("security") || pathname.includes("tab=security")) return <SettingsSkeleton security/>;

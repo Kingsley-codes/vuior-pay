@@ -8,7 +8,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Coins,
+  ArrowLeftRight,
   FileText,
   Home,
   LifeBuoy,
@@ -29,7 +29,7 @@ const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
   { label: "Bills", href: "/dashboard/bills", icon: FileText },
   { label: "Pay Bills", href: "/dashboard/pay", icon: WalletCards },
-  { label: "Credits", href: "/dashboard/credits", icon: Coins },
+  { label: "Transactions", href: "/dashboard/transactions", icon: ArrowLeftRight },
   {
     label: "Promo and Referrals",
     href: "/dashboard/referrals",

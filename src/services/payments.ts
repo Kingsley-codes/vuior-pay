@@ -50,8 +50,8 @@ export function createCreditsCheckout(userId: string, credits: number) {
   return post<{ sessionId: string; url?: string }>(endpoints.addCredits, {
     userId,
     credits,
-    success_url: `${base}/dashboard/credits?checkout=success`,
-    cancel_url: `${base}/dashboard/credits?wallet=add&checkout=cancelled`,
+    success_url: `${base}/dashboard/transactions?checkout=success`,
+    cancel_url: `${base}/dashboard/transactions?wallet=add&checkout=cancelled`,
   });
 }
 
