@@ -2,7 +2,7 @@
 
 import { CreditCard, FileText, X } from "lucide-react";
 import type { Bill, Transaction } from "@/hooks/useVuiorData";
-import { categoriesForTransaction, displayName, normalize, transactionKind } from "@/utils/transactions";
+import { categoriesForTransaction, displayName, normalize, transactionKind, transactionStatus, transactionPaymentMethod } from "@/utils/transactions";
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
@@ -19,8 +19,8 @@ export default function TransactionDetailsModal({ transaction, bills = [], onClo
     ["Bill ID", publicBillIds.join(", ") || "Not applicable"],
     ["Type", displayName(transaction.type)],
     ["Category", categoriesForTransaction(transaction, bills).join(", ")],
-    ["Payment method", transaction.paymentMethod || "Not recorded"],
-    ["Status", transaction.status],
+    ["Payment method", transactionPaymentMethod(transaction) === "stripe" ? "Stripe" : transactionPaymentMethod(transaction) === "credits" ? "Credits" : transaction.paymentMethod || "Not recorded"],
+    ["Status", transactionStatus(transaction.status)],
     ["Date", transaction.date.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })],
     ["Reference", transaction.reference || "Not recorded"],
   ];

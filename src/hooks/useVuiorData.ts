@@ -9,6 +9,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/services/firebase";
+import { transactionStatus } from "@/utils/transactions";
 
 export type Bill = {
   id: string;
@@ -173,7 +174,7 @@ export function useVuiorData(userId?: string) {
             ),
             category: String(data.category ?? "Payment"),
             amount: Number(data.amount ?? data.amountPaid ?? 0),
-            status: String(data.status ?? "completed"),
+            status: transactionStatus(String(data.status ?? "completed")),
             date:
               asDate(data.date ?? data.createdAt ?? data.paidAt) ?? new Date(0),
             type: String(data.type ?? "bill_payment"),
