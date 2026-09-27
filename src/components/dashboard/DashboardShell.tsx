@@ -16,7 +16,6 @@ import {
   Menu,
   Settings,
   UsersRound,
-  WalletCards,
   X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -28,7 +27,6 @@ import { clearAuthenticatedActivity, useIdleLogout } from "@/hooks/useIdleLogout
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
   { label: "Bills", href: "/dashboard/bills", icon: FileText },
-  { label: "Pay Bills", href: "/dashboard/pay", icon: WalletCards },
   { label: "Transactions", href: "/dashboard/transactions", icon: ArrowLeftRight },
   {
     label: "Promo and Referrals",

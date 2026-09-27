@@ -20,6 +20,7 @@ import {
 import { getFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
 import { getStorage } from "firebase/storage";
+import { installSocialProfileGuard } from "./socialProfile";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -101,6 +102,7 @@ function getClientAuth(): Auth {
 }
 
 export const auth = getClientAuth();
+installSocialProfileGuard(auth);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const functions = getFunctions(

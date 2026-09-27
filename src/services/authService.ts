@@ -1,5 +1,6 @@
 "use client";
 
+import { completeSocialProfile } from "./socialProfile";
 import { appCheckFetch } from "@/services/appCheckFetch";
 
 import {
@@ -10,66 +11,18 @@ import {
   signOut,
   type User,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { extractErrorInfo } from "./authErrors";
 import { logAuditEvent } from "./auditLog";
 import { assertFirebaseConfig, auth, db, googleProvider } from "./firebase";
 import { clearAuthenticatedActivity, markAuthenticatedActivity } from "@/hooks/useIdleLogout";
 
-const DEFAULT_AVATAR =
-  "https://ui-avatars.com/api/?name=Vuior+User&background=00a968&color=fff";
 const DELETE_ACCOUNT_ENDPOINT =
   "https://us-central1-vuior-3c7ff.cloudfunctions.net/deleteAccount";
 
 type LoginResult = {
   mustChangePassword: boolean;
 };
-
-function generatePublicId(prefix: string) {
-  const randomId = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `${prefix}-${randomId}`;
-}
-
-async function upsertSocialUser(user: User) {
-  const userRef = doc(db, "users", user.uid);
-  const snapshot = await getDoc(userRef);
-
-  const [firstName = "", ...lastNameParts] = (user.displayName || "")
-    .trim()
-    .split(/\s+/);
-
-  if (!snapshot.exists()) {
-    await setDoc(userRef, {
-      user_ID: generatePublicId("VPU"),
-      email: user.email || "",
-      firstName,
-      lastName: lastNameParts.join(" "),
-      role: "user",
-      status: "active",
-      phoneNo: user.phoneNumber || "",
-      avatar: user.photoURL || DEFAULT_AVATAR,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      dob: "",
-      accountType: "personal",
-      businessName: null,
-      emailVerified: user.emailVerified,
-      createdAt: Timestamp.now(),
-      availableCredits: 0,
-      lastLogin: Timestamp.now(),
-    });
-
-    return { isNewUser: true };
-  }
-
-  if (snapshot.data()?.isDeleted === true) {
-    await signOut(auth);
-    throw new Error("This account is no longer available.");
-  }
-
-  await updateDoc(userRef, { lastLogin: Timestamp.now() });
-
-  return { isNewUser: false };
-}
 
 export async function login(
   email: string,
@@ -173,7 +126,7 @@ export async function continueWithGoogle() {
 
   try {
     const result = await signInWithPopup(auth, googleProvider);
-    const { isNewUser } = await upsertSocialUser(result.user);
+    const { isNewUser, mustChangePassword } = await completeSocialProfile(result.user);
 
     await logAuditEvent({
       event: isNewUser ? "social_signup_success" : "social_login_success",
@@ -182,6 +135,7 @@ export async function continueWithGoogle() {
       method: "google",
     });
     markAuthenticatedActivity();
+    return { mustChangePassword };
   } catch (error) {
     const { code, message } = extractErrorInfo(error);
 

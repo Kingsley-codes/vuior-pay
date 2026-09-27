@@ -77,8 +77,8 @@ export function createBillsCheckout(params: {
     total: subtotal - params.creditsApplied,
     creditApplied: params.creditsApplied,
     savings: params.savings,
-    successUrl: `${base}/dashboard/pay?payment=success`,
-    cancelUrl: `${base}/dashboard/pay?payment=cancelled`,
+    successUrl: `${base}/dashboard/bills?payment=success`,
+    cancelUrl: `${base}/dashboard/bills?payment=cancelled`,
     sessionType: "billsPayment",
     customerId: params.customerId || null,
   });
@@ -96,11 +96,11 @@ export function billReward(bill: Bill) {
   return Number(((bill.amount * rewardPercent(bill.dueDate)) / 100).toFixed(2));
 }
 
-export async function payBillsWithCredits(userId: string, bills: Bill[]) {
+export async function payBillsWithCredits(userId: string, bills: Bill[], requestId = crypto.randomUUID().replaceAll("-", "")) {
   return post<{ total: number; reward: number }>(endpoints.payBillsWithCredits, {
     userId,
     billIds: bills.map((bill) => bill.id),
-    requestId: crypto.randomUUID().replaceAll("-", ""),
+    requestId,
   });
 }
 

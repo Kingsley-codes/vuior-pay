@@ -69,7 +69,7 @@ function SkeletonPage({ className, children }: { className: string; children: Re
 function skeletonFor(pathname: string) {
   if (pathname.includes("change-password")) return <ChangePasswordSkeleton/>;
   if (pathname.includes("add-bills")) return <AddBillSkeleton/>;
-  if (pathname.startsWith("/dashboard/pay")) return <PayBillsSkeleton/>;
+  if (pathname.startsWith("/dashboard/pay")) return <BillsSkeleton/>;
   if (pathname.startsWith("/dashboard/bills")) return <BillsSkeleton/>;
   if ((pathname.startsWith("/dashboard/credits") || pathname.startsWith("/dashboard/transactions"))) return <CreditsSkeleton/>;
   if (pathname.startsWith("/dashboard/referrals")) return <ReferralsSkeleton/>;

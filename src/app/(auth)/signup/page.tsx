@@ -189,8 +189,8 @@ export default function SignupPage() {
     setErrors({});
     setSocialSubmitting(true);
     try {
-      await continueWithGoogle();
-      router.replace("/dashboard");
+      const session = await continueWithGoogle();
+      router.replace(session.mustChangePassword ? "/dashboard/change-password" : "/dashboard");
     } catch (googleError) {
       setErrors({ form: getAuthErrorMessage(googleError) });
     } finally {

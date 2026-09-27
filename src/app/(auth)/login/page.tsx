@@ -50,8 +50,8 @@ export default function LoginPage() {
     setError("");
     setSocialSubmitting(true);
     try {
-      await continueWithGoogle();
-      router.replace("/dashboard");
+      const session = await continueWithGoogle();
+      router.replace(session.mustChangePassword ? "/dashboard/change-password" : "/dashboard");
     } catch (googleError) {
       setError(getAuthErrorMessage(googleError));
     } finally {

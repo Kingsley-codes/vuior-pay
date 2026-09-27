@@ -19,6 +19,7 @@ import {
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import BillModal from "@/components/bills/BillModal";
+import BillPaymentModal from "@/components/bills/BillPaymentModal";
 import { db } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
@@ -70,6 +71,9 @@ function displayStatus(bill: Bill) {
 export default function BillsPage() {
   const { user } = useVuiorSession();
   const { bills, activeBills, loading } = useVuiorData(user?.id);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [checkoutIds, setCheckoutIds] = useState<string[] | null>(null);
+  const [paymentMessage, setPaymentMessage] = useState("");
   const [tab, setTab] = useState<Tab>("Upcoming");
   const [category, setCategory] = useState("All Categories");
   const [paidMonth, setPaidMonth] = useState("All Months");
@@ -81,6 +85,16 @@ export default function BillsPage() {
   const [infoModal, setInfoModal] = useState<"savings" | "autopay" | null>(null);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("payment")) {
+      const message = params.get("payment") === "success"
+        ? "Checkout completed. Your payment status will update once confirmation is received."
+        : "Checkout cancelled. No payment was completed in this checkout.";
+      params.delete("payment");
+      window.history.replaceState({}, "", `${window.location.pathname}${params.size ? `?${params}` : ""}`);
+      const timer = window.setTimeout(() => setPaymentMessage(message), 0);
+      return () => window.clearTimeout(timer);
+    }
     if (new URLSearchParams(window.location.search).get("addBill") === "1") {
       window.history.replaceState({}, "", window.location.pathname);
       const timer = window.setTimeout(() => setModal({ mode: "add" }), 0);
@@ -123,7 +137,7 @@ export default function BillsPage() {
     () =>
       bills
         .filter((bill) => {
-          const billStatus = bill.status.trim().toLowerCase();
+          const billStatus = bill.status.trim().toLowerCase().replaceAll("_", " ");
           const days = dueDays(bill.dueDate);
           const matchesTab =
             tab === "Upcoming"
@@ -150,6 +164,20 @@ export default function BillsPage() {
         .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate)),
     [bills, category, paidMonth, search, tab],
   );
+
+  const payableBills = bills.filter((bill) => ["active", "upcoming", "overdue"].includes(bill.status.trim().toLowerCase()) && Number.isFinite(bill.amount) && bill.amount > 0);
+  const selectedBills = payableBills.filter((bill) => selected.has(bill.id));
+  const selectableVisible = visibleBills.filter((bill) => payableBills.some((item) => item.id === bill.id));
+  const allSelected = selectableVisible.length > 0 && selectableVisible.every((bill) => selected.has(bill.id));
+  function toggleBill(id: string) {
+    setSelected((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next; });
+  }
+  function selectVisible() {
+    setSelected((current) => { const next = new Set(current); selectableVisible.forEach((bill) => { if (allSelected) next.delete(bill.id); else next.add(bill.id); }); return next; });
+  }
+  function selectionCheckbox(bill: Bill) {
+    return <input type="checkbox" aria-label={`Select ${bill.name} for payment`} checked={selectedBills.some((item) => item.id === bill.id)} disabled={!payableBills.some((item) => item.id === bill.id)} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()} onChange={() => toggleBill(bill.id)} className="h-4 w-4 shrink-0 cursor-pointer rounded accent-[#009b67]" />;
+  }
 
   async function toggleAutopay(id: string, enabled: boolean) {
     const bill = bills.find((item) => item.id === id);
@@ -184,6 +212,7 @@ export default function BillsPage() {
           </div>
         </div>
 
+        {paymentMessage && <div role="status" className="mt-5 flex items-start justify-between gap-4 rounded-xl border border-[#c6e6d5] bg-[#f0faf4] p-4 text-xs leading-5 text-[#236443]"><p>{paymentMessage}</p><button aria-label="Dismiss payment message" onClick={() => setPaymentMessage("")} className="font-semibold">Dismiss</button></div>}
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
             [
@@ -276,6 +305,8 @@ export default function BillsPage() {
                 ) : null}
               </div>
 
+              {tab !== "Paid" && selectableVisible.length > 0 && <div className="flex items-center justify-between gap-3 border-b border-[#e7ecea] bg-[#fbfdfc] px-4 py-3"><label className="flex cursor-pointer items-center gap-3 text-xs text-[#53617a]"><input type="checkbox" aria-label="Select all visible bills" checked={allSelected} ref={(element) => { if (element) element.indeterminate = !allSelected && selectableVisible.some((bill) => selected.has(bill.id)); }} onChange={selectVisible} className="h-4 w-4 accent-[#009b67]" />Select all visible bills</label><span className="text-[11px] text-[#718097]">Select bills to pay together</span></div>}
+              {selectedBills.length > 0 && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#cee5d8] bg-[#edf8f2] px-4 py-4"><div><p className="text-xs font-semibold text-[#175a3b]">{selectedBills.length} bill{selectedBills.length === 1 ? "" : "s"} selected <span className="mx-2 text-[#b0cab9]">|</span> {money.format(selectedBills.reduce((sum, bill) => sum + bill.amount, 0))}</p><p className="mt-1 text-[10px] text-[#5a7c69]">Selection includes bills across tabs and filters.</p></div><div className="flex items-center gap-4"><button onClick={() => setSelected(new Set())} className="text-xs font-medium text-[#526d5e]">Clear selection</button><button onClick={() => setCheckoutIds(selectedBills.map((bill) => bill.id))} className="flex h-10 items-center gap-2 rounded-lg bg-[#009b67] px-4 text-xs font-semibold text-white hover:bg-[#007e54]">Proceed to pay <ChevronRight size={15} /></button></div></div>}
               <div>
                 <div className="divide-y divide-[#e9eeec] lg:hidden">
                   {visibleBills.map((bill) => {
@@ -288,13 +319,16 @@ export default function BillsPage() {
                         role="button"
                         tabIndex={0}
                         onClick={() => setModal({ mode: "details", bill })}
-                        onKeyDown={(event) =>
-                          (event.key === "Enter" || event.key === " ") &&
-                          setModal({ mode: "details", bill })
-                        }
-                        className="cursor-pointer p-4 transition hover:bg-[#fbfdfc]"
+                        onKeyDown={(event) => {
+                          if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
+                            event.preventDefault();
+                            setModal({ mode: "details", bill });
+                          }
+                        }}
+                        className={`cursor-pointer p-4 transition hover:bg-[#fbfdfc] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
                       >
                         <div className="flex items-start gap-3">
+                          {tab !== "Paid" && selectionCheckbox(bill)}
                           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
                             <FileText size={17} />
                           </span>
@@ -397,15 +431,7 @@ export default function BillsPage() {
                             </span>
                             Autopay {bill.autoPay ? "on" : "off"}
                           </button>
-                          <button
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              setModal({ mode: "details", bill });
-                            }}
-                            className="h-9 rounded-md bg-[#00a96b] px-4 text-[10px] font-semibold text-white"
-                          >
-                            View details
-                          </button>
+                          {tab !== "Paid" && <button disabled={!payableBills.some((item) => item.id === bill.id)} onClick={(event) => { event.stopPropagation(); setCheckoutIds([bill.id]); }} className="h-9 rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50">Pay now</button>}
                         </div>
                       </article>
                     );
@@ -415,6 +441,7 @@ export default function BillsPage() {
                   <table className="w-full min-w-[820px] border-collapse text-left">
                     <thead className="bg-[#f7f9f8] text-[10px] text-[#34425d]">
                       <tr>
+                        {tab !== "Paid" && <th className="w-12 px-4 py-3.5"><span className="sr-only">Select bill</span></th>}
                         {[
                           "Bill & Category",
                           "Due Date",
@@ -422,7 +449,7 @@ export default function BillsPage() {
                           "Autopay",
                           "Early-Pay Reward",
                           "Status",
-                          "Actions",
+                          ...(tab !== "Paid" ? ["Actions"] : []),
                         ].map((head) => (
                           <th key={head} className="px-4 py-3.5 font-semibold">
                             {head}
@@ -439,8 +466,11 @@ export default function BillsPage() {
                           <tr
                             key={bill.id}
                             onClick={() => setModal({ mode: "details", bill })}
-                            className="cursor-pointer text-[11px] hover:bg-[#f6fbf8]"
+                            tabIndex={0}
+                            onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); setModal({ mode: "details", bill }); } }}
+                            className={`cursor-pointer text-[11px] hover:bg-[#f6fbf8] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
                           >
+                            {tab !== "Paid" && <td className="px-4 py-3" onClick={(event) => event.stopPropagation()}>{selectionCheckbox(bill)}</td>}
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
                                 <span className="grid h-9 w-9 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
@@ -535,17 +565,7 @@ export default function BillsPage() {
                                     : bill.status}
                               </span>
                             </td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  setModal({ mode: "details", bill });
-                                }}
-                                className="h-8 rounded-md border border-[#bfe9d8] px-3 text-[9px] font-semibold text-[#00a96b]"
-                              >
-                                View
-                              </button>
-                            </td>
+                            {tab !== "Paid" && <td className="px-4 py-3"><button disabled={!payableBills.some((item) => item.id === bill.id)} onClick={(event) => { event.stopPropagation(); setCheckoutIds([bill.id]); }} className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50">Pay now</button></td>}
                           </tr>
                         );
                       })}
@@ -670,6 +690,7 @@ export default function BillsPage() {
           </aside>
         </div>
       </div>
+      {checkoutIds && user && <BillPaymentModal bills={payableBills.filter((bill) => checkoutIds.includes(bill.id))} expectedBillCount={checkoutIds.length} user={user} onClose={() => setCheckoutIds(null)} onPaid={(message) => { setSelected((current) => new Set([...current].filter((id) => !checkoutIds.includes(id)))); setCheckoutIds(null); setPaymentMessage(message); setTab("Paid"); }} />}
       {modal && user?.id ? (
         <BillModal
           initialMode={modal.mode}

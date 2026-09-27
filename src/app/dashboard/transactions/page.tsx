@@ -56,7 +56,7 @@ const defaults: TransactionFilters = {
   status: "All",
   paymentMethod: "All",
   search: "",
-  period: "Last week",
+  period: "This week",
   from: "",
   to: "",
 };
@@ -226,7 +226,7 @@ export default function TransactionsPage() {
     filters.category !== "All" ||
     filters.status !== "All" ||
     filters.paymentMethod !== "All" ||
-    filters.period !== "Last week";
+    filters.period !== "This week";
 
   function description(item: Transaction) {
     if (isBill) {

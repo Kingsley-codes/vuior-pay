@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Commit placeholder configuration, never real environment values.
 !.env.example
+
+SOCIAL_AUTH_SETUP.md

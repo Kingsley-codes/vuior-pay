@@ -20,6 +20,14 @@ export function getAuthErrorMessage(error: unknown) {
       return "This account is no longer available.";
     case "auth/weak-password":
       return "Please choose a stronger password.";
+    case "auth/account-exists-with-different-credential":
+      return "This email uses another sign-in method. Please use your original sign-in method.";
+    case "auth/popup-blocked":
+      return "Allow pop-ups for this site, then try Google sign-in again.";
+    case "auth/unauthorized-domain":
+      return "This domain is not enabled for sign-in. Please contact support.";
+    case "auth/operation-not-allowed":
+      return "This sign-in provider is not enabled. Please contact support.";
     case "auth/popup-closed-by-user":
       return "Google sign in was cancelled.";
     case "auth/network-request-failed":
