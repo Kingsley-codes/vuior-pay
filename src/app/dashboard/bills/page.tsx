@@ -76,22 +76,31 @@ export default function BillsPage() {
   const [paymentMessage, setPaymentMessage] = useState("");
   const [tab, setTab] = useState<Tab>("Upcoming");
   const [category, setCategory] = useState("All Categories");
-  const [paidMonth, setPaidMonth] = useState("All Months");
+  const [paidMonth, setPaidMonth] = useState(() =>
+    monthLabel(monthKey(new Date())),
+  );
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState<{
     mode: "add" | "details";
     bill?: Bill;
   } | null>(null);
-  const [infoModal, setInfoModal] = useState<"savings" | "autopay" | null>(null);
+  const [infoModal, setInfoModal] = useState<"savings" | "autopay" | null>(
+    null,
+  );
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.has("payment")) {
-      const message = params.get("payment") === "success"
-        ? "Checkout completed. Your payment status will update once confirmation is received."
-        : "Checkout cancelled. No payment was completed in this checkout.";
+      const message =
+        params.get("payment") === "success"
+          ? "Checkout completed. Your payment status will update once confirmation is received."
+          : "Checkout cancelled. No payment was completed in this checkout.";
       params.delete("payment");
-      window.history.replaceState({}, "", `${window.location.pathname}${params.size ? `?${params}` : ""}`);
+      window.history.replaceState(
+        {},
+        "",
+        `${window.location.pathname}${params.size ? `?${params}` : ""}`,
+      );
       const timer = window.setTimeout(() => setPaymentMessage(message), 0);
       return () => window.clearTimeout(timer);
     }
@@ -127,56 +136,92 @@ export default function BillsPage() {
       .filter(Boolean);
     return [
       "All Months",
-      ...Array.from(new Set(months))
+      ...Array.from(new Set([...months, monthKey(new Date())]))
         .sort((a, b) => b.localeCompare(a))
         .map(monthLabel),
     ];
   }, [bills]);
 
-  const visibleBills = useMemo(
-    () =>
-      bills
-        .filter((bill) => {
-          const billStatus = bill.status.trim().toLowerCase().replaceAll("_", " ");
-          const days = dueDays(bill.dueDate);
-          const matchesTab =
-            tab === "Upcoming"
-              ? ["active", "upcoming"].includes(billStatus) && days >= 0
-              : tab === "Paid"
-                  ? ["in review", "paid", "completed"].includes(billStatus)
-                  : billStatus === "overdue" ||
-                    (days < 0 && ["active", "upcoming"].includes(billStatus));
-          return (
-            matchesTab &&
-            (category === "All Categories" || bill.category === category) &&
-            (tab !== "Paid" ||
-              paidMonth === "All Months" ||
-              monthLabel(
-                monthKey(
-                  bill.paidAt ?? bill.paymentSubmittedAt ?? bill.dueDate,
-                ),
-              ) === paidMonth) &&
-            `${bill.name} ${bill.category}`
-              .toLowerCase()
-              .includes(search.toLowerCase())
-          );
-        })
-        .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate)),
-    [bills, category, paidMonth, search, tab],
-  );
+  const visibleBills = useMemo(() => {
+    const currentMonth = monthKey(new Date());
+    return bills
+      .filter((bill) => {
+        const billStatus = bill.status
+          .trim()
+          .toLowerCase()
+          .replaceAll("_", " ");
+        const days = dueDays(bill.dueDate);
+        const matchesTab =
+          tab === "Upcoming"
+            ? ["active", "upcoming"].includes(billStatus) &&
+              days >= 0 &&
+              monthKey(bill.dueDate) === currentMonth
+            : tab === "Paid"
+              ? ["in review", "paid", "completed"].includes(billStatus)
+              : billStatus === "overdue" ||
+                (days < 0 && ["active", "upcoming"].includes(billStatus));
+        return (
+          matchesTab &&
+          (category === "All Categories" || bill.category === category) &&
+          (tab !== "Paid" ||
+            paidMonth === "All Months" ||
+            monthLabel(
+              monthKey(bill.paidAt ?? bill.paymentSubmittedAt ?? bill.dueDate),
+            ) === paidMonth) &&
+          `${bill.name} ${bill.category}`
+            .toLowerCase()
+            .includes(search.toLowerCase())
+        );
+      })
+      .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
+  }, [bills, category, paidMonth, search, tab]);
 
-  const payableBills = bills.filter((bill) => ["active", "upcoming", "overdue"].includes(bill.status.trim().toLowerCase()) && Number.isFinite(bill.amount) && bill.amount > 0);
+  const payableBills = bills.filter(
+    (bill) =>
+      ["active", "upcoming", "overdue"].includes(
+        bill.status.trim().toLowerCase(),
+      ) &&
+      Number.isFinite(bill.amount) &&
+      bill.amount > 0,
+  );
   const selectedBills = payableBills.filter((bill) => selected.has(bill.id));
-  const selectableVisible = visibleBills.filter((bill) => payableBills.some((item) => item.id === bill.id));
-  const allSelected = selectableVisible.length > 0 && selectableVisible.every((bill) => selected.has(bill.id));
+  const selectableVisible = visibleBills.filter((bill) =>
+    payableBills.some((item) => item.id === bill.id),
+  );
+  const allSelected =
+    selectableVisible.length > 0 &&
+    selectableVisible.every((bill) => selected.has(bill.id));
   function toggleBill(id: string) {
-    setSelected((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next; });
+    setSelected((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
   function selectVisible() {
-    setSelected((current) => { const next = new Set(current); selectableVisible.forEach((bill) => { if (allSelected) next.delete(bill.id); else next.add(bill.id); }); return next; });
+    setSelected((current) => {
+      const next = new Set(current);
+      selectableVisible.forEach((bill) => {
+        if (allSelected) next.delete(bill.id);
+        else next.add(bill.id);
+      });
+      return next;
+    });
   }
   function selectionCheckbox(bill: Bill) {
-    return <input type="checkbox" aria-label={`Select ${bill.name} for payment`} checked={selectedBills.some((item) => item.id === bill.id)} disabled={!payableBills.some((item) => item.id === bill.id)} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()} onChange={() => toggleBill(bill.id)} className="h-4 w-4 shrink-0 cursor-pointer rounded accent-[#009b67]" />;
+    return (
+      <input
+        type="checkbox"
+        aria-label={`Select ${bill.name} for payment`}
+        checked={selectedBills.some((item) => item.id === bill.id)}
+        disabled={!payableBills.some((item) => item.id === bill.id)}
+        onClick={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
+        onChange={() => toggleBill(bill.id)}
+        className="h-4 w-4 shrink-0 cursor-pointer rounded accent-[#009b67]"
+      />
+    );
   }
 
   async function toggleAutopay(id: string, enabled: boolean) {
@@ -189,7 +234,12 @@ export default function BillsPage() {
     });
   }
 
-  if (loading) return <DashboardShell><BillsSkeleton /></DashboardShell>;
+  if (loading)
+    return (
+      <DashboardShell>
+        <BillsSkeleton />
+      </DashboardShell>
+    );
 
   return (
     <DashboardShell>
@@ -212,7 +262,21 @@ export default function BillsPage() {
           </div>
         </div>
 
-        {paymentMessage && <div role="status" className="mt-5 flex items-start justify-between gap-4 rounded-xl border border-[#c6e6d5] bg-[#f0faf4] p-4 text-xs leading-5 text-[#236443]"><p>{paymentMessage}</p><button aria-label="Dismiss payment message" onClick={() => setPaymentMessage("")} className="font-semibold">Dismiss</button></div>}
+        {paymentMessage && (
+          <div
+            role="status"
+            className="mt-5 flex items-start justify-between gap-4 rounded-xl border border-[#c6e6d5] bg-[#f0faf4] p-4 text-xs leading-5 text-[#236443]"
+          >
+            <p>{paymentMessage}</p>
+            <button
+              aria-label="Dismiss payment message"
+              onClick={() => setPaymentMessage("")}
+              className="font-semibold"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
             [
@@ -269,17 +333,15 @@ export default function BillsPage() {
           <div className="min-w-0 space-y-5">
             <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
               <div className="flex overflow-x-auto border-b border-[#e7ecea] px-3 sm:px-5">
-                {(["Upcoming", "Paid", "Overdue"] as Tab[]).map(
-                  (item) => (
-                    <button
-                      key={item}
-                      onClick={() => setTab(item)}
-                      className={`h-14 shrink-0 border-b-2 px-4 text-[12px] font-semibold ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
-                    >
-                      {item}
-                    </button>
-                  ),
-                )}
+                {(["Upcoming", "Paid", "Overdue"] as Tab[]).map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => setTab(item)}
+                    className={`h-14 shrink-0 border-b-2 px-4 text-[12px] font-semibold ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
+                  >
+                    {item}
+                  </button>
+                ))}
               </div>
               <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)]">
                 <label className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white px-3 text-[#75829a]">
@@ -305,8 +367,67 @@ export default function BillsPage() {
                 ) : null}
               </div>
 
-              {tab !== "Paid" && selectableVisible.length > 0 && <div className="flex items-center justify-between gap-3 border-b border-[#e7ecea] bg-[#fbfdfc] px-4 py-3"><label className="flex cursor-pointer items-center gap-3 text-xs text-[#53617a]"><input type="checkbox" aria-label="Select all visible bills" checked={allSelected} ref={(element) => { if (element) element.indeterminate = !allSelected && selectableVisible.some((bill) => selected.has(bill.id)); }} onChange={selectVisible} className="h-4 w-4 accent-[#009b67]" />Select all visible bills</label><span className="text-[11px] text-[#718097]">Select bills to pay together</span></div>}
-              {selectedBills.length > 0 && <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#cee5d8] bg-[#edf8f2] px-4 py-4"><div><p className="text-xs font-semibold text-[#175a3b]">{selectedBills.length} bill{selectedBills.length === 1 ? "" : "s"} selected <span className="mx-2 text-[#b0cab9]">|</span> {money.format(selectedBills.reduce((sum, bill) => sum + bill.amount, 0))}</p><p className="mt-1 text-[10px] text-[#5a7c69]">Selection includes bills across tabs and filters.</p></div><div className="flex items-center gap-4"><button onClick={() => setSelected(new Set())} className="text-xs font-medium text-[#526d5e]">Clear selection</button><button onClick={() => setCheckoutIds(selectedBills.map((bill) => bill.id))} className="flex h-10 items-center gap-2 rounded-lg bg-[#009b67] px-4 text-xs font-semibold text-white hover:bg-[#007e54]">Proceed to pay <ChevronRight size={15} /></button></div></div>}
+              {tab !== "Paid" && selectableVisible.length > 0 && (
+                <div className="flex items-center justify-between gap-3 border-b border-[#e7ecea] bg-[#fbfdfc] px-4 py-3">
+                  <label className="flex cursor-pointer items-center gap-3 text-xs text-[#53617a]">
+                    <input
+                      type="checkbox"
+                      aria-label="Select all visible bills"
+                      checked={allSelected}
+                      ref={(element) => {
+                        if (element)
+                          element.indeterminate =
+                            !allSelected &&
+                            selectableVisible.some((bill) =>
+                              selected.has(bill.id),
+                            );
+                      }}
+                      onChange={selectVisible}
+                      className="h-4 w-4 accent-[#009b67]"
+                    />
+                    Select all visible bills
+                  </label>
+                  <span className="text-[11px] text-[#718097]">
+                    Select bills to pay together
+                  </span>
+                </div>
+              )}
+              {selectedBills.length > 0 && (
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#cee5d8] bg-[#edf8f2] px-4 py-4">
+                  <div>
+                    <p className="text-xs font-semibold text-[#175a3b]">
+                      {selectedBills.length} bill
+                      {selectedBills.length === 1 ? "" : "s"} selected{" "}
+                      <span className="mx-2 text-[#b0cab9]">|</span>{" "}
+                      {money.format(
+                        selectedBills.reduce(
+                          (sum, bill) => sum + bill.amount,
+                          0,
+                        ),
+                      )}
+                    </p>
+                    <p className="mt-1 text-[10px] text-[#5a7c69]">
+                      Selection includes bills across tabs and filters.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={() => setSelected(new Set())}
+                      className="text-xs font-medium text-[#526d5e]"
+                    >
+                      Clear selection
+                    </button>
+                    <button
+                      onClick={() =>
+                        setCheckoutIds(selectedBills.map((bill) => bill.id))
+                      }
+                      className="flex h-10 items-center gap-2 rounded-lg bg-[#009b67] px-4 text-xs font-semibold text-white hover:bg-[#007e54]"
+                    >
+                      Proceed to pay <ChevronRight size={15} />
+                    </button>
+                  </div>
+                </div>
+              )}
               <div>
                 <div className="divide-y divide-[#e9eeec] lg:hidden">
                   {visibleBills.map((bill) => {
@@ -320,7 +441,10 @@ export default function BillsPage() {
                         tabIndex={0}
                         onClick={() => setModal({ mode: "details", bill })}
                         onKeyDown={(event) => {
-                          if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) {
+                          if (
+                            event.target === event.currentTarget &&
+                            (event.key === "Enter" || event.key === " ")
+                          ) {
                             event.preventDefault();
                             setModal({ mode: "details", bill });
                           }
@@ -431,7 +555,22 @@ export default function BillsPage() {
                             </span>
                             Autopay {bill.autoPay ? "on" : "off"}
                           </button>
-                          {tab !== "Paid" && <button disabled={!payableBills.some((item) => item.id === bill.id)} onClick={(event) => { event.stopPropagation(); setCheckoutIds([bill.id]); }} className="h-9 rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50">Pay now</button>}
+                          {tab !== "Paid" && (
+                            <button
+                              disabled={
+                                !payableBills.some(
+                                  (item) => item.id === bill.id,
+                                )
+                              }
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                setCheckoutIds([bill.id]);
+                              }}
+                              className="h-9 rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
+                            >
+                              Pay now
+                            </button>
+                          )}
                         </div>
                       </article>
                     );
@@ -441,7 +580,11 @@ export default function BillsPage() {
                   <table className="w-full min-w-[820px] border-collapse text-left">
                     <thead className="bg-[#f7f9f8] text-[10px] text-[#34425d]">
                       <tr>
-                        {tab !== "Paid" && <th className="w-12 px-4 py-3.5"><span className="sr-only">Select bill</span></th>}
+                        {tab !== "Paid" && (
+                          <th className="w-12 px-4 py-3.5">
+                            <span className="sr-only">Select bill</span>
+                          </th>
+                        )}
                         {[
                           "Bill & Category",
                           "Due Date",
@@ -467,10 +610,25 @@ export default function BillsPage() {
                             key={bill.id}
                             onClick={() => setModal({ mode: "details", bill })}
                             tabIndex={0}
-                            onKeyDown={(event) => { if (event.target === event.currentTarget && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); setModal({ mode: "details", bill }); } }}
+                            onKeyDown={(event) => {
+                              if (
+                                event.target === event.currentTarget &&
+                                (event.key === "Enter" || event.key === " ")
+                              ) {
+                                event.preventDefault();
+                                setModal({ mode: "details", bill });
+                              }
+                            }}
                             className={`cursor-pointer text-[11px] hover:bg-[#f6fbf8] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
                           >
-                            {tab !== "Paid" && <td className="px-4 py-3" onClick={(event) => event.stopPropagation()}>{selectionCheckbox(bill)}</td>}
+                            {tab !== "Paid" && (
+                              <td
+                                className="px-4 py-3"
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                {selectionCheckbox(bill)}
+                              </td>
+                            )}
                             <td className="px-4 py-3">
                               <div className="flex items-center gap-3">
                                 <span className="grid h-9 w-9 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
@@ -565,7 +723,24 @@ export default function BillsPage() {
                                     : bill.status}
                               </span>
                             </td>
-                            {tab !== "Paid" && <td className="px-4 py-3"><button disabled={!payableBills.some((item) => item.id === bill.id)} onClick={(event) => { event.stopPropagation(); setCheckoutIds([bill.id]); }} className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50">Pay now</button></td>}
+                            {tab !== "Paid" && (
+                              <td className="px-4 py-3">
+                                <button
+                                  disabled={
+                                    !payableBills.some(
+                                      (item) => item.id === bill.id,
+                                    )
+                                  }
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    setCheckoutIds([bill.id]);
+                                  }}
+                                  className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
+                                >
+                                  Pay now
+                                </button>
+                              </td>
+                            )}
                           </tr>
                         );
                       })}
@@ -623,10 +798,16 @@ export default function BillsPage() {
                   eligible bills.
                 </p>
               </div>
-              <button onClick={() => setInfoModal("savings")} className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]">
+              <button
+                onClick={() => setInfoModal("savings")}
+                className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]"
+              >
                 How it works <ChevronRight className="ml-2 inline" size={14} />
               </button>
-              <button onClick={() => setInfoModal("autopay")} className="h-10 rounded-md border border-[#d5e5df] bg-white px-5 text-[11px] font-semibold text-[#274b43]">
+              <button
+                onClick={() => setInfoModal("autopay")}
+                className="h-10 rounded-md border border-[#d5e5df] bg-white px-5 text-[11px] font-semibold text-[#274b43]"
+              >
                 Autopay guide
               </button>
             </section>
@@ -690,7 +871,23 @@ export default function BillsPage() {
           </aside>
         </div>
       </div>
-      {checkoutIds && user && <BillPaymentModal bills={payableBills.filter((bill) => checkoutIds.includes(bill.id))} expectedBillCount={checkoutIds.length} user={user} onClose={() => setCheckoutIds(null)} onPaid={(message) => { setSelected((current) => new Set([...current].filter((id) => !checkoutIds.includes(id)))); setCheckoutIds(null); setPaymentMessage(message); setTab("Paid"); }} />}
+      {checkoutIds && user && (
+        <BillPaymentModal
+          bills={payableBills.filter((bill) => checkoutIds.includes(bill.id))}
+          expectedBillCount={checkoutIds.length}
+          user={user}
+          onClose={() => setCheckoutIds(null)}
+          onPaid={(message) => {
+            setSelected(
+              (current) =>
+                new Set([...current].filter((id) => !checkoutIds.includes(id))),
+            );
+            setCheckoutIds(null);
+            setPaymentMessage(message);
+            setTab("Paid");
+          }}
+        />
+      )}
       {modal && user?.id ? (
         <BillModal
           initialMode={modal.mode}
@@ -699,20 +896,95 @@ export default function BillsPage() {
           onClose={() => setModal(null)}
         />
       ) : null}
-      {infoModal ? <InfoModal kind={infoModal} onClose={() => setInfoModal(null)} /> : null}
+      {infoModal ? (
+        <InfoModal kind={infoModal} onClose={() => setInfoModal(null)} />
+      ) : null}
     </DashboardShell>
   );
 }
 
-function InfoModal({ kind, onClose }: { kind: "savings" | "autopay"; onClose: () => void }) {
+function InfoModal({
+  kind,
+  onClose,
+}: {
+  kind: "savings" | "autopay";
+  onClose: () => void;
+}) {
   const isSavings = kind === "savings";
-  return <div className="fixed inset-0 z-50 grid place-items-center bg-[#07142d]/55 p-4" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-    <section role="dialog" aria-modal="true" aria-labelledby="bills-info-title" className="w-full max-w-[460px] rounded-2xl bg-white p-6 shadow-2xl">
-      <div className="flex items-start justify-between gap-4"><div><p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#009b67]">Bills guide</p><h2 id="bills-info-title" className="mt-1 text-[20px] font-bold">{isSavings ? "Maximize Your Savings" : "Autopay Made Simple"}</h2></div><button onClick={onClose} aria-label="Close" className="grid h-8 w-8 place-items-center rounded-full bg-[#f1f4f3]​">×</button></div>
-      {isSavings ? <><p className="mt-4 text-[12px] leading-5 text-[#65728a]">Pay eligible bills before their due date to earn Vuior credits.</p><div className="mt-4 divide-y divide-[#edf1ef]">{[["1–3 days early", "+2%"], ["4–7 days early", "+5%"], ["8–14 days early", "+10%"], ["15+ days early", "+15%"]].map(([label, reward]) => <div key={label} className="flex justify-between py-3 text-[12px]"><span>{label}</span><strong className="text-[#009b67]">{reward}</strong></div>)}</div></> : <><p className="mt-4 text-[12px] leading-5 text-[#65728a]">Enable autopay for an individual bill and Vuior will charge it on the due date using your saved payment method.</p><ul className="mt-4 space-y-3 text-[12px] text-[#53617a]"><li>• Turn it on or off anytime from the bill list.</li><li>• Your payment method and transaction remain securely recorded.</li><li>• Eligible early-pay rewards still apply when available.</li></ul></>}
-      <button onClick={onClose} className="mt-6 h-10 w-full rounded-lg bg-[#009b67] text-[12px] font-semibold text-white">Got it</button>
-    </section>
-  </div>;
+  return (
+    <div
+      className="fixed inset-0 z-50 grid place-items-center bg-[#07142d]/55 p-4"
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bills-info-title"
+        className="w-full max-w-[460px] rounded-2xl bg-white p-6 shadow-2xl"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#009b67]">
+              Bills guide
+            </p>
+            <h2 id="bills-info-title" className="mt-1 text-[20px] font-bold">
+              {isSavings ? "Maximize Your Savings" : "Autopay Made Simple"}
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="grid h-8 w-8 place-items-center rounded-full bg-[#f1f4f3]​"
+          >
+            ×
+          </button>
+        </div>
+        {isSavings ? (
+          <>
+            <p className="mt-4 text-[12px] leading-5 text-[#65728a]">
+              Pay eligible bills before their due date to earn Vuior credits.
+            </p>
+            <div className="mt-4 divide-y divide-[#edf1ef]">
+              {[
+                ["1–3 days early", "+2%"],
+                ["4–7 days early", "+5%"],
+                ["8–14 days early", "+10%"],
+                ["15+ days early", "+15%"],
+              ].map(([label, reward]) => (
+                <div
+                  key={label}
+                  className="flex justify-between py-3 text-[12px]"
+                >
+                  <span>{label}</span>
+                  <strong className="text-[#009b67]">{reward}</strong>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="mt-4 text-[12px] leading-5 text-[#65728a]">
+              Enable autopay for an individual bill and Vuior will charge it on
+              the due date using your saved payment method.
+            </p>
+            <ul className="mt-4 space-y-3 text-[12px] text-[#53617a]">
+              <li>• Turn it on or off anytime from the bill list.</li>
+              <li>
+                • Your payment method and transaction remain securely recorded.
+              </li>
+              <li>• Eligible early-pay rewards still apply when available.</li>
+            </ul>
+          </>
+        )}
+        <button
+          onClick={onClose}
+          className="mt-6 h-10 w-full rounded-lg bg-[#009b67] text-[12px] font-semibold text-white"
+        >
+          Got it
+        </button>
+      </section>
+    </div>
+  );
 }
 
 function Filter({
