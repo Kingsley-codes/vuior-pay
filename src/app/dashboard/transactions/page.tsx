@@ -530,6 +530,13 @@ export default function TransactionsPage() {
                         onClick={() => setSelectedTransaction(item)}
                         className="group cursor-pointer text-[12px] transition hover:bg-[#f4faf7] focus-within:bg-[#f4faf7]"
                       >
+                        <td
+                          className="whitespace-nowrap px-5 py-4 font-mono text-[11px] text-[#53637f]"
+                          title={item.transactionId}
+                        >
+                          {item.transactionId}
+                        </td>
+
                         <td className="max-w-[300px] px-5 py-4">
                           <div className="flex items-center gap-3">
                             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
@@ -549,12 +556,7 @@ export default function TransactionsPage() {
                             </div>
                           </div>
                         </td>
-                        <td
-                          className="whitespace-nowrap px-5 py-4 font-mono text-[11px] text-[#53637f]"
-                          title={item.transactionId}
-                        >
-                          {item.transactionId}
-                        </td>
+
                         <td className="max-w-48 px-5 py-4 leading-5 text-[#64718a]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </td>

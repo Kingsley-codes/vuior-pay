@@ -40,7 +40,6 @@ export default function TransactionDetailsModal({
   const paymentMethod = transactionPaymentMethod(transaction);
   const rows = [
     ["Transaction ID", transaction.transactionId],
-    ["Payment ID", transaction.paymentId || transaction.transactionId],
     ...(linkedBills.length
       ? []
       : [["Bill IDs", publicBillIds.join(", ") || "Not applicable"]]),
