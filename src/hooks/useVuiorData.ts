@@ -65,7 +65,9 @@ function asDate(value: unknown): Date | null {
 }
 
 function normalizedBillStatus(status: unknown, dueDate: unknown) {
-  const normalized = String(status ?? "active").trim().toLowerCase();
+  const normalized = String(status ?? "active")
+    .trim()
+    .toLowerCase();
   if (!["active", "pending", "approved", "unpaid"].includes(normalized))
     return normalized;
   const due = asDate(dueDate);
@@ -170,7 +172,11 @@ export function useVuiorData(userId?: string) {
           return {
             id: item.id,
             label: String(
-              data.billName ?? data.name ?? data.description ?? data.type ?? "Bill payment",
+              data.billName ??
+                data.name ??
+                data.description ??
+                data.type ??
+                "Bill payment",
             ),
             category: String(data.category ?? "Payment"),
             amount: Number(data.amount ?? data.amountPaid ?? 0),
@@ -212,28 +218,10 @@ export function useVuiorData(userId?: string) {
       () => markReady("transactions"),
     );
 
-    const unsubscribeStats = onSnapshot(
-      query(collection(db, "stats"), where(documentId(), "==", userId)),
-      (snapshot) => {
-        const data = snapshot.docs[0]?.data();
-        setWalletBalance(
-          Number(
-            data?.availableBalance ?? data?.walletBalance ?? data?.balance ?? 0,
-          ),
-        );
-        setTotalBillPaymentsThisYear(
-          Number(data?.totalBillPaymentsThisYear ?? 0),
-        );
-        markReady("stats");
-      },
-      () => markReady("stats"),
-    );
-
     return () => {
       active = false;
       unsubscribeBills();
       unsubscribeTransactions();
-      unsubscribeStats();
     };
   }, [userId]);
 
@@ -250,8 +238,6 @@ export function useVuiorData(userId?: string) {
     bills,
     activeBills,
     transactions,
-    walletBalance,
-    totalBillPaymentsThisYear,
     loading,
   };
 }

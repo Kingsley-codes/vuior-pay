@@ -26,7 +26,11 @@ import {
 import PhoneNumberInput from "@/components/phone-number-input";
 import { db, storage } from "@/services/firebase";
 import { extractBillFromImage } from "@/services/billExtraction";
-import { searchProviders, storeProvider, type Provider } from "@/services/providerService";
+import {
+  searchProviders,
+  storeProvider,
+  type Provider,
+} from "@/services/providerService";
 import type { Bill } from "@/hooks/useVuiorData";
 import {
   currencyInputNumber,
@@ -122,7 +126,9 @@ export default function BillModal({
   const [extracting, setExtracting] = useState(false);
   const [error, setError] = useState("");
   const [providers, setProviders] = useState<Provider[]>([]);
-  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null);
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
+    null,
+  );
   const [showProviders, setShowProviders] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -141,7 +147,10 @@ export default function BillModal({
         .then((matches) => !cancelled && setProviders(matches))
         .catch(() => !cancelled && setProviders([]));
     }, 250);
-    return () => { cancelled = true; window.clearTimeout(timer); };
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [form.name]);
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
@@ -490,20 +499,31 @@ export default function BillModal({
                 {showProviders && providers.length ? (
                   <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-[#cfeade] bg-white shadow-lg">
                     {providers.map((provider) => (
-                      <button key={provider.id} type="button" className="flex w-full items-center justify-between px-3 py-2.5 text-left text-[12px] hover:bg-[#f3fbf7]" onMouseDown={(event) => event.preventDefault()} onClick={() => {
-                        setSelectedProvider(provider);
-                        setForm((current) => ({
-                          ...current,
-                          name: provider.name,
-                          category: provider.categories[0] || current.category,
-                          providerPhoneNumber:
-                            provider.phoneNumbers[0] ||
-                            current.providerPhoneNumber,
-                        }));
-                        setShowProviders(false);
-                      }}>
+                      <button
+                        key={provider.id}
+                        type="button"
+                        className="flex w-full items-center justify-between px-3 py-2.5 text-left text-[12px] hover:bg-[#f3fbf7]"
+                        onMouseDown={(event) => event.preventDefault()}
+                        onClick={() => {
+                          setSelectedProvider(provider);
+                          setForm((current) => ({
+                            ...current,
+                            name: provider.name,
+                            category:
+                              provider.categories[0] || current.category,
+                            providerPhoneNumber:
+                              provider.phoneNumbers[0] ||
+                              current.providerPhoneNumber,
+                          }));
+                          setShowProviders(false);
+                        }}
+                      >
                         <span>{provider.name}</span>
-                        {provider.categories[0] ? <span className="text-[10px] text-[#718097]">{provider.categories[0]}</span> : null}
+                        {provider.categories[0] ? (
+                          <span className="text-[10px] text-[#718097]">
+                            {provider.categories[0]}
+                          </span>
+                        ) : null}
                       </button>
                     ))}
                   </div>

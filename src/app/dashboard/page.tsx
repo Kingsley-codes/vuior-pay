@@ -19,6 +19,7 @@ import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
 import { DashboardHomeSkeleton } from "@/components/dashboard/DashboardSkeletons";
+import { displayName } from "@/utils/transactions";
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -51,47 +52,46 @@ function BillIcon({ bill }: { bill: Bill }) {
 
 export default function DashboardPage() {
   const { user } = useVuiorSession();
-  const { activeBills, transactions, walletBalance, loading } = useVuiorData(
-    user?.id,
-  );
+  const { activeBills, transactions, loading } = useVuiorData(user?.id);
   const now = new Date();
-  const upcoming = activeBills
+  const activeBillsThisMonth = activeBills.filter((bill) => {
+    const dueDate = new Date(bill.dueDate);
+    return (
+      dueDate.getFullYear() === now.getFullYear() &&
+      dueDate.getMonth() === now.getMonth()
+    );
+  });
+  const upcoming = activeBillsThisMonth
     .filter((bill) => {
-      const dueDate = new Date(bill.dueDate);
-      return (
-        daysUntil(bill.dueDate) >= 0 &&
-        dueDate.getFullYear() === now.getFullYear() &&
-        dueDate.getMonth() === now.getMonth()
-      );
+      return daysUntil(bill.dueDate) >= 0;
     })
     .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
-  const unpaidTotal = activeBills.reduce((sum, bill) => sum + bill.amount, 0);
+  const unpaidTotal = activeBillsThisMonth.reduce(
+    (sum, bill) => sum + bill.amount,
+    0,
+  );
   const credits = Number(user?.availableCredits ?? 0);
-  const successfulPayments = transactions.filter((item) =>
-    ["success", "successful", "completed", "paid"].includes(
-      item.status.toLowerCase(),
-    ),
+  const successfulPayments = transactions.filter(
+    (item) =>
+      ["success", "successful", "completed", "paid"].includes(
+        item.status.toLowerCase(),
+      ) &&
+      ["Credits Purchased", "Bill Payment"].includes(displayName(item.type)),
   );
   const firstName = user?.firstName || "there";
 
   const stats = [
     {
       title: "Available Balance",
-      value: money.format(walletBalance),
+      value: money.format(credits),
       note: "Your Vuior wallet",
       icon: WalletCards,
     },
     {
       title: "Total Unpaid Bills",
       value: money.format(unpaidTotal),
-      note: `${activeBills.length} active bill${activeBills.length === 1 ? "" : "s"}`,
+      note: `${activeBillsThisMonth.length} active bill${activeBillsThisMonth.length === 1 ? "" : "s"}`,
       icon: FileText,
-    },
-    {
-      title: "Available Credits",
-      value: credits.toLocaleString(),
-      note: "Ready to redeem",
-      icon: Coins,
     },
     {
       title: "Payments This Month",
