@@ -144,64 +144,84 @@ export function BillsSkeleton() {
   );
 }
 
-export function PayBillsSkeleton() {
+export function TransactionsSkeleton() {
   return (
     <SkeletonPage className="max-w-[1530px]">
-      <PageHeading />
-      <Bone className="mt-6 h-32 rounded-xl bg-[#dfe8e5]" />
-      <Bone className="mt-5 h-12 rounded-lg" />
-      <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
-        <Card className="p-0">
-          <div className="p-5">
-            <Bone className="h-5 w-24" />
-          </div>
-          <div className="grid grid-cols-2 gap-px bg-[#edf1ef]">
-            {Array.from({ length: 8 }, (_, i) => (
-              <div key={i} className="bg-white p-5">
-                <Bone className="h-10 w-10 rounded-full" />
-                <Bone className="mt-4 h-3 w-2/3" />
-                <Bone className="mt-3 h-5 w-1/3" />
-              </div>
-            ))}
-          </div>
-        </Card>
-        <Card className="h-[420px]">
-          <Bone className="h-5 w-32" />
-          <div className="mt-6 space-y-5">
-            <Bone className="h-12" />
-            <Bone className="h-12" />
-            <Bone className="h-20" />
-            <Bone className="h-12 bg-[#dce9e4]" />
-          </div>
-        </Card>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-3">
+          <Bone className="h-8 w-44" />
+          <Bone className="h-3 w-72 max-w-[70vw]" />
+        </div>
+        <div className="flex w-full gap-3 sm:w-auto">
+          <Bone className="h-11 flex-1 sm:w-36" />
+          <Bone className="h-11 flex-1 sm:w-32" />
+          <Bone className="hidden h-11 w-11 rounded-full sm:block" />
+        </div>
       </div>
-    </SkeletonPage>
-  );
-}
-
-export function CreditsSkeleton() {
-  return (
-    <SkeletonPage className="max-w-[1530px]">
-      <PageHeading />
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {Array.from({ length: 4 }, (_, i) => (
-          <Card key={i} className="h-32">
-            <Bone className="h-3 w-28" />
-            <Bone className="mt-5 h-8 w-24" />
-            <Bone className="mt-4 h-2.5 w-32" />
+      <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        {Array.from({ length: 4 }, (_, index) => (
+          <Card key={index} className="flex min-h-[124px] items-center gap-4">
+            <Bone className="h-12 w-12 shrink-0 rounded-full sm:h-14 sm:w-14" />
+            <div className="min-w-0 flex-1 space-y-3">
+              <Bone className="h-3 w-4/5" />
+              <Bone className="h-7 w-3/5" />
+            </div>
           </Card>
         ))}
       </div>
-      <Card className="mt-5">
-        <Bone className="h-5 w-40" />
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {Array.from({ length: 4 }, (_, i) => (
-            <Bone key={i} className="h-10" />
+      <section className="mt-6 overflow-hidden rounded-xl border border-[#e2e8e6] bg-white">
+        <div className="flex h-16 items-center gap-6 border-b border-[#e7ecea] px-5">
+          <Bone className="h-4 w-32" />
+          <Bone className="h-4 w-36" />
+        </div>
+        <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-5">
+          {Array.from({ length: 5 }, (_, index) => (
+            <Bone key={index} className="h-11" />
           ))}
         </div>
-        <Rows count={8} />
-      </Card>
-      <Bone className="mt-5 h-24 w-full rounded-xl" />
+        <div className="hidden lg:block">
+          <div className="grid grid-cols-[1.5fr_1fr_1fr_.8fr_.7fr_.7fr] gap-4 border-b border-[#e9eeec] bg-[#f8faf9] px-5 py-3.5">
+            {Array.from({ length: 6 }, (_, index) => (
+              <Bone key={index} className="h-3 w-4/5" />
+            ))}
+          </div>
+          <div className="divide-y divide-[#e9eeec] px-5">
+            {Array.from({ length: 6 }, (_, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-[1.5fr_1fr_1fr_.8fr_.7fr_.7fr] items-center gap-4 py-4"
+              >
+                <div className="flex items-center gap-3">
+                  <Bone className="h-10 w-10 shrink-0 rounded-full" />
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <Bone className="h-3 w-3/5" />
+                    <Bone className="h-2.5 w-2/5" />
+                  </div>
+                </div>
+                {Array.from({ length: 4 }, (_, cell) => (
+                  <Bone key={cell} className="h-3 w-3/4" />
+                ))}
+                <Bone className="h-6 w-20 rounded-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="divide-y divide-[#e9eeec] lg:hidden">
+          {Array.from({ length: 5 }, (_, index) => (
+            <div key={index} className="p-4">
+              <div className="flex items-center gap-3">
+                <Bone className="h-10 w-10 shrink-0 rounded-full" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Bone className="h-3 w-3/5" />
+                  <Bone className="h-2.5 w-2/5" />
+                </div>
+                <Bone className="h-3 w-16" />
+              </div>
+              <Bone className="mt-4 h-8 w-full" />
+            </div>
+          ))}
+        </div>
+      </section>
     </SkeletonPage>
   );
 }
@@ -395,11 +415,8 @@ function skeletonFor(pathname: string) {
   if (pathname.includes("add-bills")) return <AddBillSkeleton />;
   if (pathname.startsWith("/dashboard/pay")) return <BillsSkeleton />;
   if (pathname.startsWith("/dashboard/bills")) return <BillsSkeleton />;
-  if (
-    pathname.startsWith("/dashboard/credits") ||
-    pathname.startsWith("/dashboard/transactions")
-  )
-    return <CreditsSkeleton />;
+  if (pathname.startsWith("/dashboard/transactions"))
+    return <TransactionsSkeleton />;
   if (pathname.startsWith("/dashboard/referrals")) return <ReferralsSkeleton />;
   if (pathname.startsWith("/dashboard/support")) return <SupportSkeleton />;
   if (pathname.includes("security") || pathname.includes("tab=security"))

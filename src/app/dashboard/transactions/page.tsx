@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
-import { CreditsSkeleton } from "@/components/dashboard/DashboardSkeletons";
+import { TransactionsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import WalletModal, {
   type WalletAction,
 } from "@/components/credits/WalletModal";
@@ -253,7 +253,7 @@ export default function TransactionsPage() {
   if (loading)
     return (
       <DashboardShell>
-        <CreditsSkeleton />
+        <TransactionsSkeleton />
       </DashboardShell>
     );
   return (
