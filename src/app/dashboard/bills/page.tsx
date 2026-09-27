@@ -25,6 +25,7 @@ import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
 import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
+import { billCategories } from "@/utils/transactions";
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -111,10 +112,7 @@ export default function BillsPage() {
     }
   }, []);
 
-  const categories = [
-    "All Categories",
-    ...Array.from(new Set(bills.map((bill) => bill.category))).filter(Boolean),
-  ];
+  const categories = ["All Categories", ...billCategories];
   const now = new Date();
   const dueThisMonth = activeBills.filter((bill) => {
     const d = new Date(bill.dueDate);

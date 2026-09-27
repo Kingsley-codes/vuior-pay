@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  collection,
-  documentId,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "@/services/firebase";
 import { transactionStatus } from "@/utils/transactions";
 
@@ -83,8 +77,6 @@ function normalizedBillStatus(status: unknown, dueDate: unknown) {
 export function useVuiorData(userId?: string) {
   const [bills, setBills] = useState<Bill[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [walletBalance, setWalletBalance] = useState(0);
-  const [totalBillPaymentsThisYear, setTotalBillPaymentsThisYear] = useState(0);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
 
   useEffect(() => {
@@ -225,13 +217,20 @@ export function useVuiorData(userId?: string) {
     };
   }, [userId]);
 
-  const activeBills = useMemo(
-    () =>
-      bills.filter((bill) =>
-        ["active", "upcoming"].includes(bill.status.trim().toLowerCase()),
-      ),
-    [bills],
-  );
+  const activeBills = useMemo(() => {
+    const now = new Date();
+    return bills.filter((bill) => {
+      const status = bill.status.trim().toLowerCase();
+      if (status === "overdue") return true;
+      if (!["active", "upcoming"].includes(status)) return false;
+      const dueDate = new Date(bill.dueDate);
+      return (
+        !Number.isNaN(dueDate.getTime()) &&
+        dueDate.getFullYear() === now.getFullYear() &&
+        dueDate.getMonth() === now.getMonth()
+      );
+    });
+  }, [bills]);
   const loading = !userId || loadedFor !== userId;
 
   return {
