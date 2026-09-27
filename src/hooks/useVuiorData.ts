@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  documentId,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "@/services/firebase";
 import { transactionStatus } from "@/utils/transactions";
 
@@ -77,6 +83,7 @@ function normalizedBillStatus(status: unknown, dueDate: unknown) {
 export function useVuiorData(userId?: string) {
   const [bills, setBills] = useState<Bill[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [totalBillPaymentsThisYear, setTotalBillPaymentsThisYear] = useState(0);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
 
   useEffect(() => {
@@ -210,10 +217,24 @@ export function useVuiorData(userId?: string) {
       () => markReady("transactions"),
     );
 
+    const unsubscribeStats = onSnapshot(
+      query(collection(db, "stats"), where(documentId(), "==", userId)),
+      (snapshot) => {
+        const data = snapshot.docs[0]?.data();
+
+        setTotalBillPaymentsThisYear(
+          Number(data?.totalBillPaymentsThisYear ?? 0),
+        );
+        markReady("stats");
+      },
+      () => markReady("stats"),
+    );
+
     return () => {
       active = false;
       unsubscribeBills();
       unsubscribeTransactions();
+      unsubscribeStats();
     };
   }, [userId]);
 
@@ -236,6 +257,7 @@ export function useVuiorData(userId?: string) {
   return {
     bills,
     activeBills,
+    totalBillPaymentsThisYear,
     transactions,
     loading,
   };
