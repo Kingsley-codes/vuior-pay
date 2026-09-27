@@ -236,12 +236,12 @@ export default function TransactionsPage() {
       const linked = billsForTransaction(item, bills);
       if (linked.length) {
         return (
-          <span className="flex min-w-0 items-center gap-2">
-            <span className="truncate" title={linked[0].name}>
+          <span className="block min-w-0">
+            <span className="block truncate" title={linked[0].name}>
               {linked[0].name}
             </span>
             {linked.length > 1 && (
-              <span className="shrink-0 rounded-md bg-[#eef3f0] px-1.5 py-0.5 text-[10px] font-medium text-[#53637f]">
+              <span className="mt-1 block text-[10px] font-normal text-[#718097]">
                 +{linked.length - 1} more
               </span>
             )}

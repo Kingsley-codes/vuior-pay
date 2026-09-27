@@ -1,6 +1,6 @@
 "use client";
 
-import { CreditCard, FileText, X } from "lucide-react";
+import { CreditCard, X } from "lucide-react";
 import type { Bill, Transaction } from "@/hooks/useVuiorData";
 import {
   billsForTransaction,
@@ -44,7 +44,9 @@ export default function TransactionDetailsModal({
       ? []
       : [["Bill IDs", publicBillIds.join(", ") || "Not applicable"]]),
     ["Type", displayName(transaction.type)],
-    ["Category", categoriesForTransaction(transaction, bills).join(", ")],
+    ...(linkedBills.length
+      ? []
+      : [["Category", categoriesForTransaction(transaction, bills).join(", ")]]),
     [
       "Payment method",
       paymentMethod === "stripe"
@@ -115,6 +117,25 @@ export default function TransactionDetailsModal({
                 {transaction.credits.toFixed(2)}
               </p>
             )}
+            {Boolean(transaction.creditsApplied || transaction.pendingCredits) && (
+              <div className="mt-4 space-y-2 border-t border-[#dce9e4] pt-3">
+                {transaction.creditsApplied ? (
+                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
+                    <span className="text-[#718097]">Credits applied</span>
+                    <span className="font-medium tabular-nums">{transaction.creditsApplied.toFixed(2)} credits</span>
+                  </p>
+                ) : null}
+                {transaction.pendingCredits ? (
+                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
+                    <span className="text-[#718097]">Pending reward</span>
+                    <span className="font-medium tabular-nums text-[#009b67]">
+                      {transaction.pendingCredits.toFixed(2)} credits (
+                      {transaction.rewardStatus || "pending"})
+                    </span>
+                  </p>
+                ) : null}
+              </div>
+            )}
           </div>
           {linkedBills.length > 0 && (
             <section className="mt-5 rounded-xl border border-[#e2e8e6] p-4">
@@ -130,8 +151,15 @@ export default function TransactionDetailsModal({
                     <span className="min-w-0 break-words text-[13px] font-medium text-[#26344c]">
                       {bill.name}
                     </span>
-                    <span className="break-all font-mono text-[10px] text-[#718097]">
-                      {bill.billId}
+                    <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[#718097]">
+                      <span className="min-w-0 break-words">
+                        <span className="sr-only">Category: </span>
+                        {bill.category || "Uncategorized"}
+                      </span>
+                      <span className="break-all font-mono text-[10px]">
+                        <span className="sr-only">Bill ID: </span>
+                        {bill.billId}
+                      </span>
                     </span>
                   </li>
                 ))}
@@ -151,29 +179,6 @@ export default function TransactionDetailsModal({
               </div>
             ))}
           </dl>
-          {(transaction.creditsApplied || transaction.pendingCredits) && (
-            <div className="mt-5 rounded-xl border border-[#dce9e4] p-4">
-              <p className="flex items-center gap-2 text-[13px] font-medium">
-                <FileText size={16} className="text-[#009b67}" />
-                Credits summary
-              </p>
-              {transaction.creditsApplied ? (
-                <p className="mt-3 flex justify-between text-[12px]">
-                  <span className="text-[#718097]">Credits applied</span>
-                  <span>{transaction.creditsApplied.toFixed(2)}</span>
-                </p>
-              ) : null}
-              {transaction.pendingCredits ? (
-                <p className="mt-2 flex justify-between text-[12px]">
-                  <span className="text-[#718097]">Pending reward</span>
-                  <span>
-                    {transaction.pendingCredits.toFixed(2)} (
-                    {transaction.rewardStatus || "pending"})
-                  </span>
-                </p>
-              ) : null}
-            </div>
-          )}
         </div>
       </div>
     </div>
