@@ -126,7 +126,7 @@ export default function DashboardPage() {
           <NotificationsMenu userId={user?.id} />
         </div>
 
-        <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {stats.map(({ title, value, note, icon: Icon }) => (
             <article
               key={title}
