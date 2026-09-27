@@ -180,8 +180,8 @@ export function TransactionsSkeleton() {
           ))}
         </div>
         <div className="hidden lg:block">
-          <div className="grid grid-cols-[1.5fr_1fr_1fr_.8fr_.7fr_.7fr] gap-4 border-b border-[#e9eeec] bg-[#f8faf9] px-5 py-3.5">
-            {Array.from({ length: 6 }, (_, index) => (
+          <div className="grid grid-cols-[1.5fr_1.1fr_1fr_1fr_.8fr_.7fr_.7fr] gap-4 border-b border-[#e9eeec] bg-[#f8faf9] px-5 py-3.5">
+            {Array.from({ length: 7 }, (_, index) => (
               <Bone key={index} className="h-3 w-4/5" />
             ))}
           </div>
@@ -189,7 +189,7 @@ export function TransactionsSkeleton() {
             {Array.from({ length: 6 }, (_, index) => (
               <div
                 key={index}
-                className="grid grid-cols-[1.5fr_1fr_1fr_.8fr_.7fr_.7fr] items-center gap-4 py-4"
+                className="grid grid-cols-[1.5fr_1.1fr_1fr_1fr_.8fr_.7fr_.7fr] items-center gap-4 py-4"
               >
                 <div className="flex items-center gap-3">
                   <Bone className="h-10 w-10 shrink-0 rounded-full" />
@@ -198,7 +198,7 @@ export function TransactionsSkeleton() {
                     <Bone className="h-2.5 w-2/5" />
                   </div>
                 </div>
-                {Array.from({ length: 4 }, (_, cell) => (
+                {Array.from({ length: 5 }, (_, cell) => (
                   <Bone key={cell} className="h-3 w-3/4" />
                 ))}
                 <Bone className="h-6 w-20 rounded-full" />

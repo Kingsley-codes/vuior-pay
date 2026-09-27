@@ -32,6 +32,7 @@ import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Transaction, useVuiorData } from "@/hooks/useVuiorData";
 import {
   billCategories,
+  billsForTransaction,
   categoriesForTransaction,
   creditCategories,
   displayName,
@@ -132,7 +133,9 @@ function creditAmount(item: Transaction) {
 
 export default function TransactionsPage() {
   const { user } = useVuiorSession();
-  const { bills, transactions, loading } = useVuiorData(user?.id);
+  const { bills, transactions, loading } = useVuiorData(user?.id, {
+    includeDeletedBills: true,
+  });
   const [filters, setFilters] = useState<TransactionFilters>(defaults);
   const [page, setPage] = useState(1);
   const [walletAction, setWalletAction] = useState<WalletAction | null>(null);
@@ -230,12 +233,21 @@ export default function TransactionsPage() {
 
   function description(item: Transaction) {
     if (isBill) {
-      const linked = bills.filter(
-        (bill) =>
-          item.billIds.includes(bill.id) ||
-          item.billPublicIds.includes(bill.billId),
-      );
-      if (linked.length) return linked.map((bill) => bill.name).join(", ");
+      const linked = billsForTransaction(item, bills);
+      if (linked.length) {
+        return (
+          <span className="flex min-w-0 items-center gap-2">
+            <span className="truncate" title={linked[0].name}>
+              {linked[0].name}
+            </span>
+            {linked.length > 1 && (
+              <span className="shrink-0 rounded-md bg-[#eef3f0] px-1.5 py-0.5 text-[10px] font-medium text-[#53637f]">
+                +{linked.length - 1} more
+              </span>
+            )}
+          </span>
+        );
+      }
     }
     return displayName(item.label) === "Bill Payment" && !isBill
       ? displayName(item.type)
@@ -484,6 +496,7 @@ export default function TransactionsPage() {
                   <tr>
                     {[
                       "Transaction",
+                      "Transaction ID",
                       isBill ? "Category" : "Credit type",
                       ...(isBill ? ["Payment method"] : []),
                       "Date",
@@ -510,6 +523,7 @@ export default function TransactionsPage() {
                       : outgoing
                         ? ArrowUpRight
                         : ArrowDownLeft;
+                    const title = description(item);
                     return (
                       <tr
                         key={item.id}
@@ -521,7 +535,7 @@ export default function TransactionsPage() {
                             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
                               <Icon size={18} />
                             </span>
-                            <div className="min-w-0">
+                            <div className="min-w-0 flex-1">
                               <button
                                 onClick={(event) => {
                                   event.stopPropagation();
@@ -530,16 +544,16 @@ export default function TransactionsPage() {
                                 aria-label={`View transaction ${item.transactionId}`}
                                 className="block max-w-full truncate text-left font-semibold text-[#26344c] outline-offset-4"
                               >
-                                {description(item)}
+                                {title}
                               </button>
-                              <p
-                                className="mt-1 truncate font-mono text-[10px] text-[#8a95a6]"
-                                title={item.transactionId}
-                              >
-                                {item.transactionId}
-                              </p>
                             </div>
                           </div>
+                        </td>
+                        <td
+                          className="whitespace-nowrap px-5 py-4 font-mono text-[11px] text-[#53637f]"
+                          title={item.transactionId}
+                        >
+                          {item.transactionId}
                         </td>
                         <td className="max-w-48 px-5 py-4 leading-5 text-[#64718a]">
                           {categoriesForTransaction(item, bills).join(", ")}
@@ -599,52 +613,60 @@ export default function TransactionsPage() {
             </div>
 
             <div className="divide-y divide-[#e9eeec] lg:hidden">
-              {visible.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setSelectedTransaction(item)}
-                  className="block w-full p-4 text-left transition hover:bg-[#f4faf7]"
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
-                      {isBill ? (
-                        <FileText size={18} />
-                      ) : (
-                        <ArrowLeftRight size={18} />
-                      )}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-[12px] font-semibold">
-                        {description(item)}
-                      </p>
-                      <p className="mt-1 truncate text-[10px] text-[#7b879b]">
-                        {categoriesForTransaction(item, bills).join(", ")}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[13px] font-semibold tabular-nums">
-                        {isBill
-                          ? money.format(item.amount)
-                          : `${creditAmount(item)} credits`}
-                      </p>
-                      <div className="mt-2">
-                        <StatusBadge status={item.status} />
+              {visible.map((item) => {
+                const title = description(item);
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setSelectedTransaction(item)}
+                    className="block w-full p-4 text-left transition hover:bg-[#f4faf7]"
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
+                        {isBill ? (
+                          <FileText size={18} />
+                        ) : (
+                          <ArrowLeftRight size={18} />
+                        )}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[12px] font-semibold">
+                          {title}
+                        </p>
+                        <p className="mt-1 truncate text-[10px] text-[#7b879b]">
+                          {categoriesForTransaction(item, bills).join(", ")}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[13px] font-semibold tabular-nums">
+                          {isBill
+                            ? money.format(item.amount)
+                            : `${creditAmount(item)} credits`}
+                        </p>
+                        <div className="mt-2">
+                          <StatusBadge status={item.status} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="mt-3 flex justify-between gap-3 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-[10px] text-[#718097]">
-                    <span>
-                      {item.date.toLocaleDateString("en-US", {
-                        dateStyle: "medium",
-                      })}
-                      {isBill ? ` / ${method(item)}` : ""}
-                    </span>
-                    <span className="truncate font-mono">
-                      {item.transactionId}
-                    </span>
-                  </div>
-                </button>
-              ))}
+                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-[10px] text-[#718097] sm:flex-row sm:items-center sm:justify-between">
+                      <span>
+                        {item.date.toLocaleDateString("en-US", {
+                          dateStyle: "medium",
+                        })}
+                        {isBill ? ` / ${method(item)}` : ""}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="mr-2 font-sans text-[9px] uppercase text-[#8a95a6]">
+                          Transaction ID
+                        </span>
+                        <span className="break-all font-mono text-[#53637f]">
+                          {item.transactionId}
+                        </span>
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
             {!visible.length && (

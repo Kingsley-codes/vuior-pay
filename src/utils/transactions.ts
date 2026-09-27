@@ -58,6 +58,14 @@ export function transactionPaymentMethod(item: Transaction): string {
   return method;
 }
 
+export function billsForTransaction(item: Transaction, bills: Bill[]): Bill[] {
+  return bills.filter(
+    (bill) =>
+      item.billIds.includes(bill.id) ||
+      item.billPublicIds.includes(bill.billId),
+  );
+}
+
 export function transactionKind(item: Transaction): "credit" | "bill" {
   // Rewards also carry bill IDs, and bill payments may debit credits.
   const category = normalize(item.category);
@@ -75,11 +83,7 @@ export function categoriesForTransaction(
   bills: Bill[],
 ): string[] {
   if (transactionKind(item) === "credit") return [displayName(item.type)];
-  const linked = bills.filter(
-    (bill) =>
-      item.billIds.includes(bill.id) ||
-      item.billPublicIds.includes(bill.billId),
-  );
+  const linked = billsForTransaction(item, bills);
   const categories = linked.map((bill) => bill.category);
   if (!["bill transactions", "payment", ""].includes(normalize(item.category)))
     categories.push(item.category);
@@ -140,13 +144,7 @@ export function filterTransactions(
     .filter((item) => {
       const categories = categoriesForTransaction(item, bills);
       const billNames = query
-        ? bills
-            .filter(
-              (bill) =>
-                item.billIds.includes(bill.id) ||
-                item.billPublicIds.includes(bill.billId),
-            )
-            .map((bill) => bill.name)
+        ? billsForTransaction(item, bills).map((bill) => bill.name)
         : [];
       const categoryMatches =
         filters.category === "All" ||

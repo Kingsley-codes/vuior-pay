@@ -80,7 +80,10 @@ function normalizedBillStatus(status: unknown, dueDate: unknown) {
   return normalized;
 }
 
-export function useVuiorData(userId?: string) {
+export function useVuiorData(
+  userId?: string,
+  { includeDeletedBills = false }: { includeDeletedBills?: boolean } = {},
+) {
   const [bills, setBills] = useState<Bill[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalBillPaymentsThisYear, setTotalBillPaymentsThisYear] = useState(0);
@@ -99,7 +102,8 @@ export function useVuiorData(userId?: string) {
       query(
         collection(db, "bills"),
         where("user_id", "==", userId),
-        where("isDeleted", "==", false),
+        // Historical payments still need the titles of archived bills.
+        ...(includeDeletedBills ? [] : [where("isDeleted", "==", false)]),
       ),
       (snapshot) => {
         setBills(
@@ -188,8 +192,7 @@ export function useVuiorData(userId?: string) {
             transactionId: String(
               data.transaction_ID ??
                 data.payment_ID ??
-                data.reference ??
-                item.id,
+                "Not recorded",
             ),
             paymentId: data.payment_ID ? String(data.payment_ID) : undefined,
             billIds: Array.isArray(data.billIds)
@@ -236,7 +239,7 @@ export function useVuiorData(userId?: string) {
       unsubscribeTransactions();
       unsubscribeStats();
     };
-  }, [userId]);
+  }, [userId, includeDeletedBills]);
 
   const activeBills = useMemo(() => {
     const now = new Date();
