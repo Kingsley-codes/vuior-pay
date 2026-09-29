@@ -14,8 +14,6 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   CalendarDays,
   CheckCircle2,
-  ExternalLink,
-  FileImage,
   FileText,
   LoaderCircle,
   Pencil,
@@ -24,6 +22,9 @@ import {
   X,
 } from "lucide-react";
 import PhoneNumberInput from "@/components/phone-number-input";
+import BillDocumentPreview, {
+  isPdfDocument,
+} from "@/components/bills/BillDocumentPreview";
 import { db, storage } from "@/services/firebase";
 import { extractBillFromImage } from "@/services/billExtraction";
 import {
@@ -169,7 +170,7 @@ export default function BillModal({
     if (next.size > 10 * 1024 * 1024)
       return setError("The document must be smaller than 10 MB.");
     setFile(next);
-    setPreview(isSupportedImage ? URL.createObjectURL(next) : "");
+    setPreview(URL.createObjectURL(next));
     setError("");
     setExtracting(true);
     try {
@@ -255,6 +256,7 @@ export default function BillModal({
           : {}),
         notes: form.notes.trim() || null,
         documentUrl,
+        documentType: file?.type || bill?.documentType || null,
         updated_at: Timestamp.now(),
       };
       const providerId = await storeProvider(
@@ -403,18 +405,10 @@ export default function BillModal({
               </div>
             ) : null}
             {bill.documentUrl ? (
-              <a
-                href={bill.documentUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 flex items-center gap-3 rounded-xl border border-[#cceadd] bg-[#f2fbf7] p-4 text-[#08764f]"
-              >
-                <FileImage size={21} />
-                <span className="flex-1 text-[11px] font-semibold">
-                  View attached bill document
-                </span>
-                <ExternalLink size={16} />
-              </a>
+              <BillDocumentPreview
+                url={bill.documentUrl}
+                documentType={bill.documentType}
+              />
             ) : null}
             <button
               type="button"
@@ -431,7 +425,8 @@ export default function BillModal({
               onClick={() => inputRef.current?.click()}
               className="relative flex min-h-[132px] w-full items-center gap-4 overflow-hidden rounded-2xl border border-dashed border-[#8fd4b8] bg-[#f3fbf7] p-5 text-left hover:bg-[#edf9f3]"
             >
-              {preview ? (
+              {preview &&
+              !isPdfDocument(preview, file?.type || bill?.documentType) ? (
                 <Image
                   src={preview}
                   alt="Bill preview"
@@ -442,7 +437,7 @@ export default function BillModal({
                 />
               ) : (
                 <span className="grid h-12 w-12 place-items-center rounded-xl bg-white text-[#009b67] shadow-sm">
-                  <Upload size={22} />
+                  {preview ? <FileText size={22} /> : <Upload size={22} />}
                 </span>
               )}
               <span className="flex-1">

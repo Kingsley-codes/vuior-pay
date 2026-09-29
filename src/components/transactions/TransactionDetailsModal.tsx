@@ -1,6 +1,7 @@
 "use client";
 
 import { CreditCard, X } from "lucide-react";
+import BillDocumentPreview from "@/components/bills/BillDocumentPreview";
 import type { Bill, Transaction } from "@/hooks/useVuiorData";
 import {
   billsForTransaction,
@@ -46,7 +47,9 @@ export default function TransactionDetailsModal({
     ["Type", displayName(transaction.type)],
     ...(linkedBills.length
       ? []
-      : [["Category", categoriesForTransaction(transaction, bills).join(", ")]]),
+      : [
+          ["Category", categoriesForTransaction(transaction, bills).join(", ")],
+        ]),
     [
       "Payment method",
       paymentMethod === "stripe"
@@ -117,12 +120,16 @@ export default function TransactionDetailsModal({
                 {transaction.credits.toFixed(2)}
               </p>
             )}
-            {Boolean(transaction.creditsApplied || transaction.pendingCredits) && (
+            {Boolean(
+              transaction.creditsApplied || transaction.pendingCredits,
+            ) && (
               <div className="mt-4 space-y-2 border-t border-[#dce9e4] pt-3">
                 {transaction.creditsApplied ? (
                   <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
                     <span className="text-[#718097]">Credits applied</span>
-                    <span className="font-medium tabular-nums">{transaction.creditsApplied.toFixed(2)} credits</span>
+                    <span className="font-medium tabular-nums">
+                      {transaction.creditsApplied.toFixed(2)} credits
+                    </span>
                   </p>
                 ) : null}
                 {transaction.pendingCredits ? (
@@ -161,6 +168,12 @@ export default function TransactionDetailsModal({
                         {bill.billId}
                       </span>
                     </span>
+                    {bill.documentUrl ? (
+                      <BillDocumentPreview
+                        url={bill.documentUrl}
+                        documentType={bill.documentType}
+                      />
+                    ) : null}
                   </li>
                 ))}
               </ul>

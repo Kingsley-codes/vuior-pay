@@ -25,6 +25,7 @@ export type Bill = {
   frequency: string;
   accountNumber?: string;
   documentUrl?: string;
+  documentType?: string;
   notes?: string;
   providerPhoneNumber?: string;
   address?: string;
@@ -136,6 +137,9 @@ export function useVuiorData(
               documentUrl: data.documentUrl
                 ? String(data.documentUrl)
                 : undefined,
+              documentType: data.documentType
+                ? String(data.documentType)
+                : undefined,
               notes: data.notes ? String(data.notes) : undefined,
               providerPhoneNumber: data.providerPhoneNumber
                 ? String(data.providerPhoneNumber)
@@ -190,9 +194,7 @@ export function useVuiorData(
             credits: Number(data.credits ?? 0),
             reference: data.reference ? String(data.reference) : undefined,
             transactionId: String(
-              data.transaction_ID ??
-                data.payment_ID ??
-                "Not recorded",
+              data.transaction_ID ?? data.payment_ID ?? "Not recorded",
             ),
             paymentId: data.payment_ID ? String(data.payment_ID) : undefined,
             billIds: Array.isArray(data.billIds)
