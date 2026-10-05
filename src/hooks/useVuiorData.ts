@@ -51,6 +51,7 @@ export type Transaction = {
   billIds: string[];
   billPublicIds: string[];
   paymentMethod?: string;
+  provider?: string;
   creditsApplied: number;
   pendingCredits: number;
   rewardStatus?: string;
@@ -205,6 +206,9 @@ export function useVuiorData(
               : [],
             paymentMethod: data.paymentMethod
               ? String(data.paymentMethod)
+              : undefined,
+            provider: data.providerName || data.provider
+              ? String(data.providerName ?? data.provider)
               : undefined,
             creditsApplied: Number(
               data.creditsApplied ?? data.creditApplied ?? 0,

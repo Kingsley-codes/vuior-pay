@@ -123,13 +123,13 @@ export function periodBounds(
 
 export type TransactionFilters = {
   type: string;
-  category: string;
-  status: string;
+  category: string[];
+  provider: string[];
+  status: string[];
   search: string;
   period: Period;
   from: string;
   to: string;
-  paymentMethod?: string;
 };
 export function filterTransactions(
   transactions: Transaction[],
@@ -143,30 +143,37 @@ export function filterTransactions(
   return transactions
     .filter((item) => {
       const categories = categoriesForTransaction(item, bills);
-      const billNames = query
-        ? billsForTransaction(item, bills).map((bill) => bill.name)
-        : [];
+      const linkedBills = billsForTransaction(item, bills);
+      const billNames = query ? linkedBills.map((bill) => bill.name) : [];
+      const providers = [item.provider, ...linkedBills.map((bill) => bill.name)]
+        .filter((value): value is string => Boolean(value?.trim()));
       const categoryMatches =
-        filters.category === "All" ||
-        categories.some((category) =>
-          filters.type === "bill" && filters.category === "Custom"
+        filters.category.length === 0 ||
+        categories.some((category) => filters.category.some((selected) =>
+          filters.type !== "credit" &&
+          transactionKind(item) === "bill" &&
+          selected === "Custom"
             ? category !== "Uncategorized" &&
               !billCategories
                 .slice(0, -1)
                 .some((standard) => normalize(standard) === normalize(category))
-            : normalize(category) === normalize(filters.category),
+            : normalize(category) === normalize(selected),
+        ));
+      const providerMatches =
+        filters.provider.length === 0 ||
+        providers.some((provider) => filters.provider.some(
+          (selected) => normalize(selected) === normalize(provider),
+        ));
+      const statusMatches =
+        filters.status.length === 0 ||
+        filters.status.some((status) =>
+          normalize(transactionStatus(item.status)) === normalize(status),
         );
       return (
         (filters.type === "all" || transactionKind(item) === filters.type) &&
         categoryMatches &&
-        (filters.type === "credit" ||
-          filters.status === "All" ||
-          normalize(transactionStatus(item.status)) ===
-            normalize(filters.status)) &&
-        (filters.type !== "bill" ||
-          !filters.paymentMethod ||
-          filters.paymentMethod === "All" ||
-          transactionPaymentMethod(item) === filters.paymentMethod) &&
+        providerMatches &&
+        statusMatches &&
         item.date >= bounds[0] &&
         item.date < bounds[1] &&
         (!query ||

@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDownLeft,
   ArrowLeftRight,
@@ -13,7 +13,6 @@ import {
   CircleDollarSign,
   CircleX,
   Clock3,
-  CreditCard,
   FileText,
   Search,
   Send,
@@ -52,19 +51,138 @@ const money = new Intl.NumberFormat("en-US", {
 });
 const pageSize = 20;
 const defaults: TransactionFilters = {
-  type: "bill",
-  category: "All",
-  status: "All",
-  paymentMethod: "All",
+  type: "all",
+  category: [],
+  provider: [],
+  status: [],
   search: "",
   period: "This week",
   from: "",
   to: "",
 };
 const tabs = [
+  { value: "all", label: "All transactions", icon: ArrowLeftRight },
   { value: "bill", label: "Bill transactions", icon: FileText },
   { value: "credit", label: "Credit transactions", icon: ArrowLeftRight },
 ] as const;
+
+function MultiSelectFilter({
+  label,
+  value,
+  onChange,
+  options,
+  allLabel,
+  searchable = false,
+  icon: Icon = SlidersHorizontal,
+}: {
+  label: string;
+  value: string[];
+  onChange: (value: string[]) => void;
+  options: { value: string; label: string }[];
+  allLabel: string;
+  searchable?: boolean;
+  icon?: typeof SlidersHorizontal;
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const container = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOutside = (event: MouseEvent) => {
+      if (!container.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+
+  const selectedLabel = value.length
+    ? `${value.length} selected`
+    : allLabel;
+  const filteredOptions = options.filter((option) =>
+    option.label.toLowerCase().includes(search.trim().toLowerCase()),
+  );
+
+  return (
+    <div ref={container} className="relative min-w-0">
+      <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+        {label}
+      </span>
+      <button
+        type="button"
+        aria-label={`${label}: ${selectedLabel}`}
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+        className="flex h-11 w-full items-center gap-2 rounded-lg border border-[#dfe5e7] bg-white px-3 text-left text-[12px] text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
+      >
+        <Icon size={15} className="shrink-0 text-[#7b879b]" />
+        <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
+        <ChevronDown size={14} className="shrink-0 text-[#7b879b]" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full z-30 mt-1 max-h-72 w-full min-w-52 overflow-hidden rounded-lg border border-[#dfe5e7] bg-white shadow-lg">
+          {searchable && (
+            <label className="flex h-10 items-center gap-2 border-b border-[#edf1ef] px-3 text-[#7b879b]">
+              <Search size={14} />
+              <input
+                autoFocus
+                aria-label={`Search ${label.toLowerCase()}`}
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder={`Search ${label.toLowerCase()}...`}
+                className="min-w-0 flex-1 bg-transparent text-[12px] text-[#344260] outline-none placeholder:text-[#8a95a6]"
+              />
+            </label>
+          )}
+          <div className="max-h-56 overflow-y-auto p-1.5">
+            <button
+              type="button"
+              onClick={() => onChange([])}
+              className="flex w-full items-center rounded-md px-2.5 py-2 text-left text-[11px] font-medium text-[#009b67] hover:bg-[#f0faf5]"
+            >
+              Clear selection · {allLabel}
+            </button>
+            {filteredOptions.map((option) => {
+              const checked = value.includes(option.value);
+              return (
+                <label
+                  key={option.value}
+                  className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-[11px] text-[#344260] hover:bg-[#f6f9f7]"
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() =>
+                      onChange(
+                        checked
+                          ? value.filter((item) => item !== option.value)
+                          : [...value, option.value],
+                      )
+                    }
+                    className="accent-[#00a96b]"
+                  />
+                  <span className="truncate">{option.label}</span>
+                </label>
+              );
+            })}
+            {!filteredOptions.length && (
+              <p className="px-2.5 py-3 text-[11px] text-[#718097]">
+                No matching {label.toLowerCase()}.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function FilterSelect({
   label,
@@ -81,9 +199,12 @@ function FilterSelect({
 }) {
   return (
     <div className="relative min-w-0">
+      <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+        {label}
+      </span>
       <Icon
         size={15}
-        className="pointer-events-none absolute left-3 top-3.5 text-[#7b879b]"
+        className="pointer-events-none absolute left-3 top-[36px] text-[#7b879b]"
       />
       <select
         aria-label={label}
@@ -99,7 +220,7 @@ function FilterSelect({
       </select>
       <ChevronDown
         size={14}
-        className="pointer-events-none absolute right-3 top-3.5 text-[#7b879b]"
+        className="pointer-events-none absolute right-3 top-[36px] text-[#7b879b]"
       />
     </div>
   );
@@ -142,7 +263,6 @@ export default function TransactionsPage() {
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
   const [guide, setGuide] = useState<number | null>(null);
-  const isBill = filters.type === "bill";
   const availableCredits = Number(user?.availableCredits ?? 0);
 
   useEffect(() => {
@@ -158,12 +278,12 @@ export default function TransactionsPage() {
     setFilters((current) => ({ ...current, ...change }));
     setPage(1);
   }
-  function selectTab(type: "bill" | "credit") {
+  function selectTab(type: "all" | "bill" | "credit") {
     updateFilters({
       type,
-      category: "All",
-      status: "All",
-      paymentMethod: "All",
+      category: [],
+      provider: [],
+      status: [],
     });
   }
   const creditTypes = useMemo(
@@ -176,6 +296,18 @@ export default function TransactionsPage() {
       ]),
     ],
     [transactions],
+  );
+  const providerOptions = useMemo(
+    () =>
+      [...new Set([
+        ...transactions.flatMap((item) => [
+          item.provider,
+          ...billsForTransaction(item, bills).map((bill) => bill.name),
+        ]),
+      ].filter((value): value is string => Boolean(value?.trim())))].sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [transactions, bills],
   );
   const filtered = useMemo(
     () => filterTransactions(transactions, bills, filters),
@@ -227,13 +359,14 @@ export default function TransactionsPage() {
     Number(user?.referralBonus ?? 0);
   const hasFilters =
     filters.search ||
-    filters.category !== "All" ||
-    filters.status !== "All" ||
-    filters.paymentMethod !== "All" ||
+    filters.category.length > 0 ||
+    filters.provider.length > 0 ||
+    filters.status.length > 0 ||
     filters.period !== "This week";
 
   function description(item: Transaction) {
-    if (isBill) {
+    const billTransaction = transactionKind(item) === "bill";
+    if (billTransaction) {
       const linked = billsForTransaction(item, bills);
       if (linked.length) {
         return (
@@ -250,7 +383,7 @@ export default function TransactionsPage() {
         );
       }
     }
-    return displayName(item.label) === "Bill Payment" && !isBill
+    return displayName(item.label) === "Bill Payment" && !billTransaction
       ? displayName(item.type)
       : item.label;
   }
@@ -368,8 +501,13 @@ export default function TransactionsPage() {
                       event.key === "Home"
                         ? tabs[0]
                         : event.key === "End"
-                          ? tabs[1]
-                          : tabs[1 - index];
+                          ? tabs[tabs.length - 1]
+                          : tabs[
+                              (index +
+                                (event.key === "ArrowRight" ? 1 : -1) +
+                                tabs.length) %
+                                tabs.length
+                            ];
                     selectTab(next.value);
                     document.getElementById(`${next.value}-tab`)?.focus();
                   }
@@ -388,52 +526,48 @@ export default function TransactionsPage() {
           >
             <div className="space-y-3 border-b border-[#e7ecea] p-4 sm:p-5">
               <div
-                className={`grid gap-3 sm:grid-cols-2 ${isBill ? "xl:grid-cols-[minmax(210px,1.4fr)_minmax(150px,1fr)_minmax(140px,.85fr)_minmax(135px,.8fr)_minmax(135px,.8fr)]" : "xl:grid-cols-[minmax(260px,1fr)_240px_180px]"}`}
+                className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(210px,1.4fr)_minmax(150px,1fr)_minmax(150px,1fr)_minmax(135px,.8fr)_minmax(135px,.8fr)]"
               >
-                <label className="flex h-11 min-w-0 items-center gap-2 rounded-lg border border-[#dfe5e7] px-3 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
-                  <Search size={17} className="shrink-0" />
-                  <input
-                    aria-label="Search transactions"
-                    value={filters.search}
-                    onChange={(event) =>
-                      updateFilters({ search: event.target.value })
-                    }
-                    placeholder="Search transactions..."
-                    className="min-w-0 flex-1 bg-transparent text-[12px] text-[#344260] outline-none placeholder:text-[#8a95a6]"
-                  />
+                <label className="block min-w-0">
+                  <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+                    Search
+                  </span>
+                  <span className="flex h-11 items-center gap-2 rounded-lg border border-[#dfe5e7] px-3 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
+                    <Search size={17} className="shrink-0" />
+                    <input
+                      aria-label="Search transactions"
+                      value={filters.search}
+                      onChange={(event) =>
+                        updateFilters({ search: event.target.value })
+                      }
+                      placeholder="Search transactions..."
+                      className="min-w-0 flex-1 bg-transparent text-[12px] text-[#344260] outline-none placeholder:text-[#8a95a6]"
+                    />
+                  </span>
                 </label>
-                <FilterSelect
-                  label={isBill ? "Category" : "Credit type"}
+                <MultiSelectFilter
+                  label={filters.type === "credit" ? "Credit type" : "Category"}
                   value={filters.category}
                   onChange={(category) => updateFilters({ category })}
+                  allLabel={filters.type === "credit" ? "All credit types" : "All categories"}
                   options={[
-                    {
-                      value: "All",
-                      label: isBill ? "All categories" : "All credit types",
-                    },
-                    ...(isBill
-                      ? [...billCategories, "Uncategorized"]
-                      : creditTypes
-                    ).map((value) => ({ value, label: value })),
-                  ]}
+                    ...(filters.type === "credit"
+                      ? creditTypes
+                      : filters.type === "bill"
+                        ? [...billCategories, "Uncategorized"]
+                        : [...billCategories, "Uncategorized", ...creditTypes]),
+                  ].map((value) => ({ value, label: value }))}
                 />
-                {isBill && (
-                  <FilterSelect
-                    label="Payment method"
-                    value={filters.paymentMethod || "All"}
-                    onChange={(paymentMethod) =>
-                      updateFilters({ paymentMethod })
-                    }
-                    icon={CreditCard}
-                    options={[
-                      { value: "All", label: "All methods" },
-                      { value: "stripe", label: "Stripe" },
-                      { value: "credits", label: "Credits" },
-                    ]}
-                  />
-                )}
+                <MultiSelectFilter
+                  label="Provider"
+                  value={filters.provider}
+                  onChange={(provider) => updateFilters({ provider })}
+                  allLabel="All providers"
+                  searchable
+                  options={providerOptions.map((value) => ({ value, label: value }))}
+                />
                 <FilterSelect
-                  label="Period"
+                  label="Date range"
                   value={filters.period}
                   onChange={(period) =>
                     updateFilters({
@@ -443,21 +577,14 @@ export default function TransactionsPage() {
                   icon={CalendarDays}
                   options={periods.map((value) => ({ value, label: value }))}
                 />
-                {isBill && (
-                  <FilterSelect
-                    label="Status"
-                    value={filters.status}
-                    onChange={(status) => updateFilters({ status })}
-                    icon={CheckCircle2}
-                    options={[
-                      { value: "All", label: "All statuses" },
-                      ...["Completed", "Pending", "Failed"].map((value) => ({
-                        value,
-                        label: value,
-                      })),
-                    ]}
-                  />
-                )}
+                <MultiSelectFilter
+                  label="Status"
+                  value={filters.status}
+                  onChange={(status) => updateFilters({ status })}
+                  allLabel="All statuses"
+                  icon={CheckCircle2}
+                  options={["Completed", "Pending", "Failed"].map((value) => ({ value, label: value }))}
+                />
               </div>
               {filters.period === "Custom" && (
                 <div className="flex flex-wrap items-end gap-3 rounded-lg bg-[#f8faf9] p-3">
@@ -516,10 +643,10 @@ export default function TransactionsPage() {
                     {[
                       "Transaction",
                       "Transaction ID",
-                      isBill ? "Category" : "Credit type",
-                      ...(isBill ? ["Payment method"] : []),
+                      filters.type === "credit" ? "Credit type" : "Category",
+                      ...(filters.type === "all" ? ["Type"] : []),
                       "Date",
-                      isBill ? "Amount" : "Credits",
+                      "Amount",
                       "Status",
                       "",
                     ].map((heading, index) => (
@@ -535,9 +662,10 @@ export default function TransactionsPage() {
                 </thead>
                 <tbody className="divide-y divide-[#e9eeec]">
                   {visible.map((item) => {
+                    const billTransaction = transactionKind(item) === "bill";
                     const outgoing =
                       normalize(item.type).includes("sent") || item.credits < 0;
-                    const Icon = isBill
+                    const Icon = billTransaction
                       ? FileText
                       : outgoing
                         ? ArrowUpRight
@@ -579,22 +707,9 @@ export default function TransactionsPage() {
                         <td className="max-w-48 px-5 py-4 leading-5 text-[#64718a]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </td>
-                        {isBill && (
-                          <td className="px-5 py-4">
-                            <span className="inline-flex items-center gap-2 text-[#53637f]">
-                              {method(item) === "Credits" ? (
-                                <WalletCards
-                                  size={15}
-                                  className="text-[#8a95a6]"
-                                />
-                              ) : (
-                                <CreditCard
-                                  size={15}
-                                  className="text-[#8a95a6]"
-                                />
-                              )}
-                              {method(item)}
-                            </span>
+                        {filters.type === "all" && (
+                          <td className="px-5 py-4 text-[#64718a]">
+                            {billTransaction ? "Bill" : "Credit"}
                           </td>
                         )}
                         <td className="whitespace-nowrap px-5 py-4 text-[#53637f]">
@@ -611,9 +726,9 @@ export default function TransactionsPage() {
                           </p>
                         </td>
                         <td
-                          className={`whitespace-nowrap px-5 py-4 text-right text-[13px] font-semibold tabular-nums ${!isBill && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
+                          className={`whitespace-nowrap px-5 py-4 text-right text-[13px] font-semibold tabular-nums ${!billTransaction && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
                         >
-                          {isBill
+                          {billTransaction
                             ? money.format(item.amount)
                             : creditAmount(item)}
                         </td>
@@ -635,6 +750,7 @@ export default function TransactionsPage() {
 
             <div className="divide-y divide-[#e9eeec] lg:hidden">
               {visible.map((item) => {
+                const billTransaction = transactionKind(item) === "bill";
                 const title = description(item);
                 return (
                   <button
@@ -644,7 +760,7 @@ export default function TransactionsPage() {
                   >
                     <div className="flex items-start gap-3">
                       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
-                        {isBill ? (
+                        {billTransaction ? (
                           <FileText size={18} />
                         ) : (
                           <ArrowLeftRight size={18} />
@@ -660,7 +776,7 @@ export default function TransactionsPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-[13px] font-semibold tabular-nums">
-                          {isBill
+                          {billTransaction
                             ? money.format(item.amount)
                             : `${creditAmount(item)} credits`}
                         </p>
@@ -674,7 +790,7 @@ export default function TransactionsPage() {
                         {item.date.toLocaleDateString("en-US", {
                           dateStyle: "medium",
                         })}
-                        {isBill ? ` / ${method(item)}` : ""}
+                        {billTransaction ? ` / ${method(item)}` : ""}
                       </span>
                       <span className="min-w-0">
                         <span className="mr-2 font-sans text-[9px] uppercase text-[#8a95a6]">
@@ -697,7 +813,7 @@ export default function TransactionsPage() {
                     <Search size={24} strokeWidth={1.5} />
                   </span>
                   <h3 className="mt-4 text-[14px] font-semibold">
-                    No {isBill ? "bill" : "credit"} transactions found
+                    No {filters.type === "all" ? "" : filters.type === "bill" ? "bill" : "credit"} transactions found
                   </h3>
                   <p className="mt-2 text-[12px] text-[#7b879b]">
                     Try a different period or adjust your filters.
