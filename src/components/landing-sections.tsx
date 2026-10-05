@@ -256,7 +256,7 @@ export function FeaturesSection() {
             <small className="mb-[7px] block text-[9px] text-[#637184]">
               Total Credits
             </small>
-            <strong className="text-[23px]">2,450</strong>
+            <strong className="text-[23px]">$2,450</strong>
             <span className="absolute right-4 bottom-[18px] text-right text-[10px] font-bold text-[#009268]">
               +$84.20
               <br />

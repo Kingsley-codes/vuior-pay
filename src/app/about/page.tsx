@@ -6,15 +6,35 @@ import { StoreBadge } from "@/components/landing-sections";
 import { SiteFooter } from "@/components/site-footer";
 
 const values = [
-  { icon: "shield" as const, title: "Smart rewards", text: "Earn credits when you pay early." },
-  { icon: "spark" as const, title: "Financial wellness", text: "Build better money habits, one payment at a time." },
-  { icon: "spark" as const, title: "Trust & security", text: "Your data and payments are always protected." },
-  { icon: "support" as const, title: "Simplicity first", text: "Easy to use. Easy to love." },
+  {
+    icon: "shield" as const,
+    title: "Smart rewards",
+    text: "Earn credits when you pay early.",
+  },
+  {
+    icon: "spark" as const,
+    title: "Financial wellness",
+    text: "Build better money habits, one payment at a time.",
+  },
+  {
+    icon: "spark" as const,
+    title: "Trust & security",
+    text: "Your data and payments are always protected.",
+  },
+  {
+    icon: "support" as const,
+    title: "Simplicity first",
+    text: "Easy to use. Easy to love.",
+  },
 ];
 
 const milestones = [
-  { icon: "⌂", value: "2023", text: "Vuior was founded with a simple idea." },
-  { icon: "◉", value: "10K+", text: "Users already managing their bills with Vuior." },
+  { icon: "⌂", value: "2026", text: "Vuior was founded with a simple idea." },
+  {
+    icon: "◉",
+    value: "10K+",
+    text: "Users already managing their bills with Vuior.",
+  },
   { icon: "⌁", value: "100+", text: "Billers and providers integrated." },
   { icon: "✈", value: "And growing", text: "We're just getting started." },
 ];
@@ -48,7 +68,10 @@ export default function AboutPage() {
             financial habits.
           </p>
           <div className="mt-7 flex items-center gap-9 max-[900px]:justify-center">
-            <Link className={`${primaryButton} h-11 px-6 text-[12px] max-[620px]:text-[14px]`} href="/signup">
+            <Link
+              className={`${primaryButton} h-11 px-6 text-[12px] max-[620px]:text-[14px]`}
+              href="/signup"
+            >
               Create free account
             </Link>
             <Link className={textLink} href="/how-it-works">
@@ -66,9 +89,13 @@ export default function AboutPage() {
             className="object-contain object-[61%_bottom] max-[620px]:object-[60%_bottom]"
           />
           <div className="absolute top-[23%] left-[4%] z-[2] flex h-[156px] w-[190px] flex-col gap-2 rounded-[10px] border border-[#e5eeeb] bg-white/95 py-[18px] pr-[17px] pb-[13px] pl-[45px] shadow-[0_12px_35px_#183c3120] max-[620px]:origin-top-left max-[620px]:scale-80">
-            <span className="absolute top-[17px] left-[17px] grid h-[18px] w-[18px] place-items-center rounded-full bg-[#0ca879] text-[10px] text-white">✓</span>
+            <span className="absolute top-[17px] left-[17px] grid h-[18px] w-[18px] place-items-center rounded-full bg-[#0ca879] text-[10px] text-white">
+              ✓
+            </span>
             <b className="text-[10px]">Payment Successful</b>
-            <small className="text-[10px] text-[#687689]">Electricity Bill</small>
+            <small className="text-[10px] text-[#687689]">
+              Electricity Bill
+            </small>
             <strong className="text-[16px]">$85.50</strong>
             <em className="text-[9px] leading-[1.7] not-italic text-[#687689]">
               You earned
@@ -82,7 +109,7 @@ export default function AboutPage() {
             <small className="col-span-full text-[9px] text-[#6b788a]">
               Available credits
             </small>
-            <strong className="text-[16px]">2,450</strong>
+            <strong className="text-[16px]">$2,450</strong>
             <span className="text-[#009268]">♙</span>
           </div>
         </div>
@@ -97,9 +124,9 @@ export default function AboutPage() {
             habits through rewards.
           </h2>
           <p className={`${bodyCopy} max-w-[480px] max-[900px]:mx-auto`}>
-            We believe paying your bills shouldn&apos;t just be an expense. It should
-            work for you. Vuior rewards you for planning ahead and paying early,
-            helping you save more and stress less.
+            We believe paying your bills shouldn&apos;t just be an expense. It
+            should work for you. Vuior rewards you for planning ahead and paying
+            early, helping you save more and stress less.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-x-11 gap-y-[38px] max-[620px]:grid-cols-1">
@@ -159,9 +186,16 @@ export default function AboutPage() {
         <div className="relative grid overflow-hidden rounded-[18px] bg-[#063f36] text-white md:grid-cols-[1.02fr_.98fr]">
           <div className="absolute -top-24 left-[42%] h-72 w-72 rounded-full bg-[#0ab17d]/20 blur-3xl" />
           <div className="relative px-7 py-9 sm:px-11 sm:py-11">
-            <p className="text-[11px] font-extrabold tracking-[.15em] text-[#92e0c0]">VUIOR, IN YOUR POCKET</p>
-            <h2 className="mt-3 max-w-[550px] text-[29px] font-bold leading-[1.15] tracking-[-1px] sm:text-[35px]">A calmer way to stay ahead of every bill.</h2>
-            <p className="mt-4 max-w-[510px] text-[14px] leading-[1.7] text-[#c9dfd7] sm:text-[15px]">Pay early, check your rewards, and keep the details that matter close at hand—where life happens.</p>
+            <p className="text-[11px] font-extrabold tracking-[.15em] text-[#92e0c0]">
+              VUIOR, IN YOUR POCKET
+            </p>
+            <h2 className="mt-3 max-w-[550px] text-[29px] font-bold leading-[1.15] tracking-[-1px] sm:text-[35px]">
+              A calmer way to stay ahead of every bill.
+            </h2>
+            <p className="mt-4 max-w-[510px] text-[14px] leading-[1.7] text-[#c9dfd7] sm:text-[15px]">
+              Pay early, check your rewards, and keep the details that matter
+              close at hand—where life happens.
+            </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <StoreBadge store="apple" />
               <StoreBadge store="google" />
@@ -169,7 +203,13 @@ export default function AboutPage() {
           </div>
           <div className="relative min-h-[260px] overflow-hidden max-[620px]:min-h-[215px]">
             <div className="absolute inset-0 z-[1] bg-linear-to-l from-[#0d5c4e] to-transparent" />
-            <Image src="/app-phones.png" alt="Vuior mobile app screens" fill sizes="(max-width: 768px) 100vw, 42vw" className="object-cover object-left" />
+            <Image
+              src="/app-phones.png"
+              alt="Vuior mobile app screens"
+              fill
+              sizes="(max-width: 768px) 100vw, 42vw"
+              className="object-cover object-left"
+            />
           </div>
         </div>
       </section>

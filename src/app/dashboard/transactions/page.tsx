@@ -143,6 +143,7 @@ export default function TransactionsPage() {
     useState<Transaction | null>(null);
   const [guide, setGuide] = useState<number | null>(null);
   const isBill = filters.type === "bill";
+  const availableCredits = Number(user?.availableCredits ?? 0);
 
   useEffect(() => {
     const action = new URLSearchParams(window.location.search).get("wallet");
@@ -271,7 +272,7 @@ export default function TransactionsPage() {
   return (
     <DashboardShell>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <header className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(410px,.9fr)] lg:items-center">
           <div>
             <h1 className="text-[29px] font-bold tracking-[-0.035em]">
               Transactions
@@ -280,28 +281,46 @@ export default function TransactionsPage() {
               Your payments and credit activity, all in one place.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setWalletAction("send")}
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg border border-[#00a96b] bg-white px-4 text-[12px] font-semibold text-[#009b67] transition hover:bg-[#f0faf5] sm:flex-none"
-            >
-              <Send size={16} />
-              Send credits
-            </button>
-            <button
-              onClick={() => setWalletAction("add")}
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-5 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:flex-none"
-            >
-              <WalletCards size={17} />
-              Add funds
-            </button>
-            <NotificationsMenu userId={user?.id} />
-          </div>
+          <section
+            aria-label="Available credit balance"
+            className="rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-5"
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#eaf8f2] text-[#009b67]">
+                <WalletCards size={20} strokeWidth={1.8} />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[11px] font-medium text-[#64718a]">
+                  Available credits
+                </p>
+                <p className="mt-0.5 text-[23px] font-bold leading-none tracking-tight text-[#14203e] tabular-nums">
+                  {money.format(availableCredits)}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center gap-2 sm:mt-0 sm:shrink-0">
+              <NotificationsMenu userId={user?.id} />
+              <button
+                onClick={() => setWalletAction("send")}
+                className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-[#d7e3dd] bg-white px-3 text-[11px] font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:flex-none"
+              >
+                <Send size={15} />
+                Send credits
+              </button>
+              <button
+                onClick={() => setWalletAction("add")}
+                className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-3 text-[11px] font-semibold text-white transition hover:bg-[#008e5a] sm:flex-none"
+              >
+                <WalletCards size={15} />
+                Add funds
+              </button>
+            </div>
+          </section>
         </header>
 
         <section
           aria-label="Transaction statistics"
-          className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4"
+          className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4"
         >
           {stats.map(({ label, value, icon: Icon, tone }) => (
             <article

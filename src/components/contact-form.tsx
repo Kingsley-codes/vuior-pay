@@ -2,6 +2,19 @@
 
 import { FormEvent, useState } from "react";
 
+const categories = [
+  ["account", "Account Issues", "Login, profile, or account settings"],
+  ["bills", "Bills Issues", "Billing statements and payments"],
+  ["payment", "Payment Issues", "Payment methods and transactions"],
+  ["credits", "Credits/Rewards Issues", "Rewards and credit balance"],
+  ["provider", "Provider Issues", "Provider-related concerns and support"],
+  ["verification", "Verification", "Identity verification and documents"],
+  ["technical", "Technical Issues", "Bugs or technical problems"],
+  ["complaint", "Complaints", "File a complaint about our service"],
+  ["general", "General Inquiry", "Questions about Vuior"],
+  ["feature", "Feature Requests", "Suggestions and improvements"],
+] as const;
+
 export function ContactForm() {
   const [sent, setSent] = useState(false);
   const fieldClass =
@@ -55,11 +68,11 @@ export function ContactForm() {
           <option value="" disabled>
             Select a subject
           </option>
-          <option>Account support</option>
-          <option>Payments and bills</option>
-          <option>Rewards</option>
-          <option>Feedback</option>
-          <option>Something else</option>
+          {categories.map(([value, label, description]) => (
+            <option key={value} value={value}>
+              {label} — {description}
+            </option>
+          ))}
         </select>
       </label>
       <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">

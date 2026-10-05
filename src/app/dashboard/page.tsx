@@ -82,7 +82,7 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: "Available Balance",
+      title: "Available Credits",
       value: money.format(credits),
       note: "Your Vuior wallet",
       icon: WalletCards,
@@ -245,9 +245,12 @@ export default function DashboardPage() {
           <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
             <div className="flex items-center justify-between">
               <h2 className="text-[15px] font-bold">Recent Transactions</h2>
-              <span className="text-[12px] font-semibold text-[#00a96b]">
-                Latest activity
-              </span>
+              <Link
+                href="/dashboard/transactions"
+                className="text-[12px] font-semibold text-[#00a96b]"
+              >
+                View all
+              </Link>
             </div>
             <div className="mt-3 divide-y divide-[#edf1ef]">
               {transactions.slice(0, 5).map((item) => {
