@@ -3,7 +3,6 @@
 import { Suspense } from "react";
 import { LockKeyhole, UserRound } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { ProfileSettingsPanel } from "@/app/dashboard/profile/page";
@@ -13,7 +12,7 @@ import { SettingsSkeleton as SettingsPageSkeleton } from "@/components/dashboard
 type SettingsTab = "profile" | "security";
 
 export default function SettingsPage() {
-  return <DashboardShell><Suspense fallback={<SettingsPageSkeleton/>}><SettingsContent/></Suspense></DashboardShell>;
+  return <Suspense fallback={<SettingsPageSkeleton/>}><SettingsContent/></Suspense>;
 }
 
 function SettingsContent() {

@@ -1,3 +1,5 @@
-import { DashboardSkeletonFrame, SupportSkeleton } from "@/components/dashboard/DashboardSkeletons";
+import { SupportSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
-export default function Loading() { return <DashboardSkeletonFrame><SupportSkeleton /></DashboardSkeletonFrame>; }
+export default function Loading() {
+  return <SupportSkeleton />;
+}

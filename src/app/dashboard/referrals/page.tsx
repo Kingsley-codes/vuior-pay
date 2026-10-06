@@ -17,7 +17,6 @@ import {
   UsersRound,
   WalletCards,
 } from "lucide-react";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { ReferralsSkeleton } from "@/components/dashboard/DashboardSkeletons";
@@ -136,10 +135,10 @@ export default function ReferralsPage() {
     }
   }
 
-  if (loading) return <DashboardShell><ReferralsSkeleton /></DashboardShell>;
+  if (loading) return <ReferralsSkeleton />;
 
   return (
-    <DashboardShell>
+    
       <div className="mx-auto max-w-[1320px] p-5 sm:p-7 lg:p-8">
         <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#043d33] via-[#075847] to-[#08765c] px-6 py-7 text-white shadow-[0_20px_55px_rgba(4,61,51,.18)] sm:px-9 sm:py-9">
           <div className="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[55px] border-white/5" />
@@ -360,7 +359,7 @@ export default function ReferralsPage() {
           </div>
         </section>
       </div>
-    </DashboardShell>
+    
   );
 }
 

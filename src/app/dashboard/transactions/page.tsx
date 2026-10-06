@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -19,7 +19,6 @@ import {
   SlidersHorizontal,
   WalletCards,
 } from "lucide-react";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { TransactionsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import WalletModal, {
@@ -398,12 +397,12 @@ export default function TransactionsPage() {
 
   if (loading)
     return (
-      <DashboardShell>
+      
         <TransactionsSkeleton />
-      </DashboardShell>
+      
     );
   return (
-    <DashboardShell>
+    <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
         <header className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(410px,.9fr)] lg:items-center">
           <div>
@@ -918,6 +917,6 @@ export default function TransactionsPage() {
           onClose={() => setGuide(null)}
         />
       )}
-    </DashboardShell>
+    </>
   );
 }

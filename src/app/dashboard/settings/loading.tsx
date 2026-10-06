@@ -1,3 +1,5 @@
-import { DashboardSkeletonFrame, SettingsSkeleton } from "@/components/dashboard/DashboardSkeletons";
+import { SettingsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
-export default function Loading() { return <DashboardSkeletonFrame><SettingsSkeleton /></DashboardSkeletonFrame>; }
+export default function Loading() {
+  return <SettingsSkeleton />;
+}

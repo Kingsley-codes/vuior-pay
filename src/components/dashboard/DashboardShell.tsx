@@ -170,7 +170,7 @@ export default function DashboardShell({
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 onClick={() => setMobileOpen(false)}
-                className={`flex h-10 items-center gap-3 rounded-md px-3 text-[13px] font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#eaf8f2] text-[#008f60]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}
+                className={`flex h-10 items-center gap-3 rounded-md px-3 text-[13px] font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#00a96b] text-white hover:bg-[#008f5b]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}
               >
                 <Icon size={18} strokeWidth={1.8} />
                 <span className={collapsed ? "lg:hidden" : ""}>

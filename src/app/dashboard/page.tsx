@@ -14,7 +14,6 @@ import {
   UsersRound,
   WalletCards,
 } from "lucide-react";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
@@ -105,13 +104,13 @@ export default function DashboardPage() {
 
   if (loading)
     return (
-      <DashboardShell>
+      
         <DashboardHomeSkeleton />
-      </DashboardShell>
+      
     );
 
   return (
-    <DashboardShell>
+    
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -339,7 +338,7 @@ export default function DashboardPage() {
           </section>
         </div>
       </div>
-    </DashboardShell>
+    
   );
 }
 

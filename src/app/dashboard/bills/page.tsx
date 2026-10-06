@@ -17,7 +17,6 @@ import {
   SlidersHorizontal,
   WalletCards,
 } from "lucide-react";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import BillModal from "@/components/bills/BillModal";
 import BillPaymentModal from "@/components/bills/BillPaymentModal";
@@ -247,13 +246,13 @@ export default function BillsPage() {
 
   if (loading)
     return (
-      <DashboardShell>
+      
         <BillsSkeleton />
-      </DashboardShell>
+      
     );
 
   return (
-    <DashboardShell>
+    <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
@@ -937,7 +936,7 @@ export default function BillsPage() {
       {infoModal ? (
         <InfoModal kind={infoModal} onClose={() => setInfoModal(null)} />
       ) : null}
-    </DashboardShell>
+    </>
   );
 }
 

@@ -1,3 +1,5 @@
-import { DashboardSkeletonFrame, ReferralsSkeleton } from "@/components/dashboard/DashboardSkeletons";
+import { ReferralsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
-export default function Loading() { return <DashboardSkeletonFrame><ReferralsSkeleton /></DashboardSkeletonFrame>; }
+export default function Loading() {
+  return <ReferralsSkeleton />;
+}

@@ -19,7 +19,6 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import PhoneNumberInput from "@/components/phone-number-input";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
@@ -137,7 +136,7 @@ export default function SupportPage() {
   }
 
   return (
-    <DashboardShell>
+    
       <div className="mx-auto max-w-[1250px] px-5 py-8 sm:px-8 lg:py-10">
         <div className="flex items-start justify-between gap-4">
           <div className="ml-12 sm:ml-0">
@@ -211,7 +210,7 @@ export default function SupportPage() {
           )}
         </div>
       </div>
-    </DashboardShell>
+    
   );
 }
 

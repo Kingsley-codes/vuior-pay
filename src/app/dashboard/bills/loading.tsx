@@ -1,3 +1,5 @@
-import { BillsSkeleton, DashboardSkeletonFrame } from "@/components/dashboard/DashboardSkeletons";
+import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 
-export default function Loading() { return <DashboardSkeletonFrame><BillsSkeleton /></DashboardSkeletonFrame>; }
+export default function Loading() {
+  return <BillsSkeleton />;
+}
