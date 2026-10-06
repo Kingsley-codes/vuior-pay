@@ -22,12 +22,19 @@ import { useEffect, useRef, useState } from "react";
 import { auth } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { DashboardLoadingScreen } from "@/components/dashboard/DashboardSkeletons";
-import { clearAuthenticatedActivity, useIdleLogout } from "@/hooks/useIdleLogout";
+import {
+  clearAuthenticatedActivity,
+  useIdleLogout,
+} from "@/hooks/useIdleLogout";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
   { label: "Bills", href: "/dashboard/bills", icon: FileText },
-  { label: "Transactions", href: "/dashboard/transactions", icon: ArrowLeftRight },
+  {
+    label: "Transactions",
+    href: "/dashboard/transactions",
+    icon: ArrowLeftRight,
+  },
   {
     label: "Promo and Referrals",
     href: "/dashboard/referrals",
@@ -170,7 +177,7 @@ export default function DashboardShell({
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 onClick={() => setMobileOpen(false)}
-                className={`flex h-10 items-center gap-3 rounded-md px-3 text-[13px] font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#00a96b] text-white hover:bg-[#008f5b]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}
+                className={`flex h-10 items-center gap-3 rounded-xl px-3 text-[13px] font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#065D53] text-white hover:bg-[#054a43]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}
               >
                 <Icon size={18} strokeWidth={1.8} />
                 <span className={collapsed ? "lg:hidden" : ""}>
