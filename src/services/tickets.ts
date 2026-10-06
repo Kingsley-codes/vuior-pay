@@ -1,5 +1,6 @@
 "use client";
 
+import { generatePublicId } from "@/utils/publicId";
 import {
   collection,
   doc,
@@ -38,19 +39,11 @@ export type CreateTicketData = Pick<
   "userId" | "userEmail" | "subject" | "message" | "category" | "phoneNumber"
 >;
 
-function generateTicketId() {
-  const value =
-    typeof crypto !== "undefined" && "randomUUID" in crypto
-      ? crypto.randomUUID().replaceAll("-", "")
-      : `${Date.now()}${Math.random().toString(16).slice(2)}`;
-  return `VTK-${value.slice(0, 10).toUpperCase()}`;
-}
-
 export async function createTicket(ticketData: CreateTicketData) {
   const ticketRef = doc(collection(db, "tickets"));
   await setDoc(ticketRef, {
     ...ticketData,
-    ticket_ID: generateTicketId(),
+    ticket_ID: generatePublicId("VTK"),
     status: "open",
     attachments: [],
     createdAt: serverTimestamp(),

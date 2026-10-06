@@ -1,5 +1,6 @@
 "use client";
 
+import { generatePublicId } from "@/utils/publicId";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
@@ -252,7 +253,7 @@ export default function BillModal({
           normalizeInternationalPhone(form.providerPhoneNumber) || null,
         autoPay: form.autoPay,
         ...(form.autoPay && !bill?.autopayId
-          ? { autopayId: crypto.randomUUID() }
+          ? { autopayId: generatePublicId("VPA") }
           : {}),
         notes: form.notes.trim() || null,
         documentUrl,
@@ -278,7 +279,7 @@ export default function BillModal({
       } else {
         await setDoc(billRef, {
           ...values,
-          bill_ID: `VPB-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+          bill_ID: generatePublicId("VPB"),
           user_id: userId,
           provider_ID: providerId,
           status: "active",

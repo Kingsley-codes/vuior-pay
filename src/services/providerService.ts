@@ -1,3 +1,4 @@
+import { generatePublicId } from "@/utils/publicId";
 import {
   collection,
   doc,
@@ -62,10 +63,6 @@ export async function searchProviders(term: string): Promise<Provider[]> {
   return snapshot.docs.map((item) => toProvider(item.id, item.data())).filter((item): item is Provider => item !== null);
 }
 
-function providerPublicId() {
-  return `VPP-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-}
-
 export async function storeProvider(
   name: string,
   phoneNumber?: string,
@@ -95,7 +92,7 @@ export async function storeProvider(
   if (existing.docs[0]) return existingId(existing.docs[0].ref);
 
   const providerRef = doc(collection(db, "providers"));
-  const providerId = providerPublicId();
+  const providerId = generatePublicId("VPP");
   await setDoc(providerRef, {
     provider_ID: providerId, name: displayName, searchName,
     phoneNumber: phone ? [phone] : [], category: categoryName ? [categoryName] : [],

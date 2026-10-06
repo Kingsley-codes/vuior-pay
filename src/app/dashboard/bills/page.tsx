@@ -1,5 +1,6 @@
 "use client";
 
+import { generatePublicId } from "@/utils/publicId";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import {
@@ -239,7 +240,7 @@ export default function BillsPage() {
     await updateDoc(doc(db, "bills", id), {
       autoPay: enabled,
       ...(enabled && !bill?.autopayId
-        ? { autopayId: crypto.randomUUID() }
+        ? { autopayId: generatePublicId("VPA") }
         : {}),
     });
   }
