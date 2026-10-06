@@ -82,6 +82,8 @@ export default function SupportPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
+  const [ticketToResolve, setTicketToResolve] = useState<Ticket | null>(null);
+  const [resolveError, setResolveError] = useState("");
 
   const loadTickets = useCallback(async () => {
     if (!user?.id) return;
@@ -102,18 +104,15 @@ export default function SupportPage() {
   ).length;
 
   async function resolve(ticket: Ticket) {
-    if (
-      !window.confirm(
-        "Mark this ticket as resolved? You can reopen it within 48 hours.",
-      )
-    )
-      return;
+    if (updatingId) return;
+    setResolveError("");
     setUpdatingId(ticket.id);
     try {
       await markTicketResolved(ticket.id);
       await loadTickets();
+      setTicketToResolve(null);
     } catch {
-      setNotice("We couldn’t update that ticket. Please try again.");
+      setResolveError("We couldn’t update that ticket. Please try again.");
     } finally {
       setUpdatingId(null);
     }
@@ -204,13 +203,126 @@ export default function SupportPage() {
                 void loadTickets();
               }}
               onCreate={() => setTab("contact")}
-              onResolve={resolve}
+              onResolve={(ticket) => {
+                setResolveError("");
+                setTicketToResolve(ticket);
+              }}
               onReopen={reopen}
             />
           )}
         </div>
+        {ticketToResolve && (
+          <ResolveTicketModal
+            ticket={ticketToResolve}
+            updating={updatingId !== null}
+            error={resolveError}
+            onClose={() => setTicketToResolve(null)}
+            onConfirm={() => void resolve(ticketToResolve)}
+          />
+        )}
       </div>
     
+  );
+}
+
+function ResolveTicketModal({
+  ticket,
+  updating,
+  error,
+  onClose,
+  onConfirm,
+}: {
+  ticket: Ticket;
+  updating: boolean;
+  error: string;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    const previousOverflow = document.body.style.overflow;
+    dialog?.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog?.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="resolve-ticket-title"
+      aria-describedby="resolve-ticket-description"
+      aria-busy={updating}
+      onCancel={(event) => {
+        event.preventDefault();
+        if (!updating) onClose();
+      }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget && !updating) onClose();
+      }}
+      className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-md overflow-y-auto rounded-2xl bg-white p-0 text-[#14203e] shadow-2xl backdrop:bg-[#07142d]/55 backdrop:backdrop-blur-[2px]"
+    >
+      <div className="p-6 sm:p-7">
+        <div className="flex items-start justify-between gap-4">
+          <span className="grid h-12 w-12 place-items-center rounded-full bg-[#e9f8f1] text-[#00a36a]">
+            <CheckCircle2 size={25} aria-hidden="true" />
+          </span>
+          <button
+            type="button"
+            aria-label="Close confirmation"
+            disabled={updating}
+            onClick={onClose}
+            className="grid h-8 w-8 place-items-center rounded-full bg-[#f1f4f3] text-[#68758d] transition hover:bg-[#e1e8e5] disabled:opacity-50"
+          >
+            <X size={17} />
+          </button>
+        </div>
+        <h2 id="resolve-ticket-title" className="mt-5 text-xl font-bold tracking-[-.02em]">
+          Mark ticket as resolved?
+        </h2>
+        <p id="resolve-ticket-description" className="mt-2 text-[13px] leading-6 text-[#68758d]">
+          If your issue has been taken care of, you can mark this ticket as resolved.
+          You can reopen it within 48 hours if you still need help.
+        </p>
+        <div className="mt-5 rounded-xl border border-[#dfe6e4] bg-[#f8faf9] px-4 py-3">
+          <p className="break-all text-[10px] font-medium text-[#7b879b]">
+            {ticket.ticket_ID || ticket.id}
+          </p>
+          <p className="mt-1 break-words text-[13px] font-semibold">
+            {ticket.subject || "Support ticket"}
+          </p>
+        </div>
+        {error && (
+          <p role="alert" className="mt-4 rounded-lg border border-[#f4c7c7] bg-[#fff4f4] px-4 py-3 text-[12px] text-[#a83434]">
+            {error}
+          </p>
+        )}
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
+          <button
+            type="button"
+            autoFocus
+            disabled={updating}
+            onClick={onClose}
+            className="flex h-11 flex-1 items-center justify-center rounded-lg border border-[#dfe6e4] px-4 text-[12px] font-semibold transition hover:bg-[#f8faf9] disabled:opacity-60"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={updating}
+            onClick={onConfirm}
+            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white transition hover:bg-[#008f60] disabled:opacity-60"
+          >
+            {updating ? <LoaderCircle size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+            {updating ? "Resolving..." : "Mark resolved"}
+          </button>
+        </div>
+      </div>
+    </dialog>
   );
 }
 
