@@ -374,6 +374,7 @@ export default function BillModal({
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {[
+                ["Service provider", bill.name || "Not provided"],
                 ["Category", bill.category],
                 ["Account number", bill.accountNumber || "Not provided"],
                 ["Frequency", bill.frequency || "Not set"],

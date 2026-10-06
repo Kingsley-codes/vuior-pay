@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import {
   CalendarDays,
@@ -13,8 +13,9 @@ import {
   RefreshCcw,
   Search,
   ShieldCheck,
-  Sparkles,
   TrendingUp,
+  SlidersHorizontal,
+  WalletCards,
 } from "lucide-react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
@@ -31,7 +32,7 @@ const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
-type Tab = "Upcoming" | "Paid" | "Overdue";
+type Tab = "Upcoming" | "Overdue" | "Paid" | "In review" | "All bills";
 
 function dueDays(value: string) {
   const due = new Date(value);
@@ -64,6 +65,8 @@ function displayStatus(bill: Bill) {
   const value = bill.status.trim().toLowerCase().replaceAll("_", " ");
   if (value === "in review")
     return { label: "In review", className: "bg-[#fff6df] text-[#9a6700]" };
+  if (value === "overdue")
+    return { label: "Overdue", className: "bg-[#ffe9e9] text-[#db3d3d]" };
   if (["paid", "completed"].includes(value))
     return { label: "Paid", className: "bg-[#e9f8f1] text-[#009a61]" };
   return { label: bill.status, className: "bg-[#e9f8f1] text-[#009a61]" };
@@ -71,13 +74,14 @@ function displayStatus(bill: Bill) {
 
 export default function BillsPage() {
   const { user } = useVuiorSession();
-  const { bills, activeBills, loading } = useVuiorData(user?.id);
+  const { bills, loading } = useVuiorData(user?.id);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [checkoutIds, setCheckoutIds] = useState<string[] | null>(null);
   const [paymentMessage, setPaymentMessage] = useState("");
   const [tab, setTab] = useState<Tab>("Upcoming");
+  const [providers, setProviders] = useState<string[]>([]);
   const [category, setCategory] = useState("All Categories");
-  const [paidMonth, setPaidMonth] = useState(() =>
+  const [selectedMonth, setSelectedMonth] = useState(() =>
     monthLabel(monthKey(new Date())),
   );
   const [search, setSearch] = useState("");
@@ -114,24 +118,33 @@ export default function BillsPage() {
 
   const categories = ["All Categories", ...billCategories];
   const now = new Date();
-  const dueThisMonth = activeBills.filter((bill) => {
-    const d = new Date(bill.dueDate);
-    return (
-      d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth()
-    );
-  });
+  const currentMonth = monthKey(now);
+  const normalizedStatus = (bill: Bill) =>
+    bill.status.trim().toLowerCase().replaceAll("_", " ");
+  const dueInCurrentMonth = (bill: Bill) =>
+    monthKey(bill.dueDate) === currentMonth;
+  const upcomingBills = bills.filter(
+    (bill) => normalizedStatus(bill) === "active" && dueInCurrentMonth(bill),
+  );
+  const overdueBills = bills.filter(
+    (bill) => normalizedStatus(bill) === "overdue",
+  );
+  const paidBills = bills.filter(
+    (bill) => normalizedStatus(bill) === "paid" && dueInCurrentMonth(bill),
+  );
+  const reviewBills = bills.filter(
+    (bill) => normalizedStatus(bill) === "in review" && dueInCurrentMonth(bill),
+  );
+  const providerOptions = useMemo(
+    () =>
+      [...new Set(bills.map((bill) => bill.name.trim()).filter(Boolean))].sort(
+        (a, b) => a.localeCompare(b),
+      ),
+    [bills],
+  );
 
   const paidMonthOptions = useMemo(() => {
-    const months = bills
-      .filter((bill) =>
-        ["in review", "paid", "completed"].includes(
-          bill.status.trim().toLowerCase().replaceAll("_", " "),
-        ),
-      )
-      .map((bill) =>
-        monthKey(bill.paidAt ?? bill.paymentSubmittedAt ?? bill.dueDate),
-      )
-      .filter(Boolean);
+    const months = bills.map((bill) => monthKey(bill.dueDate)).filter(Boolean);
     return [
       "All Months",
       ...Array.from(new Set([...months, monthKey(new Date())]))
@@ -141,38 +154,38 @@ export default function BillsPage() {
   }, [bills]);
 
   const visibleBills = useMemo(() => {
-    const currentMonth = monthKey(new Date());
     return bills
       .filter((bill) => {
-        const billStatus = bill.status
-          .trim()
-          .toLowerCase()
-          .replaceAll("_", " ");
-        const days = dueDays(bill.dueDate);
+        const billStatus = normalizedStatus(bill);
         const matchesTab =
           tab === "Upcoming"
-            ? ["active", "upcoming"].includes(billStatus) &&
-              days >= 0 &&
-              monthKey(bill.dueDate) === currentMonth
-            : tab === "Paid"
-              ? ["in review", "paid", "completed"].includes(billStatus)
-              : billStatus === "overdue" ||
-                (days < 0 && ["active", "upcoming"].includes(billStatus));
+            ? billStatus === "active" && dueInCurrentMonth(bill)
+            : tab === "Overdue"
+              ? billStatus === "overdue"
+              : tab === "Paid"
+                ? billStatus === "paid" &&
+                  (selectedMonth === "All Months" ||
+                    monthLabel(monthKey(bill.dueDate)) === selectedMonth)
+                : tab === "In review"
+                  ? billStatus === "in review" && dueInCurrentMonth(bill)
+                  : tab === "All bills" &&
+                    monthKey(bill.dueDate) === currentMonth;
         return (
           matchesTab &&
           (category === "All Categories" || bill.category === category) &&
           (tab !== "Paid" ||
-            paidMonth === "All Months" ||
-            monthLabel(
-              monthKey(bill.paidAt ?? bill.paymentSubmittedAt ?? bill.dueDate),
-            ) === paidMonth) &&
+            selectedMonth === "All Months" ||
+            monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
+          ((tab !== "Paid" && tab !== "All bills") ||
+            providers.length === 0 ||
+            providers.includes(bill.name.trim())) &&
           `${bill.name} ${bill.category}`
             .toLowerCase()
             .includes(search.toLowerCase())
         );
       })
       .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
-  }, [bills, category, paidMonth, search, tab]);
+  }, [bills, category, selectedMonth, search, tab, providers]);
 
   const payableBills = bills.filter(
     (bill) =>
@@ -249,15 +262,31 @@ export default function BillsPage() {
               Manage your recurring bills, due dates, and early-payment rewards.
             </p>
           </div>
-          <div className="flex w-full items-center gap-3 sm:w-auto">
-            <button
-              onClick={() => setModal({ mode: "add" })}
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-5 text-[11px] font-semibold text-white sm:flex-none"
-            >
-              <Plus size={17} /> Add Bill
-            </button>
-            <NotificationsMenu userId={user?.id} />
-          </div>
+          <section
+            aria-label="Available credits and bill actions"
+            className="w-full rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:w-auto sm:min-w-[440px] sm:items-center sm:justify-between sm:gap-5 sm:px-5"
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eaf8f2] text-[#009b67]">
+                <WalletCards size={19} />
+              </span>
+              <div>
+                <p className="text-[11px] text-[#64718a]">Available credits</p>
+                <p className="mt-0.5 text-[21px] font-bold leading-none text-[#14203e] tabular-nums">
+                  {money.format(Number(user?.availableCredits ?? 0))}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-end gap-3 sm:mt-0 sm:shrink-0">
+              <button
+                onClick={() => setModal({ mode: "add" })}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[11px] font-semibold text-white"
+              >
+                <Plus size={15} /> Add Bill
+              </button>
+              <NotificationsMenu userId={user?.id} />
+            </div>
+          </section>
         </div>
 
         {paymentMessage && (
@@ -278,28 +307,28 @@ export default function BillsPage() {
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
             [
-              "Active Bills",
-              String(activeBills.length),
-              `Across ${new Set(activeBills.map((b) => b.category)).size} categories`,
+              "Upcoming Bills",
+              String(upcomingBills.length),
+              "Active, due this month",
               FileText,
             ],
             [
-              "Due This Month",
-              String(dueThisMonth.length),
-              money.format(dueThisMonth.reduce((sum, b) => sum + b.amount, 0)),
+              "Overdue Bills",
+              String(overdueBills.length),
+              "All overdue bills",
               CalendarDays,
             ],
             [
-              "Autopay Enabled",
-              String(activeBills.filter((b) => b.autoPay).length),
-              `Of ${activeBills.length} bills`,
+              "Paid Bills",
+              String(paidBills.length),
+              "Paid, due this month",
               RefreshCcw,
             ],
             [
-              "Available Credits",
-              money.format(Number(user?.availableCredits ?? 0)),
-              "Ready to redeem",
-              Sparkles,
+              "In Review Bills",
+              String(reviewBills.length),
+              "In review, due this month",
+              ShieldCheck,
             ],
           ].map(([label, value, note, Icon]) => {
             const IconComponent = Icon as typeof FileText;
@@ -330,18 +359,29 @@ export default function BillsPage() {
         <div className="mt-6">
           <div className="min-w-0 space-y-5">
             <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
-              <div className="flex overflow-x-auto border-b border-[#e7ecea] px-3 sm:px-5">
-                {(["Upcoming", "Paid", "Overdue"] as Tab[]).map((item) => (
+              <div
+                role="tablist"
+                className="flex items-center overflow-x-auto border-b border-[#e7ecea] px-3 sm:px-5"
+              >
+                {(
+                  [
+                    "Upcoming",
+                    "Overdue",
+                    "Paid",
+                    "In review",
+                    "All bills",
+                  ] as Tab[]
+                ).map((item) => (
                   <button
                     key={item}
                     onClick={() => setTab(item)}
-                    className={`h-14 shrink-0 border-b-2 px-4 text-[12px] font-semibold ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
+                    className={`inline-flex h-14 shrink-0 items-center justify-center border-b-2 px-4 text-[12px] font-semibold leading-none ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
                   >
                     {item}
                   </button>
                 ))}
               </div>
-              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)]">
+              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)]">
                 <label className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white px-3 text-[#75829a]">
                   <Search size={16} />
                   <input
@@ -356,13 +396,21 @@ export default function BillsPage() {
                   onChange={setCategory}
                   options={categories}
                 />
-                {tab === "Paid" ? (
+                {tab === "Paid" || tab === "All bills" ? (
                   <Filter
-                    value={paidMonth}
-                    onChange={setPaidMonth}
+                    value={selectedMonth}
+                    onChange={setSelectedMonth}
                     options={paidMonthOptions}
                   />
                 ) : null}
+                {(tab === "Paid" || tab === "All bills") && (
+                  <MultiSelectFilter
+                    label="Provider"
+                    value={providers}
+                    onChange={setProviders}
+                    options={providerOptions}
+                  />
+                )}
               </div>
 
               {tab !== "Paid" && selectableVisible.length > 0 && (
@@ -467,13 +515,9 @@ export default function BillsPage() {
                               {money.format(bill.amount)}
                             </p>
                             <span
-                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${tab === "Paid" ? shownStatus.className : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
+                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${shownStatus.className}`}
                             >
-                              {tab === "Paid"
-                                ? shownStatus.label
-                                : days < 0
-                                  ? "Overdue"
-                                  : bill.status}
+                              {shownStatus.label}
                             </span>
                           </div>
                         </div>
@@ -584,7 +628,7 @@ export default function BillsPage() {
                           </th>
                         )}
                         {[
-                          "Bill & Category",
+                          "Provider & Category",
                           "Due Date",
                           "Amount",
                           "Autopay",
@@ -712,13 +756,9 @@ export default function BillsPage() {
                             </td>
                             <td className="px-4 py-3">
                               <span
-                                className={`rounded px-2.5 py-1.5 text-[9px] capitalize ${tab === "Paid" ? shownStatus.className : days < 0 ? "bg-[#ffe9e9] text-[#db3d3d]" : "bg-[#e9f8f1] text-[#009a61]"}`}
+                                className={`rounded px-2.5 py-1.5 text-[9px] capitalize ${shownStatus.className}`}
                               >
-                                {tab === "Paid"
-                                  ? shownStatus.label
-                                  : days < 0
-                                    ? "Overdue"
-                                    : bill.status}
+                                {shownStatus.label}
                               </span>
                             </td>
                             {tab !== "Paid" && (
@@ -1010,5 +1050,110 @@ function Filter({
         className="pointer-events-none absolute right-3 top-3 text-[#718097]"
       />
     </label>
+  );
+}
+
+function MultiSelectFilter({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string[];
+  onChange: (value: string[]) => void;
+  options: string[];
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const container = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const closeOutside = (event: MouseEvent) => {
+      if (!container.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [open]);
+  const filtered = options.filter((item) =>
+    item.toLowerCase().includes(search.trim().toLowerCase()),
+  );
+  return (
+    <div ref={container} className="relative min-w-0">
+      <button
+        type="button"
+        aria-label={`${label}: ${value.length ? `${value.length} selected` : `All ${label.toLowerCase()}s`}`}
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+        className="flex h-10 w-full items-center gap-2 rounded-md border border-[#dfe5e7] bg-white px-3 text-left text-[10px] text-[#344260]"
+      >
+        <SlidersHorizontal size={14} className="shrink-0 text-[#7b879b]" />
+        <span className="min-w-0 flex-1 truncate">
+          {value.length
+            ? `${value.length} selected`
+            : `All ${label.toLowerCase()}s`}
+        </span>
+        <ChevronDown size={14} className="text-[#718097]" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full z-30 mt-1 max-h-72 w-full min-w-52 overflow-hidden rounded-lg border border-[#dfe5e7] bg-white shadow-lg">
+          <label className="flex h-10 items-center gap-2 border-b border-[#edf1ef] px-3 text-[#7b879b]">
+            <Search size={14} />
+            <input
+              autoFocus
+              aria-label={`Search ${label.toLowerCase()}`}
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={`Search ${label.toLowerCase()}...`}
+              className="min-w-0 flex-1 bg-transparent text-[12px] outline-none"
+            />
+          </label>
+          <div className="max-h-56 overflow-y-auto p-1.5">
+            <button
+              type="button"
+              onClick={() => onChange([])}
+              className="flex w-full rounded-md px-2.5 py-2 text-left text-[11px] font-medium text-[#009b67] hover:bg-[#f0faf5]"
+            >
+              Clear selection · All providers
+            </button>
+            {filtered.map((option) => {
+              const checked = value.includes(option);
+              return (
+                <label
+                  key={option}
+                  className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-[11px] text-[#344260] hover:bg-[#f6f9f7]"
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() =>
+                      onChange(
+                        checked
+                          ? value.filter((item) => item !== option)
+                          : [...value, option],
+                      )
+                    }
+                    className="accent-[#00a96b]"
+                  />
+                  <span className="truncate">{option}</span>
+                </label>
+              );
+            })}
+            {!filtered.length && (
+              <p className="px-2.5 py-3 text-[11px] text-[#718097]">
+                No matching providers.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

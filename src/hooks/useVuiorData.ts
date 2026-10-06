@@ -145,6 +145,7 @@ export function useVuiorData(
               providerPhoneNumber: data.providerPhoneNumber
                 ? String(data.providerPhoneNumber)
                 : undefined,
+              provider: String(data.name ?? ""),
               address: data.address ? String(data.address) : undefined,
               paidAt: asDate(data.paidAt) ?? undefined,
               paymentSubmittedAt: asDate(data.paymentSubmittedAt) ?? undefined,
@@ -207,9 +208,7 @@ export function useVuiorData(
             paymentMethod: data.paymentMethod
               ? String(data.paymentMethod)
               : undefined,
-            provider: data.providerName || data.provider
-              ? String(data.providerName ?? data.provider)
-              : undefined,
+            provider: data.name ? String(data.name) : undefined,
             creditsApplied: Number(
               data.creditsApplied ?? data.creditApplied ?? 0,
             ),
