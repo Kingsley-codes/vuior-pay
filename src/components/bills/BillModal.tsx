@@ -1,16 +1,10 @@
 "use client";
 
-import { generatePublicId } from "@/utils/publicId";
+import { saveUserBill } from "@/services/billSave";
+import { withBillConfirmation } from "@/utils/billDuplicates";
+import { useBillConfirmation } from "@/hooks/useBillConfirmation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import {
-  addDoc,
-  collection,
-  doc,
-  setDoc,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   CalendarDays,
@@ -26,7 +20,7 @@ import PhoneNumberInput from "@/components/phone-number-input";
 import BillDocumentPreview, {
   isPdfDocument,
 } from "@/components/bills/BillDocumentPreview";
-import { db, storage } from "@/services/firebase";
+import { storage } from "@/services/firebase";
 import { extractBillFromImage } from "@/services/billExtraction";
 import {
   searchProviders,
@@ -40,12 +34,16 @@ import {
   normalizeInternationalPhone,
 } from "@/utils/inputFormatting";
 
+import { BILL_FREQUENCIES, normalizeBillFrequency, frequencyLabel, validAutopayFrequency } from "@/utils/billFrequency";
+import { billCreditInfo } from "@/utils/billCredits";
+
 type Mode = "add" | "details" | "edit";
 type FormState = {
   name: string;
   category: string;
   amount: string;
   dueDate: string;
+  frequency: string;
   accountNumber: string;
   providerPhoneNumber: string;
   autoPay: boolean;
@@ -56,6 +54,7 @@ const emptyForm: FormState = {
   category: "",
   amount: "",
   dueDate: "",
+  frequency: "one-time",
   accountNumber: "",
   providerPhoneNumber: "",
   autoPay: false,
@@ -105,6 +104,9 @@ export default function BillModal({
   userId: string;
   onClose: () => void;
 }) {
+  const { confirmBill, confirmationDialog } = useBillConfirmation();
+  const submitting = useRef(false);
+  const saveRequest = useRef<{ key: string; id: string } | null>(null);
   const [mode, setMode] = useState<Mode>(initialMode);
   const [form, setForm] = useState<FormState>(() =>
     bill
@@ -113,6 +115,7 @@ export default function BillModal({
           category: bill.category || "",
           amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
+          frequency: bill.autoPay && normalizeBillFrequency(bill.frequency) === "one-time" ? "" : normalizeBillFrequency(bill.frequency),
           accountNumber: bill.accountNumber || "",
           providerPhoneNumber: normalizeInternationalPhone(
             bill.providerPhoneNumber || "",
@@ -142,9 +145,9 @@ export default function BillModal({
 
   useEffect(() => {
     const term = form.name.trim();
-    if (!term) return void setProviders([]);
     let cancelled = false;
     const timer = window.setTimeout(() => {
+      if (!term) { setProviders([]); return; }
       void searchProviders(term)
         .then((matches) => !cancelled && setProviders(matches))
         .catch(() => !cancelled && setProviders([]));
@@ -201,6 +204,7 @@ export default function BillModal({
 
   async function submit(event: FormEvent) {
     event.preventDefault();
+    if (!validAutopayFrequency(form.autoPay, form.frequency)) return setError("Choose a recurring frequency to enable autopay.");
     const amount = currencyInputNumber(form.amount);
     if (
       !form.name.trim() ||
@@ -215,12 +219,11 @@ export default function BillModal({
       );
     if (mode === "add" && !file)
       return setError("Attach a bill document before saving.");
+    if (submitting.current) return;
+    submitting.current = true;
     setWorking(true);
     setError("");
     try {
-      const billRef = bill
-        ? doc(db, "bills", bill.id)
-        : doc(collection(db, "bills"));
       let documentUrl = bill?.documentUrl || null;
       if (file) {
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
@@ -230,35 +233,24 @@ export default function BillModal({
         );
         await uploadBytes(storageRef, file, { contentType: file.type });
         documentUrl = await getDownloadURL(storageRef);
-        await addDoc(collection(db, "documents"), {
-          userId,
-          billId: billRef.id,
-          documentUrl,
-          documentName: safeName,
-          documentType: file.type,
-          uploadedAt: Timestamp.now(),
-          purpose: "Bill",
-          isDeleted: false,
-        });
       }
-      const due = new Date(`${form.dueDate}T12:00:00`).toISOString();
+      const due = new Date(`${form.dueDate}T12:00:00.000Z`).toISOString();
       const values = {
         name: form.name.trim(),
         category: form.category,
         amount,
+        frequency: form.frequency,
         due_date: due,
         dueDate: due,
         accountNumber: form.accountNumber.trim(),
         providerPhoneNumber:
           normalizeInternationalPhone(form.providerPhoneNumber) || null,
         autoPay: form.autoPay,
-        ...(form.autoPay && !bill?.autopayId
-          ? { autopayId: generatePublicId("VPA") }
-          : {}),
+        nextPaymentDate: form.autoPay ? form.dueDate : null,
         notes: form.notes.trim() || null,
         documentUrl,
         documentType: file?.type || bill?.documentType || null,
-        updated_at: Timestamp.now(),
+        ...(file ? { documentName: file.name } : {}),
       };
       const providerId = await storeProvider(
         form.name,
@@ -266,38 +258,23 @@ export default function BillModal({
         form.category,
         selectedProvider?.id,
       );
-      if (bill) {
-        await updateDoc(billRef, {
-          ...values,
-          provider_ID: providerId,
-          status: ["in review", "paid", "completed"].includes(
-            normalizedStatus(bill.status),
-          )
-            ? normalizedStatus(bill.status)
-            : "active",
-        });
-      } else {
-        await setDoc(billRef, {
-          ...values,
-          bill_ID: generatePublicId("VPB"),
-          user_id: userId,
-          provider_ID: providerId,
-          status: "active",
-          isDeleted: false,
-          created_at: Timestamp.now(),
-        });
-      }
+      const key = JSON.stringify({ form, fileName: file?.name, fileSize: file?.size, fileModified: file?.lastModified });
+      if (saveRequest.current?.key !== key) saveRequest.current = { key, id: crypto.randomUUID() };
+      const result = await withBillConfirmation((confirmation) => saveUserBill({ values: { ...values, provider_ID: providerId }, billId: bill?.id, requestId: saveRequest.current!.id, confirmation }), confirmBill);
+      if (!result) { saveRequest.current = null; return; }
       onClose();
     } catch (cause) {
       setError(
         cause instanceof Error ? cause.message : "Unable to save this bill.",
       );
     } finally {
+      submitting.current = false;
       setWorking(false);
     }
   }
 
   const currentStatus = normalizedStatus(bill?.status);
+  const credits = bill ? billCreditInfo(bill) : null;
   const isInReview = currentStatus === "in review";
   const isPaid = ["paid", "completed"].includes(currentStatus);
   const isPaymentSubmitted = isInReview || isPaid;
@@ -306,6 +283,7 @@ export default function BillModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#07142d]/60 p-3 backdrop-blur-[2px]"
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}
     >
+      {confirmationDialog}
       <section
         role="dialog"
         aria-modal="true"
@@ -373,12 +351,16 @@ export default function BillModal({
                 </span>
               </div>
             </div>
+            <div className="mt-4 rounded-xl bg-[#f0f8f3] p-4 text-sm text-[#39704e]">
+              <p className="font-semibold">{credits?.label}: {money.format(credits?.amount || 0)} in credits</p>
+              <p className="mt-1 text-xs">{credits?.description}</p>
+            </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {[
                 ["Service provider", bill.name || "Not provided"],
                 ["Category", bill.category],
                 ["Account number", bill.accountNumber || "Not provided"],
-                ["Frequency", bill.frequency || "Not set"],
+                ["Frequency", frequencyLabel(bill.frequency)],
                 ["Autopay", bill.autoPay ? "On" : "Off"],
                 ["Provider phone", bill.providerPhoneNumber || "Not provided"],
                 ["Payment method", bill.paidWith || "Not paid"],
@@ -449,6 +431,7 @@ export default function BillModal({
                     : bill?.documentUrl
                       ? "Replace attached document"
                       : "Upload a bill document"}
+                  {mode === "add" && <span className="text-red-600" aria-label="required"> *</span>}
                 </b>
                 <small className="mt-1.5 block text-[10px] leading-5 text-[#657a72]">
                   JPG, PNG, WEBP or PDF up to 10 MB. Vuior AI will fill in the
@@ -480,7 +463,7 @@ export default function BillModal({
             ) : null}
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <div className="relative">
-                <Field label="Service provider">
+                <Field label="Service provider" required>
                   <input
                     required
                     value={form.name}
@@ -493,7 +476,7 @@ export default function BillModal({
                     placeholder="e.g. Duke Energy"
                   />
                 </Field>
-                {showProviders && providers.length ? (
+                {showProviders && form.name.trim() && providers.length ? (
                   <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-[#cfeade] bg-white shadow-lg">
                     {providers.map((provider) => (
                       <button
@@ -526,7 +509,7 @@ export default function BillModal({
                   </div>
                 ) : null}
               </div>
-              <Field label="Category">
+              <Field label="Category" required>
                 <select
                   required
                   value={form.category}
@@ -543,7 +526,7 @@ export default function BillModal({
                   ))}
                 </select>
               </Field>
-              <Field label="Amount">
+              <Field label="Amount" required>
                 <div className="relative">
                   <span className="pointer-events-none absolute left-3 top-3 text-[12px] text-[#65728a]">
                     $
@@ -560,7 +543,7 @@ export default function BillModal({
                   />
                 </div>
               </Field>
-              <Field label="Due date">
+              <Field label="Due date" required>
                 <input
                   required
                   type="date"
@@ -568,16 +551,22 @@ export default function BillModal({
                   onChange={(e) => update("dueDate", e.target.value)}
                 />
               </Field>
-              <Field label="Account number">
+              <Field label="Account number" required>
                 <input
                   required
-                  inputMode="numeric"
                   value={form.accountNumber}
                   onChange={(e) =>
-                    update("accountNumber", e.target.value.replace(/\D/g, ""))
+                    update("accountNumber", e.target.value)
                   }
                   placeholder="Account or reference number"
                 />
+              </Field>
+              <Field label="Frequency" required>
+                <select required value={form.frequency} onChange={(e) => update("frequency", e.target.value)}>
+                  <option value="" disabled>Select a recurring frequency</option>
+                  {BILL_FREQUENCIES.filter((value) => !form.autoPay || value !== "one-time").map((value) => <option key={value} value={value}>{frequencyLabel(value)}</option>)}
+                </select>
+                {form.autoPay && <small className="mt-1 block text-[#65728a]">Autopay requires a recurring frequency.</small>}
               </Field>
               <Field label="Provider phone">
                 <PhoneNumberInput
@@ -606,7 +595,11 @@ export default function BillModal({
               <input
                 type="checkbox"
                 checked={form.autoPay}
-                onChange={(e) => update("autoPay", e.target.checked)}
+                onChange={(e) => {
+                  const autoPay = e.target.checked;
+                  setForm((current) => ({ ...current, autoPay, frequency: autoPay && current.frequency === "one-time" ? "" : !autoPay && !current.frequency ? "one-time" : current.frequency }));
+                  setError("");
+                }}
                 className="h-4 w-4 accent-[#009b67]"
               />
             </label>
@@ -643,15 +636,17 @@ function Field({
   label,
   children,
   wide = false,
+  required = false,
 }: {
   label: string;
   children: React.ReactNode;
   wide?: boolean;
+  required?: boolean;
 }) {
   return (
     <label className={`${wide ? "mt-4 block" : "block"}`}>
       <span className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-[#44516b]">
-        {label}
+        {label} {required && <span className="text-red-600" aria-label="required">*</span>}
       </span>
       <div className="[&_input]:h-11 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[#dfe6e4] [&_input]:px-3 [&_input]:text-[12px] [&_input]:outline-none [&_input]:focus:border-[#009b67] [&_select]:h-11 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[#dfe6e4] [&_select]:bg-white [&_select]:px-3 [&_select]:text-[12px] [&_select]:outline-none [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#dfe6e4] [&_textarea]:p-3 [&_textarea]:text-[12px] [&_textarea]:outline-none">
         {children}

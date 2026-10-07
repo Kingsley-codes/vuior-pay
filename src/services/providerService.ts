@@ -10,7 +10,7 @@ import {
   query,
   setDoc,
   startAt,
-  Timestamp,
+  serverTimestamp,
   where,
 } from "firebase/firestore";
 import { auth, db } from "@/services/firebase";
@@ -42,8 +42,7 @@ function unique(values: string[]) {
 
 function toProvider(id: string, data: Record<string, unknown>): Provider | null {
   const name = typeof data.name === "string" ? data.name.trim() : "";
-  const status = typeof data.status === "string" ? data.status.toLowerCase() : "active";
-  if (!name || !["active", "approved", "verified"].includes(status)) return null;
+  if (!name || data.isDeleted === true || data.status === "merged") return null;
   return {
     id,
     providerId: typeof data.provider_ID === "string" ? data.provider_ID : undefined,
@@ -77,7 +76,7 @@ export async function storeProvider(
 
   const existingId = async (providerRef: ReturnType<typeof doc>) => {
     const snapshot = await getDoc(providerRef);
-    if (!snapshot.exists()) throw new Error("The selected provider no longer exists.");
+    if (!snapshot.exists() || snapshot.data().isDeleted || snapshot.data().status === "merged") throw new Error("The selected provider no longer exists.");
     const value = snapshot.data().provider_ID;
     if (typeof value !== "string" || !value.trim()) throw new Error("The selected provider is invalid.");
     return value;
@@ -96,8 +95,8 @@ export async function storeProvider(
   await setDoc(providerRef, {
     provider_ID: providerId, name: displayName, searchName,
     phoneNumber: phone ? [phone] : [], category: categoryName ? [categoryName] : [],
-    status: "pending", submittedBy: auth.currentUser?.uid || null,
-    createdAt: Timestamp.now(), updatedAt: Timestamp.now(),
+    submittedBy: auth.currentUser?.uid || null,
+    createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
   });
   return providerId;
 }

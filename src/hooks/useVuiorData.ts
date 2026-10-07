@@ -34,6 +34,7 @@ export type Bill = {
   paidWith?: string;
   paymentId?: string;
   amountPaid?: number;
+  earlyPaymentReward?: { credits?: number; status?: string } | null;
 };
 
 export type Transaction = {
@@ -131,7 +132,7 @@ export function useVuiorData(
               nextPaymentDate: data.nextPaymentDate
                 ? String(data.nextPaymentDate)
                 : undefined,
-              frequency: String(data.frequency ?? "Monthly"),
+              frequency: String(data.frequency || "one-time"),
               accountNumber: data.accountNumber
                 ? String(data.accountNumber)
                 : undefined,
@@ -160,6 +161,7 @@ export function useVuiorData(
                         data.earlyPaymentReward?.paymentTransactionId,
                     )
                   : undefined,
+              earlyPaymentReward: data.earlyPaymentReward ?? null,
               amountPaid:
                 data.amountPaid == null ? undefined : Number(data.amountPaid),
             };

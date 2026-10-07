@@ -1,4 +1,5 @@
 "use client";
+import { normalizeBillFrequency } from "@/utils/billFrequency";
 
 import { generatePublicId } from "@/utils/publicId";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -86,7 +87,7 @@ export default function BillsPage() {
   );
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState<{
-    mode: "add" | "details";
+    mode: "add" | "details" | "edit";
     bill?: Bill;
   } | null>(null);
   const [infoModal, setInfoModal] = useState<"savings" | "autopay" | null>(
@@ -237,8 +238,16 @@ export default function BillsPage() {
 
   async function toggleAutopay(id: string, enabled: boolean) {
     const bill = bills.find((item) => item.id === id);
+    if (!bill) return;
+    const frequency = normalizeBillFrequency(bill.frequency);
+    if (enabled && frequency === "one-time") {
+      setModal({ mode: "edit", bill: { ...bill, autoPay: true } });
+      return;
+    }
     await updateDoc(doc(db, "bills", id), {
       autoPay: enabled,
+      frequency,
+      nextPaymentDate: enabled ? bill.dueDate.slice(0, 10) : null,
       ...(enabled && !bill?.autopayId
         ? { autopayId: generatePublicId("VPA") }
         : {}),
