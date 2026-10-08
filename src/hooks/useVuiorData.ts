@@ -190,7 +190,7 @@ export function useVuiorData(
                 "Bill payment",
             ),
             category: String(data.category ?? "Payment"),
-            amount: Number(data.amount ?? data.amountPaid ?? 0),
+            amount: Number(data.amount ?? data.credits ?? data.amountPaid ?? 0),
             status: transactionStatus(String(data.status ?? "completed")),
             date:
               asDate(data.date ?? data.createdAt ?? data.paidAt) ?? new Date(0),

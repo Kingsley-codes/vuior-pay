@@ -244,7 +244,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function creditAmount(item: Transaction) {
-  const value = item.credits || item.amount;
+  const value = item.amount;
   const signed = normalize(item.type).includes("sent")
     ? -Math.abs(value)
     : value;
@@ -354,7 +354,7 @@ export default function TransactionsPage() {
   const referral =
     transactions
       .filter((item) => normalize(item.type).includes("referral"))
-      .reduce((sum, item) => sum + Math.max(0, item.credits), 0) ||
+      .reduce((sum, item) => sum + Math.max(0, item.amount), 0) ||
     Number(user?.referralBonus ?? 0);
   const hasFilters =
     filters.search ||
@@ -663,7 +663,7 @@ export default function TransactionsPage() {
                   {visible.map((item) => {
                     const billTransaction = transactionKind(item) === "bill";
                     const outgoing =
-                      normalize(item.type).includes("sent") || item.credits < 0;
+                      normalize(item.type).includes("sent") || item.amount < 0;
                     const Icon = billTransaction
                       ? FileText
                       : outgoing

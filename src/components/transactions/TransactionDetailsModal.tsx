@@ -29,7 +29,7 @@ export default function TransactionDetailsModal({
 }) {
   const isCredit = transactionKind(transaction) === "credit";
   const linkedBills = isCredit ? [] : billsForTransaction(transaction, bills);
-  const rawCredits = transaction.credits || transaction.amount;
+  const rawCredits = transaction.amount;
   const credits = normalize(transaction.type).includes("sent")
     ? -Math.abs(rawCredits)
     : rawCredits;

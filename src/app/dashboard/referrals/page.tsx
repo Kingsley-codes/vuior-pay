@@ -45,7 +45,7 @@ export default function ReferralsPage() {
     [transactions],
   );
   const totalEarned = referralCredits.reduce(
-    (sum, item) => sum + Math.max(0, item.credits),
+    (sum, item) => sum + Math.max(0, item.amount),
     0,
   );
   const ownCode =
