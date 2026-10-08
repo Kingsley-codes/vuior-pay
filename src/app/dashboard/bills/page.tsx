@@ -1,5 +1,5 @@
 "use client";
-import { normalizeBillFrequency } from "@/utils/billFrequency";
+import { BILL_FREQUENCIES, frequencyLabel, normalizeBillFrequency } from "@/utils/billFrequency";
 
 import { generatePublicId } from "@/utils/publicId";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -80,6 +80,7 @@ export default function BillsPage() {
   const [checkoutIds, setCheckoutIds] = useState<string[] | null>(null);
   const [paymentMessage, setPaymentMessage] = useState("");
   const [tab, setTab] = useState<Tab>("Upcoming");
+  const [frequencies, setFrequencies] = useState<string[]>([]);
   const [providers, setProviders] = useState<string[]>([]);
   const [category, setCategory] = useState("All Categories");
   const [selectedMonth, setSelectedMonth] = useState(() =>
@@ -173,6 +174,7 @@ export default function BillsPage() {
                     monthKey(bill.dueDate) === currentMonth;
         return (
           matchesTab &&
+          (frequencies.length === 0 || frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
           (category === "All Categories" || bill.category === category) &&
           (tab !== "Paid" ||
             selectedMonth === "All Months" ||
@@ -186,7 +188,7 @@ export default function BillsPage() {
         );
       })
       .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
-  }, [bills, category, selectedMonth, search, tab, providers]);
+  }, [bills, category, selectedMonth, search, tab, providers, frequencies]);
 
   const payableBills = bills.filter(
     (bill) =>
@@ -390,7 +392,7 @@ export default function BillsPage() {
                   </button>
                 ))}
               </div>
-              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-[minmax(280px,1fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)_minmax(180px,0.45fr)]">
+              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-[minmax(220px,1.5fr)_repeat(4,minmax(140px,1fr))]">
                 <label className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white px-3 text-[#75829a]">
                   <Search size={16} />
                   <input
@@ -404,6 +406,14 @@ export default function BillsPage() {
                   value={category}
                   onChange={setCategory}
                   options={categories}
+                />
+                <MultiSelectFilter
+                  label="Frequency"
+                  allLabel="All frequencies"
+                  value={frequencies}
+                  onChange={setFrequencies}
+                  options={BILL_FREQUENCIES}
+                  optionLabel={frequencyLabel}
                 />
                 {tab === "Paid" || tab === "All bills" ? (
                   <Filter
@@ -1067,11 +1077,15 @@ function MultiSelectFilter({
   value,
   onChange,
   options,
+  allLabel = `All ${label.toLowerCase()}s`,
+  optionLabel = (value: string) => value,
 }: {
   label: string;
   value: string[];
   onChange: (value: string[]) => void;
-  options: string[];
+  options: readonly string[];
+  allLabel?: string;
+  optionLabel?: (value: string) => string;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -1092,13 +1106,13 @@ function MultiSelectFilter({
     };
   }, [open]);
   const filtered = options.filter((item) =>
-    item.toLowerCase().includes(search.trim().toLowerCase()),
+    optionLabel(item).toLowerCase().includes(search.trim().toLowerCase()),
   );
   return (
     <div ref={container} className="relative min-w-0">
       <button
         type="button"
-        aria-label={`${label}: ${value.length ? `${value.length} selected` : `All ${label.toLowerCase()}s`}`}
+        aria-label={`${label}: ${value.length ? `${value.length} selected` : allLabel}`}
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
         className="flex h-10 w-full items-center gap-2 rounded-md border border-[#dfe5e7] bg-white px-3 text-left text-[10px] text-[#344260]"
@@ -1107,7 +1121,7 @@ function MultiSelectFilter({
         <span className="min-w-0 flex-1 truncate">
           {value.length
             ? `${value.length} selected`
-            : `All ${label.toLowerCase()}s`}
+            : allLabel}
         </span>
         <ChevronDown size={14} className="text-[#718097]" />
       </button>
@@ -1130,7 +1144,7 @@ function MultiSelectFilter({
               onClick={() => onChange([])}
               className="flex w-full rounded-md px-2.5 py-2 text-left text-[11px] font-medium text-[#009b67] hover:bg-[#f0faf5]"
             >
-              Clear selection · All providers
+              Clear selection · {allLabel}
             </button>
             {filtered.map((option) => {
               const checked = value.includes(option);
@@ -1151,13 +1165,13 @@ function MultiSelectFilter({
                     }
                     className="accent-[#00a96b]"
                   />
-                  <span className="truncate">{option}</span>
+                  <span className="truncate">{optionLabel(option)}</span>
                 </label>
               );
             })}
             {!filtered.length && (
               <p className="px-2.5 py-3 text-[11px] text-[#718097]">
-                No matching providers.
+                No matching {label.toLowerCase()} options.
               </p>
             )}
           </div>
