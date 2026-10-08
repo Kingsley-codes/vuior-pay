@@ -1,5 +1,9 @@
 "use client";
-import { BILL_FREQUENCIES, frequencyLabel, normalizeBillFrequency } from "@/utils/billFrequency";
+import {
+  BILL_FREQUENCIES,
+  frequencyLabel,
+  normalizeBillFrequency,
+} from "@/utils/billFrequency";
 
 import { generatePublicId } from "@/utils/publicId";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -82,7 +86,7 @@ export default function BillsPage() {
   const [tab, setTab] = useState<Tab>("Upcoming");
   const [frequencies, setFrequencies] = useState<string[]>([]);
   const [providers, setProviders] = useState<string[]>([]);
-  const [category, setCategory] = useState("All Categories");
+  const [categories, setCategories] = useState<string[]>([]);
   const [selectedMonth, setSelectedMonth] = useState(() =>
     monthLabel(monthKey(new Date())),
   );
@@ -118,7 +122,6 @@ export default function BillsPage() {
     }
   }, []);
 
-  const categories = ["All Categories", ...billCategories];
   const now = new Date();
   const currentMonth = monthKey(now);
   const normalizedStatus = (bill: Bill) =>
@@ -174,8 +177,9 @@ export default function BillsPage() {
                     monthKey(bill.dueDate) === currentMonth;
         return (
           matchesTab &&
-          (frequencies.length === 0 || frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
-          (category === "All Categories" || bill.category === category) &&
+          (frequencies.length === 0 ||
+            frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
+          (categories.length === 0 || categories.includes(bill.category)) &&
           (tab !== "Paid" ||
             selectedMonth === "All Months" ||
             monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
@@ -188,7 +192,7 @@ export default function BillsPage() {
         );
       })
       .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
-  }, [bills, category, selectedMonth, search, tab, providers, frequencies]);
+  }, [bills, categories, selectedMonth, search, tab, providers, frequencies]);
 
   const payableBills = bills.filter(
     (bill) =>
@@ -256,12 +260,7 @@ export default function BillsPage() {
     });
   }
 
-  if (loading)
-    return (
-      
-        <BillsSkeleton />
-      
-    );
+  if (loading) return <BillsSkeleton />;
 
   return (
     <>
@@ -402,10 +401,12 @@ export default function BillsPage() {
                     className="ml-2 min-w-0 flex-1 bg-transparent text-[11px] outline-none"
                   />
                 </label>
-                <Filter
-                  value={category}
-                  onChange={setCategory}
-                  options={categories}
+                <MultiSelectFilter
+                  label="Category"
+                  allLabel="All categories"
+                  value={categories}
+                  onChange={setCategories}
+                  options={billCategories}
                 />
                 <MultiSelectFilter
                   label="Frequency"
@@ -1119,9 +1120,7 @@ function MultiSelectFilter({
       >
         <SlidersHorizontal size={14} className="shrink-0 text-[#7b879b]" />
         <span className="min-w-0 flex-1 truncate">
-          {value.length
-            ? `${value.length} selected`
-            : allLabel}
+          {value.length ? `${value.length} selected` : allLabel}
         </span>
         <ChevronDown size={14} className="text-[#718097]" />
       </button>
