@@ -168,6 +168,7 @@ export default function TransactionDetailsModal({
                         {bill.billId}
                       </span>
                     </span>
+                    <span className="text-xs text-[#718097]">Amount paid: {money.format(bill.amountPaid ?? bill.amount)} / {(bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid"}</span>
                     {bill.documentUrl ? (
                       <BillDocumentPreview
                         url={bill.documentUrl}

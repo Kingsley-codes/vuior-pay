@@ -205,6 +205,7 @@ export default function BillModal({
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!validAutopayFrequency(form.autoPay, form.frequency)) return setError("Choose a recurring frequency to enable autopay.");
+    if (bill && ["paid", "completed"].includes(bill.status.toLowerCase())) { setError("Paid bills cannot be edited."); return; }
     const amount = currencyInputNumber(form.amount);
     if (
       !form.name.trim() ||
@@ -325,7 +326,7 @@ export default function BillModal({
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[11px] text-white/60">
-                    {isPaymentSubmitted ? "Payment amount" : "Amount due"}
+                    {isPaymentSubmitted ? "Bill total" : "Amount due"}
                   </p>
                   <strong className="mt-2 block text-[32px]">
                     {money.format(bill.amount)}
@@ -363,6 +364,8 @@ export default function BillModal({
                 ["Frequency", frequencyLabel(bill.frequency)],
                 ["Autopay", bill.autoPay ? "On" : "Off"],
                 ["Provider phone", bill.providerPhoneNumber || "Not provided"],
+                ["Amount paid", money.format(bill.amountPaid ?? (isPaymentSubmitted ? bill.amount : 0))],
+                ["Payment coverage", isPaymentSubmitted ? ((bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid") : "Not paid"],
                 ["Payment method", bill.paidWith || "Not paid"],
               ].map(([label, value]) => (
                 <div
@@ -396,7 +399,8 @@ export default function BillModal({
             ) : null}
             <button
               type="button"
-              onClick={() => setMode("edit")}
+              disabled={isPaid}
+              onClick={() => { if (!isPaid) setMode("edit"); }}
               className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#009b67] text-[12px] font-semibold text-white hover:bg-[#00875a]"
             >
               <Pencil size={16} /> Edit bill

@@ -34,6 +34,7 @@ export type Bill = {
   paidWith?: string;
   paymentId?: string;
   amountPaid?: number;
+  paymentCoverage?: "partial" | "full";
   earlyPaymentReward?: { credits?: number; status?: string } | null;
 };
 
@@ -162,6 +163,7 @@ export function useVuiorData(
                     )
                   : undefined,
               earlyPaymentReward: data.earlyPaymentReward ?? null,
+              paymentCoverage: data.paymentCoverage === "partial" || data.paymentCoverage === "full" ? data.paymentCoverage : undefined,
               amountPaid:
                 data.amountPaid == null ? undefined : Number(data.amountPaid),
             };

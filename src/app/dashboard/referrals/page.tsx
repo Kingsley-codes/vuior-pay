@@ -273,7 +273,7 @@ export default function ReferralsPage() {
                     setPromoCode(event.target.value.toUpperCase())
                   }
                   placeholder="ENTER PROMO CODE"
-                  className="h-12 min-w-0 flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-[14px] uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
+                  className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-[14px] uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
                 />
                 <ActionButton busy={redeeming === "promo"}>
                   Apply promo
@@ -300,7 +300,7 @@ export default function ReferralsPage() {
                     setReferralCode(event.target.value.toUpperCase())
                   }
                   placeholder="ENTER REFERRAL CODE"
-                  className="h-12 min-w-0 flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-[14px] uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
+                  className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-[14px] uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
                 />
                 <ActionButton busy={redeeming === "referral"}>
                   Redeem code

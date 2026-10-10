@@ -244,7 +244,7 @@ export default function BillsPage() {
 
   async function toggleAutopay(id: string, enabled: boolean) {
     const bill = bills.find((item) => item.id === id);
-    if (!bill) return;
+    if (!bill || ["paid", "completed"].includes(bill.status.toLowerCase())) return;
     const frequency = normalizeBillFrequency(bill.frequency);
     if (enabled && frequency === "one-time") {
       setModal({ mode: "edit", bill: { ...bill, autoPay: true } });
@@ -605,6 +605,7 @@ export default function BillsPage() {
                               event.stopPropagation();
                               toggleAutopay(bill.id, !bill.autoPay);
                             }}
+                            disabled={["paid", "completed"].includes(bill.status.toLowerCase())}
                             aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
                             className="flex items-center gap-2 text-[10px] font-medium text-[#53617a]"
                           >
@@ -746,7 +747,8 @@ export default function BillsPage() {
                                   event.stopPropagation();
                                   toggleAutopay(bill.id, !bill.autoPay);
                                 }}
-                                aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
+                                disabled={["paid", "completed"].includes(bill.status.toLowerCase())}
+                            aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
                                 className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}
                               >
                                 <span

@@ -61,11 +61,13 @@ export function createBillsCheckout(params: {
   creditsApplied: number;
   savings: number;
   customerId?: string;
+  billAmounts?: Record<string, number>;
 }) {
   const base = window.location.origin;
   const subtotal = params.bills.reduce((sum, bill) => sum + bill.amount, 0);
   return post<{ sessionId: string; url?: string }>(endpoints.payBills, {
     userId: params.userId,
+    billAmounts: params.billAmounts,
     visibleItems: params.bills.map((bill) => ({
       id: bill.id,
       name: bill.name,
@@ -96,10 +98,11 @@ export function billReward(bill: Bill) {
   return Number(((bill.amount * rewardPercent(bill.dueDate)) / 100).toFixed(2));
 }
 
-export async function payBillsWithCredits(userId: string, bills: Bill[], requestId = crypto.randomUUID().replaceAll("-", "")) {
+export async function payBillsWithCredits(userId: string, bills: Bill[], requestId = crypto.randomUUID().replaceAll("-", ""), billAmounts?: Record<string, number>) {
   return post<{ total: number; reward: number }>(endpoints.payBillsWithCredits, {
     userId,
     billIds: bills.map((bill) => bill.id),
+    billAmounts,
     requestId,
   });
 }

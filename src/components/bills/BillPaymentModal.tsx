@@ -24,7 +24,10 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
   const [creditAmount, setCreditAmount] = useState("");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
-  const subtotal = round(bills.reduce((sum, bill) => sum + bill.amount, 0));
+  const [amounts, setAmounts] = useState<Record<string, string>>(() => Object.fromEntries(bills.map((bill) => [bill.id, bill.amount.toFixed(2)])));
+  const billAmounts = Object.fromEntries(bills.map((bill) => [bill.id, Number(amounts[bill.id])]));
+  const invalidAmounts = bills.some((bill) => !amounts[bill.id] || !Number.isFinite(billAmounts[bill.id]) || billAmounts[bill.id] <= 0 || billAmounts[bill.id] > bill.amount || round(billAmounts[bill.id]) !== billAmounts[bill.id]);
+  const subtotal = round(bills.reduce((sum, bill) => sum + (Number.isFinite(billAmounts[bill.id]) ? billAmounts[bill.id] : 0), 0));
   const available = Math.max(0, Number(user.availableCredits) || 0);
   const fee = method === "card" ? round(subtotal * 0.03) : 0;
   const maxCredits = round(Math.min(available, Math.max(0, subtotal - 0.5)));
@@ -32,8 +35,9 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
   const invalidCredits = method === "card" && applyCredits && (!creditAmount || !Number.isFinite(enteredCredits) || enteredCredits <= 0 || enteredCredits > maxCredits || round(enteredCredits) !== enteredCredits);
   const discount = method === "card" && applyCredits && !invalidCredits ? enteredCredits : 0;
   const total = round(subtotal + fee - discount);
-  const rewards = round(bills.reduce((sum, bill) => sum + billReward(bill), 0));
-  const unavailable = bills.length !== expectedBillCount || !bills.length || bills.some((bill) => !Number.isFinite(bill.amount) || bill.amount <= 0);
+  const cardTooSmall = method === "card" && total < 0.5;
+  const rewards = round(bills.reduce((sum, bill) => sum + billReward({ ...bill, amount: billAmounts[bill.id] || 0 }), 0));
+  const unavailable = bills.length !== expectedBillCount || !bills.length || bills.length > 25 || bills.some((bill) => !Number.isFinite(bill.amount) || bill.amount <= 0);
   const creditPaymentUnavailable = available < subtotal || bills.length > 25;
 
   useEffect(() => {
@@ -44,17 +48,17 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
   }, []);
 
   async function pay() {
-    if (submitting.current || unavailable || invalidCredits || (method === "credits" && creditPaymentUnavailable)) return;
+    if (submitting.current || unavailable || invalidAmounts || invalidCredits || cardTooSmall || (method === "credits" && creditPaymentUnavailable)) return;
     submitting.current = true;
     setProcessing(true);
     setError("");
     try {
       if (method === "credits") {
         requestId.current ??= crypto.randomUUID().replaceAll("-", "");
-        await payBillsWithCredits(user.id, bills, requestId.current);
+        await payBillsWithCredits(user.id, bills, requestId.current, billAmounts);
         onPaid("Payment submitted for review. Eligible early-payment credits will be added after approval.");
       } else {
-        const response = await createBillsCheckout({ userId: user.id, bills, creditsApplied: discount, savings: rewards, customerId: user.stripeCustomerId });
+        const response = await createBillsCheckout({ userId: user.id, bills, billAmounts, creditsApplied: discount, savings: rewards, customerId: user.stripeCustomerId });
         window.location.assign(checkoutUrl(response));
       }
     } catch (cause) {
@@ -96,7 +100,9 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
                     <p className="break-words text-sm font-medium">{bill.name}</p>
                     <p className="mt-0.5 text-xs text-[#65728a]">{bill.category}</p>
                   </div>
-                  <span className="shrink-0 text-sm font-medium tabular-nums">{money.format(bill.amount)}</span>
+                  <label className="w-32 shrink-0 text-xs text-[#65728a]">Paying of {money.format(bill.amount)}
+                    <input aria-label={`Amount to pay for ${bill.name}`} disabled={processing} type="number" inputMode="decimal" min="0.01" max={bill.amount} step="0.01" value={amounts[bill.id] ?? ""} onChange={(event) => { requestId.current = null; setAmounts((previous) => ({ ...previous, [bill.id]: event.target.value })); }} className="mt-1 h-11 w-full rounded-lg border border-[#ceddd4] bg-white px-3 text-sm text-[#152b26]" />
+                  </label>
                 </div>
               ))}
             </div>
@@ -152,6 +158,8 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
             </dl>
             {rewards > 0 && <div className="mt-4 flex items-start gap-2 rounded-lg bg-[#f0f8f3] p-3 text-[#39704e]"><Sparkles size={16} className="mt-0.5 shrink-0" /><p className="text-xs leading-5">Earn up to <strong>{money.format(rewards)} in credits</strong> after approval. This reward is separate from today&apos;s payment.</p></div>}
           </section>
+          {cardTooSmall && <p role="alert" className="text-sm text-red-700">Card payments must be at least $0.50. Increase the amount or use credits.</p>}
+          {invalidAmounts && <p role="alert" className="text-sm text-red-700">Enter an amount greater than zero and no more than each bill total, with at most two decimal places.</p>}
           {unavailable && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">These bills are no longer available. Close this summary and select your bills again.</p>}
           {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm leading-5 text-red-700">{error}</p>}
         </div>
@@ -162,7 +170,7 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
             <p className="text-[28px] font-bold tracking-tight tabular-nums">{money.format(total)}</p>
           </div>
           <button
-            disabled={processing || unavailable || invalidCredits || (method === "credits" && creditPaymentUnavailable)}
+            disabled={processing || unavailable || invalidAmounts || invalidCredits || cardTooSmall || (method === "credits" && creditPaymentUnavailable)}
             onClick={pay}
             className="flex min-h-14 w-full items-center justify-center gap-2.5 rounded-xl bg-[#008f5b] px-4 py-3 text-base font-bold text-white shadow-[0_5px_14px_rgba(0,143,91,0.22)] transition hover:bg-[#007849] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#008f5b] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
           >
