@@ -26,6 +26,7 @@ export type Bill = {
   accountNumber?: string;
   documentUrl?: string;
   documentType?: string;
+  documentName?: string;
   notes?: string;
   providerPhoneNumber?: string;
   address?: string;
@@ -142,6 +143,9 @@ export function useVuiorData(
                 : undefined,
               documentType: data.documentType
                 ? String(data.documentType)
+                : undefined,
+              documentName: data.documentName
+                ? String(data.documentName)
                 : undefined,
               notes: data.notes ? String(data.notes) : undefined,
               providerPhoneNumber: data.providerPhoneNumber

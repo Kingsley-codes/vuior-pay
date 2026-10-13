@@ -44,3 +44,5 @@ next-env.d.ts
 !.env.example
 
 SOCIAL_AUTH_SETUP.md
+
+tests/

@@ -395,6 +395,7 @@ export default function BillModal({
               <BillDocumentPreview
                 url={bill.documentUrl}
                 documentType={bill.documentType}
+                documentName={bill.documentName}
               />
             ) : null}
             <button
@@ -414,7 +415,7 @@ export default function BillModal({
               className="relative flex min-h-[132px] w-full items-center gap-4 overflow-hidden rounded-2xl border border-dashed border-[#8fd4b8] bg-[#f3fbf7] p-5 text-left hover:bg-[#edf9f3]"
             >
               {preview &&
-              !isPdfDocument(preview, file?.type || bill?.documentType) ? (
+              !isPdfDocument(preview, file?.type || bill?.documentType, file?.name || bill?.documentName) ? (
                 <Image
                   src={preview}
                   alt="Bill preview"

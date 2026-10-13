@@ -1,26 +1,32 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import { ExternalLink, FileText } from "lucide-react";
+import { isPdfDocument } from "@/utils/billDocument";
 
-export function isPdfDocument(url?: string, documentType?: string) {
-  if (documentType) return documentType.toLowerCase() === "application/pdf";
-  if (!url) return false;
-  try {
-    return decodeURIComponent(new URL(url).pathname)
-      .toLowerCase()
-      .endsWith(".pdf");
-  } catch {
-    return url.toLowerCase().split(/[?#]/)[0].endsWith(".pdf");
-  }
-}
+export { isPdfDocument } from "@/utils/billDocument";
 
 export default function BillDocumentPreview({
   url,
   documentType,
+  documentName,
 }: {
   url: string;
   documentType?: string;
+  documentName?: string;
 }) {
-  const isPdf = isPdfDocument(url, documentType);
+  const isPdf = isPdfDocument(url, documentType, documentName);
+  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const fallback = (
+    <p className="p-4 text-[12px] text-[#53617a]">
+      Preview unavailable.{" "}
+      <a href={url} target="_blank" rel="noreferrer" className="font-semibold text-[#08764f] underline">
+        Open the bill document
+      </a>{" "}
+      to view or download it.
+    </p>
+  );
 
   return (
     <section className="mt-4 overflow-hidden rounded-xl border border-[#dce9e4] bg-[#f8fbf9]">
@@ -40,11 +46,16 @@ export default function BillDocumentPreview({
         </a>
       </div>
       {isPdf ? (
-        <iframe
+        <object
           title="Bill document PDF preview"
-          src={url}
+          data={url}
+          type="application/pdf"
           className="h-[min(60vh,520px)] w-full bg-white"
-        />
+        >
+          {fallback}
+        </object>
+      ) : failedUrl === url ? (
+        fallback
       ) : (
         <Image
           src={url}
@@ -52,6 +63,7 @@ export default function BillDocumentPreview({
           width={1200}
           height={800}
           unoptimized
+          onError={() => setFailedUrl(url)}
           className="h-auto max-h-130 w-full bg-white object-contain"
         />
       )}

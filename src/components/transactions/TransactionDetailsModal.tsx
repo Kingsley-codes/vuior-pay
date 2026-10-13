@@ -173,6 +173,7 @@ export default function TransactionDetailsModal({
                       <BillDocumentPreview
                         url={bill.documentUrl}
                         documentType={bill.documentType}
+                        documentName={bill.documentName}
                       />
                     ) : null}
                   </li>
