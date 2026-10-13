@@ -29,44 +29,54 @@ export default function BillDocumentPreview({
   );
 
   return (
-    <section className="mt-4 overflow-hidden rounded-xl border border-[#dce9e4] bg-[#f8fbf9]">
-      <div className="flex items-center justify-between gap-3 border-b border-[#e4ede8] px-4 py-3">
-        <span className="flex min-w-0 items-center gap-2 text-[11px] font-semibold text-[#344260]">
-          {isPdf ? <FileText size={16} /> : null}
-          {isPdf ? "PDF bill document" : "Bill document"}
-        </span>
+    <section className="mt-4 rounded-xl border border-slate-200 bg-slate-50/70 p-5 sm:p-6">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-slate-800">Bill document</p>
+          <p className="mt-0.5 text-xs text-slate-500">Original bill attachment</p>
+        </div>
         <a
           href={url}
           target="_blank"
-          rel="noreferrer"
-          className="flex shrink-0 items-center gap-1.5 text-[11px] font-semibold text-[#08764f] hover:underline"
+          rel="noopener noreferrer"
+          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
         >
           Open
-          <ExternalLink size={14} />
+          <ExternalLink size={13} />
         </a>
       </div>
-      {isPdf ? (
-        <object
-          title="Bill document PDF preview"
-          data={url}
-          type="application/pdf"
-          className="h-[min(60vh,520px)] w-full bg-white"
-        >
-          {fallback}
-        </object>
-      ) : failedUrl === url ? (
-        fallback
-      ) : (
-        <Image
-          src={url}
-          alt="Attached bill document"
-          width={1200}
-          height={800}
-          unoptimized
-          onError={() => setFailedUrl(url)}
-          className="h-auto max-h-130 w-full bg-white object-contain"
-        />
-      )}
+      <div className="flex min-h-64 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm lg:min-h-105">
+        {isPdf ? (
+          <div className="px-6 py-6 text-center">
+            <span className="mx-auto grid size-14 place-items-center rounded-2xl bg-rose-50 text-rose-600">
+              <FileText size={25} />
+            </span>
+            <p className="mt-3 text-sm font-semibold text-slate-800">
+              PDF bill document
+            </p>
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+            >
+              View document <ExternalLink size={13} />
+            </a>
+          </div>
+        ) : failedUrl === url ? (
+          fallback
+        ) : (
+          <Image
+            src={url}
+            alt="Attached bill document"
+            width={1200}
+            height={800}
+            unoptimized
+            onError={() => setFailedUrl(url)}
+            className="h-auto max-h-125 w-full object-contain"
+          />
+        )}
+      </div>
     </section>
   );
 }
