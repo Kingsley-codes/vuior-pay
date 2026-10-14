@@ -243,12 +243,12 @@ export default function ReferralsPage() {
               />
             </div>
             <p className="mt-2 text-[11px] text-[#7c899c]">
-              {money.format(referralQualifyingSpendThisYear)} of $1,000 qualifying spend this year
+              {money.format(referralQualifyingSpendThisYear)} of $1,000 in bills paid this year
             </p>
             <p className="mt-2 text-[12px] text-[#718097]">
-              Both users qualify with $1,000 in bill payments excluding wallet
-              credits, credits purchased, or a combination of both. Earned and
-              received credits do not count. Purchased credits count once, when bought.
+              Both users must pay $1,000 in bills this year. Payments using credits
+              or Stripe count, including partial payments. Buying credits alone
+              does not count.
             </p>
           </article>
         </section>
