@@ -21,6 +21,7 @@ import { useVuiorData } from "@/hooks/useVuiorData";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { ReferralsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import { redeemPromoCode, redeemReferralCode } from "@/services/referrals";
+import { isSuccessfulReferral } from "@/utils/referralRewards";
 
 type Feedback = { tone: "success" | "error"; text: string } | null;
 const money = new Intl.NumberFormat("en-US", {
@@ -217,7 +218,7 @@ export default function ReferralsPage() {
           <Metric
             icon={<UsersRound size={20} />}
             label="Successful referrals"
-            value={String(referralCredits.length)}
+            value={String(referralCredits.filter(isSuccessfulReferral).length)}
             note="Friends rewarded"
           />
           <Metric

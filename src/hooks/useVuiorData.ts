@@ -49,6 +49,7 @@ export type Transaction = {
   type: string;
   credits: number;
   reference?: string;
+  referralRole?: string;
   transactionId: string;
   paymentId?: string;
   billIds: string[];
@@ -203,6 +204,7 @@ export function useVuiorData(
             type: String(data.type ?? "bill_payment"),
             credits: Number(data.credits ?? 0),
             reference: data.reference ? String(data.reference) : undefined,
+            referralRole: data.referralRole ? String(data.referralRole) : undefined,
             transactionId: String(
               data.transaction_ID ?? data.payment_ID ?? "Not recorded",
             ),
