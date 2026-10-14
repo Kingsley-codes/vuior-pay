@@ -38,6 +38,7 @@ const money = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 type Tab = "Upcoming" | "Overdue" | "Paid" | "In review" | "All bills";
+const BILL_TABS: Tab[] = ["Upcoming", "Overdue", "Paid", "In review", "All bills"];
 
 function dueDays(value: string) {
   const due = new Date(value);
@@ -158,32 +159,32 @@ export default function BillsPage() {
     ];
   }, [bills]);
 
-  const visibleBills = useMemo(() => {
-    return bills
+  const billsByTab = useMemo(() => {
+    const filteredBills = (targetTab: Tab) => bills
       .filter((bill) => {
         const billStatus = normalizedStatus(bill);
         const matchesTab =
-          tab === "Upcoming"
-            ? billStatus === "active" && dueInCurrentMonth(bill)
-            : tab === "Overdue"
+          targetTab === "Upcoming"
+            ? billStatus === "active" && monthKey(bill.dueDate) === currentMonth
+            : targetTab === "Overdue"
               ? billStatus === "overdue"
-              : tab === "Paid"
+              : targetTab === "Paid"
                 ? billStatus === "paid" &&
                   (selectedMonth === "All Months" ||
                     monthLabel(monthKey(bill.dueDate)) === selectedMonth)
-                : tab === "In review"
-                  ? billStatus === "in review" && dueInCurrentMonth(bill)
-                  : tab === "All bills" &&
+                : targetTab === "In review"
+                  ? billStatus === "in review" && monthKey(bill.dueDate) === currentMonth
+                  : targetTab === "All bills" &&
                     monthKey(bill.dueDate) === currentMonth;
         return (
           matchesTab &&
           (frequencies.length === 0 ||
             frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
           (categories.length === 0 || categories.includes(bill.category)) &&
-          (tab !== "Paid" ||
+          (targetTab !== "Paid" ||
             selectedMonth === "All Months" ||
             monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
-          ((tab !== "Paid" && tab !== "All bills") ||
+          ((targetTab !== "Paid" && targetTab !== "All bills") ||
             providers.length === 0 ||
             providers.includes(bill.name.trim())) &&
           `${bill.name} ${bill.category}`
@@ -192,7 +193,11 @@ export default function BillsPage() {
         );
       })
       .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
-  }, [bills, categories, selectedMonth, search, tab, providers, frequencies]);
+    return Object.fromEntries(
+      BILL_TABS.map((item) => [item, filteredBills(item)]),
+    ) as Record<Tab, Bill[]>;
+  }, [bills, categories, selectedMonth, search, providers, frequencies, currentMonth]);
+  const visibleBills = billsByTab[tab];
 
   const payableBills = bills.filter(
     (bill) =>
@@ -373,21 +378,13 @@ export default function BillsPage() {
                 role="tablist"
                 className="flex items-center overflow-x-auto border-b border-[#e7ecea] px-3 sm:px-5"
               >
-                {(
-                  [
-                    "Upcoming",
-                    "Overdue",
-                    "Paid",
-                    "In review",
-                    "All bills",
-                  ] as Tab[]
-                ).map((item) => (
+                {BILL_TABS.map((item) => (
                   <button
                     key={item}
                     onClick={() => setTab(item)}
                     className={`inline-flex h-14 shrink-0 items-center justify-center border-b-2 px-4 text-[12px] font-semibold leading-none ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
                   >
-                    {item}
+                    {item} ({billsByTab[item].length})
                   </button>
                 ))}
               </div>
