@@ -33,6 +33,8 @@ export default function ReferralsPage() {
   const { user } = useVuiorSession();
   const { transactions, referralQualifyingSpendThisYear, loading } = useVuiorData(user?.id);
   const [referralCode, setReferralCode] = useState("");
+  const [redeemedForUser, setRedeemedForUser] = useState<string | null>(null);
+  const hasRedeemedReferral = Boolean(user?.redeemedReferralCode || (user?.id && redeemedForUser === user.id));
   const [promoCode, setPromoCode] = useState("");
   const [redeeming, setRedeeming] = useState<"referral" | "promo" | null>(null);
   const [feedback, setFeedback] = useState<Feedback>(null);
@@ -77,6 +79,11 @@ export default function ReferralsPage() {
     const code = referralCode.trim().toUpperCase();
     setFeedback(null);
     if (!user?.id) return;
+    if (redeeming === "referral") return;
+    if (hasRedeemedReferral) return setFeedback({
+      tone: "error",
+      text: "You have already redeemed a referral code. Each user can redeem only one.",
+    });
     if (code.length < 5)
       return setFeedback({
         tone: "error",
@@ -85,6 +92,7 @@ export default function ReferralsPage() {
     setRedeeming("referral");
     try {
       const result = await redeemReferralCode(code, user.id);
+      setRedeemedForUser(user.id);
       setReferralCode("");
       setFeedback({
         tone: "success",
@@ -290,12 +298,18 @@ export default function ReferralsPage() {
             accent="referral"
           >
             <form onSubmit={redeemReferral} className="mt-6">
+              {hasRedeemedReferral && (
+                <p role="status" className="mb-3 text-[12px] text-[#53617a]">
+                  You have already redeemed a referral code. Each user can redeem only one.
+                </p>
+              )}
               <label className="text-[12px] font-medium text-[#42516b]">
                 Referral code
               </label>
               <div className="mt-2 flex flex-col gap-3 sm:flex-row">
                 <input
                   aria-label="Referral code"
+                  disabled={hasRedeemedReferral || redeeming === "referral"}
                   value={referralCode}
                   onChange={(event) =>
                     setReferralCode(event.target.value.toUpperCase())
@@ -303,8 +317,8 @@ export default function ReferralsPage() {
                   placeholder="ENTER REFERRAL CODE"
                   className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-[14px] uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
                 />
-                <ActionButton busy={redeeming === "referral"}>
-                  Redeem code
+                <ActionButton busy={redeeming === "referral"} disabled={hasRedeemedReferral}>
+                  {hasRedeemedReferral ? "Already redeemed" : "Redeem code"}
                 </ActionButton>
               </div>
             </form>
@@ -431,14 +445,16 @@ function RedeemCard({
 }
 function ActionButton({
   busy,
+  disabled = false,
   children,
 }: {
   busy: boolean;
+  disabled?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <button
-      disabled={busy}
+      disabled={busy || disabled}
       className="flex h-12 items-center justify-center gap-2 rounded-lg bg-[#009b67] px-6 text-[13px] font-semibold text-white transition hover:bg-[#008b5d] disabled:opacity-60"
     >
       {busy ? (

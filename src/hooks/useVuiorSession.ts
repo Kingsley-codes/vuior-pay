@@ -21,6 +21,7 @@ export type VuiorUser = {
   zipCode?: string;
   availableCredits?: number;
   referralCode?: string;
+  redeemedReferralCode?: boolean;
   referralBonus?: number;
   stripeCustomerId?: string;
   mustChangePassword?: boolean;
@@ -71,6 +72,7 @@ export function useVuiorSession() {
             zipCode: String(data.zipCode ?? data.postalCode ?? ""),
             availableCredits: Number(data.availableCredits ?? 0),
             referralCode: String(data.referralCode ?? data.referral_code ?? ""),
+            redeemedReferralCode: Boolean(data.redeemedReferralCode),
             referralBonus: Number(
               data.referralBonus ?? data.referralEarnings ?? 0,
             ),
