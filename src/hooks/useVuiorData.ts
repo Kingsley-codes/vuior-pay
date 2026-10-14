@@ -3,13 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   collection,
-  documentId,
   onSnapshot,
   query,
   where,
 } from "firebase/firestore";
 import { db } from "@/services/firebase";
 import { transactionStatus } from "@/utils/transactions";
+import { yearlyReferralQualifyingSpend } from "@/utils/billPaymentTotals";
 
 export type Bill = {
   id: string;
@@ -91,13 +91,13 @@ export function useVuiorData(
 ) {
   const [bills, setBills] = useState<Bill[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [totalBillPaymentsThisYear, setTotalBillPaymentsThisYear] = useState(0);
+  const [referralQualifyingSpendThisYear, setReferralQualifyingSpendThisYear] = useState(0);
   const [loadedFor, setLoadedFor] = useState<string | null>(null);
 
   useEffect(() => {
     if (!userId) return;
     let active = true;
-    const pending = new Set(["bills", "transactions", "stats"]);
+    const pending = new Set(["bills", "transactions"]);
     const markReady = (source: string) => {
       pending.delete(source);
       if (active && pending.size === 0) setLoadedFor(userId);
@@ -228,29 +228,18 @@ export function useVuiorData(
         });
         next.sort((a, b) => b.date.getTime() - a.date.getTime());
         setTransactions(next);
+        setReferralQualifyingSpendThisYear(
+          yearlyReferralQualifyingSpend(snapshot.docs.map((item) => item.data())),
+        );
         markReady("transactions");
       },
       () => markReady("transactions"),
-    );
-
-    const unsubscribeStats = onSnapshot(
-      query(collection(db, "stats"), where(documentId(), "==", userId)),
-      (snapshot) => {
-        const data = snapshot.docs[0]?.data();
-
-        setTotalBillPaymentsThisYear(
-          Number(data?.totalBillPaymentsThisYear ?? 0),
-        );
-        markReady("stats");
-      },
-      () => markReady("stats"),
     );
 
     return () => {
       active = false;
       unsubscribeBills();
       unsubscribeTransactions();
-      unsubscribeStats();
     };
   }, [userId, includeDeletedBills]);
 
@@ -273,7 +262,7 @@ export function useVuiorData(
   return {
     bills,
     activeBills,
-    totalBillPaymentsThisYear,
+    referralQualifyingSpendThisYear,
     transactions,
     loading,
   };

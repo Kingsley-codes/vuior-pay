@@ -30,7 +30,7 @@ const money = new Intl.NumberFormat("en-US", {
 
 export default function ReferralsPage() {
   const { user } = useVuiorSession();
-  const { transactions, totalBillPaymentsThisYear, loading } = useVuiorData(user?.id);
+  const { transactions, referralQualifyingSpendThisYear, loading } = useVuiorData(user?.id);
   const [referralCode, setReferralCode] = useState("");
   const [promoCode, setPromoCode] = useState("");
   const [redeeming, setRedeeming] = useState<"referral" | "promo" | null>(null);
@@ -52,7 +52,7 @@ export default function ReferralsPage() {
     user?.referralCode || `VUIOR-${(user?.firstName || "USER").toUpperCase()}`;
   const eligibility = Math.min(
     100,
-    Math.round((totalBillPaymentsThisYear / 1000) * 100),
+    Math.round((referralQualifyingSpendThisYear / 1000) * 100),
   );
 
   async function copyCode() {
@@ -80,11 +80,6 @@ export default function ReferralsPage() {
       return setFeedback({
         tone: "error",
         text: "Enter a valid referral code.",
-      });
-    if (totalBillPaymentsThisYear < 1000)
-      return setFeedback({
-        tone: "error",
-        text: "You need to pay at least $1,000 in bills this year before redeeming a referral code.",
       });
     setRedeeming("referral");
     try {
@@ -248,7 +243,12 @@ export default function ReferralsPage() {
               />
             </div>
             <p className="mt-2 text-[11px] text-[#7c899c]">
-              {money.format(totalBillPaymentsThisYear)} of $1,000 paid
+              {money.format(referralQualifyingSpendThisYear)} of $1,000 qualifying spend this year
+            </p>
+            <p className="mt-2 text-[12px] text-[#718097]">
+              Both users qualify with $1,000 in bill payments excluding wallet
+              credits, credits purchased, or a combination of both. Earned and
+              received credits do not count. Purchased credits count once, when bought.
             </p>
           </article>
         </section>
