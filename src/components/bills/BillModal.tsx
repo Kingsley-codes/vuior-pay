@@ -559,9 +559,12 @@ export default function BillModal({
               <Field label="Account number" required>
                 <input
                   required
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]+"
                   value={form.accountNumber}
                   onChange={(e) =>
-                    update("accountNumber", e.target.value)
+                    update("accountNumber", e.target.value.replace(/\D/g, ""))
                   }
                   placeholder="Account or reference number"
                 />
