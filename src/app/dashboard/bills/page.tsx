@@ -149,7 +149,7 @@ export default function BillsPage() {
     [bills],
   );
 
-  const paidMonthOptions = useMemo(() => {
+  const monthOptions = useMemo(() => {
     const months = bills.map((bill) => monthKey(bill.dueDate)).filter(Boolean);
     return [
       "All Months",
@@ -165,24 +165,20 @@ export default function BillsPage() {
         const billStatus = normalizedStatus(bill);
         const matchesTab =
           targetTab === "Upcoming"
-            ? billStatus === "active" && monthKey(bill.dueDate) === currentMonth
+            ? billStatus === "active"
             : targetTab === "Overdue"
               ? billStatus === "overdue"
               : targetTab === "Paid"
-                ? billStatus === "paid" &&
-                  (selectedMonth === "All Months" ||
-                    monthLabel(monthKey(bill.dueDate)) === selectedMonth)
+                ? billStatus === "paid"
                 : targetTab === "In review"
-                  ? billStatus === "in review" && monthKey(bill.dueDate) === currentMonth
-                  : targetTab === "All bills" &&
-                    monthKey(bill.dueDate) === currentMonth;
+                  ? billStatus === "in review"
+                  : targetTab === "All bills";
         return (
           matchesTab &&
           (frequencies.length === 0 ||
             frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
           (categories.length === 0 || categories.includes(bill.category)) &&
-          (targetTab !== "Paid" ||
-            selectedMonth === "All Months" ||
+          (selectedMonth === "All Months" ||
             monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
           ((targetTab !== "Paid" && targetTab !== "All bills") ||
             providers.length === 0 ||
@@ -196,7 +192,7 @@ export default function BillsPage() {
     return Object.fromEntries(
       BILL_TABS.map((item) => [item, filteredBills(item)]),
     ) as Record<Tab, Bill[]>;
-  }, [bills, categories, selectedMonth, search, providers, frequencies, currentMonth]);
+  }, [bills, categories, selectedMonth, search, providers, frequencies]);
   const visibleBills = billsByTab[tab];
 
   const payableBills = bills.filter(
@@ -413,13 +409,11 @@ export default function BillsPage() {
                   options={BILL_FREQUENCIES}
                   optionLabel={frequencyLabel}
                 />
-                {tab === "Paid" || tab === "All bills" ? (
-                  <Filter
-                    value={selectedMonth}
-                    onChange={setSelectedMonth}
-                    options={paidMonthOptions}
-                  />
-                ) : null}
+                <Filter
+                  value={selectedMonth}
+                  onChange={setSelectedMonth}
+                  options={monthOptions}
+                />
                 {(tab === "Paid" || tab === "All bills") && (
                   <MultiSelectFilter
                     label="Provider"
@@ -1056,6 +1050,7 @@ function Filter({
   return (
     <label className="relative">
       <select
+        aria-label="Period"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="h-10 w-full appearance-none rounded-md border border-[#dfe5e7] bg-white px-3 pr-8 text-[10px] text-[#34425d] outline-none focus:border-[#00a96b]"
