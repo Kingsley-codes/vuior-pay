@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "@/services/firebase";
+import { profileAddressText } from "@/utils/profileRequirements";
 
 export type VuiorUser = {
   id: string;
@@ -68,7 +69,7 @@ export function useVuiorSession() {
             avatar: String(data.avatar ?? nextUser.photoURL ?? ""),
             phoneNo: String(data.phoneNo ?? ""),
             dob: String(data.dob ?? ""),
-            address: String(data.address ?? ""),
+            address: profileAddressText(data.address),
             zipCode: String(data.zipCode ?? data.postalCode ?? ""),
             availableCredits: Number(data.availableCredits ?? 0),
             referralCode: String(data.referralCode ?? data.referral_code ?? ""),

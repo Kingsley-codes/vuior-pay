@@ -5,6 +5,10 @@ import { withBillConfirmation } from "@/utils/billDuplicates";
 import { useBillConfirmation } from "@/hooks/useBillConfirmation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { doc, getDoc } from "firebase/firestore";
+import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { ADDRESS_REQUIRED_MESSAGE, hasProfileAddress } from "@/utils/profileRequirements";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   CalendarDays,
@@ -20,7 +24,7 @@ import PhoneNumberInput from "@/components/phone-number-input";
 import BillDocumentPreview, {
   isPdfDocument,
 } from "@/components/bills/BillDocumentPreview";
-import { storage } from "@/services/firebase";
+import { db, storage } from "@/services/firebase";
 import { extractBillFromImage } from "@/services/billExtraction";
 import {
   searchProviders,
@@ -105,6 +109,7 @@ export default function BillModal({
   onClose: () => void;
 }) {
   const { confirmBill, confirmationDialog } = useBillConfirmation();
+  const { user, loading: profileLoading } = useVuiorSession();
   const submitting = useRef(false);
   const saveRequest = useRef<{ key: string; id: string } | null>(null);
   const [mode, setMode] = useState<Mode>(initialMode);
@@ -225,6 +230,13 @@ export default function BillModal({
     setWorking(true);
     setError("");
     try {
+      if (mode === "add") {
+        const profile = await getDoc(doc(db, "users", userId));
+        if (!hasProfileAddress(profile.data()?.address)) {
+          setError(ADDRESS_REQUIRED_MESSAGE);
+          return;
+        }
+      }
       let documentUrl = bill?.documentUrl || null;
       if (file) {
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
@@ -320,7 +332,15 @@ export default function BillModal({
             <X size={18} />
           </button>
         </header>
-        {mode === "details" && bill ? (
+        {mode === "add" && (profileLoading || !hasProfileAddress(user?.address)) ? (
+          <div className="p-5 sm:p-7" role="status">
+            {profileLoading ? <p>Checking your profile...</p> : <>
+              <h3 className="font-semibold">Complete your profile</h3>
+              <p className="mt-2 text-sm">{ADDRESS_REQUIRED_MESSAGE}</p>
+              <Link href="/dashboard/settings?tab=profile" className="mt-4 inline-block rounded-lg bg-[#009b67] px-4 py-3 text-sm font-semibold text-white">Add address</Link>
+            </>}
+          </div>
+        ) : mode === "details" && bill ? (
           <div className="p-5 sm:p-7">
             <div className="rounded-2xl bg-linear-to-br from-[#063c33] to-[#075a49] p-6 text-white">
               <div className="flex items-start justify-between gap-4">
