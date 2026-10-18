@@ -39,6 +39,39 @@ export type CreateTicketData = Pick<
   "userId" | "userEmail" | "subject" | "message" | "category" | "phoneNumber"
 >;
 
+export type PublicTicketImage = {
+  name: string;
+  contentType: string;
+  data: string;
+};
+
+export async function createPublicTicket(ticketData: {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  subject: string;
+  message: string;
+  category: string;
+  images: PublicTicketImage[];
+}) {
+  const baseUrl = (
+    process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_BASE_URL ||
+    "https://us-central1-vuior-3c7ff.cloudfunctions.net"
+  ).replace(/\/$/, "");
+  const response = await fetch(`${baseUrl}/createPublicTicket`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ticketData),
+  });
+  const payload = (await response.json()) as {
+    success: boolean;
+    message?: string;
+  };
+  if (!response.ok || !payload.success) {
+    throw new Error(payload.message || "Unable to submit your message.");
+  }
+}
+
 export async function createTicket(ticketData: CreateTicketData) {
   const ticketRef = doc(collection(db, "tickets"));
   await setDoc(ticketRef, {

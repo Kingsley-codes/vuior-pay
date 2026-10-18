@@ -343,12 +343,14 @@ export function RewardsSection() {
           <div className="relative flex min-h-[214px] flex-col items-stretch justify-between gap-2 overflow-hidden border-l border-white/25 px-4 pt-5 pb-[15px] pl-[30px] text-left max-[900px]:border-t max-[900px]:border-white/20 max-[620px]:min-h-[210px] max-[620px]:border-l-0 max-[620px]:pl-6">
             <div className="relative z-[2] w-full [&_p]:my-2 [&_p]:w-full [&_p]:text-[10px] max-[620px]:[&_p]:text-[13px] [&_small]:my-[16px_0_5px] [&_small]:block [&_small]:text-[9px] max-[620px]:[&_small]:text-[13px] [&_strong]:text-[18px]">
               <b>Example</b>
-              <p>
-                Electricity bill{" "}
-                <span className="float-right font-bold">$100.00</span>
-              </p>
+              <div className="my-2 flex flex-col gap-0.5">
+                <span className="text-[9px] max-[620px]:text-[13px]">
+                  Electricity bill :
+                </span>
+                <strong className="text-[14px]!">$100.00</strong>
+              </div>
               <p>Paid 10 days early</p>
-              <small>Credits earned</small>
+              <small>Credits earned :</small>
               <strong>+$10.00</strong>
             </div>
             <Image
@@ -374,7 +376,7 @@ export function HowItWorks() {
     },
     {
       icon: "calendar" as const,
-      title: "Pay before the due date",
+      title: "Pay early",
       text: "Choose when to pay or set autopay and stay ahead.",
     },
     {
@@ -547,7 +549,7 @@ export function FaqSection() {
       id="faq"
     >
       <div className="flex items-center justify-between max-[430px]:items-start max-[430px]:gap-[15px]">
-        <h2 className="text-[18px] font-bold tracking-[-0.3px]">
+        <h2 className="text-[18px] font-bold tracking-[-0.3px] mb-2">
           Frequently asked questions
         </h2>
         <Link
@@ -557,10 +559,10 @@ export function FaqSection() {
           View all FAQs <Icon name="arrow" />
         </Link>
       </div>
-      <div className="grid grid-cols-2 gap-x-[55px] max-[620px]:grid-cols-1">
+      <div className="grid grid-cols-2 gap-x-[55px] max-[620px]:grid-cols-1 mb-2">
         {faqs.map((faq, index) => (
           <details
-            className={`border border-b-0 border-[#dfe9e6] ${index >= faqs.length - 2 ? "border-b max-[620px]:border-b-0" : ""} last:max-[620px]:border-b`}
+            className={`border-x border-t border-[#dfe9e6] ${index >= faqs.length - 2 ? "border-b" : ""}`}
             key={faq.value}
           >
             <summary className="flex h-11 cursor-pointer list-none items-center justify-between px-[17px] text-[10px] max-[620px]:min-h-[52px] max-[620px]:h-auto max-[620px]:py-3 max-[620px]:text-[13px] [&::-webkit-details-marker]:hidden [&_svg]:w-3.5 [[open]_&>svg]:rotate-180">

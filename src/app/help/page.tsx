@@ -41,7 +41,7 @@ export default function HelpPage() {
       <Header active="faq" wide />
       <section className="relative overflow-hidden border-b border-[#edf1ef] bg-linear-to-r from-white via-white to-[#f0faf6] px-5 py-10 sm:px-10 lg:px-12 lg:py-12">
         <div className="mx-auto max-w-[1180px]">
-          <p className="text-[13px] font-semibold text-[#009b67]">FAQ</p>
+          <p className="text-[13px] font-extrabold text-[#009b67]">FAQ</p>
           <h1 className="mt-3 text-[34px] font-bold tracking-[-.04em] sm:text-[38px]">
             Frequently asked questions
           </h1>
@@ -134,19 +134,19 @@ export default function HelpPage() {
           </section>
           <div className="flex flex-col gap-5 lg:items-stretch">
             <aside className="rounded-xl border border-[#d6ebe3] bg-[#f4fbf8] p-6">
-            <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#009b67] shadow-sm">
-              <Headphones size={22} />
-            </span>
-            <h2 className="mt-4 text-[15px] font-bold">Still need help?</h2>
-            <p className="mt-2 text-[14px] leading-6 text-[#66738b]">
-              Our support team is available Monday–Friday, 9am–6pm EST.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-5 flex h-11 items-center justify-center rounded-md bg-[#009b67] px-5 text-[14px] font-semibold text-white"
-            >
-              Contact support
-            </Link>
+              <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#009b67] shadow-sm">
+                <Headphones size={22} />
+              </span>
+              <h2 className="mt-4 text-[15px] font-bold">Still need help?</h2>
+              <p className="mt-2 text-[14px] leading-6 text-[#66738b]">
+                Our support team is available Monday–Friday, 9am–6pm EST.
+              </p>
+              <Link
+                href="/contact"
+                className="mt-5 flex h-11 items-center justify-center rounded-md bg-[#009b67] px-5 text-[14px] font-semibold text-white"
+              >
+                Contact support
+              </Link>
             </aside>
             <section className="mx-auto w-full max-w-[360px] overflow-hidden rounded-xl border border-[#d9e9e3] bg-white shadow-[0_10px_22px_rgba(18,72,56,.06)] lg:max-w-none">
               <div className="relative h-[178px] overflow-hidden bg-linear-to-br from-[#eaf8f3] via-[#f8fcfa] to-[#d8f1e7]">

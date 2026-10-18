@@ -105,7 +105,7 @@ export default function HowItWorksPage() {
             [
               "02",
               CalendarDays,
-              "Pay before the due date",
+              "Pay early",
               "Choose when to pay or set autopay. The earlier you pay, the more you earn.",
             ],
             [
@@ -356,13 +356,12 @@ export default function HowItWorksPage() {
       <section className="mx-4 mb-8 grid max-w-[800px] items-center gap-6 rounded-xl bg-linear-to-r from-[#004a3e] to-[#002f29] px-7 py-8 text-white sm:mx-auto sm:px-8 sm:py-9 md:grid-cols-[1fr_auto]">
         <div>
           <h2 className="text-[24px] font-bold leading-7 sm:text-[27px] sm:leading-8">
-            Start getting more from
-            <br />
-            the bills you already pay
+            Powered By Partnerships
           </h2>
 
           <p className="mt-3 text-[14px] leading-5 text-[#c7ded7] sm:text-[15px]">
-            Join Vuior today and earn credits every time you pay early.
+            We negotiate exclusive discounts for our users with providers across
+            industries and regions
           </p>
         </div>
 

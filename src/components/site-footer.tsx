@@ -22,9 +22,7 @@ export function SiteFooter() {
             className="h-auto w-[105px] bg-transparent"
           />
           <p className="text-[10px] leading-[1.6] text-[#bdd2cc] min-[901px]:text-[14px] min-[901px]:leading-[1.7] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
-            Pay your bills early and earn
-            <br />
-            credits for a smarter financial life.
+            Vuior - Bill Payment Simplified
           </p>
           <p className="mt-4 mb-2 text-[10px] font-bold text-white min-[901px]:text-[13px] max-[620px]:text-[13px]">
             Follow us on

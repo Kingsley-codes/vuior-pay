@@ -29,14 +29,14 @@ const values = [
 ];
 
 const milestones = [
-  { icon: "⌂", value: "2026", text: "Vuior was founded with a simple idea." },
+  { icon: "⌂", value: "2023", text: "Vuior was founded with a simple idea." },
   {
     icon: "◉",
     value: "10K+",
     text: "Users already managing their bills with Vuior.",
   },
   { icon: "⌁", value: "100+", text: "Billers and providers integrated." },
-  { icon: "✈", value: "And growing", text: "We're just getting started." },
+  { icon: "✈", value: "1 million+", text: "Bills processed by Vuior." },
 ];
 
 const primaryButton =

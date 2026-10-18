@@ -60,9 +60,9 @@ const defaults: TransactionFilters = {
   to: "",
 };
 const tabs = [
-  { value: "all", label: "All transactions", icon: ArrowLeftRight },
-  { value: "bill", label: "Bill transactions", icon: FileText },
-  { value: "credit", label: "Credit transactions", icon: ArrowLeftRight },
+  { value: "all", label: "All transactions", mobileLabel: "All", icon: ArrowLeftRight },
+  { value: "bill", label: "Bill transactions", mobileLabel: "Bills", icon: FileText },
+  { value: "credit", label: "Credit transactions", mobileLabel: "Credits", icon: ArrowLeftRight },
 ] as const;
 
 function MultiSelectFilter({
@@ -415,7 +415,7 @@ export default function TransactionsPage() {
           </div>
           <section
             aria-label="Available credit balance"
-            className="rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-5"
+            className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:px-5"
           >
             <div className="flex min-w-0 items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#eaf8f2] text-[#009b67]">
@@ -425,25 +425,27 @@ export default function TransactionsPage() {
                 <p className="text-[11px] font-medium text-[#64718a]">
                   Available credits
                 </p>
-                <p className="mt-0.5 text-[23px] font-bold leading-none tracking-tight text-[#14203e] tabular-nums">
+                <p className="mt-1 break-words text-[21px] font-bold leading-tight tracking-tight text-[#14203e] tabular-nums sm:text-[23px]">
                   {money.format(availableCredits)}
                 </p>
               </div>
             </div>
-            <div className="mt-4 flex items-center gap-2 sm:mt-0 sm:shrink-0">
+            <div>
               <NotificationsMenu userId={user?.id} />
+            </div>
+            <div className="col-span-2 grid grid-cols-2 gap-2 border-t border-[#edf1ef] pt-4">
               <button
                 onClick={() => setWalletAction("send")}
-                className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-[#d7e3dd] bg-white px-3 text-[11px] font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:flex-none"
+                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#d7e3dd] bg-white px-2 text-[12px] font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:gap-2 sm:px-3"
               >
-                <Send size={15} />
+                <Send size={15} className="shrink-0" />
                 Send credits
               </button>
               <button
                 onClick={() => setWalletAction("add")}
-                className="inline-flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-3 text-[11px] font-semibold text-white transition hover:bg-[#008e5a] sm:flex-none"
+                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#00a96b] px-2 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:gap-2 sm:px-3"
               >
-                <WalletCards size={15} />
+                <WalletCards size={15} className="shrink-0" />
                 Add funds
               </button>
             </div>
@@ -478,13 +480,14 @@ export default function TransactionsPage() {
           <div
             role="tablist"
             aria-label="Transactions"
-            className="flex border-b border-[#e7ecea] px-3 sm:px-5"
+            className="grid grid-cols-3 border-b border-[#e7ecea] px-2 sm:flex sm:px-5"
           >
-            {tabs.map(({ value, label, icon: Icon }, index) => (
+            {tabs.map(({ value, label, mobileLabel, icon: Icon }, index) => (
               <button
                 key={value}
                 id={`${value}-tab`}
                 role="tab"
+                aria-label={label}
                 aria-selected={filters.type === value}
                 aria-controls="transaction-panel"
                 tabIndex={filters.type === value ? 0 : -1}
@@ -511,10 +514,11 @@ export default function TransactionsPage() {
                     document.getElementById(`${next.value}-tab`)?.focus();
                   }
                 }}
-                className={`flex h-16 items-center justify-center gap-2 border-b-2 px-3 text-[12px] font-semibold transition sm:px-5 sm:text-[13px] ${filters.type === value ? "border-[#00a96b] text-[#009b67]" : "border-transparent text-[#65728a] hover:text-[#344260]"}`}
+                className={`flex h-14 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1 text-[12px] font-semibold transition sm:h-16 sm:gap-2 sm:px-5 sm:text-[13px] ${filters.type === value ? "border-[#00a96b] text-[#009b67]" : "border-transparent text-[#65728a] hover:text-[#344260]"}`}
               >
-                <Icon size={17} />
-                {label}
+                <Icon size={17} className="shrink-0" />
+                <span className="sm:hidden">{mobileLabel}</span>
+                <span className="hidden sm:inline">{label}</span>
               </button>
             ))}
           </div>

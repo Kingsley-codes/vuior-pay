@@ -9,11 +9,6 @@ import { SiteFooter } from "@/components/site-footer";
 const reach = [
   { icon: "✉", title: "Email support", lines: ["support@vuior.com"] },
   {
-    icon: "❓",
-    title: "Frequently asked questions",
-    lines: ["Browse answers to common", "questions"],
-  },
-  {
     icon: "☎",
     title: "Call us",
     lines: ["+234 800 123 4567", "Mon - Fri, 9am - 5pm (WAT)"],

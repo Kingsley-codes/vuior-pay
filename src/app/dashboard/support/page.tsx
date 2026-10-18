@@ -14,6 +14,7 @@ import {
   Plus,
   RefreshCw,
   Send,
+  Search,
   Ticket as TicketIcon,
   Trash2,
   X,
@@ -674,6 +675,21 @@ function TicketsPanel({
   onReopen: (ticket: Ticket) => void;
 }) {
   const [renderedAt] = useState(Date.now);
+  const [monthFilter, setMonthFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
+  const [search, setSearch] = useState("");
+  const filteredTickets = tickets.filter((ticket) => {
+    const createdAt = ticket.createdAt?.toDate?.();
+    const matchesMonth = !monthFilter || Boolean(
+      createdAt && `${createdAt.getFullYear()}-${String(createdAt.getMonth() + 1).padStart(2, "0")}` === monthFilter,
+    );
+    const matchesStatus = statusFilter === "all" || ticket.status === statusFilter;
+    const term = search.trim().toLowerCase();
+    const matchesSearch = !term || [
+      ticket.ticket_ID, ticket.subject, ticket.message, ticket.category,
+    ].some((value) => String(value || "").toLowerCase().includes(term));
+    return matchesMonth && matchesStatus && matchesSearch;
+  });
   if (loading) return <TicketsSkeleton />;
   return (
     <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,.04)]">
@@ -709,6 +725,44 @@ function TicketsPanel({
           </button>
         </div>
       </div>
+      <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-[minmax(220px,1fr)_170px_170px]">
+        <label className="relative block">
+          <Search size={15} className="absolute top-1/2 left-3 -translate-y-1/2 text-[#8994a5]" />
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search tickets"
+            aria-label="Search tickets"
+            className="h-10 w-full rounded-lg border border-[#dfe6e4] bg-white pr-3 pl-9 text-[11px] outline-none focus:border-[#00a96b]"
+          />
+        </label>
+        <label className="flex items-center gap-2 text-[10px] text-[#738097]">
+          <span className="shrink-0">Month</span>
+          <input
+            type="month"
+            value={monthFilter}
+            onChange={(event) => setMonthFilter(event.target.value)}
+            aria-label="Filter tickets by month"
+            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] px-2 text-[11px] text-[#34425d]"
+          />
+        </label>
+        <label className="flex items-center gap-2 text-[10px] text-[#738097]">
+          <span>Status</span>
+          <select
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value as TicketStatus | "all")}
+            aria-label="Filter tickets by status"
+            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] bg-white px-2 text-[11px] text-[#34425d]"
+          >
+            <option value="all">All statuses</option>
+            <option value="open">Open</option>
+            <option value="in-progress">In progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="closed">Closed</option>
+          </select>
+        </label>
+      </div>
       {!tickets.length ? (
         <div className="grid min-h-[360px] place-items-center p-8 text-center">
           <div>
@@ -727,9 +781,9 @@ function TicketsPanel({
             </button>
           </div>
         </div>
-      ) : (
+      ) : filteredTickets.length ? (
         <div className="divide-y divide-[#edf1ef]">
-          {tickets.map((ticket) => (
+          {filteredTickets.map((ticket) => (
             <TicketRow
               key={ticket.id}
               ticket={ticket}
@@ -739,6 +793,13 @@ function TicketsPanel({
               onReopen={() => onReopen(ticket)}
             />
           ))}
+        </div>
+      ) : (
+        <div className="grid min-h-[220px] place-items-center p-8 text-center">
+          <div>
+            <h3 className="text-[14px] font-bold">No matching tickets</h3>
+            <p className="mt-2 text-[11px] text-[#738097]">Try changing the search or filters.</p>
+          </div>
         </div>
       )}
     </section>

@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, Globe2, TrendingUp, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  Globe2,
+  TrendingUp,
+  Zap,
+} from "lucide-react";
 import { Header } from "@/components/header";
 import { SiteFooter } from "@/components/site-footer";
 import { initialJobs, whyJoinUs } from "@/data/jobs";

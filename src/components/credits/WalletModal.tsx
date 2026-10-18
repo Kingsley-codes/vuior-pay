@@ -120,7 +120,7 @@ export default function WalletModal({
               <WalletCards size={22} />
             </span>
             <p className="mt-8 text-[10px] uppercase tracking-[.18em] text-[#9ed7c5]">
-              Available balance
+              Available Credits
             </p>
             <strong className="mt-2 block text-[29px]">
               {money.format(available)}

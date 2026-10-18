@@ -266,7 +266,7 @@ export default function BillsPage() {
   return (
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
           <div>
             <h1 className="text-[29px] font-bold tracking-[-0.035em]">Bills</h1>
             <p className="mt-1.5 text-[13px] text-[#596885]">
@@ -275,27 +275,29 @@ export default function BillsPage() {
           </div>
           <section
             aria-label="Available credits and bill actions"
-            className="w-full rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:w-auto sm:min-w-[440px] sm:items-center sm:justify-between sm:gap-5 sm:px-5"
+            className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:gap-5 sm:px-5 xl:w-auto xl:min-w-[440px]"
           >
             <div className="flex min-w-0 items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eaf8f2] text-[#009b67]">
                 <WalletCards size={19} />
               </span>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[11px] text-[#64718a]">Available credits</p>
-                <p className="mt-0.5 text-[21px] font-bold leading-none text-[#14203e] tabular-nums">
+                <p className="mt-1 break-words text-[21px] font-bold leading-tight text-[#14203e] tabular-nums">
                   {money.format(Number(user?.availableCredits ?? 0))}
                 </p>
               </div>
             </div>
-            <div className="mt-3 flex items-center justify-end gap-3 sm:mt-0 sm:shrink-0">
+            <div className="sm:order-last sm:shrink-0">
+              <NotificationsMenu userId={user?.id} />
+            </div>
+            <div className="col-span-2 border-t border-[#edf1ef] pt-4 sm:ml-auto sm:shrink-0 sm:border-0 sm:pt-0">
               <button
                 onClick={() => setModal({ mode: "add" })}
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[11px] font-semibold text-white"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:w-auto"
               >
                 <Plus size={15} /> Add Bill
               </button>
-              <NotificationsMenu userId={user?.id} />
             </div>
           </section>
         </div>

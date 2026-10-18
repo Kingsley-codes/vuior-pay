@@ -27,11 +27,11 @@ export const whyJoinUs = [
   },
   {
     title: "Growth-focused",
-    description: "Own meaningful work and grow as Vuior scales.",
+    description: "Opportunities to lead, grow, and evolve with us",
   },
   {
     title: "Technology & innovation",
-    description: "Shape a bill-pay experience that feels simpler and smarter.",
+    description: "Create a bill-pay experience that feels simpler and smarter.",
   },
 ];
 
@@ -137,8 +137,7 @@ export const initialJobs: JobDescription[] = [
       },
       {
         title: "Why join Vuior Billpay?",
-        body:
-          "This role lets you earn income while helping families and businesses take control of their finances, save money, and access credit opportunities. Vuior Billpay provides training, tools, and a mission-driven culture to help you succeed.",
+        body: "This role lets you earn income while helping families and businesses take control of their finances, save money, and access credit opportunities. Vuior Billpay provides training, tools, and a mission-driven culture to help you succeed.",
       },
     ],
   },
