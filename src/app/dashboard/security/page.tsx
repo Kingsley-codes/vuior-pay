@@ -20,6 +20,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { auth, db } from "@/services/firebase";
 import {
+  type PasswordChangeChallenge,
   confirmPasswordChange,
   requestPasswordChangeOtp,
 } from "@/services/otpService";
@@ -57,7 +58,10 @@ export function SecuritySettingsPanel() {
   );
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showPasswordOtpDialog, setShowPasswordOtpDialog] = useState(false);
+  const [passwordChallenge, setPasswordChallenge] = useState<PasswordChangeChallenge>({ method: "email_otp" });
+  const usesSecurityQuestion = passwordChallenge.method === "security_question";
   const [passwordOtp, setPasswordOtp] = useState("");
+  const verificationReady = usesSecurityQuestion ? passwordOtp.trim().length >= 2 : /^\d{6}$/.test(passwordOtp);
   const [passwordOtpError, setPasswordOtpError] = useState("");
   const [feedback, setFeedback] = useState<{
     tone: "success" | "error";
@@ -127,7 +131,8 @@ export function SecuritySettingsPanel() {
         EmailAuthProvider.credential(firebaseUser.email, passwords.current),
       );
       await firebaseUser.getIdToken(true);
-      await requestPasswordChangeOtp();
+      const challenge = await requestPasswordChangeOtp();
+      setPasswordChallenge(challenge);
       await logAuditEvent({
         event: "password_change_started",
         userId: firebaseUser.uid,
@@ -167,14 +172,14 @@ export function SecuritySettingsPanel() {
 
   async function applyPasswordChange(event: FormEvent) {
     event.preventDefault();
-    if (!firebaseUser?.email || passwordOtp.length !== 6) {
-      setPasswordOtpError("Enter the 6-digit code from your email.");
+    if (!firebaseUser?.email || !verificationReady) {
+      setPasswordOtpError(usesSecurityQuestion ? "Enter your security answer." : "Enter the 6-digit code from your email.");
       return;
     }
     setBusy("password");
     setPasswordOtpError("");
     try {
-      await confirmPasswordChange(passwordOtp, passwords.next);
+      await confirmPasswordChange(passwordOtp, passwords.next, passwordChallenge);
       await logAuditEvent({
         event: "password_change_success",
         userId: firebaseUser.uid,
@@ -486,29 +491,32 @@ export function SecuritySettingsPanel() {
               Confirm password change
             </h2>
             <p className="mt-2 text-[12px] leading-6 text-[#66748a]">
-              Enter the 6-digit code sent to {firebaseUser?.email}. Your password is changed only after the server verifies it.
+              {usesSecurityQuestion ? "Answer your saved security question to confirm this change." : `Enter the 6-digit code sent to ${firebaseUser?.email}.`}
             </p>
+            {usesSecurityQuestion ? <p id="password-security-question" className="mt-4 text-sm font-semibold text-[#111d39]">{passwordChallenge.question}</p> : null}
             <input
               autoFocus
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              maxLength={6}
+              type={usesSecurityQuestion ? "password" : "text"}
+              inputMode={usesSecurityQuestion ? "text" : "numeric"}
+              autoComplete={usesSecurityQuestion ? "off" : "one-time-code"}
+              maxLength={usesSecurityQuestion ? 256 : 6}
               value={passwordOtp}
-              onChange={(event) => setPasswordOtp(event.target.value.replace(/\D/g, ""))}
-              className="mt-5 h-12 w-full rounded-lg border border-[#dce4e2] px-4 text-center text-lg tracking-[.45em] outline-none focus:border-[#00a36a]"
-              aria-label="One-time verification code"
+              onChange={(event) => setPasswordOtp(usesSecurityQuestion ? event.target.value : event.target.value.replace(/\D/g, ""))}
+              className={`mt-5 h-12 w-full rounded-lg border border-[#dce4e2] px-4 outline-none focus:border-[#00a36a] ${usesSecurityQuestion ? "text-sm" : "text-center text-lg tracking-[.45em]"}`}
+              aria-label={usesSecurityQuestion ? "Security answer" : "One-time verification code"}
+              aria-describedby={usesSecurityQuestion ? "password-security-question" : undefined}
             />
             {passwordOtpError ? <p className="mt-3 text-[12px] text-[#be123c]">{passwordOtpError}</p> : null}
             <div className="mt-6 flex gap-3">
-              <button
+              {!usesSecurityQuestion && <button
                 type="button"
                 disabled={busy === "password"}
-                onClick={() => void requestPasswordChangeOtp().then(() => setPasswordOtpError("A new code was sent.")).catch((error: unknown) => setPasswordOtpError(error instanceof Error ? error.message : "Could not resend the code."))}
+                onClick={() => void requestPasswordChangeOtp().then((challenge) => { setPasswordChallenge(challenge); setPasswordOtp(""); setPasswordOtpError(challenge.method === "email_otp" ? "A new code was sent." : ""); }).catch((error: unknown) => setPasswordOtpError(error instanceof Error ? error.message : "Could not resend the code."))}
                 className="h-11 flex-1 rounded-lg border border-[#dce4e2] text-[11px] font-bold text-[#53617a] disabled:opacity-50"
               >
                 Resend code
-              </button>
-              <button disabled={busy === "password" || passwordOtp.length !== 6} className="h-11 flex-1 rounded-lg bg-[#00a36a] text-[11px] font-bold text-white disabled:opacity-60">
+              </button>}
+              <button disabled={busy === "password" || !verificationReady} className="h-11 flex-1 rounded-lg bg-[#00a36a] text-[11px] font-bold text-white disabled:opacity-60">
                 {busy === "password" ? "Changing..." : "Change password"}
               </button>
             </div>

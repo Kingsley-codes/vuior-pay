@@ -27,7 +27,7 @@ export const whyJoinUs = [
   },
   {
     title: "Growth-focused",
-    description: "Opportunities to lead, grow, and evolve with us",
+    description: "Opportunities to lead, grow, and evolve with us.",
   },
   {
     title: "Technology & innovation",

@@ -195,7 +195,7 @@ export function FeaturesSection() {
           never miss a payment
         </h2>
         <p className="max-w-[350px] text-[16px] leading-[1.55] text-[#58677b] min-[901px]:text-[17px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[16px] max-[620px]:leading-[1.65]">
-          Track due dates, set reminders, and manage payments with ease.
+          Track due dates and savings, and manage payments with ease.
         </p>
         <ul className="my-7 list-none p-0 max-[900px]:mx-auto max-[900px]:max-w-[330px] max-[900px]:text-left [&_li]:my-[15px] [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:text-[14px] max-[620px]:[&_li]:text-[15px] [&_svg]:w-[18px] [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[3px] [&_svg]:text-[#009268]">
           <li>

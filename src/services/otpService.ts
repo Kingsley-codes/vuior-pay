@@ -17,6 +17,10 @@ const VERIFY_REGISTRATION_OTP_URL =
 const REQUEST_PASSWORD_CHANGE_OTP_URL = `${FUNCTIONS_BASE_URL}/requestPasswordChangeOtp`;
 const CONFIRM_PASSWORD_CHANGE_URL = `${FUNCTIONS_BASE_URL}/confirmPasswordChange`;
 
+export type PasswordChangeChallenge =
+  | { method: "security_question"; question: string }
+  | { method: "email_otp"; question?: never };
+
 export type RegistrationPayload = {
   firstName: string;
   lastName: string;
@@ -35,6 +39,8 @@ async function responseJson(response: Response) {
     message?: string;
     userId?: string;
     customToken?: string;
+    method?: "security_question" | "email_otp";
+    question?: string;
   };
   if (!response.ok) throw new Error(data.message || "Request failed.");
   return data;
@@ -106,13 +112,22 @@ async function authenticatedPost(
   );
 }
 
-export async function requestPasswordChangeOtp(): Promise<void> {
-  await authenticatedPost(REQUEST_PASSWORD_CHANGE_OTP_URL);
+export async function requestPasswordChangeOtp(): Promise<PasswordChangeChallenge> {
+  const data = await authenticatedPost(REQUEST_PASSWORD_CHANGE_OTP_URL);
+  if (data.method === "security_question") {
+    if (!data.question) throw new Error("The security question could not be loaded.");
+    return { method: "security_question", question: data.question };
+  }
+  return { method: "email_otp" };
 }
 
 export async function confirmPasswordChange(
   code: string,
   newPassword: string,
+  challenge?: PasswordChangeChallenge,
 ): Promise<void> {
-  await authenticatedPost(CONFIRM_PASSWORD_CHANGE_URL, { code, newPassword });
+  await authenticatedPost(CONFIRM_PASSWORD_CHANGE_URL, {
+    newPassword,
+    ...(challenge?.method === "security_question" ? { answer: code, question: challenge.question } : { code }),
+  });
 }

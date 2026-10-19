@@ -361,7 +361,7 @@ export default function HowItWorksPage() {
 
           <p className="mt-3 text-[14px] leading-5 text-[#c7ded7] sm:text-[15px]">
             We negotiate exclusive discounts for our users with providers across
-            industries and regions
+            industries and regions.
           </p>
         </div>
 

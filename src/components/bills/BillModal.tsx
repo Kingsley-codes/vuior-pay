@@ -51,7 +51,6 @@ type FormState = {
   accountNumber: string;
   providerPhoneNumber: string;
   autoPay: boolean;
-  notes: string;
 };
 const emptyForm: FormState = {
   name: "",
@@ -62,7 +61,6 @@ const emptyForm: FormState = {
   accountNumber: "",
   providerPhoneNumber: "",
   autoPay: false,
-  notes: "",
 };
 const categories = [
   "Utilities",
@@ -126,7 +124,6 @@ export default function BillModal({
             bill.providerPhoneNumber || "",
           ),
           autoPay: bill.autoPay,
-          notes: bill.notes || "",
         }
       : emptyForm,
   );
@@ -260,7 +257,6 @@ export default function BillModal({
           normalizeInternationalPhone(form.providerPhoneNumber) || null,
         autoPay: form.autoPay,
         nextPaymentDate: form.autoPay ? form.dueDate : null,
-        notes: form.notes.trim() || null,
         documentUrl,
         documentType: file?.type || bill?.documentType || null,
         ...(file ? { documentName: file.name } : {}),
@@ -605,14 +601,6 @@ export default function BillModal({
                 />
               </Field>
             </div>
-            <Field label="Notes" wide>
-              <textarea
-                rows={3}
-                value={form.notes}
-                onChange={(e) => update("notes", e.target.value)}
-                placeholder="Optional payment notes"
-              />
-            </Field>
             <label className="mt-4 flex items-center justify-between rounded-xl border border-[#e1e8e5] p-4">
               <span>
                 <b className="block text-[11px]">Enable autopay</b>

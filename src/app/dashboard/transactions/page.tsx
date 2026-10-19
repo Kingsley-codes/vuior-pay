@@ -404,7 +404,7 @@ export default function TransactionsPage() {
   return (
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
-        <header className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(410px,.9fr)] lg:items-center">
+        <header className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
           <div>
             <h1 className="text-[29px] font-bold tracking-[-0.035em]">
               Transactions
@@ -415,7 +415,7 @@ export default function TransactionsPage() {
           </div>
           <section
             aria-label="Available credit balance"
-            className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:px-5"
+            className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:gap-2 sm:px-5"
           >
             <div className="flex min-w-0 items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#eaf8f2] text-[#009b67]">
@@ -425,25 +425,25 @@ export default function TransactionsPage() {
                 <p className="text-[11px] font-medium text-[#64718a]">
                   Available credits
                 </p>
-                <p className="mt-1 break-words text-[21px] font-bold leading-tight tracking-tight text-[#14203e] tabular-nums sm:text-[23px]">
+                <p className="mt-1 break-words text-[21px] font-bold leading-tight tracking-tight text-[#14203e] tabular-nums sm:mt-0.5 sm:whitespace-nowrap sm:text-[23px] sm:leading-none">
                   {money.format(availableCredits)}
                 </p>
               </div>
             </div>
-            <div>
+            <div className="sm:ml-auto sm:shrink-0 sm:pl-2">
               <NotificationsMenu userId={user?.id} />
             </div>
-            <div className="col-span-2 grid grid-cols-2 gap-2 border-t border-[#edf1ef] pt-4">
+            <div className="col-span-2 grid grid-cols-2 gap-2 border-t border-[#edf1ef] pt-4 sm:flex sm:shrink-0 sm:border-0 sm:pt-0">
               <button
                 onClick={() => setWalletAction("send")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#d7e3dd] bg-white px-2 text-[12px] font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:gap-2 sm:px-3"
+                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#d7e3dd] bg-white px-2 text-[12px] font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:h-10 sm:gap-2 sm:px-3 sm:text-[11px]"
               >
                 <Send size={15} className="shrink-0" />
                 Send credits
               </button>
               <button
                 onClick={() => setWalletAction("add")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#00a96b] px-2 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:gap-2 sm:px-3"
+                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#00a96b] px-2 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:gap-2 sm:px-3 sm:text-[11px]"
               >
                 <WalletCards size={15} className="shrink-0" />
                 Add funds

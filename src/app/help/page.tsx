@@ -41,7 +41,7 @@ export default function HelpPage() {
       <Header active="faq" wide />
       <section className="relative overflow-hidden border-b border-[#edf1ef] bg-linear-to-r from-white via-white to-[#f0faf6] px-5 py-10 sm:px-10 lg:px-12 lg:py-12">
         <div className="mx-auto max-w-[1180px]">
-          <p className="text-[13px] font-extrabold text-[#009b67]">FAQ</p>
+          <p className="text-[13px] font-extrabold text-[#009b67]">FAQs</p>
           <h1 className="mt-3 text-[34px] font-bold tracking-[-.04em] sm:text-[38px]">
             Frequently asked questions
           </h1>
