@@ -136,7 +136,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
             Apply for {job.title}
           </h2>
           <p className="mb-[25px] text-[11px] leading-[1.65] text-[#667487] min-[901px]:text-[15px] max-[620px]:text-[15px]">
-            Share a few details and our team will review your application.
+            Share a few details, and our team will review your application.
           </p>
           {status ? (
             <div

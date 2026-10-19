@@ -76,7 +76,7 @@ export function HeroSection() {
         <div className="relative ml-[-25px] h-[570px] w-[760px] max-[900px]:m-0 max-[900px]:h-[460px] max-[900px]:w-full max-[620px]:mt-[18px] max-[620px]:h-[340px] max-[430px]:ml-0 max-[430px]:h-[280px]">
           <Image
             src="/hero-phone2.png"
-            alt="Vuior app showing bills, balance and rewards"
+            alt="Vuior app showing bills, balance, and rewards"
             fill
             sizes="(max-width: 800px) 100vw, 58vw"
             priority
@@ -301,9 +301,9 @@ export function FeaturesSection() {
 
 export function RewardsSection() {
   const tiers = [
-    { days: "1 – 3 days early", pct: "2%" },
-    { days: "4 – 7 days early", pct: "5%" },
-    { days: "8 – 14 days early", pct: "10%" },
+    { days: "1–3 days early", pct: "2%" },
+    { days: "4–7 days early", pct: "5%" },
+    { days: "8–14 days early", pct: "10%" },
   ];
   return (
     <section className="bg-[#003f35] text-white" id="rewards">
@@ -311,9 +311,9 @@ export function RewardsSection() {
         <div className="pl-10 max-[900px]:px-0 max-[900px]:pt-5 max-[900px]:pb-[35px] max-[900px]:text-center">
           <p className={`${eyebrow} text-[#83e6c2]`}>◉ VUIOR REWARDS</p>
           <h2 className={`${sectionHeading} mb-[15px]`}>
-            The earlier you pay
+            The earlier you pay,
             <br />
-            The more you earn
+            the more you earn
           </h2>
           <p className="max-w-[290px] text-[13px] leading-[1.55] text-[#d3e4df] min-[901px]:text-[16px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
             Earn credits when you pay eligible bills before the due date.
@@ -345,12 +345,12 @@ export function RewardsSection() {
               <b>Example</b>
               <div className="my-2 flex flex-col gap-0.5">
                 <span className="text-[9px] max-[620px]:text-[13px]">
-                  Electricity bill :
+                  Electricity bill:
                 </span>
                 <strong className="text-[14px]!">$100.00</strong>
               </div>
               <p>Paid 10 days early</p>
-              <small>Credits earned :</small>
+              <small>Credits earned:</small>
               <strong>+$10.00</strong>
             </div>
             <Image

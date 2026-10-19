@@ -113,7 +113,7 @@ export function ContactForm() {
       <div>
         <h2 className="mb-2.5 text-[16px] min-[620px]:text-[17px]">Send us a message</h2>
         <p className="mb-[25px] text-[11px] text-[#667487] min-[901px]:text-[15px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
-          Fill out the form below and our team will respond shortly.
+          Fill out the form below, and our team will respond shortly.
         </p>
       </div>
       {error ? <p role="alert" className="mb-4 rounded-md bg-red-50 p-3 text-[12px] text-red-700">{error}</p> : null}

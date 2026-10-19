@@ -20,12 +20,12 @@ export default function ForgotPasswordPage() {
     setNotice("");
 
     if (!trimmedEmail) {
-      setError("Email is required");
+      setError("Email is required.");
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(trimmedEmail)) {
-      setError("Please enter a valid email address");
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthFormShell
       title="Reset password"
-      description="Enter your email and we will send reset instructions."
+      description="Enter your email, and we will send reset instructions."
     >
       <form className="space-y-7" onSubmit={handleSubmit}>
         {notice ? (

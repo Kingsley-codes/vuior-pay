@@ -64,7 +64,7 @@ export const initialJobs: JobDescription[] = [
         title: "Compensation & benefits",
         items: [
           "Hourly pay up to $40 per hour, based on experience.",
-          "35-40 hours per week with remote-first flexible scheduling.",
+          "35–40 hours per week with remote-first, flexible scheduling.",
           "Bonus opportunities tied to accuracy, compliance, and user satisfaction metrics.",
           "Growth opportunities into compliance, account management, or leadership roles.",
         ],
@@ -169,7 +169,7 @@ export const initialJobs: JobDescription[] = [
         title: "Compensation & benefits",
         items: [
           "Hourly pay up to $50 per hour, depending on experience.",
-          "35-40 hours per week with remote and flexible work.",
+          "35–40 hours per week with remote and flexible work.",
           "Bonus opportunities tied to team verified sign-up volume and milestone achievement.",
           "Advancement opportunities into higher-level leadership roles as Vuior Billpay expands.",
         ],

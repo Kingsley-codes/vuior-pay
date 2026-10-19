@@ -53,21 +53,21 @@ const initialForm: SignupForm = {
 function validateForm(form: SignupForm) {
   const errors: Partial<Record<keyof SignupForm | "agreement", string>> = {};
 
-  if (!form.firstName.trim()) errors.firstName = "First name is required";
-  if (!form.lastName.trim()) errors.lastName = "Last name is required";
+  if (!form.firstName.trim()) errors.firstName = "First name is required.";
+  if (!form.lastName.trim()) errors.lastName = "Last name is required.";
 
   if (!form.email.trim()) {
-    errors.email = "Email is required";
+    errors.email = "Email is required.";
   } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-    errors.email = "Email is invalid";
+    errors.email = "Email is invalid.";
   }
 
   if (!hasCompletePhoneNumber(form.phone)) {
-    errors.phone = "Phone number is required";
+    errors.phone = "Phone number is required.";
   }
 
   if (!form.dob.trim()) {
-    errors.dob = "Date of birth is required";
+    errors.dob = "Date of birth is required.";
   } else {
     const [year, month, day] = form.dob.split("-").map(Number);
     const dateOfBirth = new Date(year, month - 1, day);
@@ -82,26 +82,26 @@ function validateForm(form: SignupForm) {
       dateOfBirth.getDate() === day;
 
     if (!isValidDate || dateOfBirth < oldestAllowedDate) {
-      errors.dob = "Enter a valid date of birth";
+      errors.dob = "Enter a valid date of birth.";
     } else if (dateOfBirth > latestAllowedDate) {
-      errors.dob = "You must be at least 14 years old";
+      errors.dob = "You must be at least 14 years old.";
     }
   }
 
   if (!form.password) {
-    errors.password = "Password is required";
+    errors.password = "Password is required.";
   } else if (form.password.length < 8) {
-    errors.password = "Password must be at least 8 characters";
+    errors.password = "Password must be at least 8 characters.";
   } else if (!/(?=.*\d)(?=.*[!@#$%^&*])/.test(form.password)) {
-    errors.password = "Password must contain a number and symbol";
+    errors.password = "Password must contain a number and symbol.";
   }
 
   if (form.confirmPassword !== form.password) {
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "Passwords do not match.";
   }
 
   if (form.accountType === "business" && !form.businessName.trim()) {
-    errors.businessName = "Business name is required";
+    errors.businessName = "Business name is required.";
   }
 
   return errors;
@@ -148,7 +148,7 @@ export default function SignupPage() {
     const validationErrors = validateForm(form);
     if (!agreed) {
       validationErrors.agreement =
-        "Please agree to the Terms of Service and Privacy Policy";
+        "Please agree to the Terms of Service and Privacy Policy.";
     }
 
     if (Object.keys(validationErrors).length > 0) {

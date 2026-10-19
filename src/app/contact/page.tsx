@@ -11,7 +11,7 @@ const reach = [
   {
     icon: "☎",
     title: "Call us",
-    lines: ["+234 800 123 4567", "Mon - Fri, 9am - 5pm (WAT)"],
+    lines: ["+234 800 123 4567", "Mon–Fri, 9am–5pm (WAT)"],
   },
 ];
 
@@ -32,7 +32,7 @@ export default function ContactPage() {
         <p className="text-[14px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7] max-[620px]:text-[15px]">
           Have a question, suggestion, or need support?
           <br />
-          Reach out to us and we&apos;ll get back to you as soon as possible.
+          Reach out to us, and we&apos;ll get back to you as soon as possible.
         </p>
       </section>
       <section className="mx-auto grid max-w-[1330px] grid-cols-[1.7fr_1fr] gap-6 max-[900px]:grid-cols-1 max-[900px]:px-[30px] max-[620px]:px-4">
@@ -89,7 +89,7 @@ export default function ContactPage() {
             Looking for quick answers?
           </h2>
           <p className="m-0 text-[11px] text-[#667487] min-[901px]:text-[15px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
-            Visit our FAQs for articles on managing bills, payments, rewards and
+            Visit our FAQs for articles on managing bills, payments, rewards, and
             more.
           </p>
         </div>
