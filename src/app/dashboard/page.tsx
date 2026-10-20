@@ -19,6 +19,7 @@ import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
 import { DashboardHomeSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import { displayName } from "@/utils/transactions";
+import { isInMonth, monthlyComparison } from "@/utils/monthlyComparison";
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -78,6 +79,13 @@ export default function DashboardPage() {
       ["Credits Purchased", "Bill Payment"].includes(displayName(item.type)),
   );
   const firstName = user?.firstName || "there";
+  const previousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const paymentsThisMonth = successfulPayments.filter((item) =>
+    isInMonth(item.date, now),
+  ).length;
+  const paymentsLastMonth = successfulPayments.filter((item) =>
+    isInMonth(item.date, previousMonth),
+  ).length;
 
   const stats = [
     {
@@ -94,10 +102,8 @@ export default function DashboardPage() {
     },
     {
       title: "Payments This Month",
-      value: String(successfulPayments.length),
-      note: successfulPayments.length
-        ? "Completed successfully"
-        : "No payments yet",
+      value: String(paymentsThisMonth),
+      note: monthlyComparison(paymentsThisMonth, paymentsLastMonth),
       icon: CalendarCheck2,
     },
   ];

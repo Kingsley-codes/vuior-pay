@@ -1,5 +1,6 @@
 "use client";
 import PageSizeSelect from "@/components/ui/PageSizeSelect";
+import { monthlyComparison } from "@/utils/monthlyComparison";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -320,16 +321,28 @@ export default function TransactionsPage() {
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
   );
+  // Monthly summaries retain non-date filters; table dates remain independent.
+  const now = new Date();
+  const thisMonth = filterTransactions(
+    transactions, bills, { ...filters, period: "This month" }, now,
+  );
+  const lastMonth = filterTransactions(
+    transactions, bills, { ...filters, period: "Last month" }, now,
+  );
   const stats = [
     {
       label: "Total transactions",
-      value: filtered.length,
+      value: thisMonth.length,
+      previous: lastMonth.length,
       icon: ArrowLeftRight,
       tone: "bg-[#eaf8f2] text-[#00a96b]",
     },
     {
       label: "Completed",
-      value: filtered.filter(
+      value: thisMonth.filter(
+        (item) => transactionStatus(item.status) === "Completed",
+      ).length,
+      previous: lastMonth.filter(
         (item) => transactionStatus(item.status) === "Completed",
       ).length,
       icon: CheckCircle2,
@@ -337,7 +350,10 @@ export default function TransactionsPage() {
     },
     {
       label: "Pending",
-      value: filtered.filter(
+      value: thisMonth.filter(
+        (item) => transactionStatus(item.status) === "Pending",
+      ).length,
+      previous: lastMonth.filter(
         (item) => transactionStatus(item.status) === "Pending",
       ).length,
       icon: Clock3,
@@ -345,7 +361,10 @@ export default function TransactionsPage() {
     },
     {
       label: "Failed",
-      value: filtered.filter(
+      value: thisMonth.filter(
+        (item) => transactionStatus(item.status) === "Failed",
+      ).length,
+      previous: lastMonth.filter(
         (item) => transactionStatus(item.status) === "Failed",
       ).length,
       icon: CircleX,
@@ -458,7 +477,7 @@ export default function TransactionsPage() {
           aria-label="Transaction statistics"
           className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4"
         >
-          {stats.map(({ label, value, icon: Icon, tone }) => (
+          {stats.map(({ label, value, previous, icon: Icon, tone }) => (
             <article
               key={label}
               className="flex min-h-[124px] flex-col justify-center gap-3 rounded-xl border border-[#e2e8e6] bg-white p-4 shadow-[0_7px_24px_rgba(25,55,47,0.04)] sm:flex-row sm:items-center sm:justify-start sm:gap-4 sm:p-5"
@@ -473,6 +492,9 @@ export default function TransactionsPage() {
                 <strong className="mt-1.5 block text-[27px] leading-none tracking-tight">
                   {value.toLocaleString()}
                 </strong>
+                <p className="mt-2 text-[11px] text-[#61708a]">
+                  This month · {monthlyComparison(value, previous)}
+                </p>
               </div>
             </article>
           ))}

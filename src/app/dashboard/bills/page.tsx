@@ -32,6 +32,7 @@ import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
 import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import { billCategories } from "@/utils/transactions";
+import { monthlyComparison } from "@/utils/monthlyComparison";
 
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -139,6 +140,14 @@ export default function BillsPage() {
   const paidBills = bills.filter(
     (bill) => normalizedStatus(bill) === "paid" && dueInCurrentMonth(bill),
   );
+  const previousMonth = monthKey(
+    new Date(now.getFullYear(), now.getMonth() - 1, 1),
+  );
+  const paidBillsLastMonth = bills.filter(
+    (bill) =>
+      normalizedStatus(bill) === "paid" &&
+      monthKey(bill.dueDate) === previousMonth,
+  );
   const reviewBills = bills.filter(
     (bill) => normalizedStatus(bill) === "in review" && dueInCurrentMonth(bill),
   );
@@ -181,8 +190,7 @@ export default function BillsPage() {
           (categories.length === 0 || categories.includes(bill.category)) &&
           (selectedMonth === "All Months" ||
             monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
-          ((targetTab !== "Paid" && targetTab !== "All bills") ||
-            providers.length === 0 ||
+          (providers.length === 0 ||
             providers.includes(bill.name.trim())) &&
           `${bill.name} ${bill.category}`
             .toLowerCase()
@@ -338,7 +346,7 @@ export default function BillsPage() {
             [
               "Paid Bills",
               String(paidBills.length),
-              "Paid, due this month",
+              `Due this month · ${monthlyComparison(paidBills.length, paidBillsLastMonth.length)}`,
               RefreshCcw,
             ],
             [
@@ -420,14 +428,12 @@ export default function BillsPage() {
                   onChange={setSelectedMonth}
                   options={monthOptions}
                 />
-                {(tab === "Paid" || tab === "All bills") && (
-                  <MultiSelectFilter
-                    label="Provider"
-                    value={providers}
-                    onChange={setProviders}
-                    options={providerOptions}
-                  />
-                )}
+                <MultiSelectFilter
+                  label="Provider"
+                  value={providers}
+                  onChange={setProviders}
+                  options={providerOptions}
+                />
               </div>
 
               {tab !== "Paid" && selectableVisible.length > 0 && (
