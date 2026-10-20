@@ -2,6 +2,8 @@
 import TablePagination from "@/components/ui/TablePagination";
 
 import Image from "next/image";
+import Link from "next/link";
+import { SUPPORT_FAQS } from "@/data/faqs";
 import {
   AlertCircle,
   CheckCircle2,
@@ -48,25 +50,6 @@ const categories = [
   ["complaint", "Complaints", "File a complaint about our service"],
   ["general", "General Inquiry", "Questions about Vuior"],
   ["feature", "Feature Requests", "Suggestions and improvements"],
-] as const;
-
-const faqs = [
-  [
-    "How do I reset my password?",
-    "Go to the login screen and select ‘Forgot Password’. Follow the instructions sent to your email.",
-  ],
-  [
-    "How long do transfers take?",
-    "Transfers typically take 1–3 business days to process, depending on your bank.",
-  ],
-  [
-    "Is my money secure?",
-    "Yes. Vuior uses bank-level encryption and security measures to protect your funds and data.",
-  ],
-  [
-    "How do I report a problem?",
-    "Submit the support form with the details of the problem, or call our support team during business hours.",
-  ],
 ] as const;
 
 const statusStyles: Record<TicketStatus, string> = {
@@ -623,8 +606,8 @@ function ContactPanel({
         <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,.04)]">
           <h2 className="text-[14px] font-bold">Frequently asked questions</h2>
           <div className="mt-3 divide-y divide-[#edf1ef]">
-            {faqs.map(([question, answer], index) => (
-              <div key={question} className="py-3">
+            {SUPPORT_FAQS.map(({ value, title, content }, index) => (
+              <div key={value} className="py-3">
                 <button
                   type="button"
                   onClick={() =>
@@ -635,7 +618,7 @@ function ContactPanel({
                   aria-expanded={expandedFaq === index}
                   className="flex w-full items-center gap-3 text-left text-[11px] font-semibold"
                 >
-                  <span className="flex-1">{question}</span>
+                  <span className="flex-1">{title}</span>
                   {expandedFaq === index ? (
                     <ChevronUp size={15} />
                   ) : (
@@ -643,13 +626,19 @@ function ContactPanel({
                   )}
                 </button>
                 {expandedFaq === index ? (
-                  <p className="mt-2 pr-5 text-[10px] leading-5 text-[#6f7d93]">
-                    {answer}
+                  <p className="mt-2 whitespace-pre-line pr-5 text-[10px] leading-5 text-[#6f7d93]">
+                    {content}
                   </p>
                 ) : null}
               </div>
             ))}
           </div>
+          <Link
+            href="/help"
+            className="mt-3 inline-flex rounded text-[11px] font-semibold text-[#008f60] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#008f60]"
+          >
+            View all FAQs
+          </Link>
         </section>
       </aside>
     </div>

@@ -142,7 +142,10 @@ export default function DashboardShell({
         >
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
-        <div
+        <Link
+          href="/"
+          aria-label="Vuior homepage"
+          onClick={() => setMobileOpen(false)}
           className={`mb-8 flex h-16 items-center px-2 ${collapsed ? "lg:justify-center lg:px-0" : ""}`}
         >
           <Image
@@ -161,7 +164,7 @@ export default function DashboardShell({
             priority
             className={`${collapsed ? "lg:hidden" : ""} h-auto w-[128px]`}
           />
-        </div>
+        </Link>
         <nav className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;

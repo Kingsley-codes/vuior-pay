@@ -199,6 +199,48 @@ export const MOBILE_FAQS: FAQItem[] = [
     category: "Others",
   },
   {
+    value: "dashboard-bills",
+    title: "Where can I manage my bills on the dashboard?",
+    content:
+      "Open Bills in the dashboard to view Upcoming, Overdue, Paid, In review, or All bills. Select Add Bill to create a bill and use the status tabs to keep track of bills that need attention.",
+    category: "Uploading Bills",
+  },
+  {
+    value: "dashboard-transactions",
+    title: "Where can I find my bill and credit transactions?",
+    content:
+      "Open Transactions in the dashboard. You can switch between All transactions, Bill transactions, and Credit transactions, then use search and filters to find a payment or credit entry.",
+    category: "Payments",
+  },
+  {
+    value: "support-ticket",
+    title: "How do I report a bill, payment, or credit issue?",
+    content:
+      "Open Support in the dashboard and select Contact support. Choose the category that matches your issue, enter a subject, describe what happened, and provide your phone number. Include the relevant bill or transaction details so the team can investigate, then select Submit ticket.",
+    category: "Others",
+  },
+  {
+    value: "support-attachments",
+    title: "Can I attach screenshots to a support request?",
+    content:
+      "Yes. The support form accepts up to four image attachments, each 5 MB or smaller. Use screenshots that help explain the issue, and hide passwords, full card details, or other sensitive information before uploading.",
+    category: "Others",
+  },
+  {
+    value: "support-tracking",
+    title: "How do I track my support requests?",
+    content:
+      "Open Support in the dashboard and select My tickets to see your requests and their statuses. You can search for a ticket, filter by month or status, and refresh the list to check for updates.",
+    category: "Others",
+  },
+  {
+    value: "support-reopen",
+    title: "Can I resolve or reopen a support ticket?",
+    content:
+      "When your issue is fixed, you can mark the ticket as resolved in My tickets. If you still need help, you can reopen it within 48 hours of resolution. If that window has passed, submit a new ticket and include the previous ticket number.",
+    category: "Others",
+  },
+  {
     value: "q26",
     title: "Is my data safe with Vuior?",
     content:
@@ -206,3 +248,8 @@ export const MOBILE_FAQS: FAQItem[] = [
     category: "Others",
   },
 ];
+
+// Keep the dashboard's quick answers consistent with the public FAQ page.
+export const SUPPORT_FAQS = ["q19", "q16", "support-ticket", "support-tracking"].map(
+  (value) => MOBILE_FAQS.find((faq) => faq.value === value)!,
+);
