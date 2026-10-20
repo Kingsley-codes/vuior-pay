@@ -18,7 +18,7 @@ export default function AuthInput({
   return (
     <label className="block">
       <span className="mb-2 block text-[14px] font-semibold text-[#16234c]">
-        {label}
+        {label}{props.required && <span className="text-red-600" aria-label="required"> *</span>}
       </span>
 
       <div

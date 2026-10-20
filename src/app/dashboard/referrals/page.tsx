@@ -272,10 +272,11 @@ export default function ReferralsPage() {
           >
             <form onSubmit={redeemPromo} className="mt-6">
               <label className="text-[12px] font-medium text-[#42516b]">
-                Promo code
+                Promo code<span className="text-red-600" aria-label="required"> *</span>
               </label>
               <div className="mt-2 flex flex-col gap-3 sm:flex-row">
                 <input
+                  required
                   aria-label="Promo code"
                   value={promoCode}
                   onChange={(event) =>
@@ -304,10 +305,11 @@ export default function ReferralsPage() {
                 </p>
               )}
               <label className="text-[12px] font-medium text-[#42516b]">
-                Referral code
+                Referral code<span className="text-red-600" aria-label="required"> *</span>
               </label>
               <div className="mt-2 flex flex-col gap-3 sm:flex-row">
                 <input
+                  required
                   aria-label="Referral code"
                   disabled={hasRedeemedReferral || redeeming === "referral"}
                   value={referralCode}

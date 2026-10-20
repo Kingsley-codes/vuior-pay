@@ -1,4 +1,5 @@
 "use client";
+import TablePagination from "@/components/ui/TablePagination";
 import {
   BILL_FREQUENCIES,
   frequencyLabel,
@@ -11,7 +12,6 @@ import { doc, updateDoc } from "firebase/firestore";
 import {
   CalendarDays,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   CircleDollarSign,
   FileText,
@@ -81,6 +81,7 @@ function displayStatus(bill: Bill) {
 export default function BillsPage() {
   const { user } = useVuiorSession();
   const { bills, loading } = useVuiorData(user?.id);
+  const [pagination, setPagination] = useState({ key: "", page: 1, pageSize: 20 });
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [checkoutIds, setCheckoutIds] = useState<string[] | null>(null);
   const [paymentMessage, setPaymentMessage] = useState("");
@@ -193,7 +194,10 @@ export default function BillsPage() {
       BILL_TABS.map((item) => [item, filteredBills(item)]),
     ) as Record<Tab, Bill[]>;
   }, [bills, categories, selectedMonth, search, providers, frequencies]);
-  const visibleBills = billsByTab[tab];
+  const filterKey = JSON.stringify([tab, categories, selectedMonth, search, providers, frequencies]);
+  const filteredBills = billsByTab[tab];
+  const currentPage = Math.min(pagination.key === filterKey ? pagination.page : 1, Math.max(1, Math.ceil(filteredBills.length / pagination.pageSize)));
+  const visibleBills = filteredBills.slice((currentPage - 1) * pagination.pageSize, currentPage * pagination.pageSize);
 
   const payableBills = bills.filter(
     (bill) =>
@@ -820,22 +824,7 @@ export default function BillsPage() {
                   </div>
                 ) : null}
               </div>
-              <div className="flex items-center justify-between border-t border-[#e7ecea] px-4 py-3 text-[10px] text-[#718097]">
-                <span>
-                  Showing {visibleBills.length} of {bills.length} bills
-                </span>
-                <div className="flex items-center gap-2">
-                  <button className="grid h-8 w-8 place-items-center rounded border border-[#dfe5e7]">
-                    <ChevronLeft size={14} />
-                  </button>
-                  <span className="grid h-8 w-8 place-items-center rounded bg-[#00a96b] text-white">
-                    1
-                  </span>
-                  <button className="grid h-8 w-8 place-items-center rounded border border-[#dfe5e7]">
-                    <ChevronRight size={14} />
-                  </button>
-                </div>
-              </div>
+              <TablePagination page={currentPage} pageSize={pagination.pageSize} total={filteredBills.length} onPageChange={(page) => setPagination({ ...pagination, key: filterKey, page })} onPageSizeChange={(pageSize) => setPagination({ key: filterKey, page: 1, pageSize })} />
             </section>
 
             <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">

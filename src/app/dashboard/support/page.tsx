@@ -1,4 +1,5 @@
 "use client";
+import TablePagination from "@/components/ui/TablePagination";
 
 import Image from "next/image";
 import {
@@ -674,6 +675,8 @@ function TicketsPanel({
   onResolve: (ticket: Ticket) => void;
   onReopen: (ticket: Ticket) => void;
 }) {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [renderedAt] = useState(Date.now);
   const [monthFilter, setMonthFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
@@ -690,6 +693,8 @@ function TicketsPanel({
     ].some((value) => String(value || "").toLowerCase().includes(term));
     return matchesMonth && matchesStatus && matchesSearch;
   });
+  const currentPage = Math.min(page, Math.max(1, Math.ceil(filteredTickets.length / pageSize)));
+  const visibleTickets = filteredTickets.slice((currentPage - 1) * pageSize, currentPage * pageSize);
   if (loading) return <TicketsSkeleton />;
   return (
     <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,.04)]">
@@ -731,7 +736,7 @@ function TicketsPanel({
           <input
             type="search"
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => { setSearch(event.target.value); setPage(1); }}
             placeholder="Search tickets"
             aria-label="Search tickets"
             className="h-10 w-full rounded-lg border border-[#dfe6e4] bg-white pr-3 pl-9 text-[11px] outline-none focus:border-[#00a96b]"
@@ -742,7 +747,7 @@ function TicketsPanel({
           <input
             type="month"
             value={monthFilter}
-            onChange={(event) => setMonthFilter(event.target.value)}
+            onChange={(event) => { setMonthFilter(event.target.value); setPage(1); }}
             aria-label="Filter tickets by month"
             className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] px-2 text-[11px] text-[#34425d]"
           />
@@ -751,7 +756,7 @@ function TicketsPanel({
           <span>Status</span>
           <select
             value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value as TicketStatus | "all")}
+            onChange={(event) => { setStatusFilter(event.target.value as TicketStatus | "all"); setPage(1); }}
             aria-label="Filter tickets by status"
             className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] bg-white px-2 text-[11px] text-[#34425d]"
           >
@@ -783,7 +788,7 @@ function TicketsPanel({
         </div>
       ) : filteredTickets.length ? (
         <div className="divide-y divide-[#edf1ef]">
-          {filteredTickets.map((ticket) => (
+          {visibleTickets.map((ticket) => (
             <TicketRow
               key={ticket.id}
               ticket={ticket}
@@ -802,6 +807,7 @@ function TicketsPanel({
           </div>
         </div>
       )}
+      <TablePagination page={currentPage} pageSize={pageSize} total={filteredTickets.length} onPageChange={setPage} onPageSizeChange={(value) => { setPage(1); setPageSize(value); }} />
     </section>
   );
 }

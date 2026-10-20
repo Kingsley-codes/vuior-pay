@@ -290,7 +290,7 @@ export default function SignupPage() {
 
         <label className="block">
           <span className="mb-2 block text-[14px] font-semibold text-[#16234c]">
-            Phone number
+            <span>Phone number<span className="text-red-600" aria-label="required"> *</span></span>
           </span>
           <PhoneNumberInput
             className={`vuior-phone-input--auth ${
@@ -383,6 +383,7 @@ export default function SignupPage() {
         <label className="flex cursor-pointer items-start gap-2.5 text-[12px] leading-5 text-[#526080]">
           <input
             type="checkbox"
+            required
             checked={agreed}
             onChange={(event) => {
               setAgreed(event.target.checked);
@@ -395,7 +396,7 @@ export default function SignupPage() {
             className={`${checkboxClass} mt-0.5`}
           />
           <span>
-            I agree to the{" "}
+            <span className="text-red-600" aria-label="required"> *</span> I agree to the{" "}
             <Link
               href="/terms-of-service"
               className="font-medium text-[#009d62] hover:underline"

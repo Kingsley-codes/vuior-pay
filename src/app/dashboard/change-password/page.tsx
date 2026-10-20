@@ -146,10 +146,11 @@ function PasswordField({
 }) {
   return (
     <label className="block text-xs font-medium text-slate-600">
-      {label}
+      {label}<span className="text-red-600" aria-label="required"> *</span>
       <span className="mt-1.5 flex h-11 items-center gap-2 rounded-lg border border-slate-200 px-3 transition focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-50">
         <LockKeyhole size={16} className="text-slate-400" />
         <input
+          required
           type={visible ? "text" : "password"}
           value={value}
           onChange={(event) => onChange(event.target.value)}

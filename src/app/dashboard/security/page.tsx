@@ -334,8 +334,9 @@ export function SecuritySettingsPanel() {
               copy="Used as an additional account recovery check."
             />
             <label className="mt-6 block text-[11px] font-semibold text-[#334562]">
-              Question
+              <span>Question<span className="text-red-600" aria-label="required"> *</span></span>
               <select
+                required
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 className="mt-2 h-12 w-full rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-[12px] outline-none focus:border-[#00a36a]"
@@ -347,10 +348,11 @@ export function SecuritySettingsPanel() {
               </select>
             </label>
             <label className="mt-4 block text-[11px] font-semibold text-[#334562]">
-              Answer
+              <span>Answer<span className="text-red-600" aria-label="required"> *</span></span>
               <input
                 type="password"
                 autoComplete="off"
+                required
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Enter your answer"
@@ -573,11 +575,12 @@ function PasswordField({
   return (
     <label className="block">
       <span className="mb-2 block text-[11px] font-semibold text-[#334562]">
-        {label}
+        {label}<span className="text-red-600" aria-label="required"> *</span>
       </span>
       <span className="flex h-12 items-center rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 focus-within:border-[#00a36a]">
         <LockKeyhole size={16} className="mr-2 text-[#00a36a]" />
         <input
+          required
           type={show ? "text" : "password"}
           value={value}
           onChange={(e) => onChange(e.target.value)}

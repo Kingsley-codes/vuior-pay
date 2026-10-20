@@ -156,7 +156,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
 
         <div className="grid grid-cols-2 gap-4 max-[620px]:grid-cols-1">
           <label className="flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
-            First name
+            <span>First name<span className="text-red-600" aria-label="required"> *</span></span>
             <input
               className={`${fieldClass} h-[43px]`}
               name="firstName"
@@ -164,7 +164,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
             />
           </label>
           <label className="flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
-            Last name
+            <span>Last name<span className="text-red-600" aria-label="required"> *</span></span>
             <input
               className={`${fieldClass} h-[43px]`}
               name="lastName"
@@ -174,7 +174,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         </div>
 
         <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
-          Email address
+          <span>Email address<span className="text-red-600" aria-label="required"> *</span></span>
           <input
             className={`${fieldClass} h-[43px]`}
             name="email"
@@ -184,7 +184,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         </label>
 
         <div className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
-          Phone number
+          <span>Phone number<span className="text-red-600" aria-label="required"> *</span></span>
           <PhoneNumberInput
             name="phone"
             onChange={setPhone}
@@ -195,7 +195,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         </div>
 
         <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
-          Upload resume
+          <span>Upload resume<span className="text-red-600" aria-label="required"> *</span></span>
           <input
             accept=".pdf,.doc,.docx"
             className={`${fieldClass} h-[43px] pt-2.5 file:mr-3 file:rounded file:border-0 file:bg-[#edf9f5] file:px-3 file:py-1.5 file:text-[12px] file:font-bold file:text-[#007f5d]`}
@@ -206,7 +206,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         </label>
 
         <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
-          How did you hear about us?
+          <span>How did you hear about us?<span className="text-red-600" aria-label="required"> *</span></span>
           <select
             className={`${fieldClass} h-[43px]`}
             defaultValue=""

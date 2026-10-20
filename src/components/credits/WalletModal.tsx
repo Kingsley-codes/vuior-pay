@@ -185,12 +185,14 @@ export default function WalletModal({
                 </button>
               ))}
             </div>
-            <label className="mt-5 block text-[9px] font-bold uppercase tracking-[.14em] text-[#44516b]">
-              Amount
+            <label htmlFor="wallet-amount" className="mt-5 block text-[9px] font-bold uppercase tracking-[.14em] text-[#44516b]">
+              Amount<span className="text-red-600" aria-label="required"> *</span>
             </label>
             <div className="mt-2 flex h-14 items-center rounded-xl border border-[#dfe6e4] bg-[#fafcfb] px-4 focus-within:border-[#009b67]">
               <span className="text-[20px] text-[#8792a4]">$</span>
               <input
+                id="wallet-amount"
+                required
                 autoFocus
                 value={amount}
                 onChange={(event) =>
@@ -215,12 +217,14 @@ export default function WalletModal({
             </div>
             {action === "send" ? (
               <>
-                <label className="mt-5 block text-[9px] font-bold uppercase tracking-[.14em] text-[#44516b]">
-                  Recipient email
+                <label htmlFor="wallet-recipient" className="mt-5 block text-[9px] font-bold uppercase tracking-[.14em] text-[#44516b]">
+                  Recipient email<span className="text-red-600" aria-label="required"> *</span>
                 </label>
                 <div className="mt-2 flex h-11 items-center gap-3 rounded-xl border border-[#dfe6e4] px-4 focus-within:border-[#009b67]">
                   <Mail size={16} className="text-[#8b96a7]" />
                   <input
+                    id="wallet-recipient"
+                    required
                     type="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}

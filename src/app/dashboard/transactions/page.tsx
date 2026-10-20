@@ -1,4 +1,5 @@
 "use client";
+import PageSizeSelect from "@/components/ui/PageSizeSelect";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -48,7 +49,7 @@ const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 });
-const pageSize = 20;
+
 const defaults: TransactionFilters = {
   type: "all",
   category: [],
@@ -258,6 +259,7 @@ export default function TransactionsPage() {
   });
   const [filters, setFilters] = useState<TransactionFilters>(defaults);
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [walletAction, setWalletAction] = useState<WalletAction | null>(null);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
@@ -840,8 +842,9 @@ export default function TransactionsPage() {
               </p>
               <nav
                 aria-label="Transaction pagination"
-                className="flex items-center gap-2"
+                className="flex flex-wrap items-center gap-2"
               >
+                <PageSizeSelect value={pageSize} onChange={(value) => { setPage(1); setPageSize(value); }} />
                 <button
                   aria-label="Previous page"
                   disabled={currentPage === 1}
