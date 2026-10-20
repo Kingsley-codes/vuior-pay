@@ -6,11 +6,12 @@ export function isInMonth(value: Date, month: Date): boolean {
 }
 
 export function monthlyComparison(current: number, previous: number): string {
-  if (current === previous) return "No change vs last month";
-  if (previous === 0) return `+${current.toLocaleString()} vs last month (0)`;
+  if (current === previous) return "0% vs last month";
+  // A percentage change from zero has no defined value.
+  if (previous === 0) return "New vs last month (0)";
 
   const percent = new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 1,
   }).format((Math.abs(current - previous) / previous) * 100);
-  return `${percent}% ${current > previous ? "more" : "fewer"} vs last month`;
+  return `${current > previous ? "+" : "−"}${percent}% vs last month`;
 }

@@ -32,11 +32,12 @@ export type Ticket = {
   closedAt?: Timestamp | null;
   category: string;
   phoneNumber: string;
+  transactionId?: string;
 };
 
 export type CreateTicketData = Pick<
   Ticket,
-  "userId" | "userEmail" | "subject" | "message" | "category" | "phoneNumber"
+  "userId" | "userEmail" | "subject" | "message" | "category" | "phoneNumber" | "transactionId"
 >;
 
 export type PublicTicketImage = {

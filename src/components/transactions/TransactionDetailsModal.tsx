@@ -1,6 +1,7 @@
 "use client";
 
-import { CreditCard, X } from "lucide-react";
+import { CreditCard, Flag, X } from "lucide-react";
+import Link from "next/link";
 import BillDocumentPreview from "@/components/bills/BillDocumentPreview";
 import type { Bill, Transaction } from "@/hooks/useVuiorData";
 import {
@@ -105,6 +106,7 @@ export default function TransactionDetailsModal({
           </button>
         </div>
         <div className="p-6">
+          <Link href={`/dashboard/support?transactionId=${encodeURIComponent(transaction.transactionId)}`} className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white hover:bg-[#008f60]"><Flag size={15} /> Report transaction</Link>
           <div className="rounded-xl bg-[#f6faf8] p-5">
             <p className="text-[11px] uppercase tracking-[.12em] text-[#718097]">
               {isCredit ? "Credits" : "Amount"}

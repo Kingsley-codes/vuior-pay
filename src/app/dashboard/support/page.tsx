@@ -23,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import PhoneNumberInput from "@/components/phone-number-input";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
@@ -60,6 +61,8 @@ const statusStyles: Record<TicketStatus, string> = {
 };
 
 export default function SupportPage() {
+  const searchParams = useSearchParams();
+  const initialTransactionId = searchParams.get("transactionId") || "";
   const { user } = useVuiorSession();
   const [tab, setTab] = useState<SupportTab>("contact");
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -171,6 +174,7 @@ export default function SupportPage() {
           {tab === "contact" ? (
             <ContactPanel
               user={user}
+            initialTransactionId={initialTransactionId}
               onSubmitted={async () => {
                 setNotice("");
                 await loadTickets();
@@ -313,12 +317,21 @@ function ResolveTicketModal({
 
 function ContactPanel({
   user,
+  initialTransactionId,
   onSubmitted,
 }: {
   user: ReturnType<typeof useVuiorSession>["user"];
+  initialTransactionId: string;
   onSubmitted: () => Promise<void>;
 }) {
   const [category, setCategory] = useState("");
+  const [transactionId, setTransactionId] = useState(initialTransactionId);
+  useEffect(() => {
+    if (initialTransactionId) {
+      setCategory("payment");
+      setTransactionId(initialTransactionId);
+    }
+  }, [initialTransactionId]);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [phone, setPhone] = useState<string | null>(null);
@@ -379,6 +392,7 @@ function ContactPanel({
         subject: subject.trim(),
         message: message.trim(),
         category,
+        transactionId: transactionId.trim() || undefined,
         phoneNumber: digits,
       });
       if (files.length) {
@@ -463,6 +477,13 @@ function ContactPanel({
               inputProps={{ "aria-label": "Phone number" }}
             />
           </Field>
+        </div>
+        <div className="mt-5">
+          {(category === "payment" || category === "credits") && (
+            <Field label="Transaction ID">
+              <input value={transactionId} onChange={(event) => setTransactionId(event.target.value)} disabled={sending} placeholder="Enter transaction ID (optional)" className="h-11 w-full rounded-lg border border-[#dce5e2] px-3 text-[12px] outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10" />
+            </Field>
+          )}
         </div>
         <div className="mt-5">
           <Field label="Subject" required>
@@ -893,6 +914,7 @@ function TicketRow({
               {ticket.attachments?.length === 1 ? "" : "s"}
             </span>
           </div>
+          {ticket.transactionId ? <p className="mt-3 text-[10px] text-[#64718a]">Transaction ID: <span className="font-mono text-[#26344c]">{ticket.transactionId}</span></p> : null}
           {ticket.attachments?.length ? (
             <div className="mt-3 flex gap-2 overflow-x-auto">
               {ticket.attachments.map((url, index) => (

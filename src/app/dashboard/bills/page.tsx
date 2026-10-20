@@ -39,7 +39,13 @@ const money = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 type Tab = "Upcoming" | "Overdue" | "Paid" | "In review" | "All bills";
-const BILL_TABS: Tab[] = ["Upcoming", "Overdue", "Paid", "In review", "All bills"];
+const BILL_TABS: Tab[] = [
+  "Upcoming",
+  "Overdue",
+  "Paid",
+  "In review",
+  "All bills",
+];
 
 function dueDays(value: string) {
   const due = new Date(value);
@@ -82,7 +88,11 @@ function displayStatus(bill: Bill) {
 export default function BillsPage() {
   const { user } = useVuiorSession();
   const { bills, loading } = useVuiorData(user?.id);
-  const [pagination, setPagination] = useState({ key: "", page: 1, pageSize: 20 });
+  const [pagination, setPagination] = useState({
+    key: "",
+    page: 1,
+    pageSize: 20,
+  });
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [checkoutIds, setCheckoutIds] = useState<string[] | null>(null);
   const [paymentMessage, setPaymentMessage] = useState("");
@@ -170,42 +180,55 @@ export default function BillsPage() {
   }, [bills]);
 
   const billsByTab = useMemo(() => {
-    const filteredBills = (targetTab: Tab) => bills
-      .filter((bill) => {
-        const billStatus = normalizedStatus(bill);
-        const matchesTab =
-          targetTab === "Upcoming"
-            ? billStatus === "active"
-            : targetTab === "Overdue"
-              ? billStatus === "overdue"
-              : targetTab === "Paid"
-                ? billStatus === "paid"
-                : targetTab === "In review"
-                  ? billStatus === "in review"
-                  : targetTab === "All bills";
-        return (
-          matchesTab &&
-          (frequencies.length === 0 ||
-            frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
-          (categories.length === 0 || categories.includes(bill.category)) &&
-          (selectedMonth === "All Months" ||
-            monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
-          (providers.length === 0 ||
-            providers.includes(bill.name.trim())) &&
-          `${bill.name} ${bill.category}`
-            .toLowerCase()
-            .includes(search.toLowerCase())
-        );
-      })
-      .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
+    const filteredBills = (targetTab: Tab) =>
+      bills
+        .filter((bill) => {
+          const billStatus = normalizedStatus(bill);
+          const matchesTab =
+            targetTab === "Upcoming"
+              ? billStatus === "active"
+              : targetTab === "Overdue"
+                ? billStatus === "overdue"
+                : targetTab === "Paid"
+                  ? billStatus === "paid"
+                  : targetTab === "In review"
+                    ? billStatus === "in review"
+                    : targetTab === "All bills";
+          return (
+            matchesTab &&
+            (frequencies.length === 0 ||
+              frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
+            (categories.length === 0 || categories.includes(bill.category)) &&
+            (selectedMonth === "All Months" ||
+              monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
+            (providers.length === 0 || providers.includes(bill.name.trim())) &&
+            `${bill.name} ${bill.category}`
+              .toLowerCase()
+              .includes(search.toLowerCase())
+          );
+        })
+        .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
     return Object.fromEntries(
       BILL_TABS.map((item) => [item, filteredBills(item)]),
     ) as Record<Tab, Bill[]>;
   }, [bills, categories, selectedMonth, search, providers, frequencies]);
-  const filterKey = JSON.stringify([tab, categories, selectedMonth, search, providers, frequencies]);
+  const filterKey = JSON.stringify([
+    tab,
+    categories,
+    selectedMonth,
+    search,
+    providers,
+    frequencies,
+  ]);
   const filteredBills = billsByTab[tab];
-  const currentPage = Math.min(pagination.key === filterKey ? pagination.page : 1, Math.max(1, Math.ceil(filteredBills.length / pagination.pageSize)));
-  const visibleBills = filteredBills.slice((currentPage - 1) * pagination.pageSize, currentPage * pagination.pageSize);
+  const currentPage = Math.min(
+    pagination.key === filterKey ? pagination.page : 1,
+    Math.max(1, Math.ceil(filteredBills.length / pagination.pageSize)),
+  );
+  const visibleBills = filteredBills.slice(
+    (currentPage - 1) * pagination.pageSize,
+    currentPage * pagination.pageSize,
+  );
 
   const payableBills = bills.filter(
     (bill) =>
@@ -257,7 +280,8 @@ export default function BillsPage() {
 
   async function toggleAutopay(id: string, enabled: boolean) {
     const bill = bills.find((item) => item.id === id);
-    if (!bill || ["paid", "completed"].includes(bill.status.toLowerCase())) return;
+    if (!bill || ["paid", "completed"].includes(bill.status.toLowerCase()))
+      return;
     const frequency = normalizeBillFrequency(bill.frequency);
     if (enabled && frequency === "one-time") {
       setModal({ mode: "edit", bill: { ...bill, autoPay: true } });
@@ -583,7 +607,7 @@ export default function BillsPage() {
                           </div>
                           <div>
                             <p className="text-[9px] uppercase tracking-wide text-[#8a95a6]">
-                              Early-pay reward
+                              Savings
                             </p>
                             {reward ? (
                               <>
@@ -608,7 +632,9 @@ export default function BillsPage() {
                               event.stopPropagation();
                               toggleAutopay(bill.id, !bill.autoPay);
                             }}
-                            disabled={["paid", "completed"].includes(bill.status.toLowerCase())}
+                            disabled={["paid", "completed"].includes(
+                              bill.status.toLowerCase(),
+                            )}
                             aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
                             className="flex items-center gap-2 text-[10px] font-medium text-[#53617a]"
                           >
@@ -750,8 +776,10 @@ export default function BillsPage() {
                                   event.stopPropagation();
                                   toggleAutopay(bill.id, !bill.autoPay);
                                 }}
-                                disabled={["paid", "completed"].includes(bill.status.toLowerCase())}
-                            aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
+                                disabled={["paid", "completed"].includes(
+                                  bill.status.toLowerCase(),
+                                )}
+                                aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
                                 className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}
                               >
                                 <span
@@ -830,7 +858,17 @@ export default function BillsPage() {
                   </div>
                 ) : null}
               </div>
-              <TablePagination page={currentPage} pageSize={pagination.pageSize} total={filteredBills.length} onPageChange={(page) => setPagination({ ...pagination, key: filterKey, page })} onPageSizeChange={(pageSize) => setPagination({ key: filterKey, page: 1, pageSize })} />
+              <TablePagination
+                page={currentPage}
+                pageSize={pagination.pageSize}
+                total={filteredBills.length}
+                onPageChange={(page) =>
+                  setPagination({ ...pagination, key: filterKey, page })
+                }
+                onPageSizeChange={(pageSize) =>
+                  setPagination({ key: filterKey, page: 1, pageSize })
+                }
+              />
             </section>
 
             <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">

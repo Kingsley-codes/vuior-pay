@@ -20,6 +20,8 @@ import {
   Send,
   SlidersHorizontal,
   WalletCards,
+  MoreVertical,
+  Flag,
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { TransactionsSkeleton } from "@/components/dashboard/DashboardSkeletons";
@@ -264,6 +266,7 @@ export default function TransactionsPage() {
   const [walletAction, setWalletAction] = useState<WalletAction | null>(null);
   const [selectedTransaction, setSelectedTransaction] =
     useState<Transaction | null>(null);
+  const [actionsFor, setActionsFor] = useState<string | null>(null);
   const [guide, setGuide] = useState<number | null>(null);
   const availableCredits = Number(user?.availableCredits ?? 0);
 
@@ -685,6 +688,7 @@ export default function TransactionsPage() {
                         {heading || <span className="sr-only">Details</span>}
                       </th>
                     ))}
+                    <th scope="col" className="px-4 py-3.5 text-right font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#e9eeec]">
@@ -767,6 +771,10 @@ export default function TransactionsPage() {
                             size={16}
                             className="transition group-hover:translate-x-0.5 group-hover:text-[#009b67]"
                           />
+                        </td>
+                        <td className="relative px-4 py-4 text-right" onClick={(event) => event.stopPropagation()}>
+                          <button type="button" aria-label={`Actions for transaction ${item.transactionId}`} aria-expanded={actionsFor === item.id} onClick={() => setActionsFor(actionsFor === item.id ? null : item.id)} className="grid h-8 w-8 ml-auto place-items-center rounded-md hover:bg-[#eef8f4]"><MoreVertical size={17}/></button>
+                          {actionsFor === item.id && <div className="absolute right-3 top-12 z-20 min-w-32 rounded-lg border border-[#e2e8e6] bg-white p-1 text-left shadow-xl"><button type="button" onClick={() => { setSelectedTransaction(item); setActionsFor(null); }} className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-[#f4faf7]">View</button><a href={`/dashboard/support?transactionId=${encodeURIComponent(item.transactionId)}`} onClick={() => setActionsFor(null)} className="flex items-center gap-2 rounded-md px-3 py-2 text-xs hover:bg-[#f4faf7]"><Flag size={13}/>Report</a></div>}
                         </td>
                       </tr>
                     );
