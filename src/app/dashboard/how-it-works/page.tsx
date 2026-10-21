@@ -183,7 +183,12 @@ export default function HowItWorksPage() {
       </section>
 
       <section aria-labelledby="questions-heading" className="mt-9">
-        <h2 id="questions-heading" className="text-xl font-bold tracking-tight">A few things to know</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="questions-heading" className="text-xl font-bold tracking-tight">A few things to know</h2>
+          <Link href="/help" className="inline-flex min-h-11 items-center gap-2 text-[13px] font-semibold text-[#087057] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#00a96b]">
+            View all FAQs <ArrowRight size={15} aria-hidden="true" />
+          </Link>
+        </div>
         <div className="mt-5 divide-y divide-[#e1e8e5] overflow-hidden rounded-2xl border border-[#e1e8e5] bg-white px-5 sm:px-6">
           {faqs.map(({ question, answer }) => (
             <details key={question} className="group py-5">
