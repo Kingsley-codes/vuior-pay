@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeftRight,
+  BookOpen,
   FileText,
   Home,
   LifeBuoy,
@@ -40,6 +41,7 @@ const navItems = [
     href: "/dashboard/referrals",
     icon: UsersRound,
   },
+  { label: "How it works", href: "/dashboard/how-it-works", icon: BookOpen },
   { label: "Support", href: "/dashboard/support", icon: LifeBuoy },
 ];
 
