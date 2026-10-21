@@ -12,6 +12,7 @@ import {
   transactionKind,
   transactionPaymentMethod,
   transactionStatus,
+  transactionReportUrl,
 } from "@/utils/transactions";
 
 const money = new Intl.NumberFormat("en-US", {
@@ -106,7 +107,7 @@ export default function TransactionDetailsModal({
           </button>
         </div>
         <div className="p-6">
-          <Link href={`/dashboard/support?transactionId=${encodeURIComponent(transaction.transactionId)}`} className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white hover:bg-[#008f60]"><Flag size={15} /> Report transaction</Link>
+          <Link href={transactionReportUrl(transaction)} className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white hover:bg-[#008f60]"><Flag size={15} /> Report transaction</Link>
           <div className="rounded-xl bg-[#f6faf8] p-5">
             <p className="text-[11px] uppercase tracking-[.12em] text-[#718097]">
               {isCredit ? "Credits" : "Amount"}

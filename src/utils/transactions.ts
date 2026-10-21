@@ -47,6 +47,7 @@ export function transactionStatus(status: string): string {
     return "Completed";
   if (["pending", "processing"].includes(value)) return "Pending";
   if (["failed", "declined"].includes(value)) return "Failed";
+  if (["cancelled", "canceled"].includes(value)) return "Canceled";
   return "Pending";
 }
 
@@ -76,6 +77,13 @@ export function transactionKind(item: Transaction): "credit" | "bill" {
   ) && !/bill.*pay/.test(normalize(item.type))
     ? "credit"
     : "bill";
+}
+
+export function transactionReportUrl(item: Transaction): string {
+  const type = normalize(item.type).replace(/[\s-]/g, "");
+  const purchase = ["creditspurchased", "creditpurchase", "creditspurchase", "purchasecredits"].includes(type);
+  const category = transactionKind(item) === "credit" && !purchase ? "credits" : "payment";
+  return `/dashboard/support?${new URLSearchParams({ transactionId: item.transactionId, category })}`;
 }
 
 export function categoriesForTransaction(

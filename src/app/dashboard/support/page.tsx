@@ -63,6 +63,7 @@ const statusStyles: Record<TicketStatus, string> = {
 export default function SupportPage() {
   const searchParams = useSearchParams();
   const initialTransactionId = searchParams.get("transactionId") || "";
+  const initialCategory = searchParams.get("category") === "credits" ? "credits" : "payment";
   const { user } = useVuiorSession();
   const [tab, setTab] = useState<SupportTab>("contact");
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -173,8 +174,10 @@ export default function SupportPage() {
         <div className="mt-6">
           {tab === "contact" ? (
             <ContactPanel
+            key={`${initialTransactionId}:${initialCategory}`}
               user={user}
             initialTransactionId={initialTransactionId}
+            initialCategory={initialCategory}
               onSubmitted={async () => {
                 setNotice("");
                 await loadTickets();
@@ -318,20 +321,16 @@ function ResolveTicketModal({
 function ContactPanel({
   user,
   initialTransactionId,
+  initialCategory,
   onSubmitted,
 }: {
   user: ReturnType<typeof useVuiorSession>["user"];
   initialTransactionId: string;
+  initialCategory: "credits" | "payment";
   onSubmitted: () => Promise<void>;
 }) {
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(initialTransactionId ? initialCategory : "");
   const [transactionId, setTransactionId] = useState(initialTransactionId);
-  useEffect(() => {
-    if (initialTransactionId) {
-      setCategory("payment");
-      setTransactionId(initialTransactionId);
-    }
-  }, [initialTransactionId]);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [phone, setPhone] = useState<string | null>(null);
