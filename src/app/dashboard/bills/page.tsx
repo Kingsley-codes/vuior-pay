@@ -355,12 +355,7 @@ export default function BillsPage() {
         )}
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
-            [
-              "Upcoming Bills",
-              String(upcomingBills.length),
-              "Active, due this month",
-              FileText,
-            ],
+            ["Upcoming Bills", String(upcomingBills.length), FileText],
             [
               "Overdue Bills",
               String(overdueBills.length),
@@ -370,15 +365,10 @@ export default function BillsPage() {
             [
               "Paid Bills",
               String(paidBills.length),
-              `Due this month · ${monthlyComparison(paidBills.length, paidBillsLastMonth.length)}`,
+              `${monthlyComparison(paidBills.length, paidBillsLastMonth.length)}`,
               RefreshCcw,
             ],
-            [
-              "In Review Bills",
-              String(reviewBills.length),
-              "In review, due this month",
-              ShieldCheck,
-            ],
+            ["In Review Bills", String(reviewBills.length), ShieldCheck],
           ].map(([label, value, note, Icon]) => {
             const IconComponent = Icon as typeof FileText;
             return (
@@ -585,7 +575,8 @@ export default function BillsPage() {
                                   )
                                 : "—"}
                             </p>
-                            {tab !== "Paid" ? (
+                            {tab !== "Paid" &&
+                            shownStatus.label !== "In review" ? (
                               <p
                                 className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                               >
@@ -747,7 +738,8 @@ export default function BillsPage() {
                                     )
                                   : "—"}
                               </p>
-                              {tab !== "Paid" ? (
+                              {tab !== "Paid" &&
+                              shownStatus.label !== "In review" ? (
                                 <p
                                   className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                                 >
