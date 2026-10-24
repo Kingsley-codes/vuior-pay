@@ -355,7 +355,12 @@ export default function BillsPage() {
         )}
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
-            ["Upcoming Bills", String(upcomingBills.length), FileText],
+            [
+              "Upcoming Bills",
+              String(upcomingBills.length),
+              "Due this month",
+              FileText,
+            ],
             [
               "Overdue Bills",
               String(overdueBills.length),
@@ -368,7 +373,12 @@ export default function BillsPage() {
               `${monthlyComparison(paidBills.length, paidBillsLastMonth.length)}`,
               RefreshCcw,
             ],
-            ["In Review Bills", String(reviewBills.length), ShieldCheck],
+            [
+              "In Review Bills",
+              String(reviewBills.length),
+              "Awaiting confirmation",
+              ShieldCheck,
+            ],
           ].map(([label, value, note, Icon]) => {
             const IconComponent = Icon as typeof FileText;
             return (
