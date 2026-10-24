@@ -695,14 +695,13 @@ export default function TransactionsPage() {
                 <thead className="border-b border-[#e9eeec] bg-[#f8faf9] text-[11px] text-[#64718a]">
                   <tr>
                     {[
-                      "Transaction",
                       "Transaction ID",
+                      "Transaction",
                       filters.type === "credit" ? "Credit type" : "Category",
                       ...(filters.type === "all" ? ["Type"] : []),
                       "Date",
                       "Amount",
                       "Status",
-                      "",
                     ].map((heading, index) => (
                       <th
                         key={index}
@@ -795,12 +794,7 @@ export default function TransactionsPage() {
                         <td className="px-5 py-4">
                           <StatusBadge status={item.status} />
                         </td>
-                        <td className="py-4 pr-4 text-[#a3afa9]">
-                          <ChevronRight
-                            size={16}
-                            className="transition group-hover:translate-x-0.5 group-hover:text-[#009b67]"
-                          />
-                        </td>
+
                         <td
                           className="relative px-4 py-4 text-right"
                           onClick={(event) => event.stopPropagation()}
