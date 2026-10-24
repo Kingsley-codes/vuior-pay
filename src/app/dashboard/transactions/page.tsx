@@ -65,9 +65,24 @@ const defaults: TransactionFilters = {
   to: "",
 };
 const tabs = [
-  { value: "all", label: "All transactions", mobileLabel: "All", icon: ArrowLeftRight },
-  { value: "bill", label: "Bill transactions", mobileLabel: "Bills", icon: FileText },
-  { value: "credit", label: "Credit transactions", mobileLabel: "Credits", icon: ArrowLeftRight },
+  {
+    value: "all",
+    label: "All transactions",
+    mobileLabel: "All",
+    icon: ArrowLeftRight,
+  },
+  {
+    value: "bill",
+    label: "Bill transactions",
+    mobileLabel: "Bills",
+    icon: FileText,
+  },
+  {
+    value: "credit",
+    label: "Credit transactions",
+    mobileLabel: "Credits",
+    icon: ArrowLeftRight,
+  },
 ] as const;
 
 function MultiSelectFilter({
@@ -107,9 +122,7 @@ function MultiSelectFilter({
     };
   }, [open]);
 
-  const selectedLabel = value.length
-    ? `${value.length} selected`
-    : allLabel;
+  const selectedLabel = value.length ? `${value.length} selected` : allLabel;
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(search.trim().toLowerCase()),
   );
@@ -305,14 +318,16 @@ export default function TransactionsPage() {
   );
   const providerOptions = useMemo(
     () =>
-      [...new Set([
-        ...transactions.flatMap((item) => [
-          item.provider,
-          ...billsForTransaction(item, bills).map((bill) => bill.name),
-        ]),
-      ].filter((value): value is string => Boolean(value?.trim())))].sort((a, b) =>
-        a.localeCompare(b),
-      ),
+      [
+        ...new Set(
+          [
+            ...transactions.flatMap((item) => [
+              item.provider,
+              ...billsForTransaction(item, bills).map((bill) => bill.name),
+            ]),
+          ].filter((value): value is string => Boolean(value?.trim())),
+        ),
+      ].sort((a, b) => a.localeCompare(b)),
     [transactions, bills],
   );
   const filtered = useMemo(
@@ -328,10 +343,16 @@ export default function TransactionsPage() {
   // Monthly summaries retain non-date filters; table dates remain independent.
   const now = new Date();
   const thisMonth = filterTransactions(
-    transactions, bills, { ...filters, period: "This month" }, now,
+    transactions,
+    bills,
+    { ...filters, period: "This month" },
+    now,
   );
   const lastMonth = filterTransactions(
-    transactions, bills, { ...filters, period: "Last month" }, now,
+    transactions,
+    bills,
+    { ...filters, period: "Last month" },
+    now,
   );
   const stats = [
     {
@@ -420,12 +441,7 @@ export default function TransactionsPage() {
         : "Not recorded";
   }
 
-  if (loading)
-    return (
-      
-        <TransactionsSkeleton />
-      
-    );
+  if (loading) return <TransactionsSkeleton />;
   return (
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
@@ -497,7 +513,7 @@ export default function TransactionsPage() {
                   {value.toLocaleString()}
                 </strong>
                 <p className="mt-2 text-[11px] text-[#61708a]">
-                  This month · {monthlyComparison(value, previous)}
+                  {monthlyComparison(value, previous)}
                 </p>
               </div>
             </article>
@@ -556,9 +572,7 @@ export default function TransactionsPage() {
             aria-labelledby={`${filters.type}-tab`}
           >
             <div className="space-y-3 border-b border-[#e7ecea] p-4 sm:p-5">
-              <div
-                className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(210px,1.4fr)_minmax(150px,1fr)_minmax(150px,1fr)_minmax(135px,.8fr)_minmax(135px,.8fr)]"
-              >
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(210px,1.4fr)_minmax(150px,1fr)_minmax(150px,1fr)_minmax(135px,.8fr)_minmax(135px,.8fr)]">
                 <label className="block min-w-0">
                   <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
                     Search
@@ -580,7 +594,11 @@ export default function TransactionsPage() {
                   label={filters.type === "credit" ? "Credit type" : "Category"}
                   value={filters.category}
                   onChange={(category) => updateFilters({ category })}
-                  allLabel={filters.type === "credit" ? "All credit types" : "All categories"}
+                  allLabel={
+                    filters.type === "credit"
+                      ? "All credit types"
+                      : "All categories"
+                  }
                   options={[
                     ...(filters.type === "credit"
                       ? creditTypes
@@ -595,7 +613,10 @@ export default function TransactionsPage() {
                   onChange={(provider) => updateFilters({ provider })}
                   allLabel="All providers"
                   searchable
-                  options={providerOptions.map((value) => ({ value, label: value }))}
+                  options={providerOptions.map((value) => ({
+                    value,
+                    label: value,
+                  }))}
                 />
                 <FilterSelect
                   label="Date range"
@@ -614,7 +635,9 @@ export default function TransactionsPage() {
                   onChange={(status) => updateFilters({ status })}
                   allLabel="All statuses"
                   icon={CheckCircle2}
-                  options={["Completed", "Pending", "Failed", "Canceled"].map((value) => ({ value, label: value }))}
+                  options={["Completed", "Pending", "Failed", "Canceled"].map(
+                    (value) => ({ value, label: value }),
+                  )}
                 />
               </div>
               {filters.period === "Custom" && (
@@ -689,7 +712,12 @@ export default function TransactionsPage() {
                         {heading || <span className="sr-only">Details</span>}
                       </th>
                     ))}
-                    <th scope="col" className="px-4 py-3.5 text-right font-medium">Actions</th>
+                    <th
+                      scope="col"
+                      className="px-4 py-3.5 text-right font-medium"
+                    >
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#e9eeec]">
@@ -773,9 +801,45 @@ export default function TransactionsPage() {
                             className="transition group-hover:translate-x-0.5 group-hover:text-[#009b67]"
                           />
                         </td>
-                        <td className="relative px-4 py-4 text-right" onClick={(event) => event.stopPropagation()}>
-                          <button type="button" aria-label={`Actions for transaction ${item.transactionId}`} aria-expanded={actionsFor === item.id} onClick={() => setActionsFor(actionsFor === item.id ? null : item.id)} className="grid h-8 w-8 ml-auto place-items-center rounded-md hover:bg-[#eef8f4]"><MoreVertical size={17}/></button>
-                          {actionsFor === item.id && <div className="absolute right-3 top-12 z-20 min-w-32 rounded-lg border border-[#e2e8e6] bg-white p-1 text-left shadow-xl"><button type="button" onClick={() => { setSelectedTransaction(item); setActionsFor(null); }} className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-[#f4faf7]">View</button><a href={transactionReportUrl(item)} onClick={() => setActionsFor(null)} className="flex items-center gap-2 rounded-md px-3 py-2 text-xs hover:bg-[#f4faf7]"><Flag size={13}/>Report</a></div>}
+                        <td
+                          className="relative px-4 py-4 text-right"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          <button
+                            type="button"
+                            aria-label={`Actions for transaction ${item.transactionId}`}
+                            aria-expanded={actionsFor === item.id}
+                            onClick={() =>
+                              setActionsFor(
+                                actionsFor === item.id ? null : item.id,
+                              )
+                            }
+                            className="grid h-8 w-8 ml-auto place-items-center rounded-md hover:bg-[#eef8f4]"
+                          >
+                            <MoreVertical size={17} />
+                          </button>
+                          {actionsFor === item.id && (
+                            <div className="absolute right-3 top-12 z-20 min-w-32 rounded-lg border border-[#e2e8e6] bg-white p-1 text-left shadow-xl">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedTransaction(item);
+                                  setActionsFor(null);
+                                }}
+                                className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-[#f4faf7]"
+                              >
+                                View
+                              </button>
+                              <a
+                                href={transactionReportUrl(item)}
+                                onClick={() => setActionsFor(null)}
+                                className="flex items-center gap-2 rounded-md px-3 py-2 text-xs hover:bg-[#f4faf7]"
+                              >
+                                <Flag size={13} />
+                                Report
+                              </a>
+                            </div>
+                          )}
                         </td>
                       </tr>
                     );
@@ -849,7 +913,13 @@ export default function TransactionsPage() {
                     <Search size={24} strokeWidth={1.5} />
                   </span>
                   <h3 className="mt-4 text-[14px] font-semibold">
-                    No {filters.type === "all" ? "" : filters.type === "bill" ? "bill" : "credit"} transactions found
+                    No{" "}
+                    {filters.type === "all"
+                      ? ""
+                      : filters.type === "bill"
+                        ? "bill"
+                        : "credit"}{" "}
+                    transactions found
                   </h3>
                   <p className="mt-2 text-[12px] text-[#7b879b]">
                     Try a different period or adjust your filters.
@@ -875,7 +945,13 @@ export default function TransactionsPage() {
                 aria-label="Transaction pagination"
                 className="flex flex-wrap items-center gap-2"
               >
-                <PageSizeSelect value={pageSize} onChange={(value) => { setPage(1); setPageSize(value); }} />
+                <PageSizeSelect
+                  value={pageSize}
+                  onChange={(value) => {
+                    setPage(1);
+                    setPageSize(value);
+                  }}
+                />
                 <button
                   aria-label="Previous page"
                   disabled={currentPage === 1}
