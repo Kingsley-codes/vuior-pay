@@ -59,6 +59,11 @@ export type Transaction = {
   creditsApplied: number;
   pendingCredits: number;
   rewardStatus?: string;
+  refundStatus?: string;
+  refundId?: string;
+  refundFailureReason?: string;
+  cancellationReason?: string;
+  cancelledTransactionId?: string;
 };
 
 function asDate(value: unknown): Date | null {
@@ -204,6 +209,14 @@ export function useVuiorData(
             type: String(data.type ?? "bill_payment"),
             credits: Number(data.credits ?? 0),
             reference: data.reference ? String(data.reference) : undefined,
+            refundStatus: data.refundStatus ? String(data.refundStatus) : undefined,
+            refundId: data.refundId ? String(data.refundId) : undefined,
+            refundFailureReason: data.refundFailureReason ? String(data.refundFailureReason) : undefined,
+            cancellationReason: data.cancellationReason ? String(data.cancellationReason) : undefined,
+            cancelledTransactionId: data.cancelledTransactionId
+              ? String(data.cancelledTransactionId)
+              : ["Credits Returned", "Credit Purchase Reversed"].includes(String(data.type)) && data.relatedTransactionId
+                ? String(data.relatedTransactionId) : undefined,
             referralRole: data.referralRole ? String(data.referralRole) : undefined,
             transactionId: String(
               data.transaction_ID ?? data.payment_ID ?? "Not recorded",

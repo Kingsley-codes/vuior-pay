@@ -61,6 +61,12 @@ export default function TransactionDetailsModal({
           : transaction.paymentMethod || "Not recorded",
     ],
     ["Status", transactionStatus(transaction.status)],
+    ...(transaction.refundStatus || transactionStatus(transaction.status) === "Canceled"
+      ? [["Refund status", (transaction.refundStatus || "Not recorded").replace(/_/g, " ")]] : []),
+    ...(transaction.refundId ? [["Stripe refund ID", transaction.refundId]] : []),
+    ...(transaction.refundFailureReason ? [["Refund failure reason", transaction.refundFailureReason]] : []),
+    ...(transaction.cancellationReason ? [["Cancellation reason", transaction.cancellationReason]] : []),
+    ...(transaction.cancelledTransactionId ? [["Cancelled transaction ID", transaction.cancelledTransactionId]] : []),
     [
       "Date",
       transaction.date.toLocaleString("en-US", {
