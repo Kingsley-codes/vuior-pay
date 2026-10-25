@@ -12,7 +12,6 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  CircleDollarSign,
   CircleX,
   Clock3,
   FileText,
@@ -22,8 +21,10 @@ import {
   WalletCards,
   MoreVertical,
   Flag,
+  UsersRound,
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
+import RewardsGuideBanner from "@/components/dashboard/RewardsGuideBanner";
 import { TransactionsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import WalletModal, {
   type WalletAction,
@@ -971,33 +972,33 @@ export default function TransactionsPage() {
           </div>
         </section>
 
-        <section className="mt-5 flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-5 xl:flex-row xl:items-center">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full border-[5px] border-[#a9e3cd] bg-white text-[#00a96b]">
-            <CircleDollarSign size={23} />
-          </span>
-          <div className="flex-1">
-            <h2 className="text-[14px] font-bold">Make more of your credits</h2>
-            <p className="mt-1 text-[11px] text-[#64718a]">
-              Earn rewards, invite friends, and put your credits towards your
-              next bill.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {[
-              "How to earn credits",
-              "Referral & rewards",
-              "Use your credits",
-            ].map((label, index) => (
-              <button
-                key={label}
-                onClick={() => setGuide(index)}
-                className={`h-10 rounded-md border px-4 text-[11px] font-semibold transition hover:bg-[#eef8f4] ${index === 0 ? "border-[#00a96b] text-[#009b67]" : "border-[#d5e5df] bg-white text-[#274b43]"}`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </section>
+        <div className="mt-5">
+          <RewardsGuideBanner
+            badge="Earn. Invite. Pay."
+            title="Make more of your credits"
+            description="Turn everyday payments into more possibilities. Earn rewards, invite friends, and put your credits towards your next bill."
+            actions={[
+              {
+                label: "How to earn credits",
+                description: "Discover rewards for paying early.",
+                icon: ArrowUpRight,
+                onClick: () => setGuide(0),
+              },
+              {
+                label: "Referral & rewards",
+                description: "Share Vuior with your friends.",
+                icon: UsersRound,
+                onClick: () => setGuide(1),
+              },
+              {
+                label: "Use your credits",
+                description: "Put your balance towards a bill.",
+                icon: WalletCards,
+                onClick: () => setGuide(2),
+              },
+            ]}
+          />
+        </div>
       </div>
       {walletAction && user?.id && (
         <WalletModal

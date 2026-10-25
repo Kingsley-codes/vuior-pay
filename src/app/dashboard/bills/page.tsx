@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import AddressRequiredNotice from "@/components/dashboard/AddressRequiredNotice";
+import RewardsGuideBanner from "@/components/dashboard/RewardsGuideBanner";
 import BillModal from "@/components/bills/BillModal";
 import BillPaymentModal from "@/components/bills/BillPaymentModal";
 import { db } from "@/services/firebase";
@@ -920,32 +921,25 @@ export default function BillsPage() {
               </footer>
             </section>
 
-            <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">
-              <span className="grid h-12 w-12 place-items-center rounded-full border-[5px] border-[#a9e3cd] bg-white text-[#00a96b]">
-                <CircleDollarSign size={23} />
-              </span>
-              <div className="flex-1">
-                <h2 className="text-[14px] font-bold">
-                  Earn credits when you pay early
-                </h2>
-                <p className="mt-1 text-[11px] text-[#64718a]">
-                  Pay up to 15 days early and earn up to 15% in credits on
-                  eligible bills.
-                </p>
-              </div>
-              <button
-                onClick={() => setInfoModal("savings")}
-                className="h-10 rounded-md border border-[#00a96b] px-5 text-[11px] font-semibold text-[#00a96b]"
-              >
-                How it works <ChevronRight className="ml-2 inline" size={14} />
-              </button>
-              <button
-                onClick={() => setInfoModal("autopay")}
-                className="h-10 rounded-md border border-[#d5e5df] bg-white px-5 text-[11px] font-semibold text-[#274b43]"
-              >
-                Autopay guide
-              </button>
-            </section>
+            <RewardsGuideBanner
+              badge="Up to 15% in credits"
+              title="A little earlier. A little more rewarding."
+              description="Pay eligible bills early and earn credits towards your next bill. See how your payment timing adds up."
+              actions={[
+                {
+                  label: "How it works",
+                  description: "Explore early-payment rewards and savings.",
+                  icon: TrendingUp,
+                  onClick: () => setInfoModal("savings"),
+                },
+                {
+                  label: "Autopay guide",
+                  description: "Set up automatic payments for your bills.",
+                  icon: RefreshCcw,
+                  onClick: () => setInfoModal("autopay"),
+                },
+              ]}
+            />
           </div>
 
           <aside className="hidden">
