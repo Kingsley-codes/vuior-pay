@@ -110,7 +110,10 @@ export default function BillModal({
   const { user, loading: profileLoading } = useVuiorSession();
   const submitting = useRef(false);
   const saveRequest = useRef<{ key: string; id: string } | null>(null);
-  const [mode, setMode] = useState<Mode>(initialMode);
+  const currentStatus = normalizedStatus(bill?.status);
+  const isPaid = ["paid", "completed"].includes(currentStatus);
+  const [requestedMode, setMode] = useState<Mode>(initialMode);
+  const mode = isPaid && requestedMode === "edit" ? "details" : requestedMode;
   const [form, setForm] = useState<FormState>(() =>
     bill
       ? {
@@ -207,7 +210,7 @@ export default function BillModal({
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!validAutopayFrequency(form.autoPay, form.frequency)) return setError("Choose a recurring frequency to enable autopay.");
-    if (bill && ["paid", "completed"].includes(bill.status.toLowerCase())) { setError("Paid bills cannot be edited."); return; }
+    if (isPaid) { setError("Paid bills cannot be edited."); return; }
     const amount = currencyInputNumber(form.amount);
     if (
       !form.name.trim() ||
@@ -282,10 +285,8 @@ export default function BillModal({
     }
   }
 
-  const currentStatus = normalizedStatus(bill?.status);
   const credits = bill ? billCreditInfo(bill) : null;
   const isInReview = currentStatus === "in review";
-  const isPaid = ["paid", "completed"].includes(currentStatus);
   const isPaymentSubmitted = isInReview || isPaid;
   return (
     <div
@@ -299,8 +300,8 @@ export default function BillModal({
         aria-labelledby="bill-modal-title"
         className="max-h-[94vh] w-full max-w-[720px] overflow-y-auto rounded-2xl border border-white/60 bg-white shadow-[0_24px_80px_rgba(4,33,25,.28)]"
       >
-        <header className="sticky top-0 z-10 flex items-start justify-between border-b border-[#e8eeeb] bg-white/95 px-5 py-4 backdrop-blur sm:px-7">
-          <div>
+        <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-[#e8eeeb] bg-white/95 px-5 py-4 backdrop-blur sm:px-7">
+          <div className="min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#009b67]">
               {mode === "details"
                 ? "Bill overview"
@@ -310,7 +311,7 @@ export default function BillModal({
             </p>
             <h2
               id="bill-modal-title"
-              className="mt-1 text-[21px] font-bold text-[#10203d]"
+              className="mt-1 break-words text-[21px] font-bold text-[#10203d]"
             >
               {mode === "details"
                 ? bill?.name
@@ -319,14 +320,25 @@ export default function BillModal({
                   : "Add a bill"}
             </h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="grid h-9 w-9 place-items-center rounded-full bg-[#f2f5f4] text-[#53617a] hover:bg-[#e7ecea]"
-            aria-label="Close"
-          >
-            <X size={18} />
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            {mode === "details" && bill && !isPaid && (
+              <button
+                type="button"
+                onClick={() => setMode("edit")}
+                className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#009b67] px-3 text-[11px] font-semibold text-white hover:bg-[#00875a]"
+              >
+                <Pencil size={14} /> Edit bill
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              className="grid h-9 w-9 place-items-center rounded-full bg-[#f2f5f4] text-[#53617a] hover:bg-[#e7ecea]"
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </header>
         {mode === "add" && (profileLoading || !hasProfileAddress(user?.address)) ? (
           <div className="p-5 sm:p-7" role="status">
@@ -414,14 +426,6 @@ export default function BillModal({
                 documentName={bill.documentName}
               />
             ) : null}
-            <button
-              type="button"
-              disabled={isPaid}
-              onClick={() => { if (!isPaid) setMode("edit"); }}
-              className="mt-6 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#009b67] text-[12px] font-semibold text-white hover:bg-[#00875a]"
-            >
-              <Pencil size={16} /> Edit bill
-            </button>
           </div>
         ) : (
           <form onSubmit={submit} className="p-5 sm:p-7">

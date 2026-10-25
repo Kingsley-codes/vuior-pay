@@ -15,6 +15,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
+import AddressRequiredNotice from "@/components/dashboard/AddressRequiredNotice";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Bill, useVuiorData } from "@/hooks/useVuiorData";
 import { DashboardHomeSkeleton } from "@/components/dashboard/DashboardSkeletons";
@@ -51,7 +52,7 @@ function BillIcon({ bill }: { bill: Bill }) {
 }
 
 export default function DashboardPage() {
-  const { user } = useVuiorSession();
+  const { user, loading: profileLoading } = useVuiorSession();
   const { activeBills, transactions, loading } = useVuiorData(user?.id);
   const now = new Date();
   const activeBillsThisMonth = activeBills.filter((bill) => {
@@ -118,6 +119,7 @@ export default function DashboardPage() {
   return (
     
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
+        <AddressRequiredNotice user={user} loading={profileLoading} />
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-[27px] font-bold tracking-[-0.035em] text-[#0d1b42] sm:text-[30px]">

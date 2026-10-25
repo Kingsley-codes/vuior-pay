@@ -1,5 +1,5 @@
 "use client";
-import TablePagination from "@/components/ui/TablePagination";
+import PageSizeSelect from "@/components/ui/PageSizeSelect";
 import {
   BILL_FREQUENCIES,
   frequencyLabel,
@@ -12,6 +12,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import {
   CalendarDays,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   CircleDollarSign,
   FileText,
@@ -24,6 +25,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
+import AddressRequiredNotice from "@/components/dashboard/AddressRequiredNotice";
 import BillModal from "@/components/bills/BillModal";
 import BillPaymentModal from "@/components/bills/BillPaymentModal";
 import { db } from "@/services/firebase";
@@ -86,7 +88,7 @@ function displayStatus(bill: Bill) {
 }
 
 export default function BillsPage() {
-  const { user } = useVuiorSession();
+  const { user, loading: profileLoading } = useVuiorSession();
   const { bills, loading } = useVuiorData(user?.id);
   const [pagination, setPagination] = useState({
     key: "",
@@ -221,9 +223,10 @@ export default function BillsPage() {
     frequencies,
   ]);
   const filteredBills = billsByTab[tab];
+  const pageCount = Math.max(1, Math.ceil(filteredBills.length / pagination.pageSize));
   const currentPage = Math.min(
     pagination.key === filterKey ? pagination.page : 1,
-    Math.max(1, Math.ceil(filteredBills.length / pagination.pageSize)),
+    pageCount,
   );
   const visibleBills = filteredBills.slice(
     (currentPage - 1) * pagination.pageSize,
@@ -302,6 +305,7 @@ export default function BillsPage() {
   return (
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
+        <AddressRequiredNotice user={user} loading={profileLoading} />
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
           <div>
             <h1 className="text-[29px] font-bold tracking-[-0.035em]">Bills</h1>
@@ -586,6 +590,7 @@ export default function BillsPage() {
                                 : "—"}
                             </p>
                             {tab !== "Paid" &&
+                            shownStatus.label !== "Paid" &&
                             shownStatus.label !== "In review" ? (
                               <p
                                 className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
@@ -683,7 +688,7 @@ export default function BillsPage() {
                           "Due Date",
                           "Amount",
                           "Autopay",
-                          "Early-Pay Reward",
+                          "Savings",
                           "Status",
                           ...(tab !== "Paid" ? ["Actions"] : []),
                         ].map((head) => (
@@ -749,6 +754,7 @@ export default function BillsPage() {
                                   : "—"}
                               </p>
                               {tab !== "Paid" &&
+                              shownStatus.label !== "Paid" &&
                               shownStatus.label !== "In review" ? (
                                 <p
                                   className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
@@ -860,17 +866,58 @@ export default function BillsPage() {
                   </div>
                 ) : null}
               </div>
-              <TablePagination
-                page={currentPage}
-                pageSize={pagination.pageSize}
-                total={filteredBills.length}
-                onPageChange={(page) =>
-                  setPagination({ ...pagination, key: filterKey, page })
-                }
-                onPageSizeChange={(pageSize) =>
-                  setPagination({ key: filterKey, page: 1, pageSize })
-                }
-              />
+              <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-5 py-4">
+                <p aria-live="polite" className="text-[11px] text-[#7b879b]">
+                  Showing{" "}
+                  <span className="font-medium text-[#344260]">
+                    {filteredBills.length
+                      ? `${(currentPage - 1) * pagination.pageSize + 1}-${Math.min(currentPage * pagination.pageSize, filteredBills.length)}`
+                      : "0"}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-medium text-[#344260]">
+                    {filteredBills.length}
+                  </span>{" "}
+                  bills
+                </p>
+                <nav
+                  aria-label="Bill pagination"
+                  className="flex flex-wrap items-center gap-2"
+                >
+                  <PageSizeSelect
+                    value={pagination.pageSize}
+                    onChange={(pageSize) =>
+                      setPagination({ key: filterKey, page: 1, pageSize })
+                    }
+                  />
+                  <button
+                    type="button"
+                    aria-label="Previous page"
+                    disabled={currentPage === 1}
+                    onClick={() =>
+                      setPagination({ ...pagination, key: filterKey, page: currentPage - 1 })
+                    }
+                    className="grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] text-[#64718a] transition hover:bg-[#f0faf5] disabled:opacity-35"
+                  >
+                    <ChevronLeft size={15} />
+                  </button>
+                  <span className="px-2 text-[11px] text-[#64718a]">
+                    Page <strong className="text-[#344260]">{currentPage}</strong>{" "}
+                    of {pageCount}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="Next page"
+                    disabled={currentPage === pageCount}
+                    onClick={() =>
+                      setPagination({ ...pagination, key: filterKey, page: currentPage + 1 })
+                    }
+                    className="grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] text-[#64718a] transition hover:bg-[#f0faf5] disabled:opacity-35"
+                  >
+                    <ChevronRight size={15} />
+                  </button>
+                </nav>
+              </footer>
             </section>
 
             <section className="flex flex-col gap-4 rounded-xl border border-[#bfe9d8] bg-linear-to-r from-[#f3fbf7] to-[#fbfefd] p-4 sm:flex-row sm:items-center">
@@ -979,7 +1026,10 @@ export default function BillsPage() {
       {modal && user?.id ? (
         <BillModal
           initialMode={modal.mode}
-          bill={modal.bill}
+          bill={modal.bill ? {
+            ...modal.bill,
+            status: bills.find((bill) => bill.id === modal.bill?.id)?.status ?? modal.bill.status,
+          } : undefined}
           userId={user.id}
           onClose={() => setModal(null)}
         />
