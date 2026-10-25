@@ -22,11 +22,6 @@ body {
   overflow-x: hidden;
 }
 
-button,
-input {
-  font: inherit;
-}
-
 /* Google Places renders its suggestions in a portal attached to <body>. */
 .pac-container {
   z-index: 1000;
@@ -130,25 +125,21 @@ input {
 
   .dashboard-app [class~="text-[10px]"],
   .dashboard-app [class~="text-[11px]"] {
-    font-size: 13px !important;
+    font-size: 14px !important;
   }
 
   .dashboard-app [class~="text-[12px]"] {
-    font-size: 14px !important;
+    font-size: 16px !important;
   }
 
   .dashboard-app table th,
   .dashboard-app table td {
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.45;
   }
 
-  .dashboard-app table td,
-  .dashboard-app table td * {
-    font-weight: 400 !important;
-  }
-
   .dashboard-app table th {
+    font-size: inherit;
     font-weight: 600;
   }
 }

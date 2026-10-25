@@ -254,7 +254,7 @@ function StatusBadge({ status }: { status: string }) {
         : "bg-[#fff7e5] text-[#a67617]";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-medium ${color}`}
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[14px] font-medium ${color}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {label}
@@ -421,7 +421,7 @@ export default function TransactionsPage() {
               {linked[0].name}
             </span>
             {linked.length > 1 && (
-              <span className="mt-1 block text-[10px] font-normal text-[#718097]">
+              <span className="mt-1 block text-[12px] font-normal text-[#718097]">
                 +{linked.length - 1} more
               </span>
             )}
@@ -693,7 +693,7 @@ export default function TransactionsPage() {
 
             <div className="hidden overflow-x-auto lg:block">
               <table className="w-full min-w-[860px] text-left">
-                <thead className="border-b border-[#e9eeec] bg-[#f8faf9] text-[11px] text-[#64718a]">
+                <thead className="border-b border-[#e9eeec] bg-[#f8faf9] text-[13px] text-[#64718a]">
                   <tr>
                     {[
                       "Transaction ID",
@@ -735,10 +735,10 @@ export default function TransactionsPage() {
                       <tr
                         key={item.id}
                         onClick={() => setSelectedTransaction(item)}
-                        className="group cursor-pointer text-[12px] transition hover:bg-[#f4faf7] focus-within:bg-[#f4faf7]"
+                        className="group cursor-pointer text-[14px] transition hover:bg-[#f4faf7] focus-within:bg-[#f4faf7]"
                       >
                         <td
-                          className="whitespace-nowrap px-5 py-4 font-mono text-[11px] text-[#53637f]"
+                          className="whitespace-nowrap px-5 py-4 font-mono text-[13px] text-[#53637f]"
                           title={item.transactionId}
                         >
                           {item.transactionId}
@@ -778,7 +778,7 @@ export default function TransactionsPage() {
                             day: "numeric",
                             year: "numeric",
                           })}
-                          <p className="mt-1 text-[10px] text-[#8a95a6]">
+                          <p className="mt-1 text-[9px] text-[#8a95a6]">
                             {item.date.toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -786,7 +786,7 @@ export default function TransactionsPage() {
                           </p>
                         </td>
                         <td
-                          className={`whitespace-nowrap px-5 py-4 text-right text-[13px] font-semibold tabular-nums ${!billTransaction && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
+                          className={`whitespace-nowrap px-5 py-4 text-right text-[15px] font-semibold tabular-nums ${!billTransaction && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
                         >
                           {billTransaction
                             ? money.format(item.amount)
@@ -862,15 +862,15 @@ export default function TransactionsPage() {
                         )}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[12px] font-semibold">
+                        <p className="truncate text-[14px] font-semibold">
                           {title}
                         </p>
-                        <p className="mt-1 truncate text-[10px] text-[#7b879b]">
+                        <p className="mt-1 truncate text-[12px] text-[#7b879b]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[13px] font-semibold tabular-nums">
+                        <p className="text-[15px] font-semibold tabular-nums">
                           {billTransaction
                             ? money.format(item.amount)
                             : `${creditAmount(item)} credits`}
@@ -880,7 +880,7 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-[10px] text-[#718097] sm:flex-row sm:items-center sm:justify-between">
+                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-[12px] text-[#718097] sm:flex-row sm:items-center sm:justify-between">
                       <span>
                         {item.date.toLocaleDateString("en-US", {
                           dateStyle: "medium",
@@ -888,7 +888,7 @@ export default function TransactionsPage() {
                         {billTransaction ? ` / ${method(item)}` : ""}
                       </span>
                       <span className="min-w-0">
-                        <span className="mr-2 font-sans text-[9px] uppercase text-[#8a95a6]">
+                        <span className="mr-2 font-sans text-[11px] uppercase text-[#8a95a6]">
                           Transaction ID
                         </span>
                         <span className="break-all font-mono text-[#53637f]">
@@ -916,14 +916,14 @@ export default function TransactionsPage() {
                         : "credit"}{" "}
                     transactions found
                   </h3>
-                  <p className="mt-2 text-[12px] text-[#7b879b]">
+                  <p className="mt-2 text-[14px] text-[#7b879b]">
                     Try a different period or adjust your filters.
                   </p>
                 </div>
               </div>
             )}
             <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-5 py-4">
-              <p aria-live="polite" className="text-[11px] text-[#7b879b]">
+              <p aria-live="polite" className="text-[13px] text-[#7b879b]">
                 Showing{" "}
                 <span className="font-medium text-[#344260]">
                   {filtered.length
@@ -955,7 +955,7 @@ export default function TransactionsPage() {
                 >
                   <ChevronLeft size={15} />
                 </button>
-                <span className="px-2 text-[11px] text-[#64718a]">
+                <span className="px-2 text-[13px] text-[#64718a]">
                   Page <strong className="text-[#344260]">{currentPage}</strong>{" "}
                   of {pageCount}
                 </span>

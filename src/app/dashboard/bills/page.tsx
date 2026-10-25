@@ -224,7 +224,10 @@ export default function BillsPage() {
     frequencies,
   ]);
   const filteredBills = billsByTab[tab];
-  const pageCount = Math.max(1, Math.ceil(filteredBills.length / pagination.pageSize));
+  const pageCount = Math.max(
+    1,
+    Math.ceil(filteredBills.length / pagination.pageSize),
+  );
   const currentPage = Math.min(
     pagination.key === filterKey ? pagination.page : 1,
     pageCount,
@@ -555,19 +558,19 @@ export default function BillsPage() {
                             <FileText size={17} />
                           </span>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[12px] font-semibold">
+                            <p className="truncate text-[14px] font-semibold">
                               {bill.name}
                             </p>
-                            <p className="mt-1 text-[10px] text-[#7b879b]">
+                            <p className="mt-1 text-[12px] text-[#7b879b]">
                               {bill.category}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[12px] font-bold">
+                            <p className="text-[14px] font-bold">
                               {money.format(bill.amount)}
                             </p>
                             <span
-                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[9px] capitalize ${shownStatus.className}`}
+                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[11px] capitalize ${shownStatus.className}`}
                             >
                               {shownStatus.label}
                             </span>
@@ -575,10 +578,10 @@ export default function BillsPage() {
                         </div>
                         <div className="mt-4 grid grid-cols-2 gap-3 rounded-lg bg-[#f8faf9] p-3">
                           <div>
-                            <p className="text-[9px] uppercase tracking-wide text-[#8a95a6]">
+                            <p className="text-[11px] uppercase tracking-wide text-[#8a95a6]">
                               Due date
                             </p>
-                            <p className="mt-1 text-[11px] font-medium">
+                            <p className="mt-1 text-[13px] font-medium">
                               {bill.dueDate
                                 ? new Date(bill.dueDate).toLocaleDateString(
                                     "en-US",
@@ -594,7 +597,7 @@ export default function BillsPage() {
                             shownStatus.label !== "Paid" &&
                             shownStatus.label !== "In review" ? (
                               <p
-                                className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                                className={`mt-1 text-[11px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                               >
                                 {days < 0
                                   ? `${Math.abs(days)} days overdue`
@@ -604,7 +607,7 @@ export default function BillsPage() {
                               </p>
                             ) : (
                               <p
-                                className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                                className={`mt-1 text-[11px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
                               >
                                 {shownStatus.label === "In review"
                                   ? "Payment submitted for review"
@@ -613,21 +616,21 @@ export default function BillsPage() {
                             )}
                           </div>
                           <div>
-                            <p className="text-[9px] uppercase tracking-wide text-[#8a95a6]">
+                            <p className="text-[11px] uppercase tracking-wide text-[#8a95a6]">
                               Savings
                             </p>
                             {reward ? (
                               <>
-                                <p className="mt-1 text-[11px] font-medium">
+                                <p className="mt-1 text-[13px] font-medium">
                                   Up to{" "}
                                   {money.format((bill.amount * reward) / 100)}
                                 </p>
-                                <p className="mt-1 text-[9px] text-[#00a96b]">
+                                <p className="mt-1 text-[11px] text-[#00a96b]">
                                   {reward}% reward
                                 </p>
                               </>
                             ) : (
-                              <p className="mt-1 text-[10px] text-[#7b879b]">
+                              <p className="mt-1 text-[12px] text-[#7b879b]">
                                 Not eligible
                               </p>
                             )}
@@ -643,7 +646,7 @@ export default function BillsPage() {
                               bill.status.toLowerCase(),
                             )}
                             aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
-                            className="flex items-center gap-2 text-[10px] font-medium text-[#53617a]"
+                            className="flex items-center gap-2 text-[12px] font-medium text-[#53617a]"
                           >
                             <span
                               className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}
@@ -665,7 +668,7 @@ export default function BillsPage() {
                                 event.stopPropagation();
                                 setCheckoutIds([bill.id]);
                               }}
-                              className="h-9 rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
+                              className="h-9 rounded-lg bg-[#009b67] px-4 text-[13px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
                             >
                               Pay now
                             </button>
@@ -677,7 +680,7 @@ export default function BillsPage() {
                 </div>
                 <div className="hidden overflow-x-auto lg:block">
                   <table className="w-full min-w-[820px] border-collapse text-left">
-                    <thead className="bg-[#f7f9f8] text-[10px] text-[#34425d]">
+                    <thead className="bg-[#f7f9f8] text-[12px] text-[#34425d]">
                       <tr>
                         {tab !== "Paid" && (
                           <th className="w-12 px-4 py-3.5">
@@ -718,7 +721,7 @@ export default function BillsPage() {
                                 setModal({ mode: "details", bill });
                               }
                             }}
-                            className={`cursor-pointer text-[11px] hover:bg-[#f6fbf8] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
+                            className={`cursor-pointer text-[13px] hover:bg-[#f6fbf8] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
                           >
                             {tab !== "Paid" && (
                               <td
@@ -734,15 +737,15 @@ export default function BillsPage() {
                                   <FileText size={16} />
                                 </span>
                                 <div>
-                                  <p className="font-semibold">{bill.name}</p>
-                                  <p className="mt-1 text-[9px] text-[#7b879b]">
+                                  <p>{bill.name}</p>
+                                  <p className="mt-1 text-[11px] text-[#7b879b]">
                                     {bill.category}
                                   </p>
                                 </div>
                               </div>
                             </td>
                             <td className="px-4 py-3">
-                              <p className="font-medium">
+                              <p>
                                 {bill.dueDate
                                   ? new Date(bill.dueDate).toLocaleDateString(
                                       "en-US",
@@ -776,7 +779,7 @@ export default function BillsPage() {
                                 </p>
                               )}
                             </td>
-                            <td className="px-4 py-3 font-semibold">
+                            <td className="px-4 py-3">
                               {money.format(bill.amount)}
                             </td>
                             <td className="px-4 py-3">
@@ -795,7 +798,7 @@ export default function BillsPage() {
                                   className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition ${bill.autoPay ? "left-[18px]" : "left-0.5"}`}
                                 />
                               </button>
-                              <span className="ml-2 text-[9px]">
+                              <span className="ml-2 text-[11px]">
                                 {bill.autoPay ? "On" : "Off"}
                               </span>
                             </td>
@@ -818,7 +821,7 @@ export default function BillsPage() {
                             </td>
                             <td className="px-4 py-3">
                               <span
-                                className={`rounded px-2.5 py-1.5 text-[9px] capitalize ${shownStatus.className}`}
+                                className={`rounded px-2.5 py-1.5 text-[11px] capitalize ${shownStatus.className}`}
                               >
                                 {shownStatus.label}
                               </span>
@@ -835,7 +838,7 @@ export default function BillsPage() {
                                     event.stopPropagation();
                                     setCheckoutIds([bill.id]);
                                   }}
-                                  className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[11px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
+                                  className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[13px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
                                 >
                                   Pay now
                                 </button>
@@ -851,15 +854,15 @@ export default function BillsPage() {
                   <div className="grid min-h-[250px] place-items-center p-8 text-center">
                     <div>
                       <FileText className="mx-auto text-[#c8d3cf]" size={34} />
-                      <h3 className="mt-3 text-[13px] font-semibold">
+                      <h3 className="mt-3 text-[15px] font-semibold">
                         No {tab.toLowerCase()} bills
                       </h3>
-                      <p className="mt-2 text-[11px] text-[#7a879c]">
+                      <p className="mt-2 text-[13px] text-[#7a879c]">
                         Adjust your filters or add a new bill.
                       </p>
                       <button
                         onClick={() => setModal({ mode: "add" })}
-                        className="mx-auto mt-4 flex h-9 w-fit items-center rounded-md bg-[#00a96b] px-4 text-[10px] font-semibold text-white"
+                        className="mx-auto mt-4 flex h-9 w-fit items-center rounded-md bg-[#00a96b] px-4 text-[12px] font-semibold text-white"
                       >
                         <Plus className="mr-2" size={15} /> Add Bill
                       </button>
@@ -868,7 +871,7 @@ export default function BillsPage() {
                 ) : null}
               </div>
               <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-5 py-4">
-                <p aria-live="polite" className="text-[11px] text-[#7b879b]">
+                <p aria-live="polite" className="text-[13px] text-[#7b879b]">
                   Showing{" "}
                   <span className="font-medium text-[#344260]">
                     {filteredBills.length
@@ -896,22 +899,31 @@ export default function BillsPage() {
                     aria-label="Previous page"
                     disabled={currentPage === 1}
                     onClick={() =>
-                      setPagination({ ...pagination, key: filterKey, page: currentPage - 1 })
+                      setPagination({
+                        ...pagination,
+                        key: filterKey,
+                        page: currentPage - 1,
+                      })
                     }
                     className="grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] text-[#64718a] transition hover:bg-[#f0faf5] disabled:opacity-35"
                   >
                     <ChevronLeft size={15} />
                   </button>
-                  <span className="px-2 text-[11px] text-[#64718a]">
-                    Page <strong className="text-[#344260]">{currentPage}</strong>{" "}
-                    of {pageCount}
+                  <span className="px-2 text-[13px] text-[#64718a]">
+                    Page{" "}
+                    <strong className="text-[#344260]">{currentPage}</strong> of{" "}
+                    {pageCount}
                   </span>
                   <button
                     type="button"
                     aria-label="Next page"
                     disabled={currentPage === pageCount}
                     onClick={() =>
-                      setPagination({ ...pagination, key: filterKey, page: currentPage + 1 })
+                      setPagination({
+                        ...pagination,
+                        key: filterKey,
+                        page: currentPage + 1,
+                      })
                     }
                     className="grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] text-[#64718a] transition hover:bg-[#f0faf5] disabled:opacity-35"
                   >
@@ -1020,10 +1032,16 @@ export default function BillsPage() {
       {modal && user?.id ? (
         <BillModal
           initialMode={modal.mode}
-          bill={modal.bill ? {
-            ...modal.bill,
-            status: bills.find((bill) => bill.id === modal.bill?.id)?.status ?? modal.bill.status,
-          } : undefined}
+          bill={
+            modal.bill
+              ? {
+                  ...modal.bill,
+                  status:
+                    bills.find((bill) => bill.id === modal.bill?.id)?.status ??
+                    modal.bill.status,
+                }
+              : undefined
+          }
           userId={user.id}
           onClose={() => setModal(null)}
         />
