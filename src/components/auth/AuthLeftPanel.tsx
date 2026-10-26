@@ -1,3 +1,4 @@
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Image from "next/image";
 import { CalendarDays, FileText, Star } from "lucide-react";
 import BackButton from "./BackButton";
@@ -71,6 +72,7 @@ export function AuthLeftPanel({ backHref }: { backHref?: string } = {}) {
             title="Earn credits"
             description="Rack up credits to reduce future payments."
           />
+          <EarlyPaymentNote className="text-[#c7e4dc]" />
         </div>
       </div>
     </section>

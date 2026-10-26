@@ -1,4 +1,5 @@
-﻿"use client";
+"use client";
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CalendarDays, Copy, Share2, Sparkles, UserRound, UsersRound, X } from "lucide-react";
@@ -33,6 +34,7 @@ export default function CreditGuideModal({guide, referralCode, referral, onClose
                   </div>
                 ))}
               </div>
+              <EarlyPaymentNote className="text-[#65728a]" />
             </section>}
             {guide === 1 && <section className="rounded-xl border border-[#e1e8e5] bg-white p-5">
               <h2 className="text-[14px] font-bold">Referral & Rewards</h2>

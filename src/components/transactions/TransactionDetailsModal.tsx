@@ -116,7 +116,7 @@ export default function TransactionDetailsModal({
           <Link href={transactionReportUrl(transaction)} className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white hover:bg-[#008f60]"><Flag size={15} /> Report transaction</Link>
           <div className="rounded-xl bg-[#f6faf8] p-5">
             <p className="text-[11px] uppercase tracking-[.12em] text-[#718097]">
-              {isCredit ? "Credits" : "Amount"}
+              {isCredit ? "Credits" : "Total amount paid"}
             </p>
             <p className="mt-2 text-[28px] font-semibold">
               {isCredit
@@ -141,6 +141,14 @@ export default function TransactionDetailsModal({
                     </span>
                   </p>
                 ) : null}
+                {transaction.amountCharged != null && (
+                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
+                    <span className="text-[#718097]">Paid via Stripe after credits</span>
+                    <span className="font-medium tabular-nums">
+                      {money.format(transaction.amountCharged)}
+                    </span>
+                  </p>
+                )}
                 {transaction.pendingCredits ? (
                   <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
                     <span className="text-[#718097]">Pending reward</span>

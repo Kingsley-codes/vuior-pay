@@ -1,4 +1,5 @@
 "use client";
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 
 import { useEffect, useRef, useState } from "react";
 import { CreditCard, FileText, LoaderCircle, ShieldCheck, Sparkles, WalletCards, X } from "lucide-react";
@@ -157,6 +158,7 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
               {discount > 0 && <div className="flex justify-between gap-3 text-[#008c5e]"><dt>Credits applied</dt><dd>−{money.format(discount)}</dd></div>}
             </dl>
             {rewards > 0 && <div className="mt-4 flex items-start gap-2 rounded-lg bg-[#f0f8f3] p-3 text-[#39704e]"><Sparkles size={16} className="mt-0.5 shrink-0" /><p className="text-xs leading-5">Earn up to <strong>{money.format(rewards)} in credits</strong> after approval. This reward is separate from today&apos;s payment.</p></div>}
+            <EarlyPaymentNote className="text-[#65728a]" />
           </section>
           {cardTooSmall && <p role="alert" className="text-sm text-red-700">Card payments must be at least $0.50. Increase the amount or use credits.</p>}
           {invalidAmounts && <p role="alert" className="text-sm text-red-700">Enter an amount greater than zero and no more than each bill total, with at most two decimal places.</p>}

@@ -1,4 +1,5 @@
 "use client";
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 
 import { saveUserBill } from "@/services/billSave";
 import { withBillConfirmation } from "@/utils/billDuplicates";
@@ -383,6 +384,7 @@ export default function BillModal({
             <div className="mt-4 rounded-xl bg-[#f0f8f3] p-4 text-sm text-[#39704e]">
               <p className="font-semibold">{credits?.label}: {money.format(credits?.amount || 0)} in credits</p>
               <p className="mt-1 text-xs">{credits?.description}</p>
+              <EarlyPaymentNote />
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {[

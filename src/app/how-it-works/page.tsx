@@ -1,3 +1,4 @@
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -147,6 +148,7 @@ export default function HowItWorksPage() {
             );
           })}
         </div>
+        <EarlyPaymentNote className="text-[#65728a]" />
       </section>
 
       {/* App download */}
@@ -251,6 +253,7 @@ export default function HowItWorksPage() {
               </small>
             </div>
           ))}
+          <EarlyPaymentNote className="col-span-full text-[#c7e4dc]" />
         </div>
       </section>
 

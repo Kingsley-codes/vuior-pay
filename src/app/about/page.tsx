@@ -1,3 +1,4 @@
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/header";
@@ -35,7 +36,7 @@ const milestones = [
     value: "10K+",
     text: "Users already managing their bills with Vuior.",
   },
-  { icon: "⌁", value: "100+", text: "Billers and providers integrated." },
+  { icon: "⌁", value: "1000+", text: "Billers and providers integrated." },
   { icon: "✈", value: "1 million+", text: "Bills processed by Vuior." },
 ];
 
@@ -54,7 +55,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white text-[#07142d]">
       <Header active="about" />
-      <section className="grid h-[440px] grid-cols-[48%_52%] overflow-hidden border-b border-[#dfe9e6] bg-linear-to-r from-white via-[#f8fcfa] via-42% to-[#e4f5ee] max-[900px]:h-auto max-[900px]:grid-cols-1 max-[900px]:bg-linear-to-b max-[900px]:from-white max-[900px]:via-[#f5fbf8] max-[900px]:to-[#e6f7f0]">
+      <section className="grid min-h-[440px] grid-cols-[48%_52%] overflow-hidden border-b border-[#dfe9e6] bg-linear-to-r from-white via-[#f8fcfa] via-42% to-[#e4f5ee] max-[900px]:h-auto max-[900px]:grid-cols-1 max-[900px]:bg-linear-to-b max-[900px]:from-white max-[900px]:via-[#f5fbf8] max-[900px]:to-[#e6f7f0]">
         <div className="py-[75px] pr-5 pl-[max(48px,calc((100vw-1330px)/2))] max-[900px]:px-[30px] max-[900px]:pt-[60px] max-[900px]:pb-[45px] max-[900px]:text-center">
           <p className={eyebrow}>ABOUT VUIOR</p>
           <h1 className="mb-[22px] text-[43px] font-bold leading-[1.08] tracking-[-1.9px] max-[620px]:text-[34px]">
@@ -113,6 +114,7 @@ export default function AboutPage() {
             <span className="text-[#009268]">♙</span>
           </div>
         </div>
+        <EarlyPaymentNote className="col-span-full px-12 pb-5 text-[#65728a] max-[900px]:px-[30px]" />
       </section>
 
       <section className="mx-auto grid max-w-[1330px] grid-cols-[42%_58%] items-center px-12 py-[62px] max-[900px]:grid-cols-1 max-[900px]:gap-[45px] max-[900px]:px-[30px] max-[900px]:py-[55px]">
@@ -149,6 +151,7 @@ export default function AboutPage() {
             </article>
           ))}
         </div>
+        <EarlyPaymentNote className="col-span-full text-[#65728a]" />
       </section>
 
       <section className="mx-auto max-w-[1330px] border-t border-[#dfe9e6] px-12 pt-[45px] pb-[42px] max-[900px]:px-[30px] max-[620px]:text-center">
@@ -180,6 +183,7 @@ export default function AboutPage() {
             </article>
           ))}
         </div>
+        <EarlyPaymentNote className="text-[#65728a]" />
       </section>
 
       <section className="mx-auto max-w-[1330px] px-12 pb-[42px] max-[900px]:px-[30px] max-[620px]:px-5">

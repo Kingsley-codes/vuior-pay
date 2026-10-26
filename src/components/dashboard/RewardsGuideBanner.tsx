@@ -1,3 +1,4 @@
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import { ArrowUpRight, Sparkles, type LucideIcon } from "lucide-react";
 
 type GuideAction = {
@@ -55,6 +56,7 @@ export default function RewardsGuideBanner({
           ))}
         </div>
       </div>
+      <EarlyPaymentNote className="text-[#c7e4dc]" />
     </section>
   );
 }

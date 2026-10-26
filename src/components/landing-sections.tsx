@@ -1,3 +1,4 @@
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./icons";
@@ -84,6 +85,7 @@ export function HeroSection() {
           />
         </div>
       </div>
+      <EarlyPaymentNote className="mx-auto max-w-[1240px] px-7 pb-6 text-[#65728a]" />
     </section>
   );
 }
@@ -362,6 +364,7 @@ export function RewardsSection() {
             />
           </div>
         </div>
+        <EarlyPaymentNote className="col-span-full text-center text-[#c7e4dc]" />
       </div>
     </section>
   );
@@ -415,6 +418,7 @@ export function HowItWorks() {
           </div>
         ))}
       </div>
+      <EarlyPaymentNote className="text-[#65728a]" />
     </section>
   );
 }
@@ -582,7 +586,7 @@ export function FaqSection() {
 export function FinalCtaSection() {
   return (
     <section
-      className="isolate relative mx-auto mb-9 grid h-[190px] max-w-[1080px] grid-cols-[1fr_auto] items-center overflow-hidden rounded-[17px] px-16 text-white max-[900px]:mx-[25px] max-[900px]:px-[35px] max-[620px]:mx-[15px] max-[620px]:mb-[35px] max-[620px]:min-h-[360px] max-[620px]:grid-cols-1 max-[620px]:px-[22px] max-[620px]:py-[45px] max-[620px]:text-center max-[430px]:mx-2.5"
+      className="isolate relative mx-auto mb-9 grid min-h-[190px] max-w-[1080px] grid-cols-[1fr_auto] items-center overflow-hidden rounded-[17px] px-16 text-white max-[900px]:mx-[25px] max-[900px]:px-[35px] max-[620px]:mx-[15px] max-[620px]:mb-[35px] max-[620px]:min-h-[360px] max-[620px]:grid-cols-1 max-[620px]:px-[22px] max-[620px]:py-[45px] max-[620px]:text-center max-[430px]:mx-2.5"
       id="signup"
     >
       <Image
@@ -603,6 +607,7 @@ export function FinalCtaSection() {
         </p>
       </div>
       <ButtonPair cta />
+      <EarlyPaymentNote className="relative z-[1] col-span-full pb-4 text-[#c7e4dc]" />
     </section>
   );
 }

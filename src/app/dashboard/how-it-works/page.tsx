@@ -1,4 +1,5 @@
 "use client";
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -103,6 +104,7 @@ export default function HowItWorksPage() {
             <p className="mt-5 border-t border-white/15 pt-4 text-xs leading-6 text-[#c7e4dc]">Pay 15 or more days early for the highest early-payment tier. Credits are added after approval.</p>
           </div>
         </div>
+        <EarlyPaymentNote className="text-[#c7e4dc]" />
       </section>
 
       <section aria-labelledby="steps-heading" className="mt-9">
@@ -120,6 +122,7 @@ export default function HowItWorksPage() {
             </li>
           ))}
         </ol>
+        <EarlyPaymentNote className="text-[#65728a]" />
       </section>
 
       <section aria-labelledby="rewards-heading" className="mt-9 grid gap-5 xl:grid-cols-2">
@@ -169,6 +172,7 @@ export default function HowItWorksPage() {
             <span className="rounded-full bg-[#dff1e7] px-3 py-1.5 text-xs font-semibold text-[#087057]">{tiers[selectedTier].rate}% reward</span>
           </div>
           <p className="mt-4 text-xs leading-6 text-[#65728a]">For illustration only. Your eligible reward is confirmed at payment. This reward is separate from today’s payment and does not include processing fees.</p>
+          <EarlyPaymentNote className="text-[#65728a]" />
         </div>
       </section>
 
@@ -178,6 +182,7 @@ export default function HowItWorksPage() {
           <h2 className="text-base font-bold">Your reward has a journey</h2>
           <p className="mt-2 text-[13px] leading-6 text-[#65728a]">Submit your payment → Bill is in review → Payment is approved → Credits are available.</p>
           <p className="mt-2 flex items-start gap-2 text-xs leading-6 text-[#53617a]"><CheckCircle2 size={16} className="mt-1 shrink-0 text-[#009b67]" aria-hidden="true" />Your payment date determines your reward tier, even while approval is pending.</p>
+          <EarlyPaymentNote className="text-[#65728a]" />
         </div>
         <Link href="/dashboard/transactions" className="inline-flex min-h-11 items-center gap-2 text-[13px] font-semibold text-[#087057] hover:underline">View transactions <ArrowRight size={15} aria-hidden="true" /></Link>
       </section>

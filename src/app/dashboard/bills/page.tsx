@@ -1,4 +1,5 @@
 "use client";
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import PageSizeSelect from "@/components/ui/PageSizeSelect";
 import {
   BILL_FREQUENCIES,
@@ -6,9 +7,7 @@ import {
   normalizeBillFrequency,
 } from "@/utils/billFrequency";
 
-import { generatePublicId } from "@/utils/publicId";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
 import {
   CalendarDays,
   ChevronDown,
@@ -29,7 +28,6 @@ import AddressRequiredNotice from "@/components/dashboard/AddressRequiredNotice"
 import RewardsGuideBanner from "@/components/dashboard/RewardsGuideBanner";
 import BillModal from "@/components/bills/BillModal";
 import BillPaymentModal from "@/components/bills/BillPaymentModal";
-import { db } from "@/services/firebase";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
@@ -285,25 +283,6 @@ export default function BillsPage() {
     );
   }
 
-  async function toggleAutopay(id: string, enabled: boolean) {
-    const bill = bills.find((item) => item.id === id);
-    if (!bill || ["paid", "completed"].includes(bill.status.toLowerCase()))
-      return;
-    const frequency = normalizeBillFrequency(bill.frequency);
-    if (enabled && frequency === "one-time") {
-      setModal({ mode: "edit", bill: { ...bill, autoPay: true } });
-      return;
-    }
-    await updateDoc(doc(db, "bills", id), {
-      autoPay: enabled,
-      frequency,
-      nextPaymentDate: enabled ? bill.dueDate.slice(0, 10) : null,
-      ...(enabled && !bill?.autopayId
-        ? { autopayId: generatePublicId("VPA") }
-        : {}),
-    });
-  }
-
   if (loading) return <BillsSkeleton />;
 
   return (
@@ -431,15 +410,27 @@ export default function BillsPage() {
                 ))}
               </div>
               <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-[minmax(220px,1.5fr)_repeat(4,minmax(140px,1fr))]">
-                <label className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white px-3 text-[#75829a]">
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    setPagination((current) => ({
+                      ...current,
+                      key: filterKey,
+                      page: 1,
+                    }));
+                  }}
+                  className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white pl-3 pr-1 text-[#75829a]"
+                >
                   <Search size={16} />
                   <input
+                    aria-label="Search bills"
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     placeholder="Search bills by name or category…"
                     className="ml-2 min-w-0 flex-1 bg-transparent text-[11px] outline-none"
                   />
-                </label>
+                  <button type="submit" className="ml-2 shrink-0 rounded bg-[#009b67] px-3 py-2 text-[11px] font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
+                </form>
                 <MultiSelectFilter
                   label="Category"
                   allLabel="All categories"
@@ -637,26 +628,6 @@ export default function BillsPage() {
                           </div>
                         </div>
                         <div className="mt-4 flex items-center justify-between">
-                          <button
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              toggleAutopay(bill.id, !bill.autoPay);
-                            }}
-                            disabled={["paid", "completed"].includes(
-                              bill.status.toLowerCase(),
-                            )}
-                            aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
-                            className="flex items-center gap-2 text-[12px] font-medium text-[#53617a]"
-                          >
-                            <span
-                              className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}
-                            >
-                              <span
-                                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition ${bill.autoPay ? "left-[18px]" : "left-0.5"}`}
-                              />
-                            </span>
-                            Autopay {bill.autoPay ? "on" : "off"}
-                          </button>
                           {tab !== "Paid" && (
                             <button
                               disabled={
@@ -691,7 +662,6 @@ export default function BillsPage() {
                           "Provider & Category",
                           "Due Date",
                           "Amount",
-                          "Autopay",
                           "Savings",
                           "Status",
                           ...(tab !== "Paid" ? ["Actions"] : []),
@@ -781,26 +751,6 @@ export default function BillsPage() {
                             </td>
                             <td className="px-4 py-3">
                               {money.format(bill.amount)}
-                            </td>
-                            <td className="px-4 py-3">
-                              <button
-                                onClick={(event) => {
-                                  event.stopPropagation();
-                                  toggleAutopay(bill.id, !bill.autoPay);
-                                }}
-                                disabled={["paid", "completed"].includes(
-                                  bill.status.toLowerCase(),
-                                )}
-                                aria-label={`Turn autopay ${bill.autoPay ? "off" : "on"}`}
-                                className={`relative h-5 w-9 rounded-full transition ${bill.autoPay ? "bg-[#00a96b]" : "bg-[#dfe5e8]"}`}
-                              >
-                                <span
-                                  className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition ${bill.autoPay ? "left-[18px]" : "left-0.5"}`}
-                                />
-                              </button>
-                              <span className="ml-2 text-[11px]">
-                                {bill.autoPay ? "On" : "Off"}
-                              </span>
                             </td>
                             <td className="px-4 py-3">
                               {reward && tab !== "Paid" ? (
@@ -983,6 +933,7 @@ export default function BillsPage() {
                   </div>
                 ))}
               </div>
+              <EarlyPaymentNote className="text-[#65728a]" />
             </section>
             <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
               <div className="flex items-center gap-3">
@@ -1110,6 +1061,7 @@ function InfoModal({
                 </div>
               ))}
             </div>
+            <EarlyPaymentNote className="text-[#65728a]" />
           </>
         ) : (
           <>
@@ -1124,6 +1076,7 @@ function InfoModal({
               </li>
               <li>• Eligible early-pay rewards still apply when available.</li>
             </ul>
+            <EarlyPaymentNote className="text-[#65728a]" />
           </>
         )}
         <button

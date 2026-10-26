@@ -10,6 +10,7 @@ import {
 import { db } from "@/services/firebase";
 import { transactionStatus } from "@/utils/transactions";
 import { yearlyReferralQualifyingSpend } from "@/utils/billPaymentTotals";
+import { transactionAmounts } from "@/utils/transactionAmounts";
 
 export type Bill = {
   id: string;
@@ -44,6 +45,7 @@ export type Transaction = {
   label: string;
   category: string;
   amount: number;
+  amountCharged?: number;
   status: string;
   date: Date;
   type: string;
@@ -202,7 +204,7 @@ export function useVuiorData(
                 "Bill payment",
             ),
             category: String(data.category ?? "Payment"),
-            amount: Number(data.amount ?? data.credits ?? data.amountPaid ?? 0),
+            ...transactionAmounts(data),
             status: transactionStatus(String(data.status ?? "completed")),
             date:
               asDate(data.date ?? data.createdAt ?? data.paidAt) ?? new Date(0),
@@ -233,7 +235,7 @@ export function useVuiorData(
               : undefined,
             provider: data.name ? String(data.name) : undefined,
             creditsApplied: Number(
-              data.creditsApplied ?? data.creditApplied ?? 0,
+              data.creditsApplied ?? data.creditApplied ?? data.discountApplied ?? 0,
             ),
             pendingCredits: Number(data.pendingCredits ?? 0),
             rewardStatus: data.rewardStatus

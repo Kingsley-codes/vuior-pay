@@ -574,13 +574,20 @@ export default function TransactionsPage() {
           >
             <div className="space-y-3 border-b border-[#e7ecea] p-4 sm:p-5">
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(210px,1.4fr)_minmax(150px,1fr)_minmax(150px,1fr)_minmax(135px,.8fr)_minmax(135px,.8fr)]">
-                <label className="block min-w-0">
-                  <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+                <form
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    updateFilters({ search: filters.search });
+                  }}
+                  className="block min-w-0"
+                >
+                  <label htmlFor="transaction-search" className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
                     Search
-                  </span>
-                  <span className="flex h-11 items-center gap-2 rounded-lg border border-[#dfe5e7] px-3 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
+                  </label>
+                  <span className="flex h-11 items-center gap-2 rounded-lg border border-[#dfe5e7] pl-3 pr-1 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
                     <Search size={17} className="shrink-0" />
                     <input
+                      id="transaction-search"
                       aria-label="Search transactions"
                       value={filters.search}
                       onChange={(event) =>
@@ -589,8 +596,9 @@ export default function TransactionsPage() {
                       placeholder="Search transactions..."
                       className="min-w-0 flex-1 bg-transparent text-[12px] text-[#344260] outline-none placeholder:text-[#8a95a6]"
                     />
+                    <button type="submit" className="shrink-0 rounded-md bg-[#009b67] px-3 py-2 text-[12px] font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
                   </span>
-                </label>
+                </form>
                 <MultiSelectFilter
                   label={filters.type === "credit" ? "Credit type" : "Category"}
                   value={filters.category}

@@ -1,4 +1,5 @@
 "use client";
+import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -114,6 +115,7 @@ export default function HelpPage() {
                     <span className="mt-3 inline-block rounded bg-[#f2f6f4] px-2 py-1 text-[12px] font-semibold text-[#527064]">
                       {faq.category}
                     </span>
+                    {["q15", "q16", "q23"].includes(faq.value) && <EarlyPaymentNote className="text-[#65728a]" />}
                   </div>
                 ) : null}
               </article>
