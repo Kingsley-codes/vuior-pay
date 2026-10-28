@@ -11,9 +11,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { initialJobs, whyJoinUs } from "@/data/jobs";
 
 const primaryButton =
-  "inline-flex h-11 items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[23px] text-[14px] font-bold text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824]";
+  "inline-flex h-11 items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[23px] text-[16px] font-bold text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824]";
 const eyebrow =
-  "mb-[18px] text-[11px] font-extrabold text-[#00895f] max-[620px]:text-[12px]";
+  "mb-[18px] text-[14px] font-extrabold text-[#00895f]";
 
 const icons = [Zap, Globe2, TrendingUp, BriefcaseBusiness];
 
@@ -30,7 +30,7 @@ export default function CareersPage() {
               <br />
               and thrive with us.
             </h1>
-            <p className="max-w-[560px] text-[14px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[15px]">
+            <p className="max-w-[560px] text-[16px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7] max-[900px]:mx-auto">
               Vuior is redefining how people manage and save on their bills. We
               are looking for passionate, practical builders to help shape the
               future of financial wellness.
@@ -39,7 +39,7 @@ export default function CareersPage() {
               <Link className={primaryButton} href="/careers/open-positions">
                 See open positions <ArrowRight size={17} />
               </Link>
-              <span className="text-[12px] font-bold text-[#687689] max-[620px]:text-[14px]">
+              <span className="text-[14px] font-bold text-[#687689] max-[620px]:text-[16px]">
                 {initialJobs.length} remote roles open
               </span>
             </div>
@@ -52,8 +52,8 @@ export default function CareersPage() {
                 key={job.id}
               >
                 <span>
-                  <strong className="block text-[14px]">{job.title}</strong>
-                  <small className="mt-1 block text-[12px] text-[#667487]">
+                  <strong className="block text-[16px]">{job.title}</strong>
+                  <small className="mt-1 block text-[14px] text-[#667487]">
                     {job.department} / {job.location}
                   </small>
                 </span>
@@ -82,10 +82,10 @@ export default function CareersPage() {
                 <span className="mb-4 grid h-[42px] w-[42px] place-items-center rounded-[9px] bg-[#edf9f5] text-[#009268]">
                   <Icon size={21} />
                 </span>
-                <h3 className="mb-2 text-[13px] max-[620px]:text-[17px]">
+                <h3 className="mb-2 text-[15px] max-[620px]:text-[17px]">
                   {item.title}
                 </h3>
-                <p className="m-0 text-[10px] leading-[1.6] text-[#657386] min-[901px]:text-[14px] max-[620px]:text-[15px]">
+                <p className="m-0 text-[16px] leading-[1.6] text-[#657386]">
                   {item.description}
                 </p>
               </article>
@@ -97,7 +97,7 @@ export default function CareersPage() {
       <section className="mx-auto mb-8 flex min-h-[120px] max-w-[1330px] items-center justify-between rounded-[13px] border border-[#dfe9e6] bg-[#f4fbf8] px-9 py-6 max-[900px]:mx-[30px] max-[620px]:mx-4 max-[620px]:flex-col max-[620px]:items-start max-[620px]:gap-5">
         <div>
           <h2 className="mb-2 text-[20px] font-bold">Be part of our vision.</h2>
-          <p className="text-[14px] leading-6 text-[#667487]">
+          <p className="text-[16px] leading-6 text-[#667487]">
             Join a team focused on community, innovation, and lasting financial
             impact.
           </p>

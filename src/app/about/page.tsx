@@ -41,13 +41,13 @@ const milestones = [
 ];
 
 const primaryButton =
-  "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[14px] font-bold text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+  "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[16px] font-bold text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
 const textLink =
-  "inline-flex items-center gap-[9px] whitespace-nowrap text-[13px] font-bold text-[#009268] max-[620px]:text-[14px] [&_svg]:w-[17px]";
+  "inline-flex items-center gap-[9px] whitespace-nowrap text-[15px] font-bold text-[#009268] max-[620px]:text-[16px] [&_svg]:w-[17px]";
 const eyebrow =
-  "mb-[18px] text-[11px] font-extrabold text-[#00895f] max-[620px]:text-[12px]";
+  "mb-[18px] text-[14px] font-extrabold text-[#00895f]";
 const bodyCopy =
-  "text-[12px] leading-[1.7] text-[#58677b] min-[901px]:text-[16px] min-[901px]:leading-[1.75] max-[620px]:text-[15px] max-[620px]:leading-[1.65]";
+  "text-[16px] leading-[1.7] text-[#58677b] min-[901px]:leading-[1.75] max-[620px]:leading-[1.65]";
 const sectionHeading =
   "mb-[17px] text-[26px] font-bold leading-[1.22] tracking-[-0.8px] max-[620px]:text-[28px]";
 
@@ -63,14 +63,14 @@ export default function AboutPage() {
             <br />
             to manage bills.
           </h1>
-          <p className="text-[14px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7] max-[620px]:text-[15px]">
+          <p className="text-[16px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7]">
             Vuior helps you pay your bills early, stay organized,
             <br className="max-[620px]:hidden" /> and earn real rewards for good
             financial habits.
           </p>
-          <div className="mt-7 flex items-center gap-9 max-[900px]:justify-center">
+          <div className="mt-7 flex flex-wrap items-center gap-6 max-[900px]:justify-center">
             <Link
-              className={`${primaryButton} h-11 px-6 text-[12px] max-[620px]:text-[14px]`}
+              className={`${primaryButton} h-11 px-6 text-[14px] max-[620px]:text-[16px]`}
               href="/signup"
             >
               Create free account
@@ -89,16 +89,16 @@ export default function AboutPage() {
             priority
             className="object-contain object-[61%_bottom] max-[620px]:object-[60%_bottom]"
           />
-          <div className="absolute top-[23%] left-[4%] z-[2] flex h-[156px] w-[190px] flex-col gap-2 rounded-[10px] border border-[#e5eeeb] bg-white/95 py-[18px] pr-[17px] pb-[13px] pl-[45px] shadow-[0_12px_35px_#183c3120] max-[620px]:origin-top-left max-[620px]:scale-80">
-            <span className="absolute top-[17px] left-[17px] grid h-[18px] w-[18px] place-items-center rounded-full bg-[#0ca879] text-[10px] text-white">
+          <div className="absolute top-[23%] left-[4%] z-[2] flex min-h-[180px] w-[220px] flex-col gap-2 rounded-[10px] border border-[#e5eeeb] bg-white/95 py-[18px] pr-[17px] pb-[13px] pl-[45px] shadow-[0_12px_35px_#183c3120] max-[620px]:origin-top-left">
+            <span className="absolute top-[17px] left-[17px] grid h-[18px] w-[18px] place-items-center rounded-full bg-[#0ca879] text-[13px] text-white">
               ✓
             </span>
-            <b className="text-[10px]">Payment Successful</b>
-            <small className="text-[10px] text-[#687689]">
+            <b className="text-[13px]">Payment Successful</b>
+            <small className="text-[13px] text-[#687689]">
               Electricity Bill
             </small>
             <strong className="text-[16px]">$85.50</strong>
-            <em className="text-[9px] leading-[1.7] not-italic text-[#687689]">
+            <em className="text-[12px] leading-[1.7] not-italic text-[#687689]">
               You earned
               <br />
               <mark className="rounded-lg bg-[#daf6ea] px-1.5 py-[3px] font-bold text-[#08795a]">
@@ -106,8 +106,8 @@ export default function AboutPage() {
               </mark>
             </em>
           </div>
-          <div className="absolute bottom-5 left-[1%] z-[2] grid h-[72px] w-[175px] grid-cols-[1fr_auto] rounded-[10px] border border-[#e5eeeb] bg-white/95 px-4 py-3.5 shadow-[0_12px_35px_#183c3120] max-[620px]:origin-bottom-left max-[620px]:scale-80">
-            <small className="col-span-full text-[9px] text-[#6b788a]">
+          <div className="absolute bottom-5 left-[1%] z-[2] grid min-h-[80px] w-[190px] grid-cols-[1fr_auto] rounded-[10px] border border-[#e5eeeb] bg-white/95 px-4 py-3.5 shadow-[0_12px_35px_#183c3120] max-[620px]:origin-bottom-left">
+            <small className="col-span-full text-[12px] text-[#6b788a]">
               Available credits
             </small>
             <strong className="text-[16px]">$2,450</strong>
@@ -141,10 +141,10 @@ export default function AboutPage() {
                 <Icon name={item.icon} />
               </span>
               <div>
-                <h3 className="mb-2 text-[12px] max-[620px]:text-[17px]">
+                <h3 className="mb-2 text-[17px]">
                   {item.title}
                 </h3>
-                <p className="m-0 text-[10px] leading-[1.55] text-[#657386] min-[901px]:text-[14px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
+                <p className="m-0 text-[16px] leading-[1.55] text-[#657386] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
                   {item.text}
                 </p>
               </div>
@@ -174,10 +174,10 @@ export default function AboutPage() {
               <span className="mb-[7px] grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[#edf9f5] text-[#009268]">
                 {item.icon}
               </span>
-              <strong className="mb-2 text-[12px] text-[#00895f]">
+              <strong className="mb-2 text-[14px] text-[#00895f]">
                 {item.value}
               </strong>
-              <p className="m-0 text-[10px] text-[#677588] min-[901px]:text-[14px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
+              <p className="m-0 text-[16px] text-[#677588] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
                 {item.text}
               </p>
             </article>
@@ -190,13 +190,13 @@ export default function AboutPage() {
         <div className="relative grid overflow-hidden rounded-[18px] bg-[#063f36] text-white md:grid-cols-[1.02fr_.98fr]">
           <div className="absolute -top-24 left-[42%] h-72 w-72 rounded-full bg-[#0ab17d]/20 blur-3xl" />
           <div className="relative px-7 py-9 sm:px-11 sm:py-11">
-            <p className="text-[11px] font-extrabold tracking-[.15em] text-[#92e0c0]">
+            <p className="text-[14px] font-extrabold tracking-[.15em] text-[#92e0c0]">
               VUIOR, IN YOUR POCKET
             </p>
             <h2 className="mt-3 max-w-[550px] text-[29px] font-bold leading-[1.15] tracking-[-1px] sm:text-[35px]">
               A calmer way to stay ahead of every bill.
             </h2>
-            <p className="mt-4 max-w-[510px] text-[14px] leading-[1.7] text-[#c9dfd7] sm:text-[15px]">
+            <p className="mt-4 max-w-[510px] text-[16px] leading-[1.7] text-[#c9dfd7]">
               Pay early, check your rewards, and keep the details that matter
               close at hand—where life happens.
             </p>
@@ -218,7 +218,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto mb-5 grid h-[150px] max-w-[1330px] grid-cols-[1fr_auto_260px] items-center overflow-hidden rounded-[15px] border border-[#dfe9e6] bg-linear-to-r from-[#f3faf7] to-[#fbfdfc] px-[42px] max-[900px]:mx-6 max-[900px]:h-auto max-[900px]:grid-cols-[1fr_auto] max-[900px]:p-8 max-[620px]:grid-cols-1 max-[620px]:gap-[25px] max-[620px]:text-center">
+      <section className="mx-auto mb-5 grid min-h-[150px] max-w-[1330px] grid-cols-[minmax(0,1fr)_auto] min-[1200px]:grid-cols-[minmax(0,1fr)_auto_210px] items-center overflow-hidden rounded-[15px] border border-[#dfe9e6] bg-linear-to-r from-[#f3faf7] to-[#fbfdfc] px-[42px] max-[900px]:mx-6 max-[900px]:h-auto max-[900px]:grid-cols-[1fr_auto] max-[900px]:p-8 max-[620px]:grid-cols-1 max-[620px]:gap-[25px] max-[620px]:text-center">
         <div>
           <h2 className={`${sectionHeading} m-0`}>
             Join thousands of users who are
@@ -226,7 +226,7 @@ export default function AboutPage() {
             getting more from their bills.
           </h2>
         </div>
-        <div className="flex items-center gap-[30px] max-[620px]:flex-col max-[620px]:justify-center max-[620px]:gap-[18px]">
+        <div className="flex flex-wrap items-center gap-[30px] max-[620px]:flex-col max-[620px]:justify-center max-[620px]:gap-[18px]">
           <Link className={`${primaryButton} h-11 px-[23px]`} href="/signup">
             Create free account
           </Link>
@@ -239,7 +239,7 @@ export default function AboutPage() {
           alt="Gift box and reward coins"
           width={245}
           height={150}
-          className="h-[142px] w-[210px] self-end justify-self-end object-contain max-[900px]:hidden"
+          className="h-[142px] w-[210px] self-end justify-self-end object-contain max-[1199px]:hidden"
         />
       </section>
       <SiteFooter />

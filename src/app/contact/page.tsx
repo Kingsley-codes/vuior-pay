@@ -16,20 +16,20 @@ const reach = [
 ];
 
 const outlineButton =
-  "inline-flex h-11 items-center justify-center gap-2.5 rounded-md border border-[#009268] bg-white px-[23px] text-[14px] font-bold text-[#007f5d] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+  "inline-flex h-11 items-center justify-center gap-2.5 rounded-md border border-[#009268] bg-white px-[23px] text-[16px] font-bold text-[#007f5d] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
 
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-linear-to-br from-white from-30% to-[#fbfdfc] text-[#07142d]">
       <Header active="contact" />
       <section className="mx-auto max-w-[1330px] px-12 pt-[70px] pb-[42px] max-[900px]:px-[30px] max-[900px]:pt-[55px] max-[900px]:pb-[35px] max-[620px]:px-5 max-[620px]:text-center">
-        <p className="mb-[18px] text-[11px] font-extrabold text-[#00895f] max-[620px]:text-[12px]">
+        <p className="mb-[18px] text-[14px] font-extrabold text-[#00895f]">
           CONTACT US
         </p>
         <h1 className="mb-5 text-[41px] font-bold leading-[1.08] tracking-[-1.9px] max-[620px]:text-[34px]">
           We&apos;re here to help.
         </h1>
-        <p className="text-[14px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7] max-[620px]:text-[15px]">
+        <p className="text-[16px] leading-[1.65] text-[#58677b] min-[901px]:text-[18px] min-[901px]:leading-[1.7]">
           Have a question, suggestion, or need support?
           <br />
           Reach out to us, and we&apos;ll get back to you as soon as possible.
@@ -51,12 +51,12 @@ export default function ContactPage() {
                   {item.icon}
                 </span>
                 <div>
-                  <h3 className="mb-[7px] text-[12px] max-[620px]:text-[17px]">
+                  <h3 className="mb-[7px] text-[14px] max-[620px]:text-[17px]">
                     {item.title}
                   </h3>
                   {item.lines.map((line) => (
                     <p
-                      className="m-0 text-[10px] leading-[1.55] text-[#657386] min-[901px]:text-[14px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]"
+                      className="m-0 text-[16px] leading-[1.55] text-[#657386] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]"
                       key={line}
                     >
                       {line}
@@ -67,16 +67,16 @@ export default function ContactPage() {
             ))}
           </div>
           <div className="mt-5 overflow-hidden rounded-[11px] bg-[#073f36] p-5 text-white shadow-[0_10px_24px_#153c3020]">
-            <p className="text-[10px] font-bold tracking-[.13em] text-[#9fe3c7]">
+            <p className="text-[13px] font-bold tracking-[.13em] text-[#9fe3c7]">
               VUIOR MOBILE
             </p>
             <h3 className="mt-2 text-[18px] font-semibold">
               Help is always within reach.
             </h3>
-            <p className="mt-2 text-[12px] leading-5 text-[#c5ddd5]">
+            <p className="mt-2 text-[14px] leading-5 text-[#c5ddd5]">
               Track a payment, view your credits, or get in touch from the app.
             </p>
-            <div className="mt-4 flex flex-row gap-2 [&_a]:h-10 [&_a]:min-w-0 [&_a]:w-full [&_a_strong]:text-[14px]">
+            <div className="mt-4 flex flex-row gap-2 [&_a]:h-10 [&_a]:min-w-0 [&_a]:w-full [&_a_strong]:text-[16px]">
               <StoreBadge store="apple" />
               <StoreBadge store="google" />
             </div>
@@ -88,7 +88,7 @@ export default function ContactPage() {
           <h2 className="mb-[9px] text-[16px] max-[620px]:text-[17px]">
             Looking for quick answers?
           </h2>
-          <p className="m-0 text-[11px] text-[#667487] min-[901px]:text-[15px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
+          <p className="m-0 text-[16px] text-[#667487] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
             Visit our FAQs for articles on managing bills, payments, rewards, and
             more.
           </p>
@@ -131,10 +131,10 @@ export default function ContactPage() {
               <Icon name={icon} />
             </span>
             <div>
-              <h3 className="mb-2 text-[12px] max-[620px]:text-[17px]">
+              <h3 className="mb-2 text-[14px] max-[620px]:text-[17px]">
                 {title}
               </h3>
-              <p className="m-0 text-[10px] leading-[1.55] text-[#657386] min-[901px]:text-[14px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
+              <p className="m-0 text-[16px] leading-[1.55] text-[#657386] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
                 {line1}
                 <br />
                 {line2}

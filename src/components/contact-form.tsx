@@ -19,7 +19,7 @@ const categories = [
 ] as const;
 
 const fieldClass =
-  "w-full rounded-[5px] border border-[#d9e4e1] bg-white px-3.5 text-[11px] text-[#07142d] outline-none focus:border-[#009268] focus:shadow-[0_0_0_3px_#00a47512] min-[901px]:text-[14px] max-[620px]:text-[14px]";
+  "w-full rounded-[5px] border border-[#d9e4e1] bg-white px-3.5 text-[16px] text-[#07142d] outline-none focus:border-[#009268] focus:shadow-[0_0_0_3px_#00a47512]";
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set([
   "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif",
@@ -44,7 +44,7 @@ export function ContactForm() {
   const [phone, setPhone] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
-  const fieldLabel = "mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]";
+  const fieldLabel = "mt-5 flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]";
 
   function selectImages(fileList: FileList | null) {
     if (!fileList) return;
@@ -112,12 +112,12 @@ export function ContactForm() {
     >
       <div>
         <h2 className="mb-2.5 text-[16px] min-[620px]:text-[17px]">Send us a message</h2>
-        <p className="mb-[25px] text-[11px] text-[#667487] min-[901px]:text-[15px] min-[901px]:leading-[1.65] max-[620px]:text-[15px] max-[620px]:leading-[1.65]">
+        <p className="mb-[25px] text-[16px] text-[#667487] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
           Fill out the form below, and our team will respond shortly.
         </p>
       </div>
-      {error ? <p role="alert" className="mb-4 rounded-md bg-red-50 p-3 text-[12px] text-red-700">{error}</p> : null}
-      {sent ? <p role="status" className="mb-4 rounded-md bg-[#eaf8f3] p-3 text-[12px] text-[#007f5d]">Message sent. Our team will be in touch shortly.</p> : null}
+      {error ? <p role="alert" className="mb-4 rounded-md bg-red-50 p-3 text-[14px] text-red-700">{error}</p> : null}
+      {sent ? <p role="status" className="mb-4 rounded-md bg-[#eaf8f3] p-3 text-[14px] text-[#007f5d]">Message sent. Our team will be in touch shortly.</p> : null}
 
       <label className={fieldLabel}>
         <span>Full name <span className="text-red-600">*</span></span>
@@ -147,18 +147,18 @@ export function ContactForm() {
         <textarea className={`${fieldClass} h-24 resize-y pt-3.5`} required name="message" maxLength={10000} placeholder="How can we help you?" disabled={sending} />
       </label>
       <div className="mt-5">
-        <span className="mb-2 block text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">Images <span className="font-normal text-[#748093]">(optional, up to 4)</span></span>
+        <span className="mb-2 block text-[14px] font-[650] max-[620px]:text-[15px]">Images <span className="font-normal text-[#748093]">(optional, up to 4)</span></span>
         <input ref={fileInput} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple className="sr-only" onChange={(event) => selectImages(event.target.files)} disabled={sending} />
-        <button type="button" onClick={() => fileInput.current?.click()} disabled={sending || images.length >= 4} className="inline-flex h-10 items-center gap-2 rounded-md border border-[#d9e4e1] px-3 text-[12px] text-[#34425d] disabled:opacity-50">
+        <button type="button" onClick={() => fileInput.current?.click()} disabled={sending || images.length >= 4} className="inline-flex h-10 items-center gap-2 rounded-md border border-[#d9e4e1] px-3 text-[14px] text-[#34425d] disabled:opacity-50">
           <Paperclip size={15} /> Attach images
         </button>
-        <p className="mt-1 text-[10px] text-[#748093]">JPEG, PNG, WebP, HEIC, or HEIF. 5 MB max per image.</p>
-        {images.length ? <ul className="mt-2 space-y-1">{images.map((image, index) => <li key={`${image.name}-${index}`} className="flex items-center gap-2 text-[11px] text-[#53617a]"><Paperclip size={12} /><span className="flex-1 truncate">{image.name}</span><button type="button" aria-label={`Remove ${image.name}`} onClick={() => setImages((current) => current.filter((_, i) => i !== index))} className="p-1"><X size={14} /></button></li>)}</ul> : null}
+        <p className="mt-1 text-[13px] text-[#748093]">JPEG, PNG, WebP, HEIC, or HEIF. 5 MB max per image.</p>
+        {images.length ? <ul className="mt-2 space-y-1">{images.map((image, index) => <li key={`${image.name}-${index}`} className="flex items-center gap-2 text-[14px] text-[#53617a]"><Paperclip size={12} /><span className="flex-1 truncate">{image.name}</span><button type="button" aria-label={`Remove ${image.name}`} onClick={() => setImages((current) => current.filter((_, i) => i !== index))} className="p-1"><X size={14} /></button></li>)}</ul> : null}
       </div>
-      <button className="mt-[19px] h-[42px] w-full cursor-pointer rounded-[5px] border-0 bg-linear-to-br from-[#00a475] to-[#00815c] text-[12px] font-bold text-white disabled:cursor-wait disabled:opacity-70 max-[620px]:text-[14px]" type="submit" disabled={sending}>
+      <button className="mt-[19px] h-[42px] w-full cursor-pointer rounded-[5px] border-0 bg-linear-to-br from-[#00a475] to-[#00815c] text-[14px] font-bold text-white disabled:cursor-wait disabled:opacity-70 max-[620px]:text-[16px]" type="submit" disabled={sending}>
         {sending ? "Sending..." : sent ? "Send another message" : "Send message"}
       </button>
-      <p className="mt-4 text-center text-[9px] text-[#748093] min-[901px]:text-[12px] max-[620px]:text-[13px]" aria-live="polite">
+      <p className="mt-4 text-center text-[14px] text-[#748093] max-[620px]:text-[15px]" aria-live="polite">
         We typically respond within 24 hours on business days.
       </p>
     </form>

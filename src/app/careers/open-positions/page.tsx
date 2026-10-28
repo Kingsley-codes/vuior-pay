@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { initialJobs } from "@/data/jobs";
 
 const selectClass =
-  "h-11 rounded-[7px] border border-[#d9e4e1] bg-white px-3 text-[14px] font-semibold text-[#53617a] outline-none focus:border-[#009268]";
+  "h-11 rounded-[7px] border border-[#d9e4e1] bg-white px-3 text-[16px] font-semibold text-[#53617a] outline-none focus:border-[#009268]";
 
 export default async function OpenPositionsPage({
   searchParams,
@@ -32,7 +32,7 @@ export default async function OpenPositionsPage({
     <main className="min-h-screen bg-linear-to-br from-white from-30% to-[#fbfdfc] text-[#07142d]">
       <Header active="careers" />
       <section className="mx-auto max-w-[1180px] px-5 pt-[60px] pb-8 sm:px-10 lg:px-12">
-        <p className="mb-4 text-[12px] font-extrabold text-[#00895f]">
+        <p className="mb-4 text-[14px] font-extrabold text-[#00895f]">
           OPEN POSITIONS
         </p>
         <h1 className="text-[38px] font-bold leading-[1.08] tracking-[-1.7px] max-[620px]:text-[34px]">
@@ -46,8 +46,8 @@ export default async function OpenPositionsPage({
       <main className="mx-auto max-w-[1180px] px-5 pb-12 sm:px-10 lg:px-12">
         <form className="rounded-[13px] border border-[#dfe9e6] bg-white/85 p-5 shadow-[0_7px_28px_#153c3010]">
           <div className="mb-4 flex items-center justify-between gap-4 max-[620px]:flex-col max-[620px]:items-start">
-            <span className="text-[14px] font-bold text-[#53617a]">Filters</span>
-            <span className="text-[14px] font-bold text-[#00895f]">
+            <span className="text-[16px] font-bold text-[#53617a]">Filters</span>
+            <span className="text-[16px] font-bold text-[#00895f]">
               Open Positions ({filteredJobs.length})
             </span>
           </div>
@@ -77,7 +77,7 @@ export default async function OpenPositionsPage({
               ))}
             </select>
           </div>
-          <button className="mt-4 h-10 rounded-md bg-[#009268] px-5 text-[13px] font-bold text-white">
+          <button className="mt-4 h-10 rounded-md bg-[#009268] px-5 text-[15px] font-bold text-white">
             Apply filters
           </button>
         </form>
@@ -91,7 +91,7 @@ export default async function OpenPositionsPage({
             >
               <div>
                 <h2 className="text-[18px] font-bold">{job.title}</h2>
-                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-semibold text-[#657386]">
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[15px] font-semibold text-[#657386]">
                   <span className="inline-flex items-center gap-1.5">
                     <BriefcaseBusiness size={15} /> {job.department}
                   </span>
@@ -103,7 +103,7 @@ export default async function OpenPositionsPage({
                   </span>
                 </div>
               </div>
-              <span className="inline-flex items-center gap-2 self-center text-[14px] font-bold text-[#00895f]">
+              <span className="inline-flex items-center gap-2 self-center text-[16px] font-bold text-[#00895f]">
                 View role <ArrowRight size={17} />
               </span>
             </Link>

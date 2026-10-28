@@ -18,7 +18,7 @@ export function Header({
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 900) {
+      if (window.innerWidth > 1100) {
         setMobileMenuOpen(false);
       }
     };
@@ -40,20 +40,20 @@ export function Header({
     }`;
 
   const mobileNavLink = (item?: typeof active) =>
-    `flex items-center justify-between rounded-lg border-b border-[#edf2ef] px-1 py-3.5 text-[15px] font-[650] transition-colors duration-200 hover:text-[#009268] [&_svg]:h-[18px] [&_svg]:w-[18px] hover:[&_svg]:text-[#009268] ${
+    `flex items-center justify-between rounded-lg border-b border-[#edf2ef] px-1 py-3.5 text-[16px] font-[650] transition-colors duration-200 hover:text-[#009268] [&_svg]:h-[18px] [&_svg]:w-[18px] hover:[&_svg]:text-[#009268] ${
       active === item
         ? "border-[#009268] text-[#009268] [&_svg]:text-[#009268]"
         : "text-[#07142d] [&_svg]:text-[#91a099]"
     }`;
 
   const primaryButton =
-    "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[14px] font-bold !text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+    "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[16px] font-bold !text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
 
   const smallPrimaryButton = `${primaryButton} h-11 px-[23px] max-[620px]:px-3.5`;
 
   return (
     <header
-      className={`relative z-30 mx-auto flex items-center justify-between gap-7.5 max-[900px]:h-18 max-[620px]:gap-3 max-[620px]:px-4.5 ${wide ? "h-20 max-w-360 px-12 max-[900px]:px-6" : "h-22 max-w-310 px-7"}`}
+      className={`relative z-30 mx-auto flex items-center justify-between gap-7.5 max-[1100px]:h-18 max-[620px]:gap-3 max-[620px]:px-4.5 ${wide ? "h-20 max-w-360 px-12 max-[1100px]:px-6" : "h-22 max-w-310 px-7"}`}
     >
       <Link
         href="/"
@@ -71,7 +71,7 @@ export function Header({
         />
       </Link>
       <nav
-        className={`flex text-lg font-semibold max-[900px]:hidden ${wide ? "gap-11" : "gap-7.5"}`}
+        className={`flex text-lg font-semibold max-[1100px]:hidden ${wide ? "gap-11" : "gap-7.5"}`}
         aria-label="Main navigation"
       >
         <Link className={navLink("how")} href="/how-it-works">
@@ -90,7 +90,7 @@ export function Header({
           Contact
         </Link>
       </nav>
-      <div className="flex items-center gap-9 text-[16px] font-[650] max-[900px]:hidden max-[430px]:gap-2">
+      <div className="flex items-center gap-9 text-[16px] font-[650] max-[1100px]:hidden max-[430px]:gap-2">
         {loading ? (
           <span
             className="h-11 w-41 rounded-[7px] bg-[#edf4f1]"
@@ -104,7 +104,7 @@ export function Header({
           <>
             <Link
               href="/login"
-              className="inline-flex h-11 items-center justify-center hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] rounded-md border border-[#009268] px-[23px] text-[14px] font-bold text-[#009268] transition-colors duration-200 hover:text-[#007d5a]"
+              className="inline-flex h-11 items-center justify-center hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] rounded-md border border-[#009268] px-[23px] text-[16px] font-bold text-[#009268] transition-colors duration-200 hover:text-[#007d5a]"
             >
               Log in
             </Link>
@@ -118,7 +118,7 @@ export function Header({
       </div>
       <button
         type="button"
-        className="ml-auto hidden h-11 w-11 cursor-pointer items-center justify-center rounded-[9px] border border-[#dfe9e6] bg-white p-0 text-[#075b45] shadow-[0_4px_12px_#1233260c] hover:bg-[#eaf8f3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009268] max-[900px]:inline-flex"
+        className="ml-auto hidden h-11 w-11 cursor-pointer items-center justify-center rounded-[9px] border border-[#dfe9e6] bg-white p-0 text-[#075b45] shadow-[0_4px_12px_#1233260c] hover:bg-[#eaf8f3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009268] max-[1100px]:inline-flex"
         aria-label={
           mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
         }
@@ -135,7 +135,7 @@ export function Header({
         }`}
         aria-label="Mobile navigation"
       >
-        <p className="mb-[5px] text-[11px] font-extrabold uppercase tracking-[1.1px] text-[#82918b]">
+        <p className="mb-[5px] text-[14px] font-extrabold uppercase tracking-[1.1px] text-[#82918b]">
           Explore Vuior
         </p>
         <div className="border-t border-[#edf2ef]">
@@ -200,7 +200,7 @@ export function Header({
               </Link>
               <Link
                 href="/login"
-                className="inline-flex h-[50px] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] items-center justify-center p-1 rounded-md border border-[#009268] text-[13px] font-bold text-[#176650]"
+                className="inline-flex h-[50px] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] items-center justify-center p-1 rounded-md border border-[#009268] text-[15px] font-bold text-[#176650]"
                 onClick={closeMobileMenu}
               >
                 Log in to your account

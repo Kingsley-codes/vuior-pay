@@ -3,16 +3,16 @@ import Link from "next/link";
 
 export function SiteFooter() {
   const columnClass =
-    "flex flex-col gap-3 text-[10px] text-[#bdd2cc] min-[901px]:gap-3.5 min-[901px]:text-[14px] max-[620px]:text-[14px]";
+    "flex flex-col gap-3 text-[16px] text-[#bdd2cc] min-[901px]:gap-3.5";
   const headingClass =
-    "mb-1 text-[11px] text-white min-[901px]:mb-[5px] min-[901px]:text-[14px] max-[620px]:text-[13px]";
+    "mb-1 text-[16px] text-white min-[901px]:mb-[5px] max-[620px]:text-[15px]";
   const linkClass = "transition hover:text-[#76e1bc]";
   const socialLinkClass =
     "grid h-6 w-6 place-items-center transition hover:text-[#76e1bc] min-[901px]:h-8 min-[901px]:w-8 [&_svg]:h-5 [&_svg]:w-5 min-[901px]:[&_svg]:h-6 min-[901px]:[&_svg]:w-6";
 
   return (
     <footer className="border-t border-[#dbe9e4] bg-[#003f35] pt-8 text-white">
-      <div className="mx-auto grid max-w-[1050px] grid-cols-[2.2fr_repeat(4,1fr)] gap-[50px] px-[25px] max-[900px]:grid-cols-[2fr_repeat(2,1fr)] max-[620px]:grid-cols-2 max-[620px]:gap-x-[18px] max-[620px]:gap-y-[26px] max-[620px]:px-5">
+      <div className="mx-auto grid max-w-[1050px] grid-cols-[2fr_repeat(3,minmax(0,1fr))] gap-[50px] px-[25px] max-[900px]:grid-cols-[2fr_repeat(2,1fr)] max-[620px]:grid-cols-2 max-[620px]:gap-x-[18px] max-[620px]:gap-y-[26px] max-[620px]:px-5">
         <div className="max-[620px]:col-span-full">
           <Image
             src="/logo-light.png"
@@ -21,10 +21,10 @@ export function SiteFooter() {
             height={50}
             className="h-auto w-[105px] bg-transparent"
           />
-          <p className="text-[10px] leading-[1.6] text-[#bdd2cc] min-[901px]:text-[14px] min-[901px]:leading-[1.7] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+          <p className="text-[16px] leading-[1.6] text-[#bdd2cc] min-[901px]:leading-[1.7] max-[620px]:leading-[1.65]">
             Vuior - Bill Payment Simplified
           </p>
-          <p className="mt-4 mb-2 text-[10px] font-bold text-white min-[901px]:text-[13px] max-[620px]:text-[13px]">
+          <p className="mt-4 mb-2 text-[15px] font-bold text-white">
             Follow us on
           </p>
           <div
@@ -104,7 +104,7 @@ export function SiteFooter() {
           </Link>
         </div>
       </div>
-      <p className="mt-[35px] mb-0 pb-[22px] text-center text-[9px] text-[#9fbab2] min-[901px]:text-[12px] max-[620px]:mt-[30px] max-[620px]:text-[12px]">
+      <p className="mt-[35px] mb-0 pb-[22px] text-center text-[14px] text-[#9fbab2] max-[620px]:mt-[30px]">
         © 2026 Vuior. All rights reserved.
       </p>
     </footer>

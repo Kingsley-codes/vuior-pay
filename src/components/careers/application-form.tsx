@@ -7,7 +7,7 @@ import type { JobDescription } from "@/data/jobs";
 import { hasCompletePhoneNumber } from "@/utils/inputFormatting";
 
 const fieldClass =
-  "w-full rounded-[5px] border border-[#d9e4e1] bg-white px-3.5 text-[11px] text-[#07142d] outline-none focus:border-[#009268] focus:shadow-[0_0_0_3px_#00a47512] min-[901px]:text-[14px] max-[620px]:text-[14px]";
+  "w-full rounded-[5px] border border-[#d9e4e1] bg-white px-3.5 text-[16px] text-[#07142d] outline-none focus:border-[#009268] focus:shadow-[0_0_0_3px_#00a47512]";
 type FormStatus = {
   type: "success" | "error";
   title: string;
@@ -97,17 +97,17 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         >
           <div className="flex gap-3">
             <span
-              className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full text-[14px] font-bold text-white ${
+              className={`mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full text-[16px] font-bold text-white ${
                 status.type === "success" ? "bg-[#009268]" : "bg-[#c83f3f]"
               }`}
             >
               {status.type === "success" ? "OK" : "!"}
             </span>
             <div className="min-w-0 flex-1">
-              <strong className="block text-[14px] text-[#07142d]">
+              <strong className="block text-[16px] text-[#07142d]">
                 {status.title}
               </strong>
-              <p className="mt-1 text-[13px] leading-5 text-[#657386]">
+              <p className="mt-1 text-[15px] leading-5 text-[#657386]">
                 {status.message}
               </p>
             </div>
@@ -129,18 +129,18 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         onSubmit={submit}
       >
         <div>
-          <p className="mb-2 text-[11px] font-extrabold text-[#00895f] max-[620px]:text-[12px]">
+          <p className="mb-2 text-[14px] font-extrabold text-[#00895f]">
             APPLICATION
           </p>
           <h2 className="mb-2.5 text-[18px] font-bold max-[620px]:text-[19px]">
             Apply for {job.title}
           </h2>
-          <p className="mb-[25px] text-[11px] leading-[1.65] text-[#667487] min-[901px]:text-[15px] max-[620px]:text-[15px]">
+          <p className="mb-[25px] text-[16px] leading-[1.65] text-[#667487]">
             Share a few details, and our team will review your application.
           </p>
           {status ? (
             <div
-              className={`mb-6 rounded-[9px] border px-4 py-3 text-[13px] leading-6 ${
+              className={`mb-6 rounded-[9px] border px-4 py-3 text-[15px] leading-6 ${
                 status.type === "success"
                   ? "border-[#b9e7d8] bg-[#f0fbf6] text-[#075b45]"
                   : "border-[#f0c9c9] bg-[#fff5f5] text-[#8a1f1f]"
@@ -148,14 +148,14 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
               role="status"
               aria-live="polite"
             >
-              <strong className="block text-[14px]">{status.title}</strong>
+              <strong className="block text-[16px]">{status.title}</strong>
               {status.message}
             </div>
           ) : null}
         </div>
 
         <div className="grid grid-cols-2 gap-4 max-[620px]:grid-cols-1">
-          <label className="flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+          <label className="flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]">
             <span>First name<span className="text-red-600" aria-label="required"> *</span></span>
             <input
               className={`${fieldClass} h-[43px]`}
@@ -163,7 +163,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
               required
             />
           </label>
-          <label className="flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+          <label className="flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]">
             <span>Last name<span className="text-red-600" aria-label="required"> *</span></span>
             <input
               className={`${fieldClass} h-[43px]`}
@@ -173,7 +173,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
           </label>
         </div>
 
-        <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+        <label className="mt-5 flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]">
           <span>Email address<span className="text-red-600" aria-label="required"> *</span></span>
           <input
             className={`${fieldClass} h-[43px]`}
@@ -183,7 +183,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
           />
         </label>
 
-        <div className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+        <div className="mt-5 flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]">
           <span>Phone number<span className="text-red-600" aria-label="required"> *</span></span>
           <PhoneNumberInput
             name="phone"
@@ -194,18 +194,18 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
           />
         </div>
 
-        <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+        <label className="mt-5 flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]">
           <span>Upload resume<span className="text-red-600" aria-label="required"> *</span></span>
           <input
             accept=".pdf,.doc,.docx"
-            className={`${fieldClass} h-[43px] pt-2.5 file:mr-3 file:rounded file:border-0 file:bg-[#edf9f5] file:px-3 file:py-1.5 file:text-[12px] file:font-bold file:text-[#007f5d]`}
+            className={`${fieldClass} h-[43px] pt-2.5 file:mr-3 file:rounded file:border-0 file:bg-[#edf9f5] file:px-3 file:py-1.5 file:text-[14px] file:font-bold file:text-[#007f5d]`}
             name="resume"
             required
             type="file"
           />
         </label>
 
-        <label className="mt-5 flex flex-col gap-[9px] text-[10px] font-[650] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+        <label className="mt-5 flex flex-col gap-[9px] text-[14px] font-[650] max-[620px]:text-[15px]">
           <span>How did you hear about us?<span className="text-red-600" aria-label="required"> *</span></span>
           <select
             className={`${fieldClass} h-[43px]`}
@@ -223,7 +223,7 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
           </select>
         </label>
 
-        <label className="mt-5 flex items-start gap-3 text-[10px] leading-[1.6] text-[#667487] min-[901px]:text-[12px] max-[620px]:text-[13px]">
+        <label className="mt-5 flex items-start gap-3 text-[14px] leading-[1.6] text-[#667487] max-[620px]:text-[15px]">
           <input
             className="mt-1 h-4 w-4 accent-[#009268]"
             defaultChecked
@@ -252,13 +252,13 @@ export function JobApplicationForm({ job }: { job: JobDescription }) {
         </label>
 
         <button
-          className="mt-[24px] h-[44px] w-full cursor-pointer rounded-[5px] border-0 bg-linear-to-br from-[#00a475] to-[#00815c] text-[12px] font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] max-[620px]:text-[14px]"
+          className="mt-[24px] h-[44px] w-full cursor-pointer rounded-[5px] border-0 bg-linear-to-br from-[#00a475] to-[#00815c] text-[14px] font-bold text-white transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] max-[620px]:text-[16px]"
           type="submit"
         >
           Submit application
         </button>
         <p
-          className="mt-4 text-center text-[9px] text-[#748093] min-[901px]:text-[12px] max-[620px]:text-[13px]"
+          className="mt-4 text-center text-[14px] text-[#748093] max-[620px]:text-[15px]"
           aria-live="polite"
         >
           Your information is reviewed by the Vuior careers team.

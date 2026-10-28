@@ -27,14 +27,14 @@ export default async function JobApplicationPage({
       <Header active="careers" />
       <section className="mx-auto max-w-[1180px] px-5 pt-[42px] pb-10 sm:px-10 lg:px-12">
         <Link
-          className="mb-7 inline-flex items-center gap-2 text-[13px] font-bold text-[#00895f]"
+          className="mb-7 inline-flex items-center gap-2 text-[15px] font-bold text-[#00895f]"
           href={`/careers/jobs/${job.id}`}
         >
           <ArrowLeft size={16} /> Back to role overview
         </Link>
         <div className="grid gap-7 lg:grid-cols-[300px_1fr]">
           <aside className="h-fit rounded-[13px] border border-[#dfe9e6] bg-white/85 p-5 shadow-[0_7px_28px_#153c3010]">
-            <p className="mb-2 text-[11px] font-extrabold text-[#00895f]">
+            <p className="mb-2 text-[14px] font-extrabold text-[#00895f]">
               APPLYING FOR
             </p>
             <h1 className="mb-5 text-[26px] font-bold leading-tight tracking-[-.04em]">
@@ -47,7 +47,7 @@ export default async function JobApplicationPage({
               [DollarSign, job.salaryExpectations],
             ].map(([Icon, value]) => (
               <div
-                className="flex items-center gap-3 border-t border-[#e8eeeb] py-3 text-[14px] font-semibold text-[#596885]"
+                className="flex items-center gap-3 border-t border-[#e8eeeb] py-3 text-[16px] font-semibold text-[#596885]"
                 key={value as string}
               >
                 <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#edf9f5] text-[#009268]">

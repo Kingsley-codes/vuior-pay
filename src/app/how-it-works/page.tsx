@@ -45,20 +45,20 @@ export default function HowItWorksPage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/signup"
-                className="flex h-12 items-center rounded-md bg-[#008f64] px-7 text-[14px] font-semibold text-white transition-opacity hover:opacity-90 sm:text-[15px]"
+                className="flex h-12 items-center rounded-md bg-[#008f64] px-7 text-[16px] font-semibold text-white transition-opacity hover:opacity-90"
               >
                 Create free account
               </Link>
 
               <a
                 href="#rewards"
-                className="flex h-12 items-center rounded-md border border-[#009b6b] px-7 text-[14px] font-semibold text-[#008f64] transition-colors hover:bg-[#f1faf6] sm:text-[15px]"
+                className="flex h-12 items-center rounded-md border border-[#009b6b] px-7 text-[16px] font-semibold text-[#008f64] transition-colors hover:bg-[#f1faf6]"
               >
                 See rewards
               </a>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-6 text-[13px] font-semibold sm:gap-7 sm:text-[14px]">
+            <div className="mt-8 flex flex-wrap gap-6 text-[15px] font-semibold sm:gap-7 sm:text-[16px]">
               <span className="flex items-center gap-2">
                 <LockKeyhole size={18} className="text-[#00a36a]" />
                 Pay securely
@@ -155,13 +155,13 @@ export default function HowItWorksPage() {
       <section className="mx-auto max-w-[960px] px-6 pb-12 sm:pb-14">
         <div className="relative overflow-hidden rounded-2xl border border-[#dfe9e6] bg-white shadow-[0_14px_35px_rgba(20,62,48,.06)] lg:grid lg:min-h-[276px] lg:grid-cols-[1fr_310px]">
           <div className="relative z-10 px-7 py-8 sm:px-10 sm:py-10">
-            <p className="text-[11px] font-bold tracking-[.14em] text-[#009268]">
+            <p className="text-[14px] font-bold tracking-[.14em] text-[#009268]">
               THE VUIOR APP
             </p>
             <h2 className="mt-3 text-[28px] font-bold leading-tight tracking-[-.04em] sm:text-[33px]">
               Your bills, rewards, and peace of mind—wherever you are.
             </h2>
-            <p className="mt-3 max-w-[510px] text-[15px] leading-6 text-[#596885]">
+            <p className="mt-3 max-w-[510px] text-[16px] leading-6 text-[#596885]">
               Stay ahead of every due date and make payments in a few easy taps.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -177,7 +177,7 @@ export default function HowItWorksPage() {
                   />
                 </svg>
                 <span className="flex flex-col items-start leading-none">
-                  <small className="mb-1 text-[8px]">Download on the</small>
+                  <small className="mb-1 text-[11px]">Download on the</small>
                   <strong className="text-[16px] font-semibold">
                     App Store
                   </strong>
@@ -198,7 +198,7 @@ export default function HowItWorksPage() {
                   <path fill="#00ef75" d="M1 1.5 21.2 11.8 17 15.5Z" />
                 </svg>
                 <span className="flex flex-col items-start leading-none">
-                  <small className="mb-1 text-[8px]">GET IT ON</small>
+                  <small className="mb-1 text-[11px]">GET IT ON</small>
                   <strong className="text-[16px] font-semibold">
                     Google Play
                   </strong>
@@ -232,7 +232,7 @@ export default function HowItWorksPage() {
               the more you earn
             </h2>
 
-            <p className="mt-3 text-[14px] leading-5 text-[#c7ded7] sm:text-[15px]">
+            <p className="mt-3 text-[16px] leading-5 text-[#c7ded7]">
               Earn credits on eligible bills when you pay early.
             </p>
           </div>
@@ -242,13 +242,13 @@ export default function HowItWorksPage() {
               key={days}
               className="rounded-lg border border-[#ffffff24] bg-[#005647] p-5 text-center"
             >
-              <b className="text-[13px] font-semibold sm:text-[14px]">{days}</b>
+              <b className="text-[15px] font-semibold sm:text-[16px]">{days}</b>
 
               <strong className="mt-3 block text-[30px] sm:text-[32px]">
                 {reward}
               </strong>
 
-              <small className="text-[12px] text-[#c7ded7] sm:text-[13px]">
+              <small className="text-[14px] text-[#c7ded7] sm:text-[15px]">
                 in credits
               </small>
             </div>
@@ -362,7 +362,7 @@ export default function HowItWorksPage() {
             Powered By Partnerships
           </h2>
 
-          <p className="mt-3 text-[14px] leading-5 text-[#c7ded7] sm:text-[15px]">
+          <p className="mt-3 text-[16px] leading-5 text-[#c7ded7]">
             We negotiate exclusive discounts for our users with providers across
             industries and regions.
           </p>
@@ -370,14 +370,14 @@ export default function HowItWorksPage() {
 
         <div className="flex flex-wrap gap-3">
           <Link
-            className="flex h-11 items-center rounded-md bg-[#00a36a] px-6 text-[13px] font-semibold !text-white transition-opacity hover:opacity-90 sm:text-[14px]"
+            className="flex h-11 items-center rounded-md bg-[#00a36a] px-6 text-[15px] font-semibold !text-white transition-opacity hover:opacity-90 sm:text-[16px]"
             href="/signup"
           >
             Create free account
           </Link>
 
           <Link
-            className="flex h-11 items-center rounded-md border border-[#9dc6b9] px-6 text-[13px] font-semibold text-white transition-colors hover:bg-white/10 sm:text-[14px]"
+            className="flex h-11 items-center rounded-md border border-[#9dc6b9] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-white/10 sm:text-[16px]"
             href="/login"
           >
             Log in

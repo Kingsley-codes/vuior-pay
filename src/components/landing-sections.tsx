@@ -1,3 +1,4 @@
+import EarlyPaymentCalculator from "@/components/EarlyPaymentCalculator";
 import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,17 +6,17 @@ import { Icon } from "./icons";
 import { MOBILE_FAQS } from "@/data/faqs";
 
 const buttonBase =
-  "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md px-[30px] text-[14px] font-bold transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
+  "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md px-[30px] text-[16px] font-bold transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
 
 const primaryButton = `${buttonBase} bg-linear-to-br from-[#00a475] to-[#007d5a] !text-white shadow-[0_8px_20px_#008e6623]`;
 
 const outlineButton = `${buttonBase} border border-[#009268] bg-white text-[#007f5d]`;
 
 const textLink =
-  "inline-flex items-center gap-[9px] text-[13px] font-bold text-[#009268] max-[620px]:text-[14px] [&_svg]:w-[17px]";
+  "inline-flex items-center gap-[9px] text-[15px] font-bold text-[#009268] max-[620px]:text-[16px] [&_svg]:w-[17px]";
 
 const eyebrow =
-  "mb-6 text-[10px] font-extrabold leading-none tracking-[0.6px] text-[#009268] max-[620px]:text-[12px]";
+  "mb-6 text-[13px] font-extrabold leading-none tracking-[0.6px] text-[#009268] max-[620px]:text-[14px]";
 
 const sectionHeading =
   "mb-5 text-[30px] font-bold leading-[1.24] tracking-[-1px] max-[620px]:text-2xl";
@@ -47,19 +48,19 @@ const ButtonPair = ({ cta = false }: { cta?: boolean }) => (
 export function HeroSection() {
   return (
     <section className="overflow-hidden bg-linear-to-br from-white via-[#fbfdfc] via-30% to-[#f1f8f6]">
-      <div className="mx-auto grid h-[575px] max-w-[1240px] grid-cols-[48%_52%] items-center px-7 pt-[25px] max-[900px]:h-auto max-[900px]:min-h-[720px] max-[900px]:grid-cols-1 max-[900px]:pt-[60px] max-[620px]:min-h-[680px] max-[620px]:px-[18px] max-[620px]:pt-[42px]">
+      <div className="mx-auto grid min-h-[575px] max-w-[1240px] grid-cols-[48%_52%] items-center px-7 pt-[25px] max-[900px]:h-auto max-[900px]:min-h-[720px] max-[900px]:grid-cols-1 max-[900px]:pt-[60px] max-[620px]:min-h-[680px] max-[620px]:px-[18px] max-[620px]:pt-[42px]">
         <div className="relative z-[2] pb-10 max-[900px]:pb-0 max-[900px]:text-center">
           <h1 className="mb-6 text-[57px] font-[750] leading-[1.07] tracking-[-2.6px] max-[900px]:text-[48px] max-[620px]:text-[39px] max-[620px]:tracking-[-1.8px] max-[430px]:text-[clamp(34px,10vw,39px)]">
             Pay your bills early.
             <br />
             <span className="text-[#009268]">Get rewarded for it.</span>
           </h1>
-          <p className="mb-[33px] max-w-140 text-[18px] leading-[1.7] text-[#58677b] min-[901px]:text-[20px] max-[900px]:mx-auto max-[620px]:text-[15px] max-[430px]:text-[16px] max-[430px]:leading-[1.65]">
+          <p className="mb-[33px] max-w-140 text-[18px] leading-[1.7] text-[#58677b] min-[901px]:text-[20px] max-[900px]:mx-auto max-[620px]:text-[16px] max-[430px]:text-[16px] max-[430px]:leading-[1.65]">
             Manage all your bills in one place, pay before the due date, and
             earn credits based on how early you pay.
           </p>
           <ButtonPair />
-          <div className="mt-[57px] flex gap-[35px] text-[12px] font-bold max-[900px]:mt-[35px] max-[900px]:justify-center max-[620px]:flex-wrap max-[620px]:gap-[13px] max-[430px]:mx-auto max-[430px]:grid max-[430px]:max-w-[290px] max-[430px]:grid-cols-2 max-[430px]:justify-items-start [&_span]:flex [&_span]:items-center [&_span]:gap-[9px] [&_span]:whitespace-nowrap [&_svg]:h-6 [&_svg]:w-6 [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[5px] [&_svg]:text-[#009268]">
+          <div className="mt-[57px] flex gap-[35px] text-[14px] font-bold max-[900px]:mt-[35px] max-[900px]:justify-center max-[620px]:flex-wrap max-[620px]:gap-[13px] max-[430px]:mx-auto max-[430px]:grid max-[430px]:max-w-[290px] max-[430px]:grid-cols-2 max-[430px]:justify-items-start [&_span]:flex [&_span]:items-center [&_span]:gap-[9px] [&_span]:whitespace-nowrap [&_svg]:h-6 [&_svg]:w-6 [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[5px] [&_svg]:text-[#009268]">
             <span>
               <Icon name="gift" />
               Free to join
@@ -96,7 +97,7 @@ export function Providers() {
       className="overflow-hidden border-y border-b-[#dfe9e6] border-t-[#f0f4f2] px-6 pt-[35px] pb-[37px] text-center"
       id="providers"
     >
-      <p className="mb-[31px] text-[10px] font-extrabold tracking-[1.2px] text-[#718091] max-[620px]:text-[12px]">
+      <p className="mb-[31px] text-[13px] font-extrabold tracking-[1.2px] text-[#718091] max-[620px]:text-[14px]">
         TRUSTED BY MILLIONS TO PAY BILLS FROM TOP PROVIDERS
       </p>
 
@@ -149,7 +150,7 @@ export function Providers() {
           className="h-5 w-auto shrink-0 object-contain max-[620px]:justify-self-center md:h-[35px]"
         />
 
-        <strong className="text-[11px] max-[620px]:justify-self-center md:text-2xl">
+        <strong className="text-[14px] max-[620px]:justify-self-center md:text-2xl">
           +100
           <br />
           <small>more</small>
@@ -159,34 +160,10 @@ export function Providers() {
   );
 }
 
-const bills = [
-  {
-    icon: "⚡",
-    name: "Electricity",
-    due: "Due Jun 28, 2026",
-    amount: "$85.50",
-    state: "Due soon",
-  },
-  {
-    icon: "⌁",
-    name: "Internet",
-    due: "Due Jun 30, 2026",
-    amount: "$55.00",
-    state: "Due soon",
-  },
-  {
-    icon: "◉",
-    name: "Water Bill",
-    due: "Due Jul 05, 2026",
-    amount: "$31.20",
-    state: "Upcoming",
-  },
-];
-
 export function FeaturesSection() {
   return (
     <section
-      className="mx-auto grid max-w-[1150px] grid-cols-[37%_63%] items-center gap-[35px] px-6 py-[74px] max-[900px]:grid-cols-1 max-[900px]:px-[30px] max-[900px]:py-[60px] max-[620px]:px-5 max-[620px]:py-[55px]"
+      className="mx-auto grid max-w-[1150px] grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-center gap-10 min-[1100px]:gap-14 px-6 py-[74px] max-[900px]:grid-cols-1 max-[900px]:px-[30px] max-[900px]:py-[60px] max-[620px]:px-5 max-[620px]:py-[55px]"
       id="features"
     >
       <div className="max-[900px]:text-center">
@@ -196,10 +173,10 @@ export function FeaturesSection() {
           <br />
           never miss a payment
         </h2>
-        <p className="max-w-[350px] text-[16px] leading-[1.55] text-[#58677b] min-[901px]:text-[17px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[16px] max-[620px]:leading-[1.65]">
-          Track due dates and savings, and manage payments with ease.
+        <p className="max-w-[350px] text-[16px] leading-[1.55] text-[#58677b] min-[901px]:text-[17px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:leading-[1.65]">
+          Track due dates, monitor savings, and manage payments with ease.
         </p>
-        <ul className="my-7 list-none p-0 max-[900px]:mx-auto max-[900px]:max-w-[330px] max-[900px]:text-left [&_li]:my-[15px] [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:text-[14px] max-[620px]:[&_li]:text-[15px] [&_svg]:w-[18px] [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[3px] [&_svg]:text-[#009268]">
+        <ul className="my-7 list-none p-0 max-[900px]:mx-auto max-[900px]:max-w-[330px] max-[900px]:text-left [&_li]:my-[15px] [&_li]:flex [&_li]:items-center [&_li]:gap-3 [&_li]:text-[16px] max-[620px]:[&_li]:text-[16px] [&_svg]:w-[18px] [&_svg]:rounded-full [&_svg]:bg-[#eaf8f3] [&_svg]:p-[3px] [&_svg]:text-[#009268]">
           <li>
             <Icon name="calendar" />
             See all upcoming bills at a glance
@@ -217,86 +194,7 @@ export function FeaturesSection() {
           Explore features <Icon name="arrow" />
         </Link>
       </div>
-      <div className="grid h-[360px] grid-cols-[2fr_1fr] gap-2.5 max-[620px]:h-auto max-[620px]:grid-cols-1">
-        <div className="rounded-xl border border-[#dfe9e6] bg-white p-6 shadow-[0_6px_25px_#133c3010] max-[620px]:p-[15px]">
-          <h3 className="mb-5 text-[12px]">Upcoming Bills</h3>
-          {bills.map((bill) => (
-            <div
-              className="grid grid-cols-[36px_1fr_70px_54px] items-center gap-[11px] border-b border-[#edf1f0] py-3.5 text-[11px] last:border-0 max-[620px]:grid-cols-[32px_1fr_58px_42px] max-[430px]:grid-cols-[30px_minmax(75px,1fr)_52px_42px] max-[430px]:gap-[7px] [&_small]:text-[9px] [&_small]:text-[#718091] [&_span]:flex [&_span]:flex-col [&_span]:gap-[5px]"
-              key={bill.name}
-            >
-              <span className="grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[#fff7e8] text-[17px] text-[#ffa200]">
-                {bill.icon}
-              </span>
-              <span>
-                <b>{bill.name}</b>
-                <small>{bill.due}</small>
-              </span>
-              <span className="text-right max-[430px]:[&_b]:text-[9px]">
-                <b>{bill.amount}</b>
-                <small
-                  className={
-                    bill.state === "Upcoming"
-                      ? "text-[#009268]"
-                      : "text-[#f28a00]"
-                  }
-                >
-                  {bill.state}
-                </small>
-              </span>
-              <Link
-                className="inline-flex h-[33px] items-center justify-center rounded-[5px] border-0 bg-[#009268] text-[10px] font-bold text-white max-[620px]:min-h-10"
-                href="/login"
-              >
-                Pay
-              </Link>
-            </div>
-          ))}
-        </div>
-        <aside className="grid grid-rows-[105px_1fr] gap-2.5 max-[620px]:grid-cols-2 max-[620px]:grid-rows-none max-[430px]:grid-cols-1">
-          <div className="relative rounded-xl border border-[#dfe9e6] bg-white p-[18px] shadow-[0_6px_25px_#133c3010]">
-            <small className="mb-[7px] block text-[9px] text-[#637184]">
-              Total Credits
-            </small>
-            <strong className="text-[23px]">$2,450</strong>
-            <span className="absolute right-4 bottom-[18px] text-right text-[10px] font-bold text-[#009268]">
-              +$84.20
-              <br />
-              <small className="font-normal">This month</small>
-            </span>
-          </div>
-          <div className="rounded-xl border border-[#dfe9e6] bg-white p-[18px] text-[8px] shadow-[0_6px_25px_#133c3010]">
-            <h3 className="mb-5 text-[12px]">Recent Transaction</h3>
-            {[
-              ["⚡", "Wallet Top-up", "Jun 23 · 10:30 AM", "+$100.00"],
-              ["◇", "Electricity Payment", "Jun 23 · 09:15 AM", "-$85.50"],
-            ].map(([icon, title, date, amount]) => (
-              <p
-                className="m-0 grid grid-cols-[20px_1fr_auto] items-center gap-[5px] border-b border-[#edf1f0] py-2.5"
-                key={title}
-              >
-                {icon}
-                <span className="flex flex-col gap-[5px]">
-                  <b>{title}</b>
-                  <small className="text-[7px] text-[#718091]">{date}</small>
-                </span>
-                <strong className="flex flex-col gap-[5px]">
-                  {amount}
-                  <small className="text-right text-[7px] text-[#009268]">
-                    Success
-                  </small>
-                </strong>
-              </p>
-            ))}
-            <Link
-              className="mt-[15px] block text-right text-[#009268]"
-              href="/login"
-            >
-              View all
-            </Link>
-          </div>
-        </aside>
-      </div>
+      <EarlyPaymentCalculator />
     </section>
   );
 }
@@ -317,11 +215,11 @@ export function RewardsSection() {
             <br />
             the more you earn
           </h2>
-          <p className="max-w-[290px] text-[13px] leading-[1.55] text-[#d3e4df] min-[901px]:text-[16px] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+          <p className="max-w-[290px] text-[16px] leading-[1.55] text-[#d3e4df] min-[901px]:leading-[1.7] max-[900px]:mx-auto max-[620px]:leading-[1.65]">
             Earn credits when you pay eligible bills before the due date.
           </p>
           <Link
-            className="mt-2.5 inline-flex h-[39px] items-center justify-center rounded-md bg-white px-[19px] text-[11px] font-bold text-[#006b4f] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824]"
+            className="mt-2.5 inline-flex h-[39px] items-center justify-center rounded-md bg-white px-[19px] text-[14px] font-bold text-[#006b4f] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824]"
             href="/how-it-works"
           >
             View all rewards
@@ -336,20 +234,20 @@ export function RewardsSection() {
               <span className="mb-1.5 grid h-[52px] w-[52px] place-items-center rounded-full border border-[#00a878] [&_svg]:w-[27px] [&_svg]:text-[#00c28a]">
                 <Icon name="calendar" />
               </span>
-              <b className="text-[13px]">{t.days}</b>
-              <small className="text-[11px]">Earn up to</small>
+              <b className="text-[15px]">{t.days}</b>
+              <small className="text-[14px]">Earn up to</small>
               <strong className="text-[40px] leading-none">{t.pct}</strong>
-              <small className="text-[11px]">in credits</small>
+              <small className="text-[14px]">in credits</small>
             </div>
           ))}
           <div className="relative flex min-h-[214px] flex-col items-stretch justify-between gap-2 overflow-hidden border-l border-white/25 px-4 pt-5 pb-[15px] pl-[30px] text-left max-[900px]:border-t max-[900px]:border-white/20 max-[620px]:min-h-[210px] max-[620px]:border-l-0 max-[620px]:pl-6">
-            <div className="relative z-[2] w-full [&_p]:my-2 [&_p]:w-full [&_p]:text-[10px] max-[620px]:[&_p]:text-[13px] [&_small]:my-[16px_0_5px] [&_small]:block [&_small]:text-[9px] max-[620px]:[&_small]:text-[13px] [&_strong]:text-[18px]">
+            <div className="relative z-[2] w-full [&_p]:my-2 [&_p]:w-full [&_p]:text-[13px] max-[620px]:[&_p]:text-[15px] [&_small]:my-[16px_0_5px] [&_small]:block [&_small]:text-[12px] max-[620px]:[&_small]:text-[15px] [&_strong]:text-[18px]">
               <b>Example</b>
               <div className="my-2 flex flex-col gap-0.5">
-                <span className="text-[9px] max-[620px]:text-[13px]">
+                <span className="text-[12px] max-[620px]:text-[15px]">
                   Electricity bill:
                 </span>
-                <strong className="text-[14px]!">$100.00</strong>
+                <strong className="text-[16px]!">$100.00</strong>
               </div>
               <p>Paid 10 days early</p>
               <small>Credits earned:</small>
@@ -403,16 +301,16 @@ export function HowItWorks() {
             className="relative flex flex-col items-center px-[45px]"
             key={step.title}
           >
-            <i className="absolute top-[27px] left-1.5 grid h-[23px] w-[23px] place-items-center rounded-full bg-[#009268] text-[10px] font-bold not-italic text-white max-[620px]:left-[20%]">
+            <i className="absolute top-[27px] left-1.5 grid h-[23px] w-[23px] place-items-center rounded-full bg-[#009268] text-[13px] font-bold not-italic text-white max-[620px]:left-[20%]">
               {i + 1}
             </i>
             <span className="z-[1] mb-[17px] grid h-[70px] w-[70px] place-items-center rounded-full bg-[#eff8f5] [&_svg]:w-[37px] [&_svg]:text-[#009268]">
               <Icon name={step.icon} />
             </span>
-            <b className="mb-2.5 text-[12px] max-[620px]:text-[13px]">
+            <b className="mb-2.5 text-[16px]">
               {step.title}
             </b>
-            <p className="m-0 max-w-[220px] text-[10px] leading-[1.6] text-[#5c6a7e] min-[901px]:text-[15px] min-[901px]:leading-[1.7] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+            <p className="m-0 max-w-[220px] text-[16px] leading-[1.6] text-[#5c6a7e] min-[901px]:leading-[1.7] max-[620px]:leading-[1.65]">
               {step.text}
             </p>
           </div>
@@ -425,8 +323,8 @@ export function HowItWorks() {
 
 export function DownloadSection() {
   return (
-    <section className="mx-auto mb-[49px] grid h-[242px] max-w-[1045px] grid-cols-[48%_52%] overflow-hidden rounded-2xl border border-[#dfe9e6] bg-[#f7faf9] max-[900px]:mx-[25px] max-[900px]:mb-[45px] max-[620px]:mx-[18px] max-[620px]:h-auto max-[620px]:grid-cols-1">
-      <div className="relative max-[620px]:h-[220px]">
+    <section className="mx-auto mb-[49px] grid min-h-[280px] max-w-[1045px] grid-cols-[48%_52%] overflow-hidden rounded-2xl border border-[#dfe9e6] bg-[#f7faf9] max-[900px]:mx-[25px] max-[900px]:mb-[45px] max-[620px]:mx-[18px] max-[620px]:h-auto max-[620px]:grid-cols-1">
+      <div className="relative min-h-[280px] max-[620px]:min-h-[220px]">
         <Image
           src="/app-phones.png"
           alt="Three Vuior mobile app screens"
@@ -441,11 +339,11 @@ export function DownloadSection() {
           <br />
           anytime, anywhere
         </h2>
-        <p className="max-w-[390px] text-[12px] leading-[1.55] text-[#5c6a7e] min-[901px]:text-[15px] min-[901px]:leading-[1.7] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+        <p className="max-w-[390px] text-[16px] leading-[1.55] text-[#5c6a7e] min-[901px]:leading-[1.7] max-[620px]:leading-[1.65]">
           The Vuior app makes it easy to pay bills, earn credits, and stay in
           control on the go.
         </p>
-        <div className="mt-2 flex gap-3 max-[620px]:justify-center max-[430px]:flex-col max-[430px]:items-center">
+        <div className="mt-2 flex flex-wrap gap-3 max-[620px]:justify-center max-[430px]:flex-col max-[430px]:items-center">
           <StoreBadge store="apple" />
           <StoreBadge store="google" />
         </div>
@@ -491,7 +389,7 @@ export function StoreBadge({ store }: { store: "apple" | "google" }) {
         </svg>
       )}
       <span className="flex flex-col items-start leading-none">
-        <small className="mb-1 text-[8px] font-medium tracking-[0.03em]">
+        <small className="mb-1 text-[11px] font-medium tracking-[0.03em]">
           {apple ? "Download on the" : "GET IT ON"}
         </small>
         <strong className="text-[17px] font-semibold tracking-[-0.02em]">
@@ -534,8 +432,8 @@ export function SecurityStrip() {
         >
           <Icon name={x.icon} />
           <span>
-            <b className="text-[11px] max-[620px]:text-[13px]">{x.title}</b>
-            <p className="my-2 text-[9px] leading-[1.6] text-[#647185] min-[901px]:text-[14px] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+            <b className="text-[16px]">{x.title}</b>
+            <p className="my-2 text-[16px] leading-[1.6] text-[#647185] max-[620px]:leading-[1.65]">
               {x.text}
             </p>
           </span>
@@ -557,7 +455,7 @@ export function FaqSection() {
           Frequently asked questions
         </h2>
         <Link
-          className="flex items-center gap-[7px] text-[10px] font-bold text-[#009268] max-[620px]:text-[13px] max-[430px]:mt-1 max-[430px]:whitespace-nowrap [&_svg]:w-[17px]"
+          className="flex items-center gap-[7px] text-[13px] font-bold text-[#009268] max-[620px]:text-[15px] max-[430px]:mt-1 max-[430px]:whitespace-nowrap [&_svg]:w-[17px]"
           href="/help"
         >
           View all FAQs <Icon name="arrow" />
@@ -569,11 +467,11 @@ export function FaqSection() {
             className={`border-x border-t border-[#dfe9e6] ${index >= faqs.length - 2 ? "border-b" : ""}`}
             key={faq.value}
           >
-            <summary className="flex h-11 cursor-pointer list-none items-center justify-between px-[17px] text-[10px] max-[620px]:min-h-[52px] max-[620px]:h-auto max-[620px]:py-3 max-[620px]:text-[13px] [&::-webkit-details-marker]:hidden [&_svg]:w-3.5 [[open]_&>svg]:rotate-180">
+            <summary className="flex min-h-[52px] cursor-pointer list-none items-center justify-between gap-3 py-3 px-[17px] text-[15px] leading-[1.5] [&::-webkit-details-marker]:hidden [&_svg]:w-3.5 [&_svg]:shrink-0 [[open]_&>svg]:rotate-180">
               {faq.title}
               <Icon name="chevron" />
             </summary>
-            <p className="m-0 px-[17px] pb-3.5 text-[10px] leading-[1.5] text-[#607083] min-[901px]:text-[14px] min-[901px]:leading-[1.65] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+            <p className="m-0 px-[17px] pb-3.5 text-[16px] leading-[1.5] text-[#607083] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
               {faq.content}
             </p>
           </details>
@@ -586,7 +484,7 @@ export function FaqSection() {
 export function FinalCtaSection() {
   return (
     <section
-      className="isolate relative mx-auto mb-9 grid min-h-[190px] max-w-[1080px] grid-cols-[1fr_auto] items-center overflow-hidden rounded-[17px] px-16 text-white max-[900px]:mx-[25px] max-[900px]:px-[35px] max-[620px]:mx-[15px] max-[620px]:mb-[35px] max-[620px]:min-h-[360px] max-[620px]:grid-cols-1 max-[620px]:px-[22px] max-[620px]:py-[45px] max-[620px]:text-center max-[430px]:mx-2.5"
+      className="isolate relative mx-auto mb-9 grid min-h-[190px] max-w-[1080px] grid-cols-[1fr_auto] items-center overflow-hidden rounded-[17px] px-16 text-white max-[900px]:mx-[25px] max-[900px]:grid-cols-1 max-[900px]:gap-6 max-[900px]:px-[35px] max-[900px]:py-8 max-[620px]:mx-[15px] max-[620px]:mb-[35px] max-[620px]:min-h-[360px] max-[620px]:grid-cols-1 max-[620px]:px-[22px] max-[620px]:py-[45px] max-[620px]:text-center max-[430px]:mx-2.5"
       id="signup"
     >
       <Image
@@ -602,7 +500,7 @@ export function FinalCtaSection() {
           <br />
           the bills you already pay
         </h2>
-        <p className="text-[11px] leading-[1.5] min-[901px]:text-[15px] min-[901px]:leading-[1.65] max-[620px]:text-[14px] max-[620px]:leading-[1.65]">
+        <p className="text-[16px] leading-[1.5] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
           Join Vuior today and turn early payments into real rewards.
         </p>
       </div>

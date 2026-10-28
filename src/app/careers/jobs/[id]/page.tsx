@@ -33,7 +33,7 @@ export default async function JobDetailsPage({
       <Header active="careers" />
       <section className="mx-auto max-w-[1180px] px-5 pt-[42px] pb-10 sm:px-10 lg:px-12">
         <Link
-          className="mb-7 inline-flex items-center gap-2 text-[13px] font-bold text-[#00895f]"
+          className="mb-7 inline-flex items-center gap-2 text-[15px] font-bold text-[#00895f]"
           href="/careers/open-positions"
         >
           <ArrowLeft size={16} /> Back to open positions
@@ -50,7 +50,7 @@ export default async function JobDetailsPage({
               [DollarSign, job.salaryExpectations],
             ].map(([Icon, value]) => (
               <div
-                className="flex items-center gap-3 border-t border-[#e8eeeb] py-3 text-[14px] font-semibold text-[#596885]"
+                className="flex items-center gap-3 border-t border-[#e8eeeb] py-3 text-[16px] font-semibold text-[#596885]"
                 key={value as string}
               >
                 <span className="grid h-8 w-8 place-items-center rounded-lg bg-[#edf9f5] text-[#009268]">
@@ -60,7 +60,7 @@ export default async function JobDetailsPage({
               </div>
             ))}
             <Link
-              className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#009268] px-5 text-[14px] font-bold text-white"
+              className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-[#009268] px-5 text-[16px] font-bold text-white"
               href={`/careers/jobs/${job.id}/application`}
             >
               Apply now <ArrowRight size={16} />
@@ -70,11 +70,11 @@ export default async function JobDetailsPage({
           <div className="grid gap-4">
             <article className="rounded-[13px] border border-[#dfe9e6] bg-white p-6 shadow-[0_7px_24px_#153c3009]">
               <h2 className="mb-3 text-[18px] font-bold">About Vuior Billpay</h2>
-              <p className="text-[15px] leading-7 text-[#657386]">{job.aboutUs}</p>
+              <p className="text-[16px] leading-7 text-[#657386]">{job.aboutUs}</p>
             </article>
             <article className="rounded-[13px] border border-[#dfe9e6] bg-white p-6 shadow-[0_7px_24px_#153c3009]">
               <h2 className="mb-3 text-[18px] font-bold">Role overview</h2>
-              <p className="text-[15px] leading-7 text-[#657386]">{job.summary}</p>
+              <p className="text-[16px] leading-7 text-[#657386]">{job.summary}</p>
             </article>
             {job.sections.map((section) => (
               <article
@@ -83,12 +83,12 @@ export default async function JobDetailsPage({
               >
                 <h2 className="mb-3 text-[18px] font-bold">{section.title}</h2>
                 {section.body ? (
-                  <p className="text-[15px] leading-7 text-[#657386]">
+                  <p className="text-[16px] leading-7 text-[#657386]">
                     {section.body}
                   </p>
                 ) : null}
                 {section.items ? (
-                  <ul className="grid gap-3 pl-0 text-[15px] leading-7 text-[#657386]">
+                  <ul className="grid gap-3 pl-0 text-[16px] leading-7 text-[#657386]">
                     {section.items.map((item) => (
                       <li className="grid grid-cols-[18px_1fr] gap-2" key={item}>
                         <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#009268]" />
