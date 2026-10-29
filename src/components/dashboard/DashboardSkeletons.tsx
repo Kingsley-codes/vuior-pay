@@ -102,8 +102,34 @@ export function DashboardHomeSkeleton() {
 export function BillsSkeleton() {
   return (
     <SkeletonPage className="max-w-[1530px]">
-      <PageHeading />
-      <div className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="rounded-2xl border border-[#164e41] bg-linear-to-br from-[#084b3e] via-[#073e35] to-[#052e2b]">
+        <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-6 p-5 sm:p-7">
+          <div className="min-w-0 flex-[1_1_240px] space-y-3">
+            <Bone className="h-9 w-28 opacity-20" />
+            <Bone className="h-4 w-full max-w-sm opacity-20" />
+          </div>
+          <div className="flex w-full flex-wrap items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-4 sm:w-auto sm:flex-nowrap sm:gap-4 sm:px-5">
+            <div className="w-full space-y-2 border-b border-white/10 pb-4 sm:w-48 sm:border-r sm:border-b-0 sm:pr-5 sm:pb-0">
+              <Bone className="h-5 w-36 opacity-20" />
+              <Bone className="h-9 w-full opacity-20" />
+            </div>
+            <Bone className="h-12 flex-1 opacity-20 sm:w-32 sm:flex-none" />
+            <Bone className="h-12 w-12 opacity-20" />
+          </div>
+        </div>
+        <div className="grid gap-5 rounded-b-2xl border-t border-white/10 bg-black/10 p-5 sm:p-7 xl:grid-cols-[1fr_1.4fr]">
+          <div className="space-y-3">
+            <Bone className="h-5 w-full max-w-64 opacity-20" />
+            <Bone className="h-4 w-full opacity-20" />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Bone className="h-24 opacity-20" />
+            <Bone className="h-24 opacity-20" />
+          </div>
+          <Bone className="h-4 w-full max-w-lg opacity-20 xl:col-span-2" />
+        </div>
+      </div>
+      <div className="mt-7 grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
         {Array.from({ length: 4 }, (_, i) => (
           <Card key={i} className="h-[118px]">
             <Bone className="h-3 w-24" />
@@ -112,33 +138,22 @@ export function BillsSkeleton() {
           </Card>
         ))}
       </div>
-      <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="mt-6">
         <Card className="overflow-hidden p-0">
           <div className="p-5">
             <Bone className="h-5 w-32" />
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-[1fr_1fr_auto]">
-              <Bone className="h-11" />
-              <Bone className="h-11" />
-              <Bone className="h-11 w-28" />
+            <div className="mt-5 flex gap-3">
+              <Bone className="h-11 flex-1" />
+              <Bone className="h-11 w-24" />
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {Array.from({ length: 4 }, (_, index) => <Bone key={index} className="h-11" />)}
             </div>
           </div>
           <div className="border-t border-[#edf1ef] px-5">
             <Rows count={6} />
           </div>
         </Card>
-        <div className="space-y-5">
-          <Card className="h-48">
-            <Bone className="h-10 w-10 rounded-full" />
-            <Bone className="mt-5 h-4 w-36" />
-            <Bone className="mt-3 h-3 w-full" />
-            <Bone className="mt-2 h-3 w-4/5" />
-          </Card>
-          <Card className="h-48">
-            <Bone className="h-10 w-10 rounded-full" />
-            <Bone className="mt-5 h-4 w-32" />
-            <Bone className="mt-3 h-3 w-full" />
-          </Card>
-        </div>
       </div>
     </SkeletonPage>
   );

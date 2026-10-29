@@ -12,7 +12,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.cloudfunctions.net https://*.a.run.app",
+  "connect-src 'self' https://www.gstatic.com/firebasejs/ https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.cloudfunctions.net https://*.a.run.app",
   "frame-src https://*.firebaseapp.com https://accounts.google.com",
   // TODO(App Check): Restore the reCAPTCHA frame source with App Check.
   // "frame-src https://*.firebaseapp.com https://accounts.google.com https://www.google.com/recaptcha/",

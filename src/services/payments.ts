@@ -46,6 +46,12 @@ export function sendCredits(
 }
 
 export function createCreditsCheckout(userId: string, credits: number) {
+  if (!Number.isFinite(credits) || credits < 0.5) {
+    throw new Error("Add at least $0.50 to continue to card checkout.");
+  }
+  if (credits > 999999.99) {
+    throw new Error("You can add up to $999,999.99 per card payment. Enter a smaller amount.");
+  }
   const base = window.location.origin;
   return post<{ sessionId: string; url?: string }>(endpoints.addCredits, {
     userId,

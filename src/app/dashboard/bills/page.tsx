@@ -9,11 +9,11 @@ import {
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowUpRight,
   CalendarDays,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  CircleDollarSign,
   FileText,
   Plus,
   RefreshCcw,
@@ -24,8 +24,8 @@ import {
   WalletCards,
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
+import CollapsibleGuideSection from "@/components/dashboard/CollapsibleGuideSection";
 import AddressRequiredNotice from "@/components/dashboard/AddressRequiredNotice";
-import RewardsGuideBanner from "@/components/dashboard/RewardsGuideBanner";
 import BillModal from "@/components/bills/BillModal";
 import BillPaymentModal from "@/components/bills/BillPaymentModal";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
@@ -38,6 +38,14 @@ import { monthlyComparison } from "@/utils/monthlyComparison";
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
+});
+const compactMoney = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  compactDisplay: "short",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 type Tab = "Upcoming" | "Overdue" | "Paid" | "In review" | "All bills";
 const BILL_TABS: Tab[] = [
@@ -285,45 +293,82 @@ export default function BillsPage() {
 
   if (loading) return <BillsSkeleton />;
 
+  const availableCredits = Number(user?.availableCredits ?? 0);
+  const exactBalance = money.format(availableCredits);
+  const useCompactBalance = Math.abs(availableCredits) >= 1_000_000;
+
   return (
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
         <AddressRequiredNotice user={user} loading={profileLoading} />
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-          <div>
-            <h1 className="text-[29px] font-bold tracking-[-0.035em]">Bills</h1>
-            <p className="mt-1.5 text-base text-[#596885]">
-              Manage your recurring bills, due dates, and early-payment rewards.
-            </p>
+        <section aria-labelledby="bills-page-title" className="min-w-0 rounded-2xl border border-[#164e41] bg-linear-to-br from-[#084b3e] via-[#073e35] to-[#052e2b] text-white shadow-[0_12px_32px_rgba(5,46,38,0.12)]">
+          <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-6 p-5 sm:p-7">
+            <div className="min-w-0 flex-[1_1_240px]">
+              <h1 id="bills-page-title" className="text-[30px] font-bold tracking-[-0.035em] sm:text-[32px]">Bills</h1>
+              <p className="mt-2 max-w-md text-base leading-6 text-[#bdd9ce]">
+                Your bills, due dates, and rewards. All in one place.
+              </p>
+            </div>
+            <div className="flex w-full min-w-0 flex-wrap items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-4 sm:w-auto sm:shrink-0 sm:flex-nowrap sm:gap-4 sm:px-5">
+              <div className="w-full min-w-0 basis-full border-b border-white/10 pb-4 sm:w-auto sm:shrink-0 sm:basis-auto sm:border-r sm:border-b-0 sm:pr-5 sm:pb-0">
+                <div className="flex items-center gap-2 text-[#bdd9ce]">
+                  <WalletCards size={18} className="shrink-0" aria-hidden="true" />
+                  <p className="whitespace-nowrap text-base">Available credits</p>
+                </div>
+                <p title={exactBalance} className="mt-2 whitespace-nowrap text-[28px] font-semibold leading-tight tracking-[-0.02em] text-white tabular-nums sm:text-[30px]">
+                  {useCompactBalance ? compactMoney.format(availableCredits) : exactBalance}
+                </p>
+                {useCompactBalance && (
+                  <p className="mt-1 text-base leading-6 text-[#bdd9ce] tabular-nums [overflow-wrap:anywhere] sm:whitespace-nowrap">
+                    {exactBalance}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setModal({ mode: "add" })}
+                className="inline-flex h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#b6f4d4] px-5 text-base font-semibold text-[#083e2f] transition hover:bg-[#d0fbe3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4] sm:flex-none"
+              >
+                <Plus size={19} className="shrink-0" aria-hidden="true" /> Add Bill
+              </button>
+              <NotificationsMenu userId={user?.id} variant="dark" />
+            </div>
           </div>
-          <section
-            aria-label="Available credits and bill actions"
-            className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:gap-5 sm:px-5 xl:w-auto xl:min-w-[440px]"
-          >
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#eaf8f2] text-[#009b67]">
-                <WalletCards size={19} />
-              </span>
+          <CollapsibleGuideSection title="Rewards & payment guides">
+            <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] xl:items-center">
               <div className="min-w-0">
-                <p className="text-base text-[#64718a]">Available credits</p>
-                <p className="mt-1 break-words text-[21px] font-bold leading-tight text-[#14203e] tabular-nums">
-                  {money.format(Number(user?.availableCredits ?? 0))}
+                <div className="flex items-center gap-2 text-[#b6f4d4]">
+                  <TrendingUp size={21} className="shrink-0" aria-hidden="true" />
+                  <h2 className="text-lg font-semibold">Earn up to 15% in credits</h2>
+                </div>
+                <p className="mt-2 max-w-lg text-base leading-6 text-[#bdd9ce]">
+                  Pay eligible bills early and put the rewards toward your next bill.
                 </p>
               </div>
+              <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+                {[
+                  { label: "How it works", description: "Explore early-payment rewards.", icon: TrendingUp, kind: "savings" as const },
+                  { label: "Autopay guide", description: "Plan your automatic payments.", icon: RefreshCcw, kind: "autopay" as const },
+                ].map(({ label, description, icon: Icon, kind }) => (
+                  <button
+                    key={kind}
+                    type="button"
+                    onClick={() => setInfoModal(kind)}
+                    className="group flex min-w-0 items-start gap-3 rounded-xl border border-white/15 bg-white/5 p-4 text-left transition hover:border-[#b6f4d4]/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4]"
+                  >
+                    <Icon size={20} className="mt-0.5 shrink-0 text-[#b6f4d4]" aria-hidden="true" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-base font-semibold text-white">{label}</span>
+                      <span className="mt-1 block text-base leading-6 text-[#bdd9ce]">{description}</span>
+                    </span>
+                    <ArrowUpRight size={18} className="mt-0.5 shrink-0 text-[#a1c7b6] transition group-hover:text-[#b6f4d4]" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="sm:order-last sm:shrink-0">
-              <NotificationsMenu userId={user?.id} />
-            </div>
-            <div className="col-span-2 border-t border-[#edf1ef] pt-4 sm:ml-auto sm:shrink-0 sm:border-0 sm:pt-0">
-              <button
-                onClick={() => setModal({ mode: "add" })}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#00a96b] px-4 text-base font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:w-auto"
-              >
-                <Plus size={15} /> Add Bill
-              </button>
-            </div>
-          </section>
-        </div>
+            <p className="mt-5 border-t border-white/10 pt-4 text-base leading-6 text-[#a8c8bb]">Payments on or after the due date earn no early-payment credits.</p>
+          </CollapsibleGuideSection>
+        </section>
 
         {paymentMessage && (
           <div
@@ -891,84 +936,8 @@ export default function BillsPage() {
               </footer>
             </section>
 
-            <RewardsGuideBanner
-              badge="Up to 15% in credits"
-              title="A little earlier. A little more rewarding."
-              description="Pay eligible bills early and earn credits towards your next bill. See how your payment timing adds up."
-              actions={[
-                {
-                  label: "How it works",
-                  description: "Explore early-payment rewards and savings.",
-                  icon: TrendingUp,
-                  onClick: () => setInfoModal("savings"),
-                },
-                {
-                  label: "Autopay guide",
-                  description: "Set up automatic payments for your bills.",
-                  icon: RefreshCcw,
-                  onClick: () => setInfoModal("autopay"),
-                },
-              ]}
-            />
           </div>
 
-          <aside className="hidden">
-            <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
-                  <TrendingUp size={19} />
-                </span>
-                <h2 className="text-lg font-bold">Maximize Your Savings</h2>
-              </div>
-              <p className="mt-4 text-base leading-6 text-[#65728a]">
-                Pay early and earn credits on eligible bills.
-              </p>
-              <div className="mt-3 divide-y divide-[#edf1ef]">
-                {[
-                  ["1 – 3 days early", "+2%"],
-                  ["4 – 7 days early", "+5%"],
-                  ["8 – 14 days early", "+10%"],
-                  ["15+ days early", "+15%"],
-                ].map(([label, reward]) => (
-                  <div key={label} className="flex items-center gap-3 py-3.5">
-                    <CalendarDays size={15} className="text-[#00a96b]" />
-                    <span className="flex-1 text-base font-medium">
-                      {label}
-                    </span>
-                    <strong className="text-base text-[#00a96b]">
-                      {reward}
-                    </strong>
-                  </div>
-                ))}
-              </div>
-              <EarlyPaymentNote className="text-[#65728a]" />
-            </section>
-            <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.04)]">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
-                  <RefreshCcw size={18} />
-                </span>
-                <h2 className="text-lg font-bold">Autopay Made Simple</h2>
-              </div>
-              <p className="mt-4 text-base leading-6 text-[#65728a]">
-                Never miss a payment. Autopay pays your bills on the due date.
-              </p>
-              <div className="mt-4 space-y-3 text-base text-[#5f6d85]">
-                <p className="flex gap-3">
-                  <ShieldCheck size={15} className="text-[#00a96b]" /> It&apos;s
-                  secure and convenient
-                </p>
-                <p className="flex gap-3">
-                  <CircleDollarSign size={15} className="text-[#00a96b]" />{" "}
-                  You&apos;ll still earn early-pay credits
-                </p>
-                <p className="flex gap-3">
-                  <RefreshCcw size={15} className="text-[#00a96b]" /> Turn it on
-                  or off anytime
-                </p>
-              </div>
-            </section>
-          </aside>
         </div>
       </div>
       {checkoutIds && user && (

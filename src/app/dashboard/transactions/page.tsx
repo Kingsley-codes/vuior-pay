@@ -24,7 +24,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
-import RewardsGuideBanner from "@/components/dashboard/RewardsGuideBanner";
+import CollapsibleGuideSection from "@/components/dashboard/CollapsibleGuideSection";
 import { TransactionsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import WalletModal, {
   type WalletAction,
@@ -53,6 +53,12 @@ import {
 const money = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
+});
+const compactMoney = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  notation: "compact",
+  maximumFractionDigits: 2,
 });
 
 const defaults: TransactionFilters = {
@@ -443,56 +449,94 @@ export default function TransactionsPage() {
   }
 
   if (loading) return <TransactionsSkeleton />;
+  const exactBalance = money.format(availableCredits);
+  const useCompactBalance = Math.abs(availableCredits) >= 1_000_000;
   return (
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
-        <header className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-          <div>
-            <h1 className="text-[29px] font-bold tracking-[-0.035em]">
-              Transactions
-            </h1>
-            <p className="mt-1.5 text-base text-[#596885]">
-              Your payments and credit activity, all in one place.
-            </p>
-          </div>
-          <section
-            aria-label="Available credit balance"
-            className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 rounded-xl border border-[#dfe8e3] bg-white p-4 shadow-[0_5px_18px_rgba(25,55,47,0.035)] sm:flex sm:gap-2 sm:px-5"
-          >
-            <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#eaf8f2] text-[#009b67]">
-                <WalletCards size={20} strokeWidth={1.8} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-base font-medium text-[#64718a]">
-                  Available credits
+        <section aria-labelledby="transactions-page-title" className="min-w-0 rounded-2xl border border-[#164e41] bg-linear-to-br from-[#084b3e] via-[#073e35] to-[#052e2b] text-white shadow-[0_12px_32px_rgba(5,46,38,0.12)]">
+          <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-6 p-5 sm:p-7">
+            <div className="min-w-0 flex-[1_1_240px]">
+              <h1 id="transactions-page-title" className="text-[30px] font-bold tracking-[-0.035em] sm:text-[32px]">
+                Transactions
+              </h1>
+              <p className="mt-2 max-w-md text-base leading-6 text-[#bdd9ce]">
+                Your payments and credit activity, all in one place.
+              </p>
+            </div>
+            <div
+              aria-label="Available credit balance"
+              className="flex w-full min-w-0 flex-wrap items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-4 sm:w-auto sm:gap-4 sm:px-5"
+            >
+              <div className="w-full min-w-0 basis-full border-b border-white/10 pb-4 sm:w-auto sm:basis-auto sm:border-r sm:border-b-0 sm:pr-5 sm:pb-0">
+                <div className="flex items-center gap-2 text-[#bdd9ce]">
+                  <WalletCards size={18} className="shrink-0" aria-hidden="true" />
+                  <p className="whitespace-nowrap text-base">
+                    Available credits
+                  </p>
+                </div>
+                <p title={exactBalance} className="mt-2 whitespace-nowrap text-[28px] font-semibold leading-tight tracking-[-0.02em] text-white tabular-nums sm:text-[30px]">
+                  {useCompactBalance ? compactMoney.format(availableCredits) : exactBalance}
                 </p>
-                <p className="mt-1 break-words text-[21px] font-bold leading-tight tracking-tight text-[#14203e] tabular-nums sm:mt-0.5 sm:whitespace-nowrap sm:text-[23px] sm:leading-none">
-                  {money.format(availableCredits)}
+                {useCompactBalance && (
+                  <p className="mt-1 text-base leading-6 text-[#bdd9ce] tabular-nums [overflow-wrap:anywhere]">
+                    {exactBalance}
+                  </p>
+                )}
+              </div>
+              <div className="grid min-w-0 flex-1 grid-cols-2 gap-2 sm:flex sm:flex-none">
+                <button
+                  type="button"
+                  onClick={() => setWalletAction("send")}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-3 text-base font-semibold text-white transition hover:border-[#b6f4d4]/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4] sm:px-4"
+                >
+                  <Send size={15} className="shrink-0" />
+                  Send credits
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setWalletAction("add")}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#b6f4d4] px-3 text-base font-semibold text-[#083e2f] transition hover:bg-[#d0fbe3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4] sm:px-4"
+                >
+                  <WalletCards size={15} className="shrink-0" />
+                  Add funds
+                </button>
+              </div>
+              <NotificationsMenu userId={user?.id} variant="dark" />
+            </div>
+          </div>
+          <CollapsibleGuideSection title="Credits & rewards guides">
+            <div className="grid gap-5 2xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] 2xl:items-center">
+              <div className="min-w-0">
+                <h2 className="text-lg font-semibold">Make more of your credits</h2>
+                <p className="mt-2 max-w-lg text-base leading-6 text-[#bdd9ce]">
+                  Earn rewards, invite friends, and put your credits towards your next bill.
                 </p>
               </div>
+              <div className="grid min-w-0 gap-3 lg:grid-cols-3">
+                {[
+                  { label: "How to earn credits", description: "Discover rewards for paying early.", icon: ArrowUpRight, guide: 0 },
+                  { label: "Referral & rewards", description: "Share Vuior with your friends.", icon: UsersRound, guide: 1 },
+                  { label: "Use your credits", description: "Put your balance towards a bill.", icon: WalletCards, guide: 2 },
+                ].map(({ label, description, icon: Icon, guide }) => (
+                  <button
+                    key={guide}
+                    type="button"
+                    onClick={() => setGuide(guide)}
+                    className="group flex min-w-0 items-start gap-3 rounded-xl border border-white/15 bg-white/5 p-4 text-left transition hover:border-[#b6f4d4]/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4]"
+                  >
+                    <Icon size={20} className="mt-0.5 shrink-0 text-[#b6f4d4]" aria-hidden="true" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-base font-semibold text-white">{label}</span>
+                      <span className="mt-1 block text-base leading-6 text-[#bdd9ce]">{description}</span>
+                    </span>
+                    <ArrowUpRight size={18} className="mt-0.5 shrink-0 text-[#a1c7b6] transition group-hover:text-[#b6f4d4]" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="sm:ml-auto sm:shrink-0 sm:pl-2">
-              <NotificationsMenu userId={user?.id} />
-            </div>
-            <div className="col-span-2 grid grid-cols-2 gap-2 border-t border-[#edf1ef] pt-4 sm:flex sm:shrink-0 sm:border-0 sm:pt-0">
-              <button
-                onClick={() => setWalletAction("send")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#d7e3dd] bg-white px-2 text-base font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:h-10 sm:gap-2 sm:px-3 sm:text-base"
-              >
-                <Send size={15} className="shrink-0" />
-                Send credits
-              </button>
-              <button
-                onClick={() => setWalletAction("add")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#00a96b] px-2 text-base font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:gap-2 sm:px-3 sm:text-base"
-              >
-                <WalletCards size={15} className="shrink-0" />
-                Add funds
-              </button>
-            </div>
-          </section>
-        </header>
+          </CollapsibleGuideSection>
+        </section>
 
         <section
           aria-label="Transaction statistics"
@@ -982,33 +1026,6 @@ export default function TransactionsPage() {
           </div>
         </section>
 
-        <div className="mt-5">
-          <RewardsGuideBanner
-            badge="Earn. Invite. Pay."
-            title="Make more of your credits"
-            description="Turn everyday payments into more possibilities. Earn rewards, invite friends, and put your credits towards your next bill."
-            actions={[
-              {
-                label: "How to earn credits",
-                description: "Discover rewards for paying early.",
-                icon: ArrowUpRight,
-                onClick: () => setGuide(0),
-              },
-              {
-                label: "Referral & rewards",
-                description: "Share Vuior with your friends.",
-                icon: UsersRound,
-                onClick: () => setGuide(1),
-              },
-              {
-                label: "Use your credits",
-                description: "Put your balance towards a bill.",
-                icon: WalletCards,
-                onClick: () => setGuide(2),
-              },
-            ]}
-          />
-        </div>
       </div>
       {walletAction && user?.id && (
         <WalletModal

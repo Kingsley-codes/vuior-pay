@@ -35,7 +35,7 @@ function NotificationIcon({ kind }: { kind: AppNotification["kind"] }) {
   return <Bell className={common} />;
 }
 
-export default function NotificationsMenu({ userId }: { userId?: string }) {
+export default function NotificationsMenu({ userId, variant = "default" }: { userId?: string; variant?: "default" | "dark" }) {
   const push = usePushNotifications();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -63,13 +63,13 @@ export default function NotificationsMenu({ userId }: { userId?: string }) {
         aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ""}`}
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
-        className="relative grid h-10 w-10 place-items-center rounded-lg border border-[#dfe6e4] bg-white text-[#53617a] transition hover:bg-[#f5f8f7] hover:text-[#008f60]"
+        className={`relative grid shrink-0 place-items-center border transition focus-visible:outline-2 focus-visible:outline-offset-2 ${variant === "dark" ? "h-12 w-12 rounded-xl border-white/20 bg-white/5 text-[#d8f4e6] hover:bg-white/10 focus-visible:outline-[#b6f4d4]" : "h-10 w-10 rounded-lg border-[#dfe6e4] bg-white text-[#53617a] hover:bg-[#f5f8f7] hover:text-[#008f60] focus-visible:outline-[#009b67]"}`}
       >
         <Bell size={18} />
         {unreadCount ? <span className="absolute -right-1 -top-1 grid h-6 min-w-6 place-items-center rounded-full bg-[#00a96b] px-1 text-base font-bold text-white">{unreadCount > 9 ? "9+" : unreadCount}</span> : null}
       </button>
       {open ? (
-        <section className="absolute right-0 z-[60] mt-2 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-[#dfe6e4] bg-white shadow-[0_18px_48px_rgba(20,43,36,.18)]" aria-label="Notifications">
+        <section className={`absolute right-0 z-[60] mt-2 overflow-hidden rounded-xl border border-[#dfe6e4] bg-white text-[#0d1b42] shadow-[0_18px_48px_rgba(20,43,36,.18)] ${variant === "dark" ? "w-[min(24rem,calc(100vw-5rem))]" : "w-[min(24rem,calc(100vw-2rem))]"}`} aria-label="Notifications">
           <header className="flex items-center justify-between border-b border-[#edf1ef] px-4 py-3.5">
             <div><h2 className="text-lg font-bold text-[#0d1b42]">Notifications</h2><p className="mt-0.5 text-base text-[#718097]">{unreadCount ? `${unreadCount} unread` : "You’re all caught up"}</p></div>
             <div className="flex items-center gap-1">
