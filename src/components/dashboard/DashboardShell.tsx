@@ -111,7 +111,7 @@ export default function DashboardShell({
   if (!firebaseUser) return null;
   if (mustChangePassword && pathname !== passwordChangePath) {
     return (
-      <div className="grid min-h-screen place-items-center bg-[#f8faf9] text-sm text-[#65718c]">
+      <div className="grid min-h-screen place-items-center bg-[#f8faf9] text-base text-[#65718c]">
         Redirecting to password change...
       </div>
     );
@@ -182,7 +182,7 @@ export default function DashboardShell({
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 onClick={() => setMobileOpen(false)}
-                className={`flex h-10 items-center gap-3 rounded-xl px-3 text-[15px] font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#065D53] text-white hover:bg-[#054a43]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}
+                className={`flex h-10 items-center gap-3 rounded-xl px-3 text-base font-medium transition ${collapsed ? "lg:justify-center" : ""} ${active ? "bg-[#065D53] text-white hover:bg-[#054a43]" : "text-[#53617a] hover:bg-[#f5f8f7]"}`}
               >
                 <Icon size={18} strokeWidth={1.8} />
                 <span className={collapsed ? "lg:hidden" : ""}>
@@ -205,7 +205,7 @@ export default function DashboardShell({
                   setUserMenuOpen(false);
                   setMobileOpen(false);
                 }}
-                className="flex h-10 items-center gap-3 rounded-md px-3 text-[14px] text-[#53617a] transition hover:bg-[#f5f8f7]"
+                className="flex h-10 items-center gap-3 rounded-md px-3 text-base text-[#53617a] transition hover:bg-[#f5f8f7]"
               >
                 <Settings size={17} /> Profile & settings
               </Link>
@@ -214,7 +214,7 @@ export default function DashboardShell({
                 type="button"
                 disabled={loggingOut}
                 onClick={logout}
-                className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-[14px] text-[#dc3545] transition hover:bg-[#fff1f2] disabled:opacity-60"
+                className="flex h-10 w-full items-center gap-3 rounded-md px-3 text-base text-[#dc3545] transition hover:bg-[#fff1f2] disabled:opacity-60"
               >
                 <LogOut size={17} />
                 {loggingOut ? "Logging out…" : "Log out"}
@@ -238,8 +238,8 @@ export default function DashboardShell({
               className="h-[34px] w-[34px] shrink-0 rounded-full object-cover"
             />
             <div className={collapsed ? "min-w-0 lg:hidden" : "min-w-0"}>
-              <p className="truncate text-[13px] font-semibold">{name}</p>
-              <p className="truncate text-[11px] text-[#7c889a]">
+              <p className="truncate text-base font-semibold">{name}</p>
+              <p className="truncate text-base text-[#7c889a]">
                 {user?.email}
               </p>
             </div>

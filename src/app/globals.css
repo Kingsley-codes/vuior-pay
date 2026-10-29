@@ -117,29 +117,27 @@ body {
   --react-international-phone-font-size: 12px;
 }
 
-@media (min-width: 1024px) {
-  .dashboard-app [class~="text-[8px]"],
-  .dashboard-app [class~="text-[9px]"] {
-    font-size: 12px !important;
+/* Dashboard typography uses at least 16px for copy and labels,
+   17px for table copy, and 18px for table headers and desktop tabs.
+   Keep these defaults in a layer so explicit utilities can still take priority. */
+@layer components {
+  .dashboard-app {
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
-  .dashboard-app [class~="text-[10px]"],
-  .dashboard-app [class~="text-[11px]"] {
-    font-size: 14px !important;
+  .dashboard-app small {
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
-  .dashboard-app [class~="text-[12px]"] {
-    font-size: 16px !important;
+  .dashboard-app table {
+    font-size: 1.0625rem;
+    line-height: 1.5;
   }
+}
 
-  .dashboard-app table th,
-  .dashboard-app table td {
-    font-size: 15px;
-    line-height: 1.45;
-  }
-
-  .dashboard-app table th {
-    font-size: inherit;
-    font-weight: 600;
-  }
+/* The phone library reads this variable from the input wrapper itself. */
+.dashboard-app .vuior-phone-input {
+  --react-international-phone-font-size: 16px;
 }

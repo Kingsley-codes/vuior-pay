@@ -119,13 +119,13 @@ export default function WalletModal({
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10">
               <WalletCards size={22} />
             </span>
-            <p className="mt-8 text-[10px] uppercase tracking-[.18em] text-[#9ed7c5]">
+            <p className="mt-8 text-base uppercase tracking-[.18em] text-[#9ed7c5]">
               Available Credits
             </p>
             <strong className="mt-2 block text-[29px]">
               {money.format(available)}
             </strong>
-            <div className="mt-8 space-y-4 text-[10px] leading-5 text-white/70">
+            <div className="mt-8 space-y-4 text-base leading-6 text-white/70">
               <p className="flex gap-2">
                 <ShieldCheck
                   className="mt-0.5 shrink-0 text-[#5ee0b4]"
@@ -143,9 +143,9 @@ export default function WalletModal({
             </div>
           </aside>
           <form onSubmit={submit} className="p-5 sm:p-7">
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#009b67]">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-base font-bold uppercase tracking-[.16em] text-[#009b67]">
                   Vuior wallet
                 </p>
                 <h2
@@ -154,7 +154,7 @@ export default function WalletModal({
                 >
                   {action === "add" ? "Add funds" : "Send credits"}
                 </h2>
-                <p className="mt-1 text-[10px] leading-5 text-[#65728a]">
+                <p className="mt-1 text-base leading-6 text-[#65728a]">
                   {action === "add"
                     ? "Choose an amount and continue to secure card checkout."
                     : "Transfer credits instantly to another verified Vuior user."}
@@ -179,13 +179,13 @@ export default function WalletModal({
                     setResult(null);
                     setAmount("");
                   }}
-                  className={`h-10 rounded-lg text-[11px] font-semibold transition ${action === item ? "bg-white text-[#009b67] shadow-sm" : "text-[#718097]"}`}
+                  className={`h-10 rounded-lg text-base font-semibold transition ${action === item ? "bg-white text-[#009b67] shadow-sm" : "text-[#718097]"}`}
                 >
                   {item === "add" ? "Add funds" : "Send credits"}
                 </button>
               ))}
             </div>
-            <label htmlFor="wallet-amount" className="mt-5 block text-[9px] font-bold uppercase tracking-[.14em] text-[#44516b]">
+            <label htmlFor="wallet-amount" className="mt-5 block text-base font-bold uppercase tracking-[.14em] text-[#44516b]">
               Amount<span className="text-red-600" aria-label="required"> *</span>
             </label>
             <div className="mt-2 flex h-14 items-center rounded-xl border border-[#dfe6e4] bg-[#fafcfb] px-4 focus-within:border-[#009b67]">
@@ -209,7 +209,7 @@ export default function WalletModal({
                   type="button"
                   onClick={() => setAmount(formatCurrencyInput(String(value)))}
                   key={value}
-                  className={`h-9 rounded-lg border text-[10px] font-semibold ${numeric === value ? "border-[#00a36a] bg-[#eef9f5] text-[#009b67]" : "border-[#dfe6e4] text-[#53617a]"}`}
+                  className={`h-9 rounded-lg border text-base font-semibold ${numeric === value ? "border-[#00a36a] bg-[#eef9f5] text-[#009b67]" : "border-[#dfe6e4] text-[#53617a]"}`}
                 >
                   {money.format(value).replace(".00", "")}
                 </button>
@@ -217,7 +217,7 @@ export default function WalletModal({
             </div>
             {action === "send" ? (
               <>
-                <label htmlFor="wallet-recipient" className="mt-5 block text-[9px] font-bold uppercase tracking-[.14em] text-[#44516b]">
+                <label htmlFor="wallet-recipient" className="mt-5 block text-base font-bold uppercase tracking-[.14em] text-[#44516b]">
                   Recipient email<span className="text-red-600" aria-label="required"> *</span>
                 </label>
                 <div className="mt-2 flex h-11 items-center gap-3 rounded-xl border border-[#dfe6e4] px-4 focus-within:border-[#009b67]">
@@ -229,10 +229,10 @@ export default function WalletModal({
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     placeholder="name@example.com"
-                    className="min-w-0 flex-1 text-[11px] outline-none"
+                    className="min-w-0 flex-1 text-base outline-none"
                   />
                 </div>
-                <p className="mt-3 rounded-lg bg-[#fff8eb] p-3 text-[9px] leading-4 text-[#8a6116]">
+                <p className="mt-3 rounded-lg bg-[#fff8eb] p-3 text-base leading-6 text-[#8a6116]">
                   Transfers are immediate and cannot be reversed. Confirm the
                   recipient before sending.
                 </p>
@@ -241,8 +241,8 @@ export default function WalletModal({
               <div className="mt-5 flex items-center gap-3 rounded-xl border border-[#dfe8e5] bg-[#f8fbfa] p-3">
                 <CreditCard size={18} className="text-[#009b67]" />
                 <div>
-                  <p className="text-[10px] font-semibold">Card checkout</p>
-                  <p className="mt-0.5 text-[9px] text-[#718097]">
+                  <p className="text-base font-semibold">Card checkout</p>
+                  <p className="mt-0.5 text-base text-[#718097]">
                     Your payment is processed securely by Stripe.
                   </p>
                 </div>
@@ -250,7 +250,7 @@ export default function WalletModal({
             )}
             {result ? (
               <div
-                className={`mt-4 flex gap-2 rounded-lg border p-3 text-[10px] ${result.ok ? "border-[#bde6d4] bg-[#effaf5] text-[#08764f]" : "border-[#fecaca] bg-[#fff1f2] text-[#b4233b]"}`}
+                className={`mt-4 flex gap-2 rounded-lg border p-3 text-base ${result.ok ? "border-[#bde6d4] bg-[#effaf5] text-[#08764f]" : "border-[#fecaca] bg-[#fff1f2] text-[#b4233b]"}`}
               >
                 {result.ok ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
                 <span>{result.message}</span>
@@ -258,7 +258,7 @@ export default function WalletModal({
             ) : null}
             <button
               disabled={loading || numeric <= 0}
-              className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#009b67] text-[11px] font-semibold text-white shadow-[0_8px_20px_rgba(0,155,103,.18)] hover:bg-[#00875a] disabled:opacity-50"
+              className="mt-5 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#009b67] text-base font-semibold text-white shadow-[0_8px_20px_rgba(0,155,103,.18)] hover:bg-[#00875a] disabled:opacity-50"
             >
               {loading ? (
                 <LoaderCircle className="animate-spin" size={16} />

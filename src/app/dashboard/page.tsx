@@ -125,7 +125,7 @@ export default function DashboardPage() {
             <h1 className="text-[27px] font-bold tracking-[-0.035em] text-[#0d1b42] sm:text-[30px]">
               Dashboard
             </h1>
-            <p className="mt-1.5 text-[13px] text-[#596885]">
+            <p className="mt-1.5 text-base text-[#596885]">
               Welcome back, {firstName}. Track your bills, payments, credits,
               and savings in one place.
             </p>
@@ -143,18 +143,18 @@ export default function DashboardPage() {
                 <Icon size={27} strokeWidth={1.8} />
               </span>
               <div>
-                <p className="text-[12px] text-[#53637f]">{title}</p>
+                <p className="text-lg text-[#53637f]">{title}</p>
                 <strong className="mt-2 block text-[25px] tracking-[-0.035em]">
                   {value}
                 </strong>
-                <p className="mt-2 text-[11px] text-[#61708a]">{note}</p>
+                <p className="mt-2 text-base text-[#61708a]">{note}</p>
               </div>
             </article>
           ))}
         </section>
 
         <section className="mt-5 rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
-          <h2 className="text-[16px] font-bold">Quick Actions</h2>
+          <h2 className="text-lg font-bold">Quick Actions</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {[
               {
@@ -181,7 +181,7 @@ export default function DashboardPage() {
               <Link
                 key={label}
                 href={href}
-                className="flex h-[74px] items-center justify-center gap-5 rounded-lg border border-[#dfe6e4] text-[13px] font-semibold transition hover:border-[#00a96b] hover:bg-[#f5fcf9]"
+                className="flex h-[74px] items-center justify-center gap-5 rounded-lg border border-[#dfe6e4] text-base font-semibold transition hover:border-[#00a96b] hover:bg-[#f5fcf9]"
               >
                 <Icon className="text-[#00a96b]" size={27} />
                 {label}
@@ -193,9 +193,9 @@ export default function DashboardPage() {
         <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_1.12fr_.85fr]">
           <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
             <div className="flex items-center justify-between">
-              <h2 className="text-[15px] font-bold">Upcoming Bills</h2>
+              <h2 className="text-lg font-bold">Upcoming Bills</h2>
               <Link
-                className="text-[12px] font-semibold text-[#00a96b]"
+                className="text-base font-semibold text-[#00a96b]"
                 href="/dashboard/bills"
               >
                 View all
@@ -211,10 +211,10 @@ export default function DashboardPage() {
                   >
                     <BillIcon bill={bill} />
                     <div className="min-w-0">
-                      <p className="truncate text-[12px] font-semibold">
+                      <p className="truncate text-base font-semibold">
                         {bill.name}
                       </p>
-                      <p className="mt-1 text-[10px] text-[#758199]">
+                      <p className="mt-1 text-base text-[#758199]">
                         {days < 0
                           ? `${Math.abs(days)} days overdue`
                           : days === 0
@@ -223,11 +223,11 @@ export default function DashboardPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[12px] font-semibold">
+                      <p className="text-base font-semibold">
                         {money.format(bill.amount)}
                       </p>
                       <span
-                        className={`mt-1 inline-block rounded px-2 py-1 text-[9px] ${days <= 3 ? "bg-[#fff1e5] text-[#e87912]" : "bg-[#e9f8f1] text-[#009a61]"}`}
+                        className={`mt-1 inline-block rounded px-2 py-1 text-base ${days <= 3 ? "bg-[#fff1e5] text-[#e87912]" : "bg-[#e9f8f1] text-[#009a61]"}`}
                       >
                         {days <= 3 ? "Due soon" : "Upcoming"}
                       </span>
@@ -242,7 +242,7 @@ export default function DashboardPage() {
             {upcoming.length ? (
               <Link
                 href="/dashboard/bills"
-                className="ml-auto mt-4 flex h-9 w-fit items-center justify-center rounded-md bg-[#00a96b] px-6 text-[11px] font-semibold text-white"
+                className="ml-auto mt-4 flex h-9 w-fit items-center justify-center rounded-md bg-[#00a96b] px-6 text-base font-semibold text-white"
               >
                 Pay bills
               </Link>
@@ -251,10 +251,10 @@ export default function DashboardPage() {
 
           <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
             <div className="flex items-center justify-between">
-              <h2 className="text-[15px] font-bold">Recent Transactions</h2>
+              <h2 className="text-lg font-bold">Recent Transactions</h2>
               <Link
                 href="/dashboard/transactions"
-                className="text-[12px] font-semibold text-[#00a96b]"
+                className="text-base font-semibold text-[#00a96b]"
               >
                 View all
               </Link>
@@ -282,10 +282,10 @@ export default function DashboardPage() {
                       )}
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-[11px] font-semibold">
+                      <p className="truncate text-base font-semibold">
                         {item.label}
                       </p>
-                      <p className="mt-1 text-[9px] text-[#78849a]">
+                      <p className="mt-1 text-base text-[#78849a]">
                         {item.date.toLocaleDateString("en-US", {
                           month: "short",
                           day: "2-digit",
@@ -294,12 +294,12 @@ export default function DashboardPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[11px] font-semibold">
+                      <p className="text-base font-semibold">
                         {incoming ? "+" : "-"}
                         {money.format(Math.abs(item.amount))}
                       </p>
                       <span
-                        className={`mt-1 inline-block rounded px-2 py-1 text-[9px] ${ok ? "bg-[#e9f8f1] text-[#009a61]" : "bg-[#ffe9e9] text-[#e04444]"}`}
+                        className={`mt-1 inline-block rounded px-2 py-1 text-base ${ok ? "bg-[#e9f8f1] text-[#009a61]" : "bg-[#ffe9e9] text-[#e04444]"}`}
                       >
                         {ok ? "Success" : item.status}
                       </span>
@@ -314,14 +314,14 @@ export default function DashboardPage() {
           </section>
 
           <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.035)]">
-            <h2 className="text-[14px] font-bold">Referral & Credits</h2>
+            <h2 className="text-lg font-bold">Referral & Credits</h2>
             <div className="mt-5 flex items-center gap-4">
               <span className="grid h-14 w-14 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
                 <UsersRound size={27} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-[9px] text-[#65728a]">Your Referral Code</p>
-                <div className="mt-2 truncate rounded-md bg-[#eaf8f2] px-4 py-2 text-[15px] font-bold text-[#00a96b]">
+                <p className="text-base text-[#65728a]">Your Referral Code</p>
+                <div className="mt-2 truncate rounded-md bg-[#eaf8f2] px-4 py-2 text-base font-bold text-[#00a96b]">
                   {user?.referralCode ||
                     `VUIOR-${(user?.firstName || "USER").toUpperCase()}`}
                 </div>
@@ -329,7 +329,7 @@ export default function DashboardPage() {
             </div>
             <div className="mt-5 flex items-end justify-between">
               <div>
-                <p className="text-[9px] text-[#65728a]">
+                <p className="text-base text-[#65728a]">
                   Total Referral Bonus
                 </p>
                 <strong className="mt-1 block text-[16px] text-[#00a96b]">
@@ -338,7 +338,7 @@ export default function DashboardPage() {
               </div>
               <Link
                 href="/dashboard/referrals"
-                className="flex h-9 items-center rounded-md border border-[#00a96b] px-5 text-[10px] font-semibold text-[#00a96b]"
+                className="flex h-9 items-center rounded-md border border-[#00a96b] px-5 text-base font-semibold text-[#00a96b]"
               >
                 Share code
               </Link>
@@ -354,7 +354,7 @@ function Empty({ message }: { message: string }) {
   return (
     <div className="flex min-h-[150px] flex-col items-center justify-center text-center">
       <FileText className="mb-3 text-[#c8d3cf]" size={30} />
-      <p className="max-w-[220px] text-[11px] leading-5 text-[#7a879c]">
+      <p className="max-w-[220px] text-base leading-6 text-[#7a879c]">
         {message}
       </p>
     </div>

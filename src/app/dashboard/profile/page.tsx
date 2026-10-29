@@ -168,7 +168,7 @@ export function ProfileSettingsPanel() {
       {feedback ? (
         <div
           role="status"
-          className={`mt-6 flex items-center gap-2 rounded-lg border px-4 py-3 text-[13px] ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}
+          className={`mt-6 flex items-center gap-2 rounded-lg border px-4 py-3 text-base ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}
         >
           {feedback.tone === "success" ? <CheckCircle2 size={17} /> : null}
           {feedback.text}
@@ -202,17 +202,17 @@ export function ProfileSettingsPanel() {
             className="hidden"
             onChange={updatePhoto}
           />
-          <h2 className="mt-4 text-[16px] font-bold">{displayName}</h2>
-          <p className="mt-1 text-[11px] text-[#7a879b]">{user?.email}</p>
+          <h2 className="mt-4 text-lg font-bold">{displayName}</h2>
+          <p className="mt-1 text-base text-[#7a879b]">{user?.email}</p>
           <button
             type="button"
             disabled={uploading}
             onClick={() => fileInput.current?.click()}
-            className="mt-5 h-10 rounded-lg border border-[#00a36a] px-5 text-[11px] font-bold text-[#009662]"
+            className="mt-5 h-10 rounded-lg border border-[#00a36a] px-5 text-base font-bold text-[#009662]"
           >
             {uploading ? "Uploading…" : "Change photo"}
           </button>
-          <p className="mt-3 text-[10px] leading-4 text-[#98a2b2]">
+          <p className="mt-3 text-base leading-6 text-[#98a2b2]">
             JPG, PNG, or WebP. Maximum 5 MB.
           </p>
         </aside>
@@ -226,8 +226,8 @@ export function ProfileSettingsPanel() {
               <UserRound size={19} />
             </span>
             <div>
-              <h2 className="text-[15px] font-bold">Personal information</h2>
-              <p className="mt-0.5 text-[11px] text-[#7b8799]">
+              <h2 className="text-lg font-bold">Personal information</h2>
+              <p className="mt-0.5 text-base text-[#7b8799]">
                 All fields marked required must be completed.
               </p>
             </div>
@@ -294,7 +294,7 @@ export function ProfileSettingsPanel() {
           <div className="mt-7 flex justify-end border-t border-[#edf1ef] pt-5">
             <button
               disabled={saving}
-              className="h-12 rounded-lg bg-[#00a36a] px-8 text-[12px] font-bold text-white shadow-[0_8px_18px_rgba(0,163,106,.16)] transition hover:bg-[#008f5d] disabled:opacity-60"
+              className="h-12 rounded-lg bg-[#00a36a] px-8 text-base font-bold text-white shadow-[0_8px_18px_rgba(0,163,106,.16)] transition hover:bg-[#008f5d] disabled:opacity-60"
             >
               {saving ? "Saving changes…" : "Save changes"}
             </button>
@@ -327,10 +327,10 @@ function Field({
 }) {
   return (
     <label className={wide ? "sm:col-span-2" : ""}>
-      <span className="mb-2 block text-[11px] font-semibold text-[#334562]">
+      <span className="mb-2 block text-base font-semibold text-[#334562]">
         {label} <em className="not-italic text-[#e05757]">*</em>
       </span>
-      <span className="flex h-12 items-center gap-2 rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-[#00a36a] focus-within:border-[#00a36a] [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-[13px] [&>input]:text-[#172744] [&>input]:outline-none [&>select]:min-w-0 [&>select]:flex-1 [&>select]:bg-transparent [&>select]:text-[13px] [&>select]:text-[#172744] [&>select]:outline-none">
+      <span className="flex h-12 items-center gap-2 rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-[#00a36a] focus-within:border-[#00a36a] [&>input]:min-w-0 [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-base [&>input]:text-[#172744] [&>input]:outline-none [&>select]:min-w-0 [&>select]:flex-1 [&>select]:bg-transparent [&>select]:text-base [&>select]:text-[#172744] [&>select]:outline-none">
         {icon}
         {children}
       </span>

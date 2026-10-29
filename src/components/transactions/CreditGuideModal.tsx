@@ -15,7 +15,7 @@ export default function CreditGuideModal({guide, referralCode, referral, onClose
  <button autoFocus aria-label="Close guide" onClick={onClose} className="mb-3 ml-auto grid h-9 w-9 place-items-center rounded-full bg-[#f1f4f3]"><X size={18}/></button>
            <div className="space-y-5">
             {guide === 0 && <section className="rounded-xl border border-[#e1e8e5] bg-white p-5">
-              <h2 className="text-[14px] font-bold">
+              <h2 className="text-lg font-bold">
                 How to earn more credits
               </h2>
               <div className="mt-2 divide-y divide-[#ebefed]">
@@ -25,10 +25,10 @@ export default function CreditGuideModal({guide, referralCode, referral, onClose
                       <CalendarDays size={19} />
                     </span>
                     <div className="flex-1">
-                      <b className="text-[10px]">{title}</b>
-                      <p className="mt-1 text-[9px] text-[#65728a]">{note}</p>
+                      <b className="text-base">{title}</b>
+                      <p className="mt-1 text-base text-[#65728a]">{note}</p>
                     </div>
-                    <strong className="text-[15px] text-[#009b67]">
+                    <strong className="text-base text-[#009b67]">
                       {reward}
                     </strong>
                   </div>
@@ -37,27 +37,27 @@ export default function CreditGuideModal({guide, referralCode, referral, onClose
               <EarlyPaymentNote className="text-[#65728a]" />
             </section>}
             {guide === 1 && <section className="rounded-xl border border-[#e1e8e5] bg-white p-5">
-              <h2 className="text-[14px] font-bold">Referral & Rewards</h2>
+              <h2 className="text-lg font-bold">Referral & Rewards</h2>
               <div className="mt-3 flex items-center gap-3">
                 <span className="grid h-12 w-12 place-items-center rounded-full bg-[#eef8f4] text-[#00a36a]">
                   <UsersRound size={24} />
                 </span>
-                <p className="text-[10px] leading-4">
+                <p className="text-base leading-6">
                   Invite friends and earn credits when they pay their first
                   bill.
                 </p>
               </div>
-              <label className="mt-4 block text-[10px] text-[#65728a]">
+              <label className="mt-4 block text-base text-[#65728a]">
                 Your referral code
               </label>
               <button
                 onClick={copyReferral}
-                className="mt-2 flex h-10 w-full items-center justify-between rounded-md border border-[#dfe6e4] px-4 text-[12px] font-semibold"
+                className="mt-2 flex h-10 w-full items-center justify-between rounded-md border border-[#dfe6e4] px-4 text-base font-semibold"
               >
                 <span>{copied ? "Copied!" : referralCode}</span>
                 <Copy size={15} />
               </button>
-              <div className="mt-3 flex justify-between text-[10px]">
+              <div className="mt-3 flex justify-between text-base">
                 <span className="text-[#65728a]">Bonus earned</span>
                 <b className="text-[#009b67]">
                   +{referral.toLocaleString()} credits
@@ -65,17 +65,17 @@ export default function CreditGuideModal({guide, referralCode, referral, onClose
               </div>
               <button
                 onClick={shareReferral}
-                className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#009b67] text-[10px] font-semibold text-white"
+                className="mt-4 flex h-10 w-full items-center justify-center gap-2 rounded-md bg-[#009b67] text-base font-semibold text-white"
               >
                 <Share2 size={15} /> Share referral code
               </button>
             </section>}
             {guide === 2 && <section className="rounded-xl border border-[#e1e8e5] bg-white p-5">
-              <h2 className="text-[14px] font-bold">Use your credits</h2>
-              <p className="mt-1 text-[10px] text-[#65728a]">
+              <h2 className="text-lg font-bold">Use your credits</h2>
+              <p className="mt-1 text-base text-[#65728a]">
                 Apply your credits to reduce your bill payments.
               </p>
-              <div className="mt-3 space-y-3 text-[10px]">
+              <div className="mt-3 space-y-3 text-base">
                 <p className="flex gap-3">
                   <UserRound size={16} className="text-[#00a36a]" /> Apply to
                   eligible bills
@@ -87,13 +87,13 @@ export default function CreditGuideModal({guide, referralCode, referral, onClose
               </div>
               <Link
                 href="/dashboard/bills"
-                className="mt-4 flex h-10 items-center justify-center rounded-md bg-[#009b67] text-[10px] font-semibold text-white"
+                className="mt-4 flex h-10 items-center justify-center rounded-md bg-[#009b67] text-base font-semibold text-white"
               >
                 Apply credits
               </Link>
             </section>}
           </div>
- {error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}
+ {error && <p role="alert" className="mt-3 text-base text-red-700">{error}</p>}
  </dialog>;
 }
 

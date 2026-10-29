@@ -303,7 +303,7 @@ export default function BillModal({
       >
         <header className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-[#e8eeeb] bg-white/95 px-5 py-4 backdrop-blur sm:px-7">
           <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#009b67]">
+            <p className="text-base font-bold uppercase tracking-[.16em] text-[#009b67]">
               {mode === "details"
                 ? "Bill overview"
                 : mode === "edit"
@@ -326,7 +326,7 @@ export default function BillModal({
               <button
                 type="button"
                 onClick={() => setMode("edit")}
-                className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#009b67] px-3 text-[11px] font-semibold text-white hover:bg-[#00875a]"
+                className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-[#009b67] px-3 text-base font-semibold text-white hover:bg-[#00875a]"
               >
                 <Pencil size={14} /> Edit bill
               </button>
@@ -345,8 +345,8 @@ export default function BillModal({
           <div className="p-5 sm:p-7" role="status">
             {profileLoading ? <p>Checking your profile...</p> : <>
               <h3 className="font-semibold">Complete your profile</h3>
-              <p className="mt-2 text-sm">{ADDRESS_REQUIRED_MESSAGE}</p>
-              <Link href="/dashboard/settings?tab=profile" className="mt-4 inline-block rounded-lg bg-[#009b67] px-4 py-3 text-sm font-semibold text-white">Add address</Link>
+              <p className="mt-2 text-base">{ADDRESS_REQUIRED_MESSAGE}</p>
+              <Link href="/dashboard/settings?tab=profile" className="mt-4 inline-block rounded-lg bg-[#009b67] px-4 py-3 text-base font-semibold text-white">Add address</Link>
             </>}
           </div>
         ) : mode === "details" && bill ? (
@@ -354,13 +354,13 @@ export default function BillModal({
             <div className="rounded-2xl bg-linear-to-br from-[#063c33] to-[#075a49] p-6 text-white">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[11px] text-white/60">
+                  <p className="text-base text-white/60">
                     {isPaymentSubmitted ? "Bill total" : "Amount due"}
                   </p>
                   <strong className="mt-2 block text-[32px]">
                     {money.format(bill.amount)}
                   </strong>
-                  <p className="mt-3 flex items-center gap-2 text-[11px] text-white/75">
+                  <p className="mt-3 flex items-center gap-2 text-base text-white/75">
                     <CalendarDays size={15} />
                     {dateInput(bill.dueDate)
                       ? new Date(bill.dueDate).toLocaleDateString("en-US", {
@@ -372,7 +372,7 @@ export default function BillModal({
                   </p>
                 </div>
                 <span
-                  className={`rounded-full px-3 py-1.5 text-[10px] font-semibold ${isPaid ? "bg-[#dcfce7] text-[#08764f]" : isInReview ? "bg-[#fff6df] text-[#9a6700]" : "bg-white/12 text-white"}`}
+                  className={`rounded-full px-3 py-1.5 text-base font-semibold ${isPaid ? "bg-[#dcfce7] text-[#08764f]" : isInReview ? "bg-[#fff6df] text-[#9a6700]" : "bg-white/12 text-white"}`}
                 >
                   {isPaymentSubmitted ? (
                     <CheckCircle2 className="mr-1.5 inline" size={13} />
@@ -381,9 +381,9 @@ export default function BillModal({
                 </span>
               </div>
             </div>
-            <div className="mt-4 rounded-xl bg-[#f0f8f3] p-4 text-sm text-[#39704e]">
+            <div className="mt-4 rounded-xl bg-[#f0f8f3] p-4 text-base text-[#39704e]">
               <p className="font-semibold">{credits?.label}: {money.format(credits?.amount || 0)} in credits</p>
-              <p className="mt-1 text-xs">{credits?.description}</p>
+              <p className="mt-1 text-base">{credits?.description}</p>
               <EarlyPaymentNote />
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -402,10 +402,10 @@ export default function BillModal({
                   key={label}
                   className="rounded-xl border border-[#e4ebe8] bg-[#fafcfb] p-4"
                 >
-                  <p className="text-[9px] uppercase tracking-wider text-[#8792a4]">
+                  <p className="text-base uppercase tracking-wider text-[#8792a4]">
                     {label}
                   </p>
-                  <p className="mt-2 text-[12px] font-semibold text-[#263553]">
+                  <p className="mt-2 text-base font-semibold text-[#263553]">
                     {value}
                   </p>
                 </div>
@@ -413,10 +413,10 @@ export default function BillModal({
             </div>
             {bill.notes ? (
               <div className="mt-4 rounded-xl border border-[#e4ebe8] p-4">
-                <p className="text-[9px] uppercase tracking-wider text-[#8792a4]">
+                <p className="text-base uppercase tracking-wider text-[#8792a4]">
                   Notes
                 </p>
-                <p className="mt-2 text-[11px] leading-5 text-[#53617a]">
+                <p className="mt-2 text-base leading-6 text-[#53617a]">
                   {bill.notes}
                 </p>
               </div>
@@ -452,7 +452,7 @@ export default function BillModal({
                 </span>
               )}
               <span className="flex-1">
-                <b className="block text-[12px] text-[#19352d]">
+                <b className="block text-base text-[#19352d]">
                   {file
                     ? file.name
                     : bill?.documentUrl
@@ -460,17 +460,17 @@ export default function BillModal({
                       : "Upload a bill document"}
                   {mode === "add" && <span className="text-red-600" aria-label="required"> *</span>}
                 </b>
-                <small className="mt-1.5 block text-[10px] leading-5 text-[#657a72]">
+                <small className="mt-1.5 block text-base leading-6 text-[#657a72]">
                   JPG, PNG, WEBP or PDF up to 10 MB. Vuior AI will fill in the
                   bill details automatically.
                 </small>
                 {extracting ? (
-                  <span className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-[#009b67]">
+                  <span className="mt-2 flex items-center gap-2 text-base font-semibold text-[#009b67]">
                     <LoaderCircle className="animate-spin" size={14} /> Reading
                     your bill…
                   </span>
                 ) : (
-                  <span className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-[#009b67]">
+                  <span className="mt-2 flex items-center gap-2 text-base font-semibold text-[#009b67]">
                     <Sparkles size={14} /> AI-assisted entry
                   </span>
                 )}
@@ -484,7 +484,7 @@ export default function BillModal({
               onChange={(event) => chooseFile(event.target.files?.[0])}
             />
             {error ? (
-              <p className="mt-4 rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-4 py-3 text-[11px] text-[#be123c]">
+              <p className="mt-4 rounded-lg border border-[#fecdd3] bg-[#fff1f2] px-4 py-3 text-base text-[#be123c]">
                 {error}
               </p>
             ) : null}
@@ -509,7 +509,7 @@ export default function BillModal({
                       <button
                         key={provider.id}
                         type="button"
-                        className="flex w-full items-center justify-between px-3 py-2.5 text-left text-[12px] hover:bg-[#f3fbf7]"
+                        className="flex w-full items-center justify-between px-3 py-2.5 text-left text-base hover:bg-[#f3fbf7]"
                         onMouseDown={(event) => event.preventDefault()}
                         onClick={() => {
                           setSelectedProvider(provider);
@@ -527,7 +527,7 @@ export default function BillModal({
                       >
                         <span>{provider.name}</span>
                         {provider.categories[0] ? (
-                          <span className="text-[10px] text-[#718097]">
+                          <span className="text-base text-[#718097]">
                             {provider.categories[0]}
                           </span>
                         ) : null}
@@ -555,7 +555,7 @@ export default function BillModal({
               </Field>
               <Field label="Amount" required>
                 <div className="relative">
-                  <span className="pointer-events-none absolute left-3 top-3 text-[12px] text-[#65728a]">
+                  <span className="pointer-events-none absolute left-3 top-3 text-base text-[#65728a]">
                     $
                   </span>
                   <input
@@ -609,8 +609,8 @@ export default function BillModal({
             </div>
             <label className="mt-4 flex items-center justify-between rounded-xl border border-[#e1e8e5] p-4">
               <span>
-                <b className="block text-[11px]">Enable autopay</b>
-                <small className="mt-1 block text-[9px] text-[#718097]">
+                <b className="block text-base">Enable autopay</b>
+                <small className="mt-1 block text-base text-[#718097]">
                   Pay automatically on the due date.
                 </small>
               </span>
@@ -631,13 +631,13 @@ export default function BillModal({
                 onClick={
                   mode === "edit" && bill ? () => setMode("details") : onClose
                 }
-                className="h-11 flex-1 rounded-lg border border-[#d7e0dd] text-[11px] font-semibold text-[#53617a]"
+                className="h-11 flex-1 rounded-lg border border-[#d7e0dd] text-base font-semibold text-[#53617a]"
               >
                 Cancel
               </button>
               <button
                 disabled={working || extracting}
-                className="flex h-11 flex-[1.6] items-center justify-center gap-2 rounded-lg bg-[#009b67] text-[11px] font-semibold text-white disabled:opacity-50"
+                className="flex h-11 flex-[1.6] items-center justify-center gap-2 rounded-lg bg-[#009b67] text-base font-semibold text-white disabled:opacity-50"
               >
                 {working ? (
                   <LoaderCircle className="animate-spin" size={16} />
@@ -667,10 +667,10 @@ function Field({
 }) {
   return (
     <label className={`${wide ? "mt-4 block" : "block"}`}>
-      <span className="mb-2 block text-[10px] font-bold uppercase tracking-wider text-[#44516b]">
+      <span className="mb-2 block text-base font-bold uppercase tracking-wider text-[#44516b]">
         {label} {required && <span className="text-red-600" aria-label="required">*</span>}
       </span>
-      <div className="[&_input]:h-11 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[#dfe6e4] [&_input]:px-3 [&_input]:text-[12px] [&_input]:outline-none [&_input]:focus:border-[#009b67] [&_select]:h-11 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[#dfe6e4] [&_select]:bg-white [&_select]:px-3 [&_select]:text-[12px] [&_select]:outline-none [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#dfe6e4] [&_textarea]:p-3 [&_textarea]:text-[12px] [&_textarea]:outline-none">
+      <div className="[&_input]:h-11 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[#dfe6e4] [&_input]:px-3 [&_input]:text-base [&_input]:outline-none [&_input]:focus:border-[#009b67] [&_select]:h-11 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[#dfe6e4] [&_select]:bg-white [&_select]:px-3 [&_select]:text-base [&_select]:outline-none [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#dfe6e4] [&_textarea]:p-3 [&_textarea]:text-base [&_textarea]:outline-none">
         {children}
       </div>
     </label>

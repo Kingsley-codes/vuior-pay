@@ -14,7 +14,7 @@ export default function TablePagination({
 }) {
   const pages = Math.max(1, Math.ceil(total / pageSize));
   return (
-    <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-4 py-3 text-xs text-[#718097]">
+    <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-4 py-3 text-base text-[#718097]">
       <span aria-live="polite">
         Showing {total ? (page - 1) * pageSize + 1 : 0} -
         {Math.min(page * pageSize, total)} of {total}

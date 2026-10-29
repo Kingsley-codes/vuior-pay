@@ -23,15 +23,15 @@ export default function AddressRequiredNotice({
       <div className="flex items-start gap-3">
         <MapPin size={20} className="mt-0.5 shrink-0" aria-hidden="true" />
         <div>
-          <p className="text-sm font-semibold">Add your address to create bills</p>
-          <p className="mt-1 text-[13px] leading-5">
+          <p className="text-base font-semibold">Add your address to create bills</p>
+          <p className="mt-1 text-base leading-6">
             {ADDRESS_REQUIRED_MESSAGE}
           </p>
         </div>
       </div>
       <Link
         href="/dashboard/settings?tab=profile"
-        className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-[#009b67] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#008e5a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]"
+        className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-[#009b67] px-4 py-2 text-base font-semibold text-white transition hover:bg-[#008e5a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]"
       >
         Add address
       </Link>

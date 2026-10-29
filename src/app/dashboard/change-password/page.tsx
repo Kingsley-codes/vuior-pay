@@ -55,7 +55,7 @@ export default function ChangeTemporaryPasswordPage() {
   };
 
   return (
-    <main className="grid min-h-screen place-items-center bg-slate-50 px-4 py-8 text-slate-950">
+    <main className="dashboard-app grid min-h-screen place-items-center bg-slate-50 px-4 py-8 text-slate-950">
       <section className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex justify-center">
           <Image
@@ -74,7 +74,7 @@ export default function ChangeTemporaryPasswordPage() {
           <h1 className="mt-4 text-2xl font-semibold tracking-tight">
             Change your password
           </h1>
-          <p className="mt-2 text-sm leading-6 text-slate-500">
+          <p className="mt-2 text-base leading-6 text-slate-500">
             Your account was created with a temporary password. Set a permanent
             password to continue.
           </p>
@@ -107,21 +107,21 @@ export default function ChangeTemporaryPasswordPage() {
             }
           />
           {error ? (
-            <p role="alert" className="text-xs text-rose-600">
+            <p role="alert" className="text-base text-rose-600">
               {error}
             </p>
           ) : null}
           <button
             type="submit"
             disabled={submitting}
-            className="h-11 w-full rounded-lg bg-emerald-600 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-11 w-full rounded-lg bg-emerald-600 text-base font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Updating password" : "Save password"}
           </button>
           <button
             type="button"
             onClick={() => void logout()}
-            className="h-10 w-full rounded-lg border border-slate-200 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+            className="h-10 w-full rounded-lg border border-slate-200 text-base font-semibold text-slate-600 transition hover:bg-slate-50"
           >
             Sign out
           </button>
@@ -145,7 +145,7 @@ function PasswordField({
   onChange: (value: string) => void;
 }) {
   return (
-    <label className="block text-xs font-medium text-slate-600">
+    <label className="block text-base font-medium text-slate-600">
       {label}<span className="text-red-600" aria-label="required"> *</span>
       <span className="mt-1.5 flex h-11 items-center gap-2 rounded-lg border border-slate-200 px-3 transition focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-50">
         <LockKeyhole size={16} className="text-slate-400" />
@@ -155,7 +155,7 @@ function PasswordField({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           autoComplete="new-password"
-          className="min-w-0 flex-1 bg-transparent text-sm outline-none"
+          className="min-w-0 flex-1 bg-transparent text-base outline-none"
         />
         <button
           type="button"

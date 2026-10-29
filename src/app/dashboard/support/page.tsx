@@ -128,13 +128,13 @@ export default function SupportPage() {
       <div className="mx-auto max-w-[1250px] px-5 py-8 sm:px-8 lg:py-10">
         <div className="flex items-start justify-between gap-4">
           <div className="ml-12 sm:ml-0">
-            <p className="text-[11px] font-bold uppercase tracking-[.16em] text-[#00a36a]">
+            <p className="text-base font-bold uppercase tracking-[.16em] text-[#00a36a]">
               Help center
             </p>
             <h1 className="mt-2 text-2xl font-bold tracking-[-.03em] sm:text-[30px]">
               Support
             </h1>
-            <p className="mt-2 text-[13px] text-[#68758d]">
+            <p className="mt-2 text-base text-[#68758d]">
               Get help from our team and keep track of your requests.
             </p>
           </div>
@@ -142,7 +142,7 @@ export default function SupportPage() {
         </div>
 
         {notice ? (
-          <div className="mt-5 flex items-center gap-3 rounded-lg border border-[#f4c7c7] bg-[#fff4f4] px-4 py-3 text-[12px] text-[#a83434]">
+          <div className="mt-5 flex items-center gap-3 rounded-lg border border-[#f4c7c7] bg-[#fff4f4] px-4 py-3 text-base text-[#a83434]">
             <AlertCircle size={17} />
             <span className="flex-1">{notice}</span>
             <button aria-label="Dismiss message" onClick={() => setNotice("")}>
@@ -164,7 +164,7 @@ export default function SupportPage() {
             <TicketIcon size={16} />
             My tickets
             {activeCount ? (
-              <span className="grid min-w-5 place-items-center rounded-full bg-[#00a96b] px-1.5 py-0.5 text-[9px] text-white">
+              <span className="grid min-w-5 place-items-center rounded-full bg-[#00a96b] px-1.5 py-0.5 text-base text-white">
                 {activeCount > 9 ? "9+" : activeCount}
               </span>
             ) : null}
@@ -276,20 +276,20 @@ function ResolveTicketModal({
         <h2 id="resolve-ticket-title" className="mt-5 text-xl font-bold tracking-[-.02em]">
           Mark ticket as resolved?
         </h2>
-        <p id="resolve-ticket-description" className="mt-2 text-[13px] leading-6 text-[#68758d]">
+        <p id="resolve-ticket-description" className="mt-2 text-base leading-6 text-[#68758d]">
           If your issue has been taken care of, you can mark this ticket as resolved.
           You can reopen it within 48 hours if you still need help.
         </p>
         <div className="mt-5 rounded-xl border border-[#dfe6e4] bg-[#f8faf9] px-4 py-3">
-          <p className="break-all text-[10px] font-medium text-[#7b879b]">
+          <p className="break-all text-base font-medium text-[#7b879b]">
             {ticket.ticket_ID || ticket.id}
           </p>
-          <p className="mt-1 break-words text-[13px] font-semibold">
+          <p className="mt-1 break-words text-base font-semibold">
             {ticket.subject || "Support ticket"}
           </p>
         </div>
         {error && (
-          <p role="alert" className="mt-4 rounded-lg border border-[#f4c7c7] bg-[#fff4f4] px-4 py-3 text-[12px] text-[#a83434]">
+          <p role="alert" className="mt-4 rounded-lg border border-[#f4c7c7] bg-[#fff4f4] px-4 py-3 text-base text-[#a83434]">
             {error}
           </p>
         )}
@@ -299,7 +299,7 @@ function ResolveTicketModal({
             autoFocus
             disabled={updating}
             onClick={onClose}
-            className="flex h-11 flex-1 items-center justify-center rounded-lg border border-[#dfe6e4] px-4 text-[12px] font-semibold transition hover:bg-[#f8faf9] disabled:opacity-60"
+            className="flex h-11 flex-1 items-center justify-center rounded-lg border border-[#dfe6e4] px-4 text-base font-semibold transition hover:bg-[#f8faf9] disabled:opacity-60"
           >
             Cancel
           </button>
@@ -307,7 +307,7 @@ function ResolveTicketModal({
             type="button"
             disabled={updating}
             onClick={onConfirm}
-            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white transition hover:bg-[#008f60] disabled:opacity-60"
+            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-base font-semibold text-white transition hover:bg-[#008f60] disabled:opacity-60"
           >
             {updating ? <LoaderCircle size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
             {updating ? "Resolving..." : "Mark resolved"}
@@ -425,8 +425,8 @@ function ContactPanel({
             <Send size={18} />
           </span>
           <div>
-            <h2 className="text-[16px] font-bold">Send us a message</h2>
-            <p className="mt-1 text-[11px] text-[#738097]">
+            <h2 className="text-lg font-bold">Send us a message</h2>
+            <p className="mt-1 text-base text-[#738097]">
               Fields marked with * are required.
             </p>
           </div>
@@ -435,7 +435,7 @@ function ContactPanel({
         {error ? (
           <div
             role="alert"
-            className="mt-5 flex gap-2 rounded-lg bg-[#fff1f1] px-4 py-3 text-[11px] text-[#b63838]"
+            className="mt-5 flex gap-2 rounded-lg bg-[#fff1f1] px-4 py-3 text-base text-[#b63838]"
           >
             <AlertCircle size={16} className="shrink-0" />
             {error}
@@ -444,7 +444,7 @@ function ContactPanel({
         {success ? (
           <div
             role="status"
-            className="mt-5 flex gap-2 rounded-lg bg-[#eaf8f2] px-4 py-3 text-[11px] text-[#007d54]"
+            className="mt-5 flex gap-2 rounded-lg bg-[#eaf8f2] px-4 py-3 text-base text-[#007d54]"
           >
             <CheckCircle2 size={16} />
             Ticket submitted. Our team will respond within 24–48 hours.
@@ -457,7 +457,7 @@ function ContactPanel({
               value={category}
               onChange={(event) => setCategory(event.target.value)}
               disabled={sending}
-              className="h-11 w-full rounded-lg border border-[#dce5e2] bg-white px-3 text-[12px] outline-none focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10"
+              className="h-11 w-full rounded-lg border border-[#dce5e2] bg-white px-3 text-base outline-none focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10"
             >
               <option value="">Select a category</option>
               {categories.map(([value, label, description]) => (
@@ -480,7 +480,7 @@ function ContactPanel({
         <div className="mt-5">
           {(category === "payment" || category === "credits") && (
             <Field label="Transaction ID">
-              <input value={transactionId} onChange={(event) => setTransactionId(event.target.value)} disabled={sending} placeholder="Enter transaction ID (optional)" className="h-11 w-full rounded-lg border border-[#dce5e2] px-3 text-[12px] outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10" />
+              <input value={transactionId} onChange={(event) => setTransactionId(event.target.value)} disabled={sending} placeholder="Enter transaction ID (optional)" className="h-11 w-full rounded-lg border border-[#dce5e2] px-3 text-base outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10" />
             </Field>
           )}
         </div>
@@ -492,7 +492,7 @@ function ContactPanel({
               disabled={sending}
               maxLength={120}
               placeholder="What is your issue about?"
-              className="h-11 w-full rounded-lg border border-[#dce5e2] px-3 text-[12px] outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10"
+              className="h-11 w-full rounded-lg border border-[#dce5e2] px-3 text-base outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10"
             />
           </Field>
         </div>
@@ -505,9 +505,9 @@ function ContactPanel({
               maxLength={3000}
               rows={7}
               placeholder="Please describe your issue in detail..."
-              className="w-full resize-y rounded-lg border border-[#dce5e2] px-3 py-3 text-[12px] leading-5 outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10"
+              className="w-full resize-y rounded-lg border border-[#dce5e2] px-3 py-3 text-base leading-6 outline-none placeholder:text-[#9aa4b4] focus:border-[#00a96b] focus:ring-3 focus:ring-[#00a96b]/10"
             />
-            <p className="mt-1 text-right text-[9px] text-[#8b96a8]">
+            <p className="mt-1 text-right text-base text-[#8b96a8]">
               {message.length}/3000
             </p>
           </Field>
@@ -516,14 +516,14 @@ function ContactPanel({
         <div className="mt-5">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[11px] font-semibold text-[#34425d]">
+              <p className="text-base font-semibold text-[#34425d]">
                 Attachments
               </p>
-              <p className="mt-1 text-[9px] text-[#7d899d]">
+              <p className="mt-1 text-base text-[#7d899d]">
                 Up to 4 images, 5 MB each
               </p>
             </div>
-            <span className="text-[10px] text-[#7d899d]">{files.length}/4</span>
+            <span className="text-base text-[#7d899d]">{files.length}/4</span>
           </div>
           <input
             ref={inputRef}
@@ -571,7 +571,7 @@ function ContactPanel({
                 className="flex aspect-[4/3] flex-col items-center justify-center rounded-lg border border-dashed border-[#b8c8c3] bg-[#f9fbfa] text-[#66748a] transition hover:border-[#00a96b] hover:bg-[#f2fbf7] hover:text-[#008f60]"
               >
                 <Plus size={19} />
-                <span className="mt-1 text-[10px] font-semibold">
+                <span className="mt-1 text-base font-semibold">
                   Add image
                 </span>
               </button>
@@ -580,13 +580,13 @@ function ContactPanel({
         </div>
 
         <div className="mt-6 flex flex-col-reverse gap-3 border-t border-[#edf1ef] pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <p className="flex items-center gap-2 text-[10px] text-[#738097]">
+          <p className="flex items-center gap-2 text-base text-[#738097]">
             <Clock3 size={14} />
             Replies typically arrive within 24–48 hours.
           </p>
           <button
             disabled={sending}
-            className="flex h-11 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-7 text-[12px] font-semibold text-white transition hover:bg-[#009c63] disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex h-11 items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-7 text-base font-semibold text-white transition hover:bg-[#009c63] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {sending ? (
               <>
@@ -610,21 +610,21 @@ function ContactPanel({
               <Phone size={18} />
             </span>
             <div>
-              <h2 className="text-[13px] font-bold">Phone support</h2>
-              <p className="mt-1 text-[10px] text-[#738097]">
+              <h2 className="text-lg font-bold">Phone support</h2>
+              <p className="mt-1 text-base text-[#738097]">
                 Monday–Friday, 9 AM–6 PM EST
               </p>
             </div>
           </div>
           <a
             href="tel:+18333671826"
-            className="mt-5 flex h-10 items-center justify-center rounded-lg border border-[#00a96b] text-[11px] font-semibold text-[#008f60] transition hover:bg-[#eaf8f2]"
+            className="mt-5 flex h-10 items-center justify-center rounded-lg border border-[#00a96b] text-base font-semibold text-[#008f60] transition hover:bg-[#eaf8f2]"
           >
             Call +1 (833) 367-1826
           </a>
         </section>
         <section className="rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,.04)]">
-          <h2 className="text-[14px] font-bold">Frequently asked questions</h2>
+          <h2 className="text-lg font-bold">Frequently asked questions</h2>
           <div className="mt-3 divide-y divide-[#edf1ef]">
             {SUPPORT_FAQS.map(({ value, title, content }, index) => (
               <div key={value} className="py-3">
@@ -636,7 +636,7 @@ function ContactPanel({
                     )
                   }
                   aria-expanded={expandedFaq === index}
-                  className="flex w-full items-center gap-3 text-left text-[11px] font-semibold"
+                  className="flex w-full items-center gap-3 text-left text-base font-semibold"
                 >
                   <span className="flex-1">{title}</span>
                   {expandedFaq === index ? (
@@ -646,7 +646,7 @@ function ContactPanel({
                   )}
                 </button>
                 {expandedFaq === index ? (
-                  <p className="mt-2 whitespace-pre-line pr-5 text-[10px] leading-5 text-[#6f7d93]">
+                  <p className="mt-2 whitespace-pre-line pr-5 text-base leading-6 text-[#6f7d93]">
                     {content}
                   </p>
                 ) : null}
@@ -655,7 +655,7 @@ function ContactPanel({
           </div>
           <Link
             href="/help"
-            className="mt-3 inline-flex rounded text-[11px] font-semibold text-[#008f60] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#008f60]"
+            className="mt-3 inline-flex rounded text-base font-semibold text-[#008f60] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#008f60]"
           >
             View all FAQs
           </Link>
@@ -709,8 +709,8 @@ function TicketsPanel({
     <section className="overflow-hidden rounded-xl border border-[#e2e8e6] bg-white shadow-[0_7px_24px_rgba(25,55,47,.04)]">
       <div className="flex flex-col gap-3 border-b border-[#e7ecea] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-[16px] font-bold">My support tickets</h2>
-          <p className="mt-1 text-[10px] text-[#738097]">
+          <h2 className="text-lg font-bold">My support tickets</h2>
+          <p className="mt-1 text-base text-[#738097]">
             {tickets.length} ticket{tickets.length === 1 ? "" : "s"} ·{" "}
             {
               tickets.filter(
@@ -732,7 +732,7 @@ function TicketsPanel({
           </button>
           <button
             onClick={onCreate}
-            className="flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[11px] font-semibold text-white"
+            className="flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-base font-semibold text-white"
           >
             <Plus size={15} />
             New ticket
@@ -748,26 +748,26 @@ function TicketsPanel({
             onChange={(event) => { setSearch(event.target.value); setPage(1); }}
             placeholder="Search tickets"
             aria-label="Search tickets"
-            className="h-10 w-full rounded-lg border border-[#dfe6e4] bg-white pr-3 pl-9 text-[11px] outline-none focus:border-[#00a96b]"
+            className="h-10 w-full rounded-lg border border-[#dfe6e4] bg-white pr-3 pl-9 text-base outline-none focus:border-[#00a96b]"
           />
         </label>
-        <label className="flex items-center gap-2 text-[10px] text-[#738097]">
+        <label className="flex items-center gap-2 text-base text-[#738097]">
           <span className="shrink-0">Month</span>
           <input
             type="month"
             value={monthFilter}
             onChange={(event) => { setMonthFilter(event.target.value); setPage(1); }}
             aria-label="Filter tickets by month"
-            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] px-2 text-[11px] text-[#34425d]"
+            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] px-2 text-base text-[#34425d]"
           />
         </label>
-        <label className="flex items-center gap-2 text-[10px] text-[#738097]">
+        <label className="flex items-center gap-2 text-base text-[#738097]">
           <span>Status</span>
           <select
             value={statusFilter}
             onChange={(event) => { setStatusFilter(event.target.value as TicketStatus | "all"); setPage(1); }}
             aria-label="Filter tickets by status"
-            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] bg-white px-2 text-[11px] text-[#34425d]"
+            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] bg-white px-2 text-base text-[#34425d]"
           >
             <option value="all">All statuses</option>
             <option value="open">Open</option>
@@ -783,13 +783,13 @@ function TicketsPanel({
             <span className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
               <TicketIcon size={34} />
             </span>
-            <h3 className="mt-4 text-[15px] font-bold">No tickets yet</h3>
-            <p className="mt-2 text-[11px] text-[#738097]">
+            <h3 className="mt-4 text-base font-bold">No tickets yet</h3>
+            <p className="mt-2 text-base text-[#738097]">
               When you contact support, your requests will appear here.
             </p>
             <button
               onClick={onCreate}
-              className="mt-5 h-10 rounded-lg bg-[#00a96b] px-5 text-[11px] font-semibold text-white"
+              className="mt-5 h-10 rounded-lg bg-[#00a96b] px-5 text-base font-semibold text-white"
             >
               Create a ticket
             </button>
@@ -811,8 +811,8 @@ function TicketsPanel({
       ) : (
         <div className="grid min-h-[220px] place-items-center p-8 text-center">
           <div>
-            <h3 className="text-[14px] font-bold">No matching tickets</h3>
-            <p className="mt-2 text-[11px] text-[#738097]">Try changing the search or filters.</p>
+            <h3 className="text-base font-bold">No matching tickets</h3>
+            <p className="mt-2 text-base text-[#738097]">Try changing the search or filters.</p>
           </div>
         </div>
       )}
@@ -881,16 +881,16 @@ function TicketRow({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-[13px] font-bold">
+            <h3 className="text-base font-bold">
               {ticket.subject || "Support ticket"}
             </h3>
             <span
-              className={`rounded-full px-2.5 py-1 text-[9px] font-semibold capitalize ${statusStyles[ticket.status]}`}
+              className={`rounded-full px-2.5 py-1 text-base font-semibold capitalize ${statusStyles[ticket.status]}`}
             >
               {ticket.status.replace("-", " ")}
             </span>
           </div>
-          <p className="mt-1.5 text-[9px] text-[#7b879b]">
+          <p className="mt-1.5 text-base text-[#7b879b]">
             {ticket.ticket_ID || ticket.id} · Created{" "}
             {created
               ? created.toLocaleDateString("en-US", {
@@ -900,10 +900,10 @@ function TicketRow({
                 })
               : "just now"}
           </p>
-          <p className="mt-3 max-w-3xl whitespace-pre-wrap text-[11px] leading-5 text-[#53617a]">
+          <p className="mt-3 max-w-3xl whitespace-pre-wrap text-base leading-6 text-[#53617a]">
             {ticket.message}
           </p>
-          <div className="mt-4 flex flex-wrap items-center gap-4 text-[9px] text-[#7b879b]">
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-base text-[#7b879b]">
             <span className="capitalize">
               Category: {ticket.category || "General"}
             </span>
@@ -913,7 +913,7 @@ function TicketRow({
               {ticket.attachments?.length === 1 ? "" : "s"}
             </span>
           </div>
-          {ticket.transactionId ? <p className="mt-3 text-[10px] text-[#64718a]">Transaction ID: <span className="font-mono text-[#26344c]">{ticket.transactionId}</span></p> : null}
+          {ticket.transactionId ? <p className="mt-3 text-base text-[#64718a]">Transaction ID: <span className="font-mono text-[#26344c]">{ticket.transactionId}</span></p> : null}
           {ticket.attachments?.length ? (
             <div className="mt-3 flex gap-2 overflow-x-auto">
               {ticket.attachments.map((url, index) => (
@@ -941,7 +941,7 @@ function TicketRow({
             <button
               disabled={updating}
               onClick={onResolve}
-              className="flex h-9 min-w-[124px] items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[10px] font-semibold text-white disabled:opacity-60"
+              className="flex h-9 min-w-[124px] items-center justify-center gap-2 rounded-lg bg-[#00a96b] px-4 text-base font-semibold text-white disabled:opacity-60"
             >
               {updating ? (
                 <LoaderCircle size={14} className="animate-spin" />
@@ -954,7 +954,7 @@ function TicketRow({
             <button
               disabled={updating}
               onClick={onReopen}
-              className="flex h-9 min-w-[100px] items-center justify-center gap-2 rounded-lg border border-[#00a96b] px-4 text-[10px] font-semibold text-[#008f60] disabled:opacity-60"
+              className="flex h-9 min-w-[100px] items-center justify-center gap-2 rounded-lg border border-[#00a96b] px-4 text-base font-semibold text-[#008f60] disabled:opacity-60"
             >
               {updating ? (
                 <LoaderCircle size={14} className="animate-spin" />
@@ -981,7 +981,7 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[11px] font-semibold text-[#34425d]">
+      <span className="mb-2 block text-base font-semibold text-[#34425d]">
         {label}
         {required ? <span className="text-[#e04444]"> *</span> : null}
       </span>
@@ -1004,7 +1004,7 @@ function Tab({
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`flex h-10 items-center gap-2 rounded-md px-4 text-[11px] font-semibold transition sm:px-5 ${active ? "bg-[#eaf8f2] text-[#008f60]" : "text-[#66748a] hover:bg-[#f7f9f8]"}`}
+      className={`flex h-10 items-center gap-2 rounded-md px-4 text-base font-semibold transition sm:px-5 ${active ? "bg-[#eaf8f2] text-[#008f60]" : "text-[#66748a] hover:bg-[#f7f9f8]"}`}
     >
       {children}
     </button>

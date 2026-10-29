@@ -130,7 +130,7 @@ function MultiSelectFilter({
 
   return (
     <div ref={container} className="relative min-w-0">
-      <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+      <span className="mb-1.5 block text-base font-medium text-[#53637f]">
         {label}
       </span>
       <button
@@ -138,7 +138,7 @@ function MultiSelectFilter({
         aria-label={`${label}: ${selectedLabel}`}
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className="flex h-11 w-full items-center gap-2 rounded-lg border border-[#dfe5e7] bg-white px-3 text-left text-[12px] text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
+        className="flex h-11 w-full items-center gap-2 rounded-lg border border-[#dfe5e7] bg-white px-3 text-left text-base text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
       >
         <Icon size={15} className="shrink-0 text-[#7b879b]" />
         <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
@@ -155,7 +155,7 @@ function MultiSelectFilter({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder={`Search ${label.toLowerCase()}...`}
-                className="min-w-0 flex-1 bg-transparent text-[12px] text-[#344260] outline-none placeholder:text-[#8a95a6]"
+                className="min-w-0 flex-1 bg-transparent text-base text-[#344260] outline-none placeholder:text-[#8a95a6]"
               />
             </label>
           )}
@@ -163,7 +163,7 @@ function MultiSelectFilter({
             <button
               type="button"
               onClick={() => onChange([])}
-              className="flex w-full items-center rounded-md px-2.5 py-2 text-left text-[11px] font-medium text-[#009b67] hover:bg-[#f0faf5]"
+              className="flex w-full items-center rounded-md px-2.5 py-2 text-left text-base font-medium text-[#009b67] hover:bg-[#f0faf5]"
             >
               Clear selection · {allLabel}
             </button>
@@ -172,7 +172,7 @@ function MultiSelectFilter({
               return (
                 <label
                   key={option.value}
-                  className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-[11px] text-[#344260] hover:bg-[#f6f9f7]"
+                  className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-base text-[#344260] hover:bg-[#f6f9f7]"
                 >
                   <input
                     type="checkbox"
@@ -191,7 +191,7 @@ function MultiSelectFilter({
               );
             })}
             {!filteredOptions.length && (
-              <p className="px-2.5 py-3 text-[11px] text-[#718097]">
+              <p className="px-2.5 py-3 text-base text-[#718097]">
                 No matching {label.toLowerCase()}.
               </p>
             )}
@@ -217,18 +217,18 @@ function FilterSelect({
 }) {
   return (
     <div className="relative min-w-0">
-      <span className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+      <span className="mb-1.5 block text-base font-medium text-[#53637f]">
         {label}
       </span>
       <Icon
         size={15}
-        className="pointer-events-none absolute left-3 top-[36px] text-[#7b879b]"
+        className="pointer-events-none absolute left-3 top-[44px] text-[#7b879b]"
       />
       <select
         aria-label={label}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-11 w-full appearance-none rounded-lg border border-[#dfe5e7] bg-white pl-9 pr-9 text-[12px] text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
+        className="h-11 w-full appearance-none rounded-lg border border-[#dfe5e7] bg-white pl-9 pr-9 text-base text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -238,7 +238,7 @@ function FilterSelect({
       </select>
       <ChevronDown
         size={14}
-        className="pointer-events-none absolute right-3 top-[36px] text-[#7b879b]"
+        className="pointer-events-none absolute right-3 top-[44px] text-[#7b879b]"
       />
     </div>
   );
@@ -254,7 +254,7 @@ function StatusBadge({ status }: { status: string }) {
         : "bg-[#fff7e5] text-[#a67617]";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-[14px] font-medium ${color}`}
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-base font-medium ${color}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {label}
@@ -421,7 +421,7 @@ export default function TransactionsPage() {
               {linked[0].name}
             </span>
             {linked.length > 1 && (
-              <span className="mt-1 block text-[12px] font-normal text-[#718097]">
+              <span className="mt-1 block text-base font-normal text-[#718097]">
                 +{linked.length - 1} more
               </span>
             )}
@@ -451,7 +451,7 @@ export default function TransactionsPage() {
             <h1 className="text-[29px] font-bold tracking-[-0.035em]">
               Transactions
             </h1>
-            <p className="mt-1.5 text-[13px] text-[#596885]">
+            <p className="mt-1.5 text-base text-[#596885]">
               Your payments and credit activity, all in one place.
             </p>
           </div>
@@ -464,7 +464,7 @@ export default function TransactionsPage() {
                 <WalletCards size={20} strokeWidth={1.8} />
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-[#64718a]">
+                <p className="text-base font-medium text-[#64718a]">
                   Available credits
                 </p>
                 <p className="mt-1 break-words text-[21px] font-bold leading-tight tracking-tight text-[#14203e] tabular-nums sm:mt-0.5 sm:whitespace-nowrap sm:text-[23px] sm:leading-none">
@@ -478,14 +478,14 @@ export default function TransactionsPage() {
             <div className="col-span-2 grid grid-cols-2 gap-2 border-t border-[#edf1ef] pt-4 sm:flex sm:shrink-0 sm:border-0 sm:pt-0">
               <button
                 onClick={() => setWalletAction("send")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#d7e3dd] bg-white px-2 text-[12px] font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:h-10 sm:gap-2 sm:px-3 sm:text-[11px]"
+                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#d7e3dd] bg-white px-2 text-base font-semibold text-[#344260] transition hover:border-[#a9cdbb] hover:bg-[#f7fbf9] sm:h-10 sm:gap-2 sm:px-3 sm:text-base"
               >
                 <Send size={15} className="shrink-0" />
                 Send credits
               </button>
               <button
                 onClick={() => setWalletAction("add")}
-                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#00a96b] px-2 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:gap-2 sm:px-3 sm:text-[11px]"
+                className="inline-flex h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#00a96b] px-2 text-base font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:gap-2 sm:px-3 sm:text-base"
               >
                 <WalletCards size={15} className="shrink-0" />
                 Add funds
@@ -496,12 +496,12 @@ export default function TransactionsPage() {
 
         <section
           aria-label="Transaction statistics"
-          className="mt-5 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4"
+          className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-4 2xl:grid-cols-4"
         >
           {stats.map(({ label, value, previous, icon: Icon, tone }) => (
             <article
               key={label}
-              className="flex min-h-[124px] flex-col justify-center gap-3 rounded-xl border border-[#e2e8e6] bg-white p-4 shadow-[0_7px_24px_rgba(25,55,47,0.04)] sm:flex-row sm:items-center sm:justify-start sm:gap-4 sm:p-5"
+              className="flex min-h-[124px] items-center gap-3 rounded-xl border border-[#e2e8e6] bg-white p-4 shadow-[0_7px_24px_rgba(25,55,47,0.04)] sm:gap-4 sm:p-5"
             >
               <span
                 className={`grid h-12 w-12 shrink-0 place-items-center rounded-full sm:h-14 sm:w-14 ${tone}`}
@@ -509,11 +509,11 @@ export default function TransactionsPage() {
                 <Icon size={25} strokeWidth={1.7} />
               </span>
               <div>
-                <p className="text-[12px] text-[#53637f]">{label}</p>
+                <p className="text-lg text-[#53637f]">{label}</p>
                 <strong className="mt-1.5 block text-[27px] leading-none tracking-tight">
                   {value.toLocaleString()}
                 </strong>
-                <p className="mt-2 text-[11px] text-[#61708a]">
+                <p className="mt-2 text-base text-[#61708a]">
                   {monthlyComparison(value, previous)}
                 </p>
               </div>
@@ -559,7 +559,7 @@ export default function TransactionsPage() {
                     document.getElementById(`${next.value}-tab`)?.focus();
                   }
                 }}
-                className={`flex h-14 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1 text-[12px] font-semibold transition sm:h-16 sm:gap-2 sm:px-5 sm:text-[13px] ${filters.type === value ? "border-[#00a96b] text-[#009b67]" : "border-transparent text-[#65728a] hover:text-[#344260]"}`}
+                className={`flex h-14 min-w-0 items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1 text-base font-semibold transition sm:h-16 sm:gap-2 sm:px-5 sm:text-lg ${filters.type === value ? "border-[#00a96b] text-[#009b67]" : "border-transparent text-[#65728a] hover:text-[#344260]"}`}
               >
                 <Icon size={17} className="shrink-0" />
                 <span className="sm:hidden">{mobileLabel}</span>
@@ -573,31 +573,33 @@ export default function TransactionsPage() {
             aria-labelledby={`${filters.type}-tab`}
           >
             <div className="space-y-3 border-b border-[#e7ecea] p-4 sm:p-5">
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-[minmax(210px,1.4fr)_minmax(150px,1fr)_minmax(150px,1fr)_minmax(135px,.8fr)_minmax(135px,.8fr)]">
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 <form
                   onSubmit={(event) => {
                     event.preventDefault();
                     updateFilters({ search: filters.search });
                   }}
-                  className="block min-w-0"
+                  className="col-span-full min-w-0"
                 >
-                  <label htmlFor="transaction-search" className="mb-1.5 block text-[11px] font-medium text-[#53637f]">
+                  <label htmlFor="transaction-search" className="mb-1.5 block text-base font-medium text-[#53637f]">
                     Search
                   </label>
-                  <span className="flex h-11 items-center gap-2 rounded-lg border border-[#dfe5e7] pl-3 pr-1 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
-                    <Search size={17} className="shrink-0" />
-                    <input
-                      id="transaction-search"
-                      aria-label="Search transactions"
-                      value={filters.search}
-                      onChange={(event) =>
-                        updateFilters({ search: event.target.value })
-                      }
-                      placeholder="Search transactions..."
-                      className="min-w-0 flex-1 bg-transparent text-[12px] text-[#344260] outline-none placeholder:text-[#8a95a6]"
-                    />
-                    <button type="submit" className="shrink-0 rounded-md bg-[#009b67] px-3 py-2 text-[12px] font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-lg border border-[#dfe5e7] bg-white px-3 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
+                      <Search size={17} className="shrink-0" />
+                      <input
+                        id="transaction-search"
+                        aria-label="Search transactions"
+                        value={filters.search}
+                        onChange={(event) =>
+                          updateFilters({ search: event.target.value })
+                        }
+                        placeholder="Search transactions..."
+                        className="min-w-0 flex-1 bg-transparent text-base text-[#344260] outline-none placeholder:text-[#8a95a6]"
+                      />
+                    </div>
+                    <button type="submit" className="h-11 shrink-0 rounded-lg bg-[#009b67] px-5 text-base font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
+                  </div>
                 </form>
                 <MultiSelectFilter
                   label={filters.type === "credit" ? "Credit type" : "Category"}
@@ -651,7 +653,7 @@ export default function TransactionsPage() {
               </div>
               {filters.period === "Custom" && (
                 <div className="flex flex-wrap items-end gap-3 rounded-lg bg-[#f8faf9] p-3">
-                  <label className="text-[11px] text-[#596885]">
+                  <label className="text-base text-[#596885]">
                     From
                     <input
                       type="date"
@@ -660,10 +662,10 @@ export default function TransactionsPage() {
                       onChange={(event) =>
                         updateFilters({ from: event.target.value })
                       }
-                      className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-[12px]"
+                      className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base"
                     />
                   </label>
-                  <label className="text-[11px] text-[#596885]">
+                  <label className="text-base text-[#596885]">
                     To
                     <input
                       type="date"
@@ -672,13 +674,13 @@ export default function TransactionsPage() {
                       onChange={(event) =>
                         updateFilters({ to: event.target.value })
                       }
-                      className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-[12px]"
+                      className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base"
                     />
                   </label>
                   {!validPeriod && (
                     <p
                       role="status"
-                      className="pb-3 text-[11px] text-[#a67617]"
+                      className="pb-3 text-base text-[#a67617]"
                     >
                       Choose a valid start and end date.
                     </p>
@@ -691,7 +693,7 @@ export default function TransactionsPage() {
                     onClick={() =>
                       updateFilters({ ...defaults, type: filters.type })
                     }
-                    className="text-[11px] font-semibold text-[#009b67] hover:underline"
+                    className="text-base font-semibold text-[#009b67] hover:underline"
                   >
                     Clear filters
                   </button>
@@ -700,8 +702,8 @@ export default function TransactionsPage() {
             </div>
 
             <div className="hidden overflow-x-auto lg:block">
-              <table className="w-full min-w-[860px] text-left">
-                <thead className="border-b border-[#e9eeec] bg-[#f8faf9] text-[13px] text-[#64718a]">
+              <table className="text-[17px] w-full min-w-[1080px] text-left">
+                <thead className="border-b border-[#e9eeec] bg-[#f8faf9] text-lg text-[#64718a]">
                   <tr>
                     {[
                       "Transaction ID",
@@ -715,14 +717,14 @@ export default function TransactionsPage() {
                       <th
                         key={index}
                         scope="col"
-                        className={`px-5 py-3.5 font-medium ${heading === "Amount" || heading === "Credits" ? "text-right" : ""}`}
+                        className={`px-5 py-3.5 font-semibold ${heading === "Amount" || heading === "Credits" ? "text-right" : ""}`}
                       >
                         {heading || <span className="sr-only">Details</span>}
                       </th>
                     ))}
                     <th
                       scope="col"
-                      className="px-4 py-3.5 text-right font-medium"
+                      className="px-4 py-3.5 text-right font-semibold"
                     >
                       Actions
                     </th>
@@ -743,10 +745,10 @@ export default function TransactionsPage() {
                       <tr
                         key={item.id}
                         onClick={() => setSelectedTransaction(item)}
-                        className="group cursor-pointer text-[14px] transition hover:bg-[#f4faf7] focus-within:bg-[#f4faf7]"
+                        className="group cursor-pointer text-[17px] transition hover:bg-[#f4faf7] focus-within:bg-[#f4faf7]"
                       >
                         <td
-                          className="whitespace-nowrap px-5 py-4 font-mono text-[13px] text-[#53637f]"
+                          className="whitespace-nowrap px-5 py-4 font-mono text-[17px] text-[#53637f]"
                           title={item.transactionId}
                         >
                           {item.transactionId}
@@ -772,7 +774,7 @@ export default function TransactionsPage() {
                           </div>
                         </td>
 
-                        <td className="max-w-48 px-5 py-4 leading-5 text-[#64718a]">
+                        <td className="max-w-48 px-5 py-4 leading-6 text-[#64718a]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </td>
                         {filters.type === "all" && (
@@ -786,7 +788,7 @@ export default function TransactionsPage() {
                             day: "numeric",
                             year: "numeric",
                           })}
-                          <p className="mt-1 text-[9px] text-[#8a95a6]">
+                          <p className="mt-1 text-[17px] text-[#8a95a6]">
                             {item.date.toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -794,7 +796,7 @@ export default function TransactionsPage() {
                           </p>
                         </td>
                         <td
-                          className={`whitespace-nowrap px-5 py-4 text-right text-[15px] font-semibold tabular-nums ${!billTransaction && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
+                          className={`whitespace-nowrap px-5 py-4 text-right text-[17px] font-semibold tabular-nums ${!billTransaction && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
                         >
                           {billTransaction
                             ? money.format(item.amount)
@@ -829,14 +831,14 @@ export default function TransactionsPage() {
                                   setSelectedTransaction(item);
                                   setActionsFor(null);
                                 }}
-                                className="block w-full rounded-md px-3 py-2 text-left text-xs hover:bg-[#f4faf7]"
+                                className="block w-full rounded-md px-3 py-2 text-left text-[17px] hover:bg-[#f4faf7]"
                               >
                                 View
                               </button>
                               <a
                                 href={transactionReportUrl(item)}
                                 onClick={() => setActionsFor(null)}
-                                className="flex items-center gap-2 rounded-md px-3 py-2 text-xs hover:bg-[#f4faf7]"
+                                className="flex items-center gap-2 rounded-md px-3 py-2 text-[17px] hover:bg-[#f4faf7]"
                               >
                                 <Flag size={13} />
                                 Report
@@ -870,15 +872,15 @@ export default function TransactionsPage() {
                         )}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-[14px] font-semibold">
+                        <p className="truncate text-base font-semibold">
                           {title}
                         </p>
-                        <p className="mt-1 truncate text-[12px] text-[#7b879b]">
+                        <p className="mt-1 truncate text-base text-[#7b879b]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-[15px] font-semibold tabular-nums">
+                        <p className="text-base font-semibold tabular-nums">
                           {billTransaction
                             ? money.format(item.amount)
                             : `${creditAmount(item)} credits`}
@@ -888,7 +890,7 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-[12px] text-[#718097] sm:flex-row sm:items-center sm:justify-between">
+                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-base text-[#718097] sm:flex-row sm:items-center sm:justify-between">
                       <span>
                         {item.date.toLocaleDateString("en-US", {
                           dateStyle: "medium",
@@ -896,7 +898,7 @@ export default function TransactionsPage() {
                         {billTransaction ? ` / ${method(item)}` : ""}
                       </span>
                       <span className="min-w-0">
-                        <span className="mr-2 font-sans text-[11px] uppercase text-[#8a95a6]">
+                        <span className="mr-2 font-sans text-base uppercase text-[#8a95a6]">
                           Transaction ID
                         </span>
                         <span className="break-all font-mono text-[#53637f]">
@@ -915,7 +917,7 @@ export default function TransactionsPage() {
                   <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-[#f0f6f3] text-[#9ab5a8]">
                     <Search size={24} strokeWidth={1.5} />
                   </span>
-                  <h3 className="mt-4 text-[14px] font-semibold">
+                  <h3 className="mt-4 text-base font-semibold">
                     No{" "}
                     {filters.type === "all"
                       ? ""
@@ -924,14 +926,14 @@ export default function TransactionsPage() {
                         : "credit"}{" "}
                     transactions found
                   </h3>
-                  <p className="mt-2 text-[14px] text-[#7b879b]">
+                  <p className="mt-2 text-base text-[#7b879b]">
                     Try a different period or adjust your filters.
                   </p>
                 </div>
               </div>
             )}
             <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-5 py-4">
-              <p aria-live="polite" className="text-[13px] text-[#7b879b]">
+              <p aria-live="polite" className="text-base text-[#7b879b]">
                 Showing{" "}
                 <span className="font-medium text-[#344260]">
                   {filtered.length
@@ -963,7 +965,7 @@ export default function TransactionsPage() {
                 >
                   <ChevronLeft size={15} />
                 </button>
-                <span className="px-2 text-[13px] text-[#64718a]">
+                <span className="px-2 text-base text-[#64718a]">
                   Page <strong className="text-[#344260]">{currentPage}</strong>{" "}
                   of {pageCount}
                 </span>

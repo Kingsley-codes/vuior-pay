@@ -263,7 +263,7 @@ export function SecuritySettingsPanel() {
       {feedback ? (
         <div
           role="status"
-          className={`mt-6 rounded-lg border px-4 py-3 text-[13px] ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}
+          className={`mt-6 rounded-lg border px-4 py-3 text-base ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}
         >
           {feedback.text}
         </div>
@@ -309,14 +309,14 @@ export function SecuritySettingsPanel() {
               }
             />
           </div>
-          <div className="mt-5 rounded-xl bg-[#f5f8f7] p-4 text-[11px] leading-5 text-[#66748a]">
+          <div className="mt-5 rounded-xl bg-[#f5f8f7] p-4 text-base leading-6 text-[#66748a]">
             <strong className="text-[#34445f]">Password requirements</strong>
             <br />
             At least 8 characters with one number and one symbol (!@#$%^&*).
           </div>
           <button
             disabled={busy !== null}
-            className="mt-6 h-12 w-full rounded-lg bg-[#00a36a] text-[12px] font-bold text-white transition hover:bg-[#008f5d] disabled:opacity-60"
+            className="mt-6 h-12 w-full rounded-lg bg-[#00a36a] text-base font-bold text-white transition hover:bg-[#008f5d] disabled:opacity-60"
           >
             {busy === "password"
               ? "Verifying…"
@@ -333,13 +333,13 @@ export function SecuritySettingsPanel() {
               title="Security question"
               copy="Used as an additional account recovery check."
             />
-            <label className="mt-6 block text-[11px] font-semibold text-[#334562]">
+            <label className="mt-6 block text-base font-semibold text-[#334562]">
               <span>Question<span className="text-red-600" aria-label="required"> *</span></span>
               <select
                 required
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="mt-2 h-12 w-full rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-[12px] outline-none focus:border-[#00a36a]"
+                className="mt-2 h-12 w-full rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-base outline-none focus:border-[#00a36a]"
               >
                 <option value="">Select a question</option>
                 {QUESTIONS.map((q) => (
@@ -347,7 +347,7 @@ export function SecuritySettingsPanel() {
                 ))}
               </select>
             </label>
-            <label className="mt-4 block text-[11px] font-semibold text-[#334562]">
+            <label className="mt-4 block text-base font-semibold text-[#334562]">
               <span>Answer<span className="text-red-600" aria-label="required"> *</span></span>
               <input
                 type="password"
@@ -356,12 +356,12 @@ export function SecuritySettingsPanel() {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Enter your answer"
-                className="mt-2 h-12 w-full rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-[12px] outline-none focus:border-[#00a36a]"
+                className="mt-2 h-12 w-full rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 text-base outline-none focus:border-[#00a36a]"
               />
             </label>
             <button
               disabled={busy !== null}
-              className="mt-5 h-11 w-full rounded-lg border border-[#00a36a] text-[11px] font-bold text-[#009662] disabled:opacity-60"
+              className="mt-5 h-11 w-full rounded-lg border border-[#00a36a] text-base font-bold text-[#009662] disabled:opacity-60"
             >
               {busy === "question" ? "Saving…" : "Save security question"}
             </button>
@@ -370,10 +370,10 @@ export function SecuritySettingsPanel() {
             <span className="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-[#2bd195]">
               <ShieldCheck size={20} />
             </span>
-            <h2 className="mt-4 text-[14px] font-bold">
+            <h2 className="mt-4 text-lg font-bold">
               Your account is protected
             </h2>
-            <p className="mt-2 text-[11px] leading-5 text-[#a8b3c5]">
+            <p className="mt-2 text-base leading-6 text-[#a8b3c5]">
               Sensitive changes require recent authentication and email
               verification.
             </p>
@@ -382,10 +382,10 @@ export function SecuritySettingsPanel() {
             <span className="grid h-10 w-10 place-items-center rounded-full bg-[#fff1f2] text-[#dc3545]">
               <Trash2 size={19} />
             </span>
-            <h2 className="mt-4 text-[14px] font-bold text-[#9f1239]">
+            <h2 className="mt-4 text-lg font-bold text-[#9f1239]">
               Delete account
             </h2>
-            <p className="mt-2 text-[11px] leading-5 text-[#7b5964]">
+            <p className="mt-2 text-base leading-6 text-[#7b5964]">
               This is permanent. Your account will be deactivated. All your data
               will be deleted and cannot be recovered.
             </p>
@@ -393,7 +393,7 @@ export function SecuritySettingsPanel() {
               type="button"
               disabled={busy !== null}
               onClick={() => setShowDeleteDialog(true)}
-              className="mt-5 h-11 w-full rounded-lg border border-[#e11d48] text-[11px] font-bold text-[#be123c] transition hover:bg-[#fff1f2] disabled:opacity-60"
+              className="mt-5 h-11 w-full rounded-lg border border-[#e11d48] text-base font-bold text-[#be123c] transition hover:bg-[#fff1f2] disabled:opacity-60"
             >
               Delete account
             </button>
@@ -435,7 +435,7 @@ export function SecuritySettingsPanel() {
             >
               Delete your account?
             </h2>
-            <p className="mt-2 text-[12px] leading-6 text-[#66748a]">
+            <p className="mt-2 text-base leading-6 text-[#66748a]">
               Your account will be deactivated. This is permanent. You will be
               signed out and all your data will be deleted and cannot be
               recovered.
@@ -446,7 +446,7 @@ export function SecuritySettingsPanel() {
                 type="button"
                 disabled={busy === "delete"}
                 onClick={() => setShowDeleteDialog(false)}
-                className="h-11 rounded-lg border border-[#dce4e2] px-5 text-[11px] font-bold text-[#53617a] disabled:opacity-50"
+                className="h-11 rounded-lg border border-[#dce4e2] px-5 text-base font-bold text-[#53617a] disabled:opacity-50"
               >
                 Keep account
               </button>
@@ -454,7 +454,7 @@ export function SecuritySettingsPanel() {
                 type="button"
                 disabled={busy === "delete"}
                 onClick={() => void handleDeleteAccount()}
-                className="h-11 rounded-lg bg-[#dc2626] px-5 text-[11px] font-bold text-white transition hover:bg-[#b91c1c] disabled:opacity-60"
+                className="h-11 rounded-lg bg-[#dc2626] px-5 text-base font-bold text-white transition hover:bg-[#b91c1c] disabled:opacity-60"
               >
                 {busy === "delete" ? "Deleting account..." : "Delete account"}
               </button>
@@ -492,10 +492,10 @@ export function SecuritySettingsPanel() {
             <h2 id="password-otp-title" className="mt-5 text-[19px] font-bold text-[#111d39]">
               Confirm password change
             </h2>
-            <p className="mt-2 text-[12px] leading-6 text-[#66748a]">
+            <p className="mt-2 text-base leading-6 text-[#66748a]">
               {usesSecurityQuestion ? "Answer your saved security question to confirm this change." : `Enter the 6-digit code sent to ${firebaseUser?.email}.`}
             </p>
-            {usesSecurityQuestion ? <p id="password-security-question" className="mt-4 text-sm font-semibold text-[#111d39]">{passwordChallenge.question}</p> : null}
+            {usesSecurityQuestion ? <p id="password-security-question" className="mt-4 text-base font-semibold text-[#111d39]">{passwordChallenge.question}</p> : null}
             <input
               autoFocus
               type={usesSecurityQuestion ? "password" : "text"}
@@ -504,21 +504,21 @@ export function SecuritySettingsPanel() {
               maxLength={usesSecurityQuestion ? 256 : 6}
               value={passwordOtp}
               onChange={(event) => setPasswordOtp(usesSecurityQuestion ? event.target.value : event.target.value.replace(/\D/g, ""))}
-              className={`mt-5 h-12 w-full rounded-lg border border-[#dce4e2] px-4 outline-none focus:border-[#00a36a] ${usesSecurityQuestion ? "text-sm" : "text-center text-lg tracking-[.45em]"}`}
+              className={`mt-5 h-12 w-full rounded-lg border border-[#dce4e2] px-4 outline-none focus:border-[#00a36a] ${usesSecurityQuestion ? "text-base" : "text-center text-lg tracking-[.45em]"}`}
               aria-label={usesSecurityQuestion ? "Security answer" : "One-time verification code"}
               aria-describedby={usesSecurityQuestion ? "password-security-question" : undefined}
             />
-            {passwordOtpError ? <p className="mt-3 text-[12px] text-[#be123c]">{passwordOtpError}</p> : null}
+            {passwordOtpError ? <p className="mt-3 text-base text-[#be123c]">{passwordOtpError}</p> : null}
             <div className="mt-6 flex gap-3">
               {!usesSecurityQuestion && <button
                 type="button"
                 disabled={busy === "password"}
                 onClick={() => void requestPasswordChangeOtp().then((challenge) => { setPasswordChallenge(challenge); setPasswordOtp(""); setPasswordOtpError(challenge.method === "email_otp" ? "A new code was sent." : ""); }).catch((error: unknown) => setPasswordOtpError(error instanceof Error ? error.message : "Could not resend the code."))}
-                className="h-11 flex-1 rounded-lg border border-[#dce4e2] text-[11px] font-bold text-[#53617a] disabled:opacity-50"
+                className="h-11 flex-1 rounded-lg border border-[#dce4e2] text-base font-bold text-[#53617a] disabled:opacity-50"
               >
                 Resend code
               </button>}
-              <button disabled={busy === "password" || !verificationReady} className="h-11 flex-1 rounded-lg bg-[#00a36a] text-[11px] font-bold text-white disabled:opacity-60">
+              <button disabled={busy === "password" || !verificationReady} className="h-11 flex-1 rounded-lg bg-[#00a36a] text-base font-bold text-white disabled:opacity-60">
                 {busy === "password" ? "Changing..." : "Change password"}
               </button>
             </div>
@@ -553,8 +553,8 @@ function CardHeading({
         {icon}
       </span>
       <div>
-        <h2 className="text-[15px] font-bold">{title}</h2>
-        <p className="mt-1 text-[11px] leading-5 text-[#7b8799]">{copy}</p>
+        <h2 className="text-lg font-bold">{title}</h2>
+        <p className="mt-1 text-base leading-6 text-[#7b8799]">{copy}</p>
       </div>
     </div>
   );
@@ -574,7 +574,7 @@ function PasswordField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[11px] font-semibold text-[#334562]">
+      <span className="mb-2 block text-base font-semibold text-[#334562]">
         {label}<span className="text-red-600" aria-label="required"> *</span>
       </span>
       <span className="flex h-12 items-center rounded-lg border border-[#dce4e2] bg-[#fbfcfc] px-3 focus-within:border-[#00a36a]">
@@ -585,7 +585,7 @@ function PasswordField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           autoComplete="off"
-          className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
+          className="min-w-0 flex-1 bg-transparent text-base outline-none"
         />
         <button
           type="button"

@@ -97,7 +97,7 @@ export default function TransactionDetailsModal({
               <h2 id="transaction-title" className="text-[20px] font-semibold">
                 Transaction details
               </h2>
-              <p className="mt-1 break-words text-[12px] text-[#65728a]">
+              <p className="mt-1 break-words text-base text-[#65728a]">
                 {linkedBills.length > 1
                   ? `${linkedBills.length} bills in this payment`
                   : linkedBills[0]?.name || transaction.label}
@@ -113,9 +113,9 @@ export default function TransactionDetailsModal({
           </button>
         </div>
         <div className="p-6">
-          <Link href={transactionReportUrl(transaction)} className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white hover:bg-[#008f60]"><Flag size={15} /> Report transaction</Link>
+          <Link href={transactionReportUrl(transaction)} className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#00a96b] px-4 text-base font-semibold text-white hover:bg-[#008f60]"><Flag size={15} /> Report transaction</Link>
           <div className="rounded-xl bg-[#f6faf8] p-5">
-            <p className="text-[11px] uppercase tracking-[.12em] text-[#718097]">
+            <p className="text-base uppercase tracking-[.12em] text-[#718097]">
               {isCredit ? "Credits" : "Total amount paid"}
             </p>
             <p className="mt-2 text-[28px] font-semibold">
@@ -124,7 +124,7 @@ export default function TransactionDetailsModal({
                 : money.format(transaction.amount)}
             </p>
             {!isCredit && transaction.credits !== 0 && (
-              <p className="mt-2 text-[12px] text-[#009b67]">
+              <p className="mt-2 text-base text-[#009b67]">
                 Credits: {transaction.credits > 0 ? "+" : ""}
                 {transaction.credits.toFixed(2)}
               </p>
@@ -134,7 +134,7 @@ export default function TransactionDetailsModal({
             ) && (
               <div className="mt-4 space-y-2 border-t border-[#dce9e4] pt-3">
                 {transaction.creditsApplied ? (
-                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
+                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-base">
                     <span className="text-[#718097]">Credits applied</span>
                     <span className="font-medium tabular-nums">
                       {transaction.creditsApplied.toFixed(2)} credits
@@ -142,7 +142,7 @@ export default function TransactionDetailsModal({
                   </p>
                 ) : null}
                 {transaction.amountCharged != null && (
-                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
+                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-base">
                     <span className="text-[#718097]">Paid via Stripe after credits</span>
                     <span className="font-medium tabular-nums">
                       {money.format(transaction.amountCharged)}
@@ -150,7 +150,7 @@ export default function TransactionDetailsModal({
                   </p>
                 )}
                 {transaction.pendingCredits ? (
-                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-[12px]">
+                  <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-base">
                     <span className="text-[#718097]">Pending reward</span>
                     <span className="font-medium tabular-nums text-[#009b67]">
                       {transaction.pendingCredits.toFixed(2)} credits (
@@ -163,7 +163,7 @@ export default function TransactionDetailsModal({
           </div>
           {linkedBills.length > 0 && (
             <section className="mt-5 rounded-xl border border-[#e2e8e6] p-4">
-              <h3 className="text-[12px] font-semibold text-[#344260]">
+              <h3 className="text-base font-semibold text-[#344260]">
                 Bills included ({linkedBills.length})
               </h3>
               <ul className="mt-2 divide-y divide-[#edf1ef]">
@@ -172,20 +172,20 @@ export default function TransactionDetailsModal({
                     key={bill.id}
                     className="flex flex-col gap-1 py-3 first:pt-2 last:pb-1"
                   >
-                    <span className="min-w-0 break-words text-[13px] font-medium text-[#26344c]">
+                    <span className="min-w-0 break-words text-base font-medium text-[#26344c]">
                       {bill.name}
                     </span>
-                    <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[#718097]">
+                    <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-base text-[#718097]">
                       <span className="min-w-0 break-words">
                         <span className="sr-only">Category: </span>
                         {bill.category || "Uncategorized"}
                       </span>
-                      <span className="break-all font-mono text-[10px]">
+                      <span className="break-all font-mono text-base">
                         <span className="sr-only">Bill ID: </span>
                         {bill.billId}
                       </span>
                     </span>
-                    <span className="text-xs text-[#718097]">Amount paid: {money.format(bill.amountPaid ?? bill.amount)} / {(bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid"}</span>
+                    <span className="text-base text-[#718097]">Amount paid: {money.format(bill.amountPaid ?? bill.amount)} / {(bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid"}</span>
                     {bill.documentUrl ? (
                       <BillDocumentPreview
                         url={bill.documentUrl}
@@ -204,8 +204,8 @@ export default function TransactionDetailsModal({
                 key={label}
                 className="grid gap-1 py-3 sm:grid-cols-[150px_1fr]"
               >
-                <dt className="text-[12px] text-[#718097]">{label}</dt>
-                <dd className="break-all text-[13px] text-[#17213b]">
+                <dt className="text-base text-[#718097]">{label}</dt>
+                <dd className="break-all text-base text-[#17213b]">
                   {value}
                 </dd>
               </div>

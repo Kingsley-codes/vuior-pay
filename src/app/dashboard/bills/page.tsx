@@ -292,7 +292,7 @@ export default function BillsPage() {
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
           <div>
             <h1 className="text-[29px] font-bold tracking-[-0.035em]">Bills</h1>
-            <p className="mt-1.5 text-[13px] text-[#596885]">
+            <p className="mt-1.5 text-base text-[#596885]">
               Manage your recurring bills, due dates, and early-payment rewards.
             </p>
           </div>
@@ -305,7 +305,7 @@ export default function BillsPage() {
                 <WalletCards size={19} />
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] text-[#64718a]">Available credits</p>
+                <p className="text-base text-[#64718a]">Available credits</p>
                 <p className="mt-1 break-words text-[21px] font-bold leading-tight text-[#14203e] tabular-nums">
                   {money.format(Number(user?.availableCredits ?? 0))}
                 </p>
@@ -317,7 +317,7 @@ export default function BillsPage() {
             <div className="col-span-2 border-t border-[#edf1ef] pt-4 sm:ml-auto sm:shrink-0 sm:border-0 sm:pt-0">
               <button
                 onClick={() => setModal({ mode: "add" })}
-                className="inline-flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#00a96b] px-4 text-[12px] font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:w-auto"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-[#00a96b] px-4 text-base font-semibold text-white transition hover:bg-[#008e5a] sm:h-10 sm:w-auto"
               >
                 <Plus size={15} /> Add Bill
               </button>
@@ -328,7 +328,7 @@ export default function BillsPage() {
         {paymentMessage && (
           <div
             role="status"
-            className="mt-5 flex items-start justify-between gap-4 rounded-xl border border-[#c6e6d5] bg-[#f0faf4] p-4 text-xs leading-5 text-[#236443]"
+            className="mt-5 flex items-start justify-between gap-4 rounded-xl border border-[#c6e6d5] bg-[#f0faf4] p-4 text-base leading-6 text-[#236443]"
           >
             <p>{paymentMessage}</p>
             <button
@@ -340,7 +340,7 @@ export default function BillsPage() {
             </button>
           </div>
         )}
-        <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-7 grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
           {[
             [
               "Upcoming Bills",
@@ -373,17 +373,17 @@ export default function BillsPage() {
                 key={String(label)}
                 className="flex min-h-[130px] items-center gap-4 rounded-xl border border-[#e2e8e6] bg-white p-5 shadow-[0_7px_24px_rgba(25,55,47,0.04)]"
               >
-                <span className="grid h-14 w-14 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
                   <IconComponent size={27} />
                 </span>
                 <div>
-                  <p className="text-[12px] text-[#53637f]">
+                  <p className="text-lg text-[#53637f]">
                     {label as string}
                   </p>
                   <strong className="mt-1.5 block text-[25px]">
                     {value as string}
                   </strong>
-                  <p className="mt-1.5 text-[11px] text-[#64718a]">
+                  <p className="mt-1.5 text-base text-[#64718a]">
                     {note as string}
                   </p>
                 </div>
@@ -403,13 +403,13 @@ export default function BillsPage() {
                   <button
                     key={item}
                     onClick={() => setTab(item)}
-                    className={`inline-flex h-14 shrink-0 items-center justify-center border-b-2 px-4 text-[12px] font-semibold leading-none ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
+                    className={`inline-flex h-14 shrink-0 items-center justify-center border-b-2 px-4 text-base font-semibold leading-none sm:text-lg ${tab === item ? "border-[#00a96b] text-[#00a96b]" : "border-transparent text-[#344260]"}`}
                   >
                     {item} ({billsByTab[item].length})
                   </button>
                 ))}
               </div>
-              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-[minmax(220px,1.5fr)_repeat(4,minmax(140px,1fr))]">
+              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-4">
                 <form
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -419,17 +419,25 @@ export default function BillsPage() {
                       page: 1,
                     }));
                   }}
-                  className="flex h-10 min-w-0 items-center rounded-md border border-[#dfe5e7] bg-white pl-3 pr-1 text-[#75829a]"
+                  className="col-span-full min-w-0"
                 >
-                  <Search size={16} />
-                  <input
-                    aria-label="Search bills"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="Search bills by name or category…"
-                    className="ml-2 min-w-0 flex-1 bg-transparent text-[11px] outline-none"
-                  />
-                  <button type="submit" className="ml-2 shrink-0 rounded bg-[#009b67] px-3 py-2 text-[11px] font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
+                  <label htmlFor="bill-search" className="mb-1.5 block text-base font-medium text-[#53637f]">
+                    Search
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-lg border border-[#dfe5e7] bg-white px-3 text-[#75829a] transition focus-within:border-[#00a96b] focus-within:ring-2 focus-within:ring-[#00a96b]/10">
+                      <Search size={17} className="shrink-0" />
+                      <input
+                        id="bill-search"
+                        aria-label="Search bills"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        placeholder="Search bills by name or category…"
+                        className="min-w-0 flex-1 bg-transparent text-base text-[#344260] outline-none placeholder:text-[#8a95a6]"
+                      />
+                    </div>
+                    <button type="submit" className="h-11 shrink-0 rounded-lg bg-[#009b67] px-5 text-base font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
+                  </div>
                 </form>
                 <MultiSelectFilter
                   label="Category"
@@ -460,8 +468,8 @@ export default function BillsPage() {
               </div>
 
               {tab !== "Paid" && selectableVisible.length > 0 && (
-                <div className="flex items-center justify-between gap-3 border-b border-[#e7ecea] bg-[#fbfdfc] px-4 py-3">
-                  <label className="flex cursor-pointer items-center gap-3 text-xs text-[#53617a]">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7ecea] bg-[#fbfdfc] px-4 py-3">
+                  <label className="flex cursor-pointer items-center gap-3 text-base text-[#53617a]">
                     <input
                       type="checkbox"
                       aria-label="Select all visible bills"
@@ -479,7 +487,7 @@ export default function BillsPage() {
                     />
                     Select all visible bills
                   </label>
-                  <span className="text-[11px] text-[#718097]">
+                  <span className="text-base text-[#718097]">
                     Select bills to pay together
                   </span>
                 </div>
@@ -487,7 +495,7 @@ export default function BillsPage() {
               {selectedBills.length > 0 && (
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#cee5d8] bg-[#edf8f2] px-4 py-4">
                   <div>
-                    <p className="text-xs font-semibold text-[#175a3b]">
+                    <p className="text-base font-semibold text-[#175a3b]">
                       {selectedBills.length} bill
                       {selectedBills.length === 1 ? "" : "s"} selected{" "}
                       <span className="mx-2 text-[#b0cab9]">|</span>{" "}
@@ -498,14 +506,14 @@ export default function BillsPage() {
                         ),
                       )}
                     </p>
-                    <p className="mt-1 text-[10px] text-[#5a7c69]">
+                    <p className="mt-1 text-base text-[#5a7c69]">
                       Selection includes bills across tabs and filters.
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
                     <button
                       onClick={() => setSelected(new Set())}
-                      className="text-xs font-medium text-[#526d5e]"
+                      className="text-base font-medium text-[#526d5e]"
                     >
                       Clear selection
                     </button>
@@ -513,7 +521,7 @@ export default function BillsPage() {
                       onClick={() =>
                         setCheckoutIds(selectedBills.map((bill) => bill.id))
                       }
-                      className="flex h-10 items-center gap-2 rounded-lg bg-[#009b67] px-4 text-xs font-semibold text-white hover:bg-[#007e54]"
+                      className="flex h-10 items-center gap-2 rounded-lg bg-[#009b67] px-4 text-base font-semibold text-white hover:bg-[#007e54]"
                     >
                       Proceed to pay <ChevronRight size={15} />
                     </button>
@@ -549,19 +557,19 @@ export default function BillsPage() {
                             <FileText size={17} />
                           </span>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[14px] font-semibold">
+                            <p className="truncate text-base font-semibold">
                               {bill.name}
                             </p>
-                            <p className="mt-1 text-[12px] text-[#7b879b]">
+                            <p className="mt-1 text-base text-[#7b879b]">
                               {bill.category}
                             </p>
                           </div>
                           <div className="text-right">
-                            <p className="text-[14px] font-bold">
+                            <p className="text-base font-bold">
                               {money.format(bill.amount)}
                             </p>
                             <span
-                              className={`mt-1.5 inline-block rounded px-2 py-1 text-[11px] capitalize ${shownStatus.className}`}
+                              className={`mt-1.5 inline-block rounded px-2 py-1 text-base capitalize ${shownStatus.className}`}
                             >
                               {shownStatus.label}
                             </span>
@@ -569,10 +577,10 @@ export default function BillsPage() {
                         </div>
                         <div className="mt-4 grid grid-cols-2 gap-3 rounded-lg bg-[#f8faf9] p-3">
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-[#8a95a6]">
+                            <p className="text-base uppercase tracking-wide text-[#8a95a6]">
                               Due date
                             </p>
-                            <p className="mt-1 text-[13px] font-medium">
+                            <p className="mt-1 text-base font-medium">
                               {bill.dueDate
                                 ? new Date(bill.dueDate).toLocaleDateString(
                                     "en-US",
@@ -588,7 +596,7 @@ export default function BillsPage() {
                             shownStatus.label !== "Paid" &&
                             shownStatus.label !== "In review" ? (
                               <p
-                                className={`mt-1 text-[11px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                                className={`mt-1 text-base ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                               >
                                 {days < 0
                                   ? `${Math.abs(days)} days overdue`
@@ -598,7 +606,7 @@ export default function BillsPage() {
                               </p>
                             ) : (
                               <p
-                                className={`mt-1 text-[11px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                                className={`mt-1 text-base ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
                               >
                                 {shownStatus.label === "In review"
                                   ? "Payment submitted for review"
@@ -607,21 +615,21 @@ export default function BillsPage() {
                             )}
                           </div>
                           <div>
-                            <p className="text-[11px] uppercase tracking-wide text-[#8a95a6]">
+                            <p className="text-base uppercase tracking-wide text-[#8a95a6]">
                               Savings
                             </p>
                             {reward ? (
                               <>
-                                <p className="mt-1 text-[13px] font-medium">
+                                <p className="mt-1 text-base font-medium">
                                   Up to{" "}
                                   {money.format((bill.amount * reward) / 100)}
                                 </p>
-                                <p className="mt-1 text-[11px] text-[#00a96b]">
+                                <p className="mt-1 text-base text-[#00a96b]">
                                   {reward}% reward
                                 </p>
                               </>
                             ) : (
-                              <p className="mt-1 text-[12px] text-[#7b879b]">
+                              <p className="mt-1 text-base text-[#7b879b]">
                                 Not eligible
                               </p>
                             )}
@@ -639,7 +647,7 @@ export default function BillsPage() {
                                 event.stopPropagation();
                                 setCheckoutIds([bill.id]);
                               }}
-                              className="h-9 rounded-lg bg-[#009b67] px-4 text-[13px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
+                              className="h-9 rounded-lg bg-[#009b67] px-4 text-base font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
                             >
                               Pay now
                             </button>
@@ -650,8 +658,8 @@ export default function BillsPage() {
                   })}
                 </div>
                 <div className="hidden overflow-x-auto lg:block">
-                  <table className="w-full min-w-[820px] border-collapse text-left">
-                    <thead className="bg-[#f7f9f8] text-[12px] text-[#34425d]">
+                  <table className="text-[17px] w-full min-w-[1000px] border-collapse text-left">
+                    <thead className="border-b border-[#e9eeec] bg-[#f7f9f8] text-lg text-[#34425d]">
                       <tr>
                         {tab !== "Paid" && (
                           <th className="w-12 px-4 py-3.5">
@@ -691,30 +699,30 @@ export default function BillsPage() {
                                 setModal({ mode: "details", bill });
                               }
                             }}
-                            className={`cursor-pointer text-[13px] hover:bg-[#f6fbf8] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
+                            className={`cursor-pointer text-[17px] hover:bg-[#f6fbf8] ${selectedBills.some((item) => item.id === bill.id) ? "bg-[#f0faf5]" : ""}`}
                           >
                             {tab !== "Paid" && (
                               <td
-                                className="px-4 py-3"
+                                className="px-4 py-4"
                                 onClick={(event) => event.stopPropagation()}
                               >
                                 {selectionCheckbox(bill)}
                               </td>
                             )}
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               <div className="flex items-center gap-3">
                                 <span className="grid h-9 w-9 place-items-center rounded-full bg-[#eef8f4] text-[#00a96b]">
                                   <FileText size={16} />
                                 </span>
                                 <div>
                                   <p>{bill.name}</p>
-                                  <p className="mt-1 text-[11px] text-[#7b879b]">
+                                  <p className="mt-1 text-[17px] text-[#7b879b]">
                                     {bill.category}
                                   </p>
                                 </div>
                               </div>
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               <p>
                                 {bill.dueDate
                                   ? new Date(bill.dueDate).toLocaleDateString(
@@ -731,7 +739,7 @@ export default function BillsPage() {
                               shownStatus.label !== "Paid" &&
                               shownStatus.label !== "In review" ? (
                                 <p
-                                  className={`mt-1 text-[9px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                                  className={`mt-1 text-[17px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                                 >
                                   {days < 0
                                     ? `${Math.abs(days)} days overdue`
@@ -741,7 +749,7 @@ export default function BillsPage() {
                                 </p>
                               ) : (
                                 <p
-                                  className={`mt-1 text-[9px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                                  className={`mt-1 text-[17px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
                                 >
                                   {shownStatus.label === "In review"
                                     ? "Payment submitted for review"
@@ -749,17 +757,17 @@ export default function BillsPage() {
                                 </p>
                               )}
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               {money.format(bill.amount)}
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               {reward && tab !== "Paid" ? (
                                 <>
                                   <p>
                                     Up to{" "}
                                     {money.format((bill.amount * reward) / 100)}
                                   </p>
-                                  <p className="mt-1 text-[9px] text-[#00a96b]">
+                                  <p className="mt-1 text-[17px] text-[#00a96b]">
                                     ({reward}%)
                                   </p>
                                 </>
@@ -769,15 +777,15 @@ export default function BillsPage() {
                                 </span>
                               )}
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-4">
                               <span
-                                className={`rounded px-2.5 py-1.5 text-[11px] capitalize ${shownStatus.className}`}
+                                className={`rounded px-2.5 py-1.5 text-[17px] capitalize ${shownStatus.className}`}
                               >
                                 {shownStatus.label}
                               </span>
                             </td>
                             {tab !== "Paid" && (
-                              <td className="px-4 py-3">
+                              <td className="px-4 py-4">
                                 <button
                                   disabled={
                                     !payableBills.some(
@@ -788,7 +796,7 @@ export default function BillsPage() {
                                     event.stopPropagation();
                                     setCheckoutIds([bill.id]);
                                   }}
-                                  className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[13px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
+                                  className="h-9 whitespace-nowrap rounded-lg bg-[#009b67] px-4 text-[17px] font-semibold text-white hover:bg-[#007e54] disabled:opacity-50"
                                 >
                                   Pay now
                                 </button>
@@ -804,15 +812,15 @@ export default function BillsPage() {
                   <div className="grid min-h-[250px] place-items-center p-8 text-center">
                     <div>
                       <FileText className="mx-auto text-[#c8d3cf]" size={34} />
-                      <h3 className="mt-3 text-[15px] font-semibold">
+                      <h3 className="mt-3 text-base font-semibold">
                         No {tab.toLowerCase()} bills
                       </h3>
-                      <p className="mt-2 text-[13px] text-[#7a879c]">
+                      <p className="mt-2 text-base text-[#7a879c]">
                         Adjust your filters or add a new bill.
                       </p>
                       <button
                         onClick={() => setModal({ mode: "add" })}
-                        className="mx-auto mt-4 flex h-9 w-fit items-center rounded-md bg-[#00a96b] px-4 text-[12px] font-semibold text-white"
+                        className="mx-auto mt-4 flex h-9 w-fit items-center rounded-md bg-[#00a96b] px-4 text-base font-semibold text-white"
                       >
                         <Plus className="mr-2" size={15} /> Add Bill
                       </button>
@@ -821,7 +829,7 @@ export default function BillsPage() {
                 ) : null}
               </div>
               <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-5 py-4">
-                <p aria-live="polite" className="text-[13px] text-[#7b879b]">
+                <p aria-live="polite" className="text-base text-[#7b879b]">
                   Showing{" "}
                   <span className="font-medium text-[#344260]">
                     {filteredBills.length
@@ -859,7 +867,7 @@ export default function BillsPage() {
                   >
                     <ChevronLeft size={15} />
                   </button>
-                  <span className="px-2 text-[13px] text-[#64718a]">
+                  <span className="px-2 text-base text-[#64718a]">
                     Page{" "}
                     <strong className="text-[#344260]">{currentPage}</strong> of{" "}
                     {pageCount}
@@ -910,9 +918,9 @@ export default function BillsPage() {
                 <span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
                   <TrendingUp size={19} />
                 </span>
-                <h2 className="text-[13px] font-bold">Maximize Your Savings</h2>
+                <h2 className="text-lg font-bold">Maximize Your Savings</h2>
               </div>
-              <p className="mt-4 text-[10px] leading-5 text-[#65728a]">
+              <p className="mt-4 text-base leading-6 text-[#65728a]">
                 Pay early and earn credits on eligible bills.
               </p>
               <div className="mt-3 divide-y divide-[#edf1ef]">
@@ -924,10 +932,10 @@ export default function BillsPage() {
                 ].map(([label, reward]) => (
                   <div key={label} className="flex items-center gap-3 py-3.5">
                     <CalendarDays size={15} className="text-[#00a96b]" />
-                    <span className="flex-1 text-[10px] font-medium">
+                    <span className="flex-1 text-base font-medium">
                       {label}
                     </span>
-                    <strong className="text-[14px] text-[#00a96b]">
+                    <strong className="text-base text-[#00a96b]">
                       {reward}
                     </strong>
                   </div>
@@ -940,12 +948,12 @@ export default function BillsPage() {
                 <span className="grid h-10 w-10 place-items-center rounded-full bg-[#eaf8f2] text-[#00a96b]">
                   <RefreshCcw size={18} />
                 </span>
-                <h2 className="text-[13px] font-bold">Autopay Made Simple</h2>
+                <h2 className="text-lg font-bold">Autopay Made Simple</h2>
               </div>
-              <p className="mt-4 text-[10px] leading-5 text-[#65728a]">
+              <p className="mt-4 text-base leading-6 text-[#65728a]">
                 Never miss a payment. Autopay pays your bills on the due date.
               </p>
-              <div className="mt-4 space-y-3 text-[10px] text-[#5f6d85]">
+              <div className="mt-4 space-y-3 text-base text-[#5f6d85]">
                 <p className="flex gap-3">
                   <ShieldCheck size={15} className="text-[#00a96b]" /> It&apos;s
                   secure and convenient
@@ -1021,11 +1029,11 @@ function InfoModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="bills-info-title"
-        className="w-full max-w-[460px] rounded-2xl bg-white p-6 shadow-2xl"
+        className="max-h-[90dvh] w-full max-w-[460px] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#009b67]">
+            <p className="text-base font-bold uppercase tracking-[.14em] text-[#009b67]">
               Bills guide
             </p>
             <h2 id="bills-info-title" className="mt-1 text-[20px] font-bold">
@@ -1042,7 +1050,7 @@ function InfoModal({
         </div>
         {isSavings ? (
           <>
-            <p className="mt-4 text-[12px] leading-5 text-[#65728a]">
+            <p className="mt-4 text-base leading-6 text-[#65728a]">
               Pay eligible bills before their due date to earn Vuior credits.
             </p>
             <div className="mt-4 divide-y divide-[#edf1ef]">
@@ -1054,7 +1062,7 @@ function InfoModal({
               ].map(([label, reward]) => (
                 <div
                   key={label}
-                  className="flex justify-between py-3 text-[12px]"
+                  className="flex justify-between py-3 text-base"
                 >
                   <span>{label}</span>
                   <strong className="text-[#009b67]">{reward}</strong>
@@ -1065,11 +1073,11 @@ function InfoModal({
           </>
         ) : (
           <>
-            <p className="mt-4 text-[12px] leading-5 text-[#65728a]">
+            <p className="mt-4 text-base leading-6 text-[#65728a]">
               Enable autopay for an individual bill and Vuior will charge it on
               the due date using your saved payment method.
             </p>
-            <ul className="mt-4 space-y-3 text-[12px] text-[#53617a]">
+            <ul className="mt-4 space-y-3 text-base text-[#53617a]">
               <li>• Turn it on or off anytime from the bill list.</li>
               <li>
                 • Your payment method and transaction remain securely recorded.
@@ -1081,7 +1089,7 @@ function InfoModal({
         )}
         <button
           onClick={onClose}
-          className="mt-6 h-10 w-full rounded-lg bg-[#009b67] text-[12px] font-semibold text-white"
+          className="mt-6 h-10 w-full rounded-lg bg-[#009b67] text-base font-semibold text-white"
         >
           Got it
         </button>
@@ -1105,7 +1113,7 @@ function Filter({
         aria-label="Period"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-10 w-full appearance-none rounded-md border border-[#dfe5e7] bg-white px-3 pr-8 text-[10px] text-[#34425d] outline-none focus:border-[#00a96b]"
+        className="h-10 w-full appearance-none rounded-md border border-[#dfe5e7] bg-white px-3 pr-8 text-base text-[#34425d] outline-none focus:border-[#00a96b]"
       >
         {options.map((option) => (
           <option key={option}>{option}</option>
@@ -1162,7 +1170,7 @@ function MultiSelectFilter({
         aria-label={`${label}: ${value.length ? `${value.length} selected` : allLabel}`}
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className="flex h-10 w-full items-center gap-2 rounded-md border border-[#dfe5e7] bg-white px-3 text-left text-[10px] text-[#344260]"
+        className="flex h-10 w-full items-center gap-2 rounded-md border border-[#dfe5e7] bg-white px-3 text-left text-base text-[#344260]"
       >
         <SlidersHorizontal size={14} className="shrink-0 text-[#7b879b]" />
         <span className="min-w-0 flex-1 truncate">
@@ -1180,14 +1188,14 @@ function MultiSelectFilter({
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={`Search ${label.toLowerCase()}...`}
-              className="min-w-0 flex-1 bg-transparent text-[12px] outline-none"
+              className="min-w-0 flex-1 bg-transparent text-base outline-none"
             />
           </label>
           <div className="max-h-56 overflow-y-auto p-1.5">
             <button
               type="button"
               onClick={() => onChange([])}
-              className="flex w-full rounded-md px-2.5 py-2 text-left text-[11px] font-medium text-[#009b67] hover:bg-[#f0faf5]"
+              className="flex w-full rounded-md px-2.5 py-2 text-left text-base font-medium text-[#009b67] hover:bg-[#f0faf5]"
             >
               Clear selection · {allLabel}
             </button>
@@ -1196,7 +1204,7 @@ function MultiSelectFilter({
               return (
                 <label
                   key={option}
-                  className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-[11px] text-[#344260] hover:bg-[#f6f9f7]"
+                  className="flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-base text-[#344260] hover:bg-[#f6f9f7]"
                 >
                   <input
                     type="checkbox"
@@ -1215,7 +1223,7 @@ function MultiSelectFilter({
               );
             })}
             {!filtered.length && (
-              <p className="px-2.5 py-3 text-[11px] text-[#718097]">
+              <p className="px-2.5 py-3 text-base text-[#718097]">
                 No matching {label.toLowerCase()} options.
               </p>
             )}

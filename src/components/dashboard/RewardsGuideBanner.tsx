@@ -29,12 +29,12 @@ export default function RewardsGuideBanner({
             <span className="grid h-8 w-8 place-items-center rounded-lg border border-[#9ce7c6]/25 bg-[#9ce7c6]/10 text-[#b5f5d6]">
               <Sparkles size={16} aria-hidden="true" />
             </span>
-            <span className="rounded-full border border-[#b5f5d6]/20 bg-[#b5f5d6]/10 px-3 py-1 text-[10px] font-semibold tracking-wide text-[#c4f7df]">
+            <span className="rounded-full border border-[#b5f5d6]/20 bg-[#b5f5d6]/10 px-3 py-1 text-base font-semibold tracking-wide text-[#c4f7df]">
               {badge}
             </span>
           </div>
           <h2 className="text-[19px] font-bold tracking-[-0.025em] sm:text-[21px]">{title}</h2>
-          <p className="mt-2 max-w-md text-[12px] leading-5 text-[#c0dfd4]">{description}</p>
+          <p className="mt-2 max-w-md text-base leading-6 text-[#c0dfd4]">{description}</p>
         </div>
         <div className={`grid gap-2.5 ${actions.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
           {actions.map(({ label, description: actionDescription, icon: Icon, onClick }) => (
@@ -50,8 +50,8 @@ export default function RewardsGuideBanner({
                 </span>
                 <ArrowUpRight size={16} className="text-[#a8d7c6] transition group-hover:text-white" aria-hidden="true" />
               </span>
-              <span className="text-[12px] font-semibold">{label}</span>
-              <span className="mt-1 text-[11px] leading-[18px] text-[#c0dfd4]">{actionDescription}</span>
+              <span className="text-base font-semibold">{label}</span>
+              <span className="mt-1 text-base leading-6 text-[#c0dfd4]">{actionDescription}</span>
             </button>
           ))}
         </div>
