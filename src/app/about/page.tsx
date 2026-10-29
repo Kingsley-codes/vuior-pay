@@ -166,7 +166,7 @@ export default function AboutPage() {
         <div className="mt-[35px] grid grid-cols-4 gap-2.5 max-[620px]:grid-cols-1">
           {milestones.map(({ icon: MilestoneIcon, value, text }) => (
             <article
-              className="flex min-h-[110px] flex-col items-start rounded-[10px] border border-[#dfe9e6] px-5 py-3.5 max-[620px]:items-center"
+              className="flex min-h-[110px] flex-col items-center rounded-[10px] border border-[#dfe9e6] px-5 py-3.5 text-center"
               key={value}
             >
               <span className="mb-[7px] grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[#edf9f5] text-[#009268]">
