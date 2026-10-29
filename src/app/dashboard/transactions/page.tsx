@@ -427,7 +427,7 @@ export default function TransactionsPage() {
               {linked[0].name}
             </span>
             {linked.length > 1 && (
-              <span className="mt-1 block text-base font-normal text-[#718097]">
+              <span className="mt-1 block text-sm font-normal text-[#718097]">
                 +{linked.length - 1} more
               </span>
             )}
@@ -792,7 +792,7 @@ export default function TransactionsPage() {
                         className="group cursor-pointer text-[17px] transition hover:bg-[#f4faf7] focus-within:bg-[#f4faf7]"
                       >
                         <td
-                          className="whitespace-nowrap px-5 py-4 font-mono text-[17px] text-[#53637f]"
+                          className="whitespace-nowrap px-5 py-4 font-mono text-[15px] text-[#53637f]"
                           title={item.transactionId}
                         >
                           {item.transactionId}
@@ -818,11 +818,11 @@ export default function TransactionsPage() {
                           </div>
                         </td>
 
-                        <td className="max-w-48 px-5 py-4 leading-6 text-[#64718a]">
+                        <td className="max-w-48 px-5 py-4 text-[15px] leading-6 text-[#64718a]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </td>
                         {filters.type === "all" && (
-                          <td className="px-5 py-4 text-[#64718a]">
+                          <td className="px-5 py-4 text-[15px] text-[#64718a]">
                             {billTransaction ? "Bill" : "Credit"}
                           </td>
                         )}
@@ -832,7 +832,7 @@ export default function TransactionsPage() {
                             day: "numeric",
                             year: "numeric",
                           })}
-                          <p className="mt-1 text-[17px] text-[#8a95a6]">
+                          <p className="mt-1 text-[15px] text-[#8a95a6]">
                             {item.date.toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
@@ -919,7 +919,7 @@ export default function TransactionsPage() {
                         <p className="truncate text-base font-semibold">
                           {title}
                         </p>
-                        <p className="mt-1 truncate text-base text-[#7b879b]">
+                        <p className="mt-1 truncate text-sm text-[#7b879b]">
                           {categoriesForTransaction(item, bills).join(", ")}
                         </p>
                       </div>
@@ -934,7 +934,7 @@ export default function TransactionsPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-base text-[#718097] sm:flex-row sm:items-center sm:justify-between">
+                    <div className="mt-3 flex flex-col gap-2 rounded-lg bg-[#f8faf9] px-3 py-2.5 text-sm text-[#718097] sm:flex-row sm:items-center sm:justify-between">
                       <span>
                         {item.date.toLocaleDateString("en-US", {
                           dateStyle: "medium",
@@ -942,7 +942,7 @@ export default function TransactionsPage() {
                         {billTransaction ? ` / ${method(item)}` : ""}
                       </span>
                       <span className="min-w-0">
-                        <span className="mr-2 font-sans text-base uppercase text-[#8a95a6]">
+                        <span className="mr-2 font-sans text-sm uppercase text-[#8a95a6]">
                           Transaction ID
                         </span>
                         <span className="break-all font-mono text-[#53637f]">

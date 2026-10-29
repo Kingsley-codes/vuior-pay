@@ -605,7 +605,7 @@ export default function BillsPage() {
                             <p className="truncate text-base font-semibold">
                               {bill.name}
                             </p>
-                            <p className="mt-1 text-base text-[#7b879b]">
+                            <p className="mt-1 text-sm text-[#7b879b]">
                               {bill.category}
                             </p>
                           </div>
@@ -622,7 +622,7 @@ export default function BillsPage() {
                         </div>
                         <div className="mt-4 grid grid-cols-2 gap-3 rounded-lg bg-[#f8faf9] p-3">
                           <div>
-                            <p className="text-base uppercase tracking-wide text-[#8a95a6]">
+                            <p className="text-sm uppercase tracking-wide text-[#8a95a6]">
                               Due date
                             </p>
                             <p className="mt-1 text-base font-medium">
@@ -641,7 +641,7 @@ export default function BillsPage() {
                             shownStatus.label !== "Paid" &&
                             shownStatus.label !== "In review" ? (
                               <p
-                                className={`mt-1 text-base ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                                className={`mt-1 text-sm ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                               >
                                 {days < 0
                                   ? `${Math.abs(days)} days overdue`
@@ -651,7 +651,7 @@ export default function BillsPage() {
                               </p>
                             ) : (
                               <p
-                                className={`mt-1 text-base ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                                className={`mt-1 text-sm ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
                               >
                                 {shownStatus.label === "In review"
                                   ? "Payment submitted for review"
@@ -660,7 +660,7 @@ export default function BillsPage() {
                             )}
                           </div>
                           <div>
-                            <p className="text-base uppercase tracking-wide text-[#8a95a6]">
+                            <p className="text-sm uppercase tracking-wide text-[#8a95a6]">
                               Savings
                             </p>
                             {reward ? (
@@ -669,12 +669,12 @@ export default function BillsPage() {
                                   Up to{" "}
                                   {money.format((bill.amount * reward) / 100)}
                                 </p>
-                                <p className="mt-1 text-base text-[#00a96b]">
+                                <p className="mt-1 text-sm text-[#00a96b]">
                                   {reward}% reward
                                 </p>
                               </>
                             ) : (
-                              <p className="mt-1 text-base text-[#7b879b]">
+                              <p className="mt-1 text-sm text-[#7b879b]">
                                 Not eligible
                               </p>
                             )}
@@ -761,7 +761,7 @@ export default function BillsPage() {
                                 </span>
                                 <div>
                                   <p>{bill.name}</p>
-                                  <p className="mt-1 text-[17px] text-[#7b879b]">
+                                  <p className="mt-1 text-[15px] text-[#7b879b]">
                                     {bill.category}
                                   </p>
                                 </div>
@@ -784,7 +784,7 @@ export default function BillsPage() {
                               shownStatus.label !== "Paid" &&
                               shownStatus.label !== "In review" ? (
                                 <p
-                                  className={`mt-1 text-[17px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
+                                  className={`mt-1 text-[15px] ${days < 0 ? "text-[#e04444]" : "text-[#7b879b]"}`}
                                 >
                                   {days < 0
                                     ? `${Math.abs(days)} days overdue`
@@ -794,7 +794,7 @@ export default function BillsPage() {
                                 </p>
                               ) : (
                                 <p
-                                  className={`mt-1 text-[17px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
+                                  className={`mt-1 text-[15px] ${shownStatus.label === "In review" ? "text-[#9a6700]" : "text-[#009a61]"}`}
                                 >
                                   {shownStatus.label === "In review"
                                     ? "Payment submitted for review"
@@ -812,12 +812,12 @@ export default function BillsPage() {
                                     Up to{" "}
                                     {money.format((bill.amount * reward) / 100)}
                                   </p>
-                                  <p className="mt-1 text-[17px] text-[#00a96b]">
+                                  <p className="mt-1 text-[15px] text-[#00a96b]">
                                     ({reward}%)
                                   </p>
                                 </>
                               ) : (
-                                <span className="text-[#7b879b]">
+                                <span className="text-[15px] text-[#7b879b]">
                                   {tab === "Paid" ? "Recorded" : "Not eligible"}
                                 </span>
                               )}

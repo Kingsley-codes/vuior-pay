@@ -1,6 +1,7 @@
 import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import Image from "next/image";
 import Link from "next/link";
+import { Building2, ReceiptText, Rocket, UsersRound } from "lucide-react";
 import { Header } from "@/components/header";
 import { Icon } from "@/components/icons";
 import { StoreBadge } from "@/components/landing-sections";
@@ -30,22 +31,21 @@ const values = [
 ];
 
 const milestones = [
-  { icon: "⌂", value: "2023", text: "Vuior was founded with a simple idea." },
+  { icon: Rocket, value: "2023", text: "Vuior was founded with a simple idea." },
   {
-    icon: "◉",
+    icon: UsersRound,
     value: "10K+",
     text: "Users already managing their bills with Vuior.",
   },
-  { icon: "⌁", value: "1000+", text: "Billers and providers integrated." },
-  { icon: "✈", value: "1 million+", text: "Bills processed by Vuior." },
+  { icon: Building2, value: "1000+", text: "Billers and providers integrated." },
+  { icon: ReceiptText, value: "1 million+", text: "Bills processed by Vuior." },
 ];
 
 const primaryButton =
   "inline-flex h-[50px] items-center justify-center gap-2.5 rounded-md bg-linear-to-br from-[#00a475] to-[#007d5a] px-[30px] text-[16px] font-bold text-white shadow-[0_8px_20px_#008e6623] transition hover:-translate-y-0.5 hover:shadow-[0_10px_24px_#007b5824] [&_svg]:w-[19px]";
 const textLink =
   "inline-flex items-center gap-[9px] whitespace-nowrap text-[15px] font-bold text-[#009268] max-[620px]:text-[16px] [&_svg]:w-[17px]";
-const eyebrow =
-  "mb-[18px] text-[14px] font-extrabold text-[#00895f]";
+const eyebrow = "mb-[18px] text-[14px] font-extrabold text-[#00895f]";
 const bodyCopy =
   "text-[16px] leading-[1.7] text-[#58677b] min-[901px]:leading-[1.75] max-[620px]:leading-[1.65]";
 const sectionHeading =
@@ -141,9 +141,7 @@ export default function AboutPage() {
                 <Icon name={item.icon} />
               </span>
               <div>
-                <h3 className="mb-2 text-[17px]">
-                  {item.title}
-                </h3>
+                <h3 className="mb-2 text-[17px]">{item.title}</h3>
                 <p className="m-0 text-[16px] leading-[1.55] text-[#657386] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
                   {item.text}
                 </p>
@@ -166,19 +164,19 @@ export default function AboutPage() {
           control and get rewarded.
         </p>
         <div className="mt-[35px] grid grid-cols-4 gap-2.5 max-[620px]:grid-cols-1">
-          {milestones.map((item) => (
+          {milestones.map(({ icon: MilestoneIcon, value, text }) => (
             <article
               className="flex min-h-[110px] flex-col items-start rounded-[10px] border border-[#dfe9e6] px-5 py-3.5 max-[620px]:items-center"
-              key={item.value}
+              key={value}
             >
               <span className="mb-[7px] grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[#edf9f5] text-[#009268]">
-                {item.icon}
+                <MilestoneIcon size={20} strokeWidth={1.8} aria-hidden="true" />
               </span>
-              <strong className="mb-2 text-[14px] text-[#00895f]">
-                {item.value}
+              <strong className="mb-2 text-3xl text-[#00895f]">
+                {value}
               </strong>
               <p className="m-0 text-[16px] text-[#677588] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
-                {item.text}
+                {text}
               </p>
             </article>
           ))}
