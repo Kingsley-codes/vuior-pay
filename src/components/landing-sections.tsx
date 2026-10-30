@@ -356,7 +356,7 @@ export function StoreBadge({ store }: { store: "apple" | "google" }) {
   const apple = store === "apple";
   return (
     <Link
-      className="flex h-[50px] min-w-[154px] items-center justify-center gap-2.5 rounded-[9px] border border-[#27312e] bg-linear-to-b from-[#171a19] to-[#050606] px-3.5 py-1.5 text-white shadow-[0_7px_16px_#10251d1c] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_#10251d29] max-[430px]:w-[150px]"
+      className="inline-flex h-[50px] w-[164px] shrink-0 items-center justify-center gap-2.5 whitespace-nowrap rounded-[9px] border border-[#27312e] bg-linear-to-b from-[#171a19] to-[#050606] px-3.5 py-1.5 text-white shadow-[0_7px_16px_#10251d1c] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_#10251d29] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#009268]"
       href="/#"
       aria-label={
         apple ? "Download Vuior on the App Store" : "Get Vuior on Google Play"

@@ -172,7 +172,7 @@ export default function HelpPage() {
                 <p className="mt-2 text-[15px] leading-6 text-[#66738b]">
                   Stay on top of every payment wherever you are.
                 </p>
-                <div className="mt-4 flex flex-col items-center gap-2 [&_a]:min-w-0 [&_a]:w-[210px]">
+                <div className="mt-4 flex flex-col items-center gap-3">
                   <StoreBadge store="apple" />
                   <StoreBadge store="google" />
                 </div>

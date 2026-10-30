@@ -76,7 +76,7 @@ export default function ContactPage() {
             <p className="mt-2 text-[14px] leading-5 text-[#c5ddd5]">
               Track a payment, view your credits, or get in touch from the app.
             </p>
-            <div className="mt-4 flex flex-row gap-2 [&_a]:h-10 [&_a]:min-w-0 [&_a]:w-full [&_a_strong]:text-[16px]">
+            <div className="mt-4 flex flex-wrap gap-3">
               <StoreBadge store="apple" />
               <StoreBadge store="google" />
             </div>

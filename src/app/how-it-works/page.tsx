@@ -14,6 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Header } from "@/components/header";
+import { StoreBadge } from "@/components/landing-sections";
 import { SiteFooter } from "@/components/site-footer";
 
 const tiers = [
@@ -165,45 +166,8 @@ export default function HowItWorksPage() {
               Stay ahead of every due date and make payments in a few easy taps.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Link
-                href="/#"
-                aria-label="Download Vuior on the App Store"
-                className="inline-flex h-[48px] min-w-[151px] items-center justify-center gap-2 rounded-[8px] bg-[#101817] px-3 text-white transition-transform hover:-translate-y-0.5 hover:bg-[#1b2925]"
-              >
-                <svg className="h-7 w-6" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="currentColor"
-                    d="M17.05 12.54c-.02-2.18 1.78-3.24 1.86-3.29a4 4 0 0 0-3.15-1.7c-1.32-.14-2.6.8-3.27.8-.69 0-1.73-.78-2.85-.76a4.2 4.2 0 0 0-3.54 2.16c-1.53 2.65-.39 6.55 1.08 8.69.74 1.05 1.6 2.23 2.72 2.19 1.1-.05 1.51-.7 2.83-.7 1.31 0 1.69.7 2.84.68 1.18-.02 1.92-1.05 2.63-2.1a8.6 8.6 0 0 0 1.2-2.45 3.78 3.78 0 0 1-2.35-3.52ZM14.9 6.15a3.83 3.83 0 0 0 .88-2.75 3.9 3.9 0 0 0-2.54 1.3 3.65 3.65 0 0 0-.9 2.65 3.22 3.22 0 0 0 2.56-1.2Z"
-                  />
-                </svg>
-                <span className="flex flex-col items-start leading-none">
-                  <small className="mb-1 text-[11px]">Download on the</small>
-                  <strong className="text-[16px] font-semibold">
-                    App Store
-                  </strong>
-                </span>
-              </Link>
-              <Link
-                href="/#"
-                aria-label="Get Vuior on Google Play"
-                className="inline-flex h-[48px] min-w-[151px] items-center justify-center gap-2 rounded-[8px] bg-[#101817] px-3 text-white transition-transform hover:-translate-y-0.5 hover:bg-[#1b2925]"
-              >
-                <svg className="h-7 w-6" viewBox="0 0 28 31" aria-hidden="true">
-                  <path fill="#00d6ff" d="M1 1.5 17 15.5 1 29.5Z" />
-                  <path
-                    fill="#ffdb00"
-                    d="m17 15.5 4.2-3.7 5.2 3c.8.5.8 1.2 0 1.7l-5.3 3Z"
-                  />
-                  <path fill="#ff3a44" d="M1 29.5 17 15.5l4.1 4Z" />
-                  <path fill="#00ef75" d="M1 1.5 21.2 11.8 17 15.5Z" />
-                </svg>
-                <span className="flex flex-col items-start leading-none">
-                  <small className="mb-1 text-[11px]">GET IT ON</small>
-                  <strong className="text-[16px] font-semibold">
-                    Google Play
-                  </strong>
-                </span>
-              </Link>
+              <StoreBadge store="apple" />
+              <StoreBadge store="google" />
             </div>
           </div>
           <div className="relative hidden overflow-hidden bg-[#f5faf8] lg:block">
