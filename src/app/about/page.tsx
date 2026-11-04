@@ -31,13 +31,21 @@ const values = [
 ];
 
 const milestones = [
-  { icon: Rocket, value: "2023", text: "Vuior was founded with a simple idea." },
+  {
+    icon: Rocket,
+    value: "2023",
+    text: "Vuior was founded with a simple idea.",
+  },
   {
     icon: UsersRound,
     value: "10K+",
     text: "Users already managing their bills with Vuior.",
   },
-  { icon: Building2, value: "1000+", text: "Billers and providers integrated." },
+  {
+    icon: Building2,
+    value: "1000+",
+    text: "Billers and providers integrated.",
+  },
   { icon: ReceiptText, value: "1 million+", text: "Bills processed by Vuior." },
 ];
 
@@ -114,7 +122,6 @@ export default function AboutPage() {
             <span className="text-[#009268]">♙</span>
           </div>
         </div>
-        <EarlyPaymentNote className="col-span-full px-12 pb-5 text-[#65728a] max-[900px]:px-[30px]" />
       </section>
 
       <section className="mx-auto grid max-w-[1330px] grid-cols-[42%_58%] items-center px-12 py-[62px] max-[900px]:grid-cols-1 max-[900px]:gap-[45px] max-[900px]:px-[30px] max-[900px]:py-[55px]">
@@ -149,7 +156,6 @@ export default function AboutPage() {
             </article>
           ))}
         </div>
-        <EarlyPaymentNote className="col-span-full text-[#65728a]" />
       </section>
 
       <section className="mx-auto max-w-[1330px] border-t border-[#dfe9e6] px-12 pt-[45px] pb-[42px] max-[900px]:px-[30px] max-[620px]:text-center">
@@ -172,16 +178,13 @@ export default function AboutPage() {
               <span className="mb-[7px] grid h-[34px] w-[34px] place-items-center rounded-[9px] bg-[#edf9f5] text-[#009268]">
                 <MilestoneIcon size={20} strokeWidth={1.8} aria-hidden="true" />
               </span>
-              <strong className="mb-2 text-3xl text-[#00895f]">
-                {value}
-              </strong>
+              <strong className="mb-2 text-3xl text-[#00895f]">{value}</strong>
               <p className="m-0 text-[16px] text-[#677588] min-[901px]:leading-[1.65] max-[620px]:leading-[1.65]">
                 {text}
               </p>
             </article>
           ))}
         </div>
-        <EarlyPaymentNote className="text-[#65728a]" />
       </section>
 
       <section className="mx-auto max-w-[1330px] px-12 pb-[42px] max-[900px]:px-[30px] max-[620px]:px-5">

@@ -30,7 +30,7 @@ export default function HelpPage() {
       MOBILE_FAQS.filter(
         (faq) =>
           (topic === "All Topics" || faq.category === topic) &&
-          `${faq.title} ${faq.content}`
+          faq.title
             .toLowerCase()
             .includes(search.trim().toLowerCase()),
       ),
@@ -50,15 +50,33 @@ export default function HelpPage() {
             Everything you need to know about accounts, bills, payments,
             credits, referrals, and security.
           </p>
-          <label className="mt-8 flex h-12 max-w-[590px] items-center gap-3 rounded-lg border border-[#dfe6e4] bg-white px-4 shadow-[0_8px_24px_rgba(25,55,47,.05)]">
-            <Search size={18} className="text-[#63728d]" />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              className="min-w-0 flex-1 bg-transparent text-[16px] outline-none"
-              placeholder="Search for answers…"
-            />
-          </label>
+          <form
+            role="search"
+            aria-label="Search FAQs"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setSearch(search.trim());
+            }}
+            className="mt-8 flex max-w-[590px] gap-3"
+          >
+            <label className="flex h-12 min-w-0 flex-1 items-center gap-3 rounded-lg border border-[#dfe6e4] bg-white px-4 shadow-[0_8px_24px_rgba(25,55,47,.05)] focus-within:border-[#009b67]">
+              <Search size={18} className="shrink-0 text-[#63728d]" aria-hidden="true" />
+              <input
+                type="search"
+                aria-label="Search questions"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                className="min-w-0 flex-1 bg-transparent text-[16px] outline-none"
+                placeholder="Search questions…"
+              />
+            </label>
+            <button
+              type="submit"
+              className="h-12 shrink-0 rounded-lg bg-[#009b67] px-5 text-[16px] font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]"
+            >
+              Search
+            </button>
+          </form>
         </div>
       </section>
       <main className="mx-auto max-w-[1180px] px-5 py-10 sm:px-10 lg:px-12">

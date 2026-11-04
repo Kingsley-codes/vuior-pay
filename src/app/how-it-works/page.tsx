@@ -8,7 +8,6 @@ import {
   Gift,
   Headphones,
   History,
-  Icon,
   LockKeyhole,
   RefreshCcw,
   ShieldCheck,
@@ -149,7 +148,7 @@ export default function HowItWorksPage() {
             );
           })}
         </div>
-        <EarlyPaymentNote className="text-[#65728a]" />
+        <EarlyPaymentNote className="text-[#65728a] col-span-full text-center" />
       </section>
 
       {/* App download */}
@@ -217,7 +216,7 @@ export default function HowItWorksPage() {
               </small>
             </div>
           ))}
-          <EarlyPaymentNote className="col-span-full text-[#c7e4dc]" />
+          <EarlyPaymentNote className="col-span-full text-center text-[#c7e4dc]" />
         </div>
       </section>
 

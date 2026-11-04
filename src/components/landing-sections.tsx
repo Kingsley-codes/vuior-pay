@@ -86,7 +86,6 @@ export function HeroSection() {
           />
         </div>
       </div>
-      <EarlyPaymentNote className="mx-auto max-w-[1240px] px-7 pb-6 text-[#65728a]" />
     </section>
   );
 }
@@ -307,9 +306,7 @@ export function HowItWorks() {
             <span className="z-[1] mb-[17px] grid h-[70px] w-[70px] place-items-center rounded-full bg-[#eff8f5] [&_svg]:w-[37px] [&_svg]:text-[#009268]">
               <Icon name={step.icon} />
             </span>
-            <b className="mb-2.5 text-[16px]">
-              {step.title}
-            </b>
+            <b className="mb-2.5 text-[16px]">{step.title}</b>
             <p className="m-0 max-w-[220px] text-[16px] leading-[1.6] text-[#5c6a7e] min-[901px]:leading-[1.7] max-[620px]:leading-[1.65]">
               {step.text}
             </p>
@@ -505,7 +502,6 @@ export function FinalCtaSection() {
         </p>
       </div>
       <ButtonPair cta />
-      <EarlyPaymentNote className="relative z-[1] col-span-full pb-4 text-[#c7e4dc]" />
     </section>
   );
 }

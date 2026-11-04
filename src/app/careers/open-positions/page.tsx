@@ -1,21 +1,24 @@
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, MapPin, TimerReset } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, MapPin, Search, TimerReset } from "lucide-react";
 import { Header } from "@/components/header";
 import { SiteFooter } from "@/components/site-footer";
+import { PositionsFilterForm } from "@/components/careers/positions-filter-form";
 import { initialJobs } from "@/data/jobs";
 
 const selectClass =
-  "h-11 rounded-[7px] border border-[#d9e4e1] bg-white px-3 text-[16px] font-semibold text-[#53617a] outline-none focus:border-[#009268]";
+  "h-11 min-w-0 w-full rounded-[7px] border border-[#d9e4e1] bg-white px-3 text-[16px] font-semibold text-[#53617a] outline-none focus:border-[#009268]";
 
 export default async function OpenPositionsPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ department?: string; location?: string; type?: string }>;
+  searchParams?: Promise<{ department?: string; location?: string; type?: string; q?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
   const department = resolvedSearchParams?.department || "all";
   const location = resolvedSearchParams?.location || "all";
   const type = resolvedSearchParams?.type || "all";
+  const search = resolvedSearchParams?.q || "";
+  const searchTerm = search.trim().toLowerCase();
 
   const departments = Array.from(new Set(initialJobs.map((job) => job.department)));
   const locations = Array.from(new Set(initialJobs.map((job) => job.location)));
@@ -25,7 +28,10 @@ export default async function OpenPositionsPage({
     (job) =>
       (department === "all" || job.department === department) &&
       (location === "all" || job.location === location) &&
-      (type === "all" || job.type === type),
+      (type === "all" || job.type === type) &&
+      [job.title, job.department, job.location, job.type].some((value) =>
+        value.toLowerCase().includes(searchTerm),
+      ),
   );
 
   return (
@@ -44,14 +50,33 @@ export default async function OpenPositionsPage({
       </section>
 
       <main className="mx-auto max-w-[1180px] px-5 pb-12 sm:px-10 lg:px-12">
-        <form className="rounded-[13px] border border-[#dfe9e6] bg-white/85 p-5 shadow-[0_7px_28px_#153c3010]">
+        <PositionsFilterForm>
           <div className="mb-4 flex items-center justify-between gap-4 max-[620px]:flex-col max-[620px]:items-start">
             <span className="text-[16px] font-bold text-[#53617a]">Filters</span>
             <span className="text-[16px] font-bold text-[#00895f]">
               Open Positions ({filteredJobs.length})
             </span>
           </div>
-          <div className="grid grid-cols-3 gap-3 max-[700px]:grid-cols-1">
+          <div className="grid grid-cols-1 gap-3 min-[701px]:grid-cols-3 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
+            <div className="flex min-w-0 gap-2 min-[701px]:col-span-3 lg:col-span-1">
+              <label className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-[7px] border border-[#d9e4e1] bg-white px-3 text-[#53617a] focus-within:border-[#009268]">
+                <Search size={17} className="shrink-0" aria-hidden="true" />
+                <input
+                  type="search"
+                  name="q"
+                  defaultValue={search}
+                  aria-label="Search open positions"
+                  placeholder="Search roles…"
+                  className="min-w-0 flex-1 bg-transparent text-[16px] outline-none"
+                />
+              </label>
+              <button
+                type="submit"
+                className="h-11 shrink-0 rounded-[7px] bg-[#009268] px-4 text-[15px] font-bold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009268]"
+              >
+                Search
+              </button>
+            </div>
             <select className={selectClass} defaultValue={department} name="department">
               <option value="all">All departments</option>
               {departments.map((item) => (
@@ -77,10 +102,7 @@ export default async function OpenPositionsPage({
               ))}
             </select>
           </div>
-          <button className="mt-4 h-10 rounded-md bg-[#009268] px-5 text-[15px] font-bold text-white">
-            Apply filters
-          </button>
-        </form>
+        </PositionsFilterForm>
 
         <section className="mt-8 grid gap-4">
           {filteredJobs.map((job) => (
