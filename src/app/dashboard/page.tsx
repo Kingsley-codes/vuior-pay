@@ -129,6 +129,14 @@ export default function DashboardPage() {
               Welcome back, {firstName}. Track your bills, payments, credits,
               and savings in one place.
             </p>
+            <p className="mt-2 text-sm font-medium text-slate-500">
+              {new Intl.DateTimeFormat("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              }).format(now)}
+            </p>
           </div>
           <NotificationsMenu userId={user?.id} />
         </div>

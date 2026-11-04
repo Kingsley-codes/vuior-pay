@@ -1,6 +1,6 @@
 "use client";
 import EarlyPaymentNote from "@/components/EarlyPaymentNote";
-import PageSizeSelect from "@/components/ui/PageSizeSelect";
+import TablePagination from "@/components/ui/TablePagination";
 import {
   BILL_FREQUENCIES,
   frequencyLabel,
@@ -12,7 +12,6 @@ import {
   ArrowUpRight,
   CalendarDays,
   ChevronDown,
-  ChevronLeft,
   ChevronRight,
   FileText,
   Plus,
@@ -301,10 +300,18 @@ export default function BillsPage() {
     <>
       <div className="mx-auto max-w-[1530px] p-5 sm:p-7 lg:p-8">
         <AddressRequiredNotice user={user} loading={profileLoading} />
-        <section aria-labelledby="bills-page-title" className="min-w-0 rounded-2xl border border-[#164e41] bg-linear-to-br from-[#084b3e] via-[#073e35] to-[#052e2b] text-white shadow-[0_12px_32px_rgba(5,46,38,0.12)]">
+        <section
+          aria-labelledby="bills-page-title"
+          className="min-w-0 rounded-2xl border border-[#164e41] bg-linear-to-br from-[#084b3e] via-[#073e35] to-[#052e2b] text-white shadow-[0_12px_32px_rgba(5,46,38,0.12)]"
+        >
           <div className="flex flex-wrap items-center justify-between gap-x-10 gap-y-6 p-5 sm:p-7">
             <div className="min-w-0 flex-[1_1_240px]">
-              <h1 id="bills-page-title" className="text-[30px] font-bold tracking-[-0.035em] sm:text-[32px]">Bills</h1>
+              <h1
+                id="bills-page-title"
+                className="text-[30px] font-bold tracking-[-0.035em] sm:text-[32px]"
+              >
+                Bills
+              </h1>
               <p className="mt-2 max-w-md text-base leading-6 text-[#bdd9ce]">
                 Your bills, due dates, and rewards. All in one place.
               </p>
@@ -312,11 +319,22 @@ export default function BillsPage() {
             <div className="flex w-full min-w-0 flex-wrap items-center gap-3 rounded-xl border border-white/15 bg-white/5 p-4 sm:w-auto sm:shrink-0 sm:flex-nowrap sm:gap-4 sm:px-5">
               <div className="w-full min-w-0 basis-full border-b border-white/10 pb-4 sm:w-auto sm:shrink-0 sm:basis-auto sm:border-r sm:border-b-0 sm:pr-5 sm:pb-0">
                 <div className="flex items-center gap-2 text-[#bdd9ce]">
-                  <WalletCards size={18} className="shrink-0" aria-hidden="true" />
-                  <p className="whitespace-nowrap text-base">Available credits</p>
+                  <WalletCards
+                    size={18}
+                    className="shrink-0"
+                    aria-hidden="true"
+                  />
+                  <p className="whitespace-nowrap text-base">
+                    Available credits
+                  </p>
                 </div>
-                <p title={exactBalance} className="mt-2 whitespace-nowrap text-[28px] font-semibold leading-tight tracking-[-0.02em] text-white tabular-nums sm:text-[30px]">
-                  {useCompactBalance ? compactMoney.format(availableCredits) : exactBalance}
+                <p
+                  title={exactBalance}
+                  className="mt-2 whitespace-nowrap text-[28px] font-semibold leading-tight tracking-[-0.02em] text-white tabular-nums sm:text-[30px]"
+                >
+                  {useCompactBalance
+                    ? compactMoney.format(availableCredits)
+                    : exactBalance}
                 </p>
                 {useCompactBalance && (
                   <p className="mt-1 text-base leading-6 text-[#bdd9ce] tabular-nums [overflow-wrap:anywhere] sm:whitespace-nowrap">
@@ -329,7 +347,8 @@ export default function BillsPage() {
                 onClick={() => setModal({ mode: "add" })}
                 className="inline-flex h-12 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#b6f4d4] px-5 text-base font-semibold text-[#083e2f] transition hover:bg-[#d0fbe3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4] sm:flex-none"
               >
-                <Plus size={19} className="shrink-0" aria-hidden="true" /> Add Bill
+                <Plus size={19} className="shrink-0" aria-hidden="true" /> Add
+                Bill
               </button>
               <NotificationsMenu userId={user?.id} variant="dark" />
             </div>
@@ -338,17 +357,34 @@ export default function BillsPage() {
             <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] xl:items-center">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 text-[#b6f4d4]">
-                  <TrendingUp size={21} className="shrink-0" aria-hidden="true" />
-                  <h2 className="text-lg font-semibold">Earn up to 15% in credits</h2>
+                  <TrendingUp
+                    size={21}
+                    className="shrink-0"
+                    aria-hidden="true"
+                  />
+                  <h2 className="text-lg font-semibold">
+                    Earn up to 15% in credits
+                  </h2>
                 </div>
                 <p className="mt-2 max-w-lg text-base leading-6 text-[#bdd9ce]">
-                  Pay eligible bills early and put the rewards toward your next bill.
+                  Pay eligible bills early and put the rewards toward your next
+                  bill.
                 </p>
               </div>
               <div className="grid min-w-0 gap-3 sm:grid-cols-2">
                 {[
-                  { label: "How it works", description: "Explore early-payment rewards.", icon: TrendingUp, kind: "savings" as const },
-                  { label: "Autopay guide", description: "Plan your automatic payments.", icon: RefreshCcw, kind: "autopay" as const },
+                  {
+                    label: "How it works",
+                    description: "Explore early-payment rewards.",
+                    icon: TrendingUp,
+                    kind: "savings" as const,
+                  },
+                  {
+                    label: "Autopay guide",
+                    description: "Plan your automatic payments.",
+                    icon: RefreshCcw,
+                    kind: "autopay" as const,
+                  },
                 ].map(({ label, description, icon: Icon, kind }) => (
                   <button
                     key={kind}
@@ -356,17 +392,31 @@ export default function BillsPage() {
                     onClick={() => setInfoModal(kind)}
                     className="group flex min-w-0 items-start gap-3 rounded-xl border border-white/15 bg-white/5 p-4 text-left transition hover:border-[#b6f4d4]/40 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b6f4d4]"
                   >
-                    <Icon size={20} className="mt-0.5 shrink-0 text-[#b6f4d4]" aria-hidden="true" />
+                    <Icon
+                      size={20}
+                      className="mt-0.5 shrink-0 text-[#b6f4d4]"
+                      aria-hidden="true"
+                    />
                     <span className="min-w-0 flex-1">
-                      <span className="block text-base font-semibold text-white">{label}</span>
-                      <span className="mt-1 block text-base leading-6 text-[#bdd9ce]">{description}</span>
+                      <span className="block text-base font-semibold text-white">
+                        {label}
+                      </span>
+                      <span className="mt-1 block text-base leading-6 text-[#bdd9ce]">
+                        {description}
+                      </span>
                     </span>
-                    <ArrowUpRight size={18} className="mt-0.5 shrink-0 text-[#a1c7b6] transition group-hover:text-[#b6f4d4]" aria-hidden="true" />
+                    <ArrowUpRight
+                      size={18}
+                      className="mt-0.5 shrink-0 text-[#a1c7b6] transition group-hover:text-[#b6f4d4]"
+                      aria-hidden="true"
+                    />
                   </button>
                 ))}
               </div>
             </div>
-            <p className="mt-5 border-t border-white/10 pt-4 text-base leading-6 text-[#a8c8bb]">Payments on or after the due date earn no early-payment credits.</p>
+            <p className="mt-5 border-t border-white/10 pt-4 text-base leading-6 text-[#a8c8bb]">
+              Payments on or after the due date earn no early-payment credits.
+            </p>
           </CollapsibleGuideSection>
         </section>
 
@@ -422,9 +472,7 @@ export default function BillsPage() {
                   <IconComponent size={27} />
                 </span>
                 <div>
-                  <p className="text-lg text-[#53637f]">
-                    {label as string}
-                  </p>
+                  <p className="text-lg text-[#53637f]">{label as string}</p>
                   <strong className="mt-1.5 block text-[25px]">
                     {value as string}
                   </strong>
@@ -466,7 +514,10 @@ export default function BillsPage() {
                   }}
                   className="col-span-full min-w-0"
                 >
-                  <label htmlFor="bill-search" className="mb-1.5 block text-base font-medium text-[#53637f]">
+                  <label
+                    htmlFor="bill-search"
+                    className="mb-1.5 block text-base font-medium text-[#53637f]"
+                  >
                     Search
                   </label>
                   <div className="flex items-center gap-3">
@@ -481,7 +532,12 @@ export default function BillsPage() {
                         className="min-w-0 flex-1 bg-transparent text-base text-[#344260] outline-none placeholder:text-[#8a95a6]"
                       />
                     </div>
-                    <button type="submit" className="h-11 shrink-0 rounded-lg bg-[#009b67] px-5 text-base font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">Search</button>
+                    <button
+                      type="submit"
+                      className="h-11 shrink-0 rounded-lg bg-[#009b67] px-5 text-base font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]"
+                    >
+                      Search
+                    </button>
                   </div>
                 </form>
                 <MultiSelectFilter
@@ -873,71 +929,20 @@ export default function BillsPage() {
                   </div>
                 ) : null}
               </div>
-              <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#e7ecea] px-5 py-4">
-                <p aria-live="polite" className="text-base text-[#7b879b]">
-                  Showing{" "}
-                  <span className="font-medium text-[#344260]">
-                    {filteredBills.length
-                      ? `${(currentPage - 1) * pagination.pageSize + 1}-${Math.min(currentPage * pagination.pageSize, filteredBills.length)}`
-                      : "0"}
-                  </span>{" "}
-                  of{" "}
-                  <span className="font-medium text-[#344260]">
-                    {filteredBills.length}
-                  </span>{" "}
-                  bills
-                </p>
-                <nav
-                  aria-label="Bill pagination"
-                  className="flex flex-wrap items-center gap-2"
-                >
-                  <PageSizeSelect
-                    value={pagination.pageSize}
-                    onChange={(pageSize) =>
-                      setPagination({ key: filterKey, page: 1, pageSize })
-                    }
-                  />
-                  <button
-                    type="button"
-                    aria-label="Previous page"
-                    disabled={currentPage === 1}
-                    onClick={() =>
-                      setPagination({
-                        ...pagination,
-                        key: filterKey,
-                        page: currentPage - 1,
-                      })
-                    }
-                    className="grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] text-[#64718a] transition hover:bg-[#f0faf5] disabled:opacity-35"
-                  >
-                    <ChevronLeft size={15} />
-                  </button>
-                  <span className="px-2 text-base text-[#64718a]">
-                    Page{" "}
-                    <strong className="text-[#344260]">{currentPage}</strong> of{" "}
-                    {pageCount}
-                  </span>
-                  <button
-                    type="button"
-                    aria-label="Next page"
-                    disabled={currentPage === pageCount}
-                    onClick={() =>
-                      setPagination({
-                        ...pagination,
-                        key: filterKey,
-                        page: currentPage + 1,
-                      })
-                    }
-                    className="grid h-8 w-8 place-items-center rounded-md border border-[#dfe6e4] text-[#64718a] transition hover:bg-[#f0faf5] disabled:opacity-35"
-                  >
-                    <ChevronRight size={15} />
-                  </button>
-                </nav>
-              </footer>
+              <TablePagination
+                label="bills"
+                page={currentPage}
+                pageSize={pagination.pageSize}
+                total={filteredBills.length}
+                onPageChange={(page) =>
+                  setPagination({ ...pagination, key: filterKey, page })
+                }
+                onPageSizeChange={(pageSize) =>
+                  setPagination({ key: filterKey, page: 1, pageSize })
+                }
+              />
             </section>
-
           </div>
-
         </div>
       </div>
       {checkoutIds && user && (

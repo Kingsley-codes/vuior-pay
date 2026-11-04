@@ -6,6 +6,7 @@ import Link from "next/link";
 import { SUPPORT_FAQS } from "@/data/faqs";
 import {
   AlertCircle,
+  CalendarDays,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -26,6 +27,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import PhoneNumberInput from "@/components/phone-number-input";
+import { periodBounds, periods, type Period } from "@/utils/transactions";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import {
   createTicket,
@@ -687,20 +689,23 @@ function TicketsPanel({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [renderedAt] = useState(Date.now);
-  const [monthFilter, setMonthFilter] = useState("");
+  const [period, setPeriod] = useState<Period | "All time">("This month");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
   const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
   const [search, setSearch] = useState("");
+  const bounds = period === "All time" ? null : periodBounds(period, from, to);
   const filteredTickets = tickets.filter((ticket) => {
     const createdAt = ticket.createdAt?.toDate?.();
-    const matchesMonth = !monthFilter || Boolean(
-      createdAt && `${createdAt.getFullYear()}-${String(createdAt.getMonth() + 1).padStart(2, "0")}` === monthFilter,
+    const matchesPeriod = period === "All time" || Boolean(
+      bounds && createdAt && createdAt >= bounds[0] && createdAt < bounds[1],
     );
     const matchesStatus = statusFilter === "all" || ticket.status === statusFilter;
     const term = search.trim().toLowerCase();
     const matchesSearch = !term || [
       ticket.ticket_ID, ticket.subject, ticket.message, ticket.category,
     ].some((value) => String(value || "").toLowerCase().includes(term));
-    return matchesMonth && matchesStatus && matchesSearch;
+    return matchesPeriod && matchesStatus && matchesSearch;
   });
   const currentPage = Math.min(page, Math.max(1, Math.ceil(filteredTickets.length / pageSize)));
   const visibleTickets = filteredTickets.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -739,35 +744,48 @@ function TicketsPanel({
           </button>
         </div>
       </div>
-      <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-[minmax(220px,1fr)_170px_170px]">
-        <label className="relative block">
-          <Search size={15} className="absolute top-1/2 left-3 -translate-y-1/2 text-[#8994a5]" />
-          <input
-            type="search"
-            value={search}
-            onChange={(event) => { setSearch(event.target.value); setPage(1); }}
-            placeholder="Search tickets"
-            aria-label="Search tickets"
-            className="h-10 w-full rounded-lg border border-[#dfe6e4] bg-white pr-3 pl-9 text-base outline-none focus:border-[#00a96b]"
-          />
+      <div className="grid gap-3 border-b border-[#e7ecea] p-4 lg:grid-cols-[minmax(260px,1fr)_190px_190px]">
+        <form onSubmit={(event) => { event.preventDefault(); setPage(1); }}>
+          <label htmlFor="ticket-search" className="mb-1.5 block text-base font-medium text-[#53637f]">Search</label>
+          <div className="flex gap-2">
+            <div className="relative min-w-0 flex-1">
+              <Search size={15} className="absolute top-1/2 left-3 -translate-y-1/2 text-[#8994a5]" />
+              <input
+                id="ticket-search"
+                type="search"
+                value={search}
+                onChange={(event) => { setSearch(event.target.value); setPage(1); }}
+                placeholder="Search tickets"
+                aria-label="Search tickets"
+                className="h-11 w-full rounded-lg border border-[#dfe5e7] bg-white pr-3 pl-9 text-base outline-none focus:border-[#00a96b]"
+              />
+            </div>
+            <button type="submit" className="h-11 shrink-0 rounded-lg bg-[#009b67] px-5 text-base font-semibold text-white transition hover:bg-[#008455] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#009b67]">
+              Search
+            </button>
+          </div>
+        </form>
+        <label className="relative min-w-0">
+          <span className="mb-1.5 block text-base font-medium text-[#53637f]">Date range</span>
+          <CalendarDays size={15} className="pointer-events-none absolute bottom-3.5 left-3 text-[#7b879b]" />
+          <select
+            value={period}
+            onChange={(event) => { setPeriod(event.target.value as Period | "All time"); setPage(1); }}
+            aria-label="Filter tickets by period"
+            className="h-11 w-full appearance-none rounded-lg border border-[#dfe5e7] bg-white pl-9 pr-9 text-base text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
+          >
+            <option>All time</option>
+            {periods.map((value) => <option key={value}>{value}</option>)}
+          </select>
+          <ChevronDown size={14} className="pointer-events-none absolute bottom-3.5 right-3 text-[#718097]" />
         </label>
-        <label className="flex items-center gap-2 text-base text-[#738097]">
-          <span className="shrink-0">Month</span>
-          <input
-            type="month"
-            value={monthFilter}
-            onChange={(event) => { setMonthFilter(event.target.value); setPage(1); }}
-            aria-label="Filter tickets by month"
-            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] px-2 text-base text-[#34425d]"
-          />
-        </label>
-        <label className="flex items-center gap-2 text-base text-[#738097]">
-          <span>Status</span>
+        <label className="min-w-0 text-base text-[#738097]">
+          <span className="mb-1.5 block font-medium text-[#53637f]">Status</span>
           <select
             value={statusFilter}
             onChange={(event) => { setStatusFilter(event.target.value as TicketStatus | "all"); setPage(1); }}
             aria-label="Filter tickets by status"
-            className="h-10 min-w-0 flex-1 rounded-lg border border-[#dfe6e4] bg-white px-2 text-base text-[#34425d]"
+            className="h-11 w-full rounded-lg border border-[#dfe5e7] bg-white px-3 text-base text-[#34425d] outline-none focus:border-[#00a96b]"
           >
             <option value="all">All statuses</option>
             <option value="open">Open</option>
@@ -776,6 +794,19 @@ function TicketsPanel({
             <option value="closed">Closed</option>
           </select>
         </label>
+        {period === "Custom" && (
+          <div className="flex flex-wrap items-end gap-3 rounded-lg bg-[#f8faf9] p-3 lg:col-span-3">
+            <label className="text-base text-[#596885]">
+              From
+              <input type="date" value={from} max={to || undefined} onChange={(event) => { setFrom(event.target.value); setPage(1); }} className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base" />
+            </label>
+            <label className="text-base text-[#596885]">
+              To
+              <input type="date" value={to} min={from || undefined} onChange={(event) => { setTo(event.target.value); setPage(1); }} className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base" />
+            </label>
+            {!bounds && <p role="status" className="pb-3 text-base text-[#a67617]">Choose a valid start and end date.</p>}
+          </div>
+        )}
       </div>
       {!tickets.length ? (
         <div className="grid min-h-[360px] place-items-center p-8 text-center">
@@ -816,7 +847,7 @@ function TicketsPanel({
           </div>
         </div>
       )}
-      <TablePagination page={currentPage} pageSize={pageSize} total={filteredTickets.length} onPageChange={setPage} onPageSizeChange={(value) => { setPage(1); setPageSize(value); }} />
+      <TablePagination label="tickets" page={currentPage} pageSize={pageSize} total={filteredTickets.length} onPageChange={setPage} onPageSizeChange={(value) => { setPage(1); setPageSize(value); }} />
     </section>
   );
 }
