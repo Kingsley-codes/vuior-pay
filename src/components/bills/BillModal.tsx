@@ -1,5 +1,6 @@
 "use client";
 import EarlyPaymentNote from "@/components/EarlyPaymentNote";
+import AutopayScheduleModal from "@/components/bills/AutopayScheduleModal";
 
 import { saveUserBill } from "@/services/billSave";
 import { withBillConfirmation } from "@/utils/billDuplicates";
@@ -52,6 +53,7 @@ type FormState = {
   accountNumber: string;
   providerPhoneNumber: string;
   autoPay: boolean;
+  autoPayDaysBefore: number;
 };
 const emptyForm: FormState = {
   name: "",
@@ -62,6 +64,7 @@ const emptyForm: FormState = {
   accountNumber: "",
   providerPhoneNumber: "",
   autoPay: false,
+  autoPayDaysBefore: 7,
 };
 const categories = [
   "Utilities",
@@ -128,9 +131,11 @@ export default function BillModal({
             bill.providerPhoneNumber || "",
           ),
           autoPay: bill.autoPay,
+          autoPayDaysBefore: bill.autoPayDaysBefore ?? 0,
         }
       : emptyForm,
   );
+  const [showAutopaySchedule, setShowAutopaySchedule] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(bill?.documentUrl || "");
   const [working, setWorking] = useState(false);
@@ -144,10 +149,10 @@ export default function BillModal({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const close = (event: KeyboardEvent) => event.key === "Escape" && onClose();
+    const close = (event: KeyboardEvent) => { if (event.key === "Escape") { if (showAutopaySchedule) setShowAutopaySchedule(false); else onClose(); } };
     document.addEventListener("keydown", close);
     return () => document.removeEventListener("keydown", close);
-  }, [onClose]);
+  }, [onClose, showAutopaySchedule]);
 
   useEffect(() => {
     const term = form.name.trim();
@@ -260,7 +265,7 @@ export default function BillModal({
         providerPhoneNumber:
           normalizeInternationalPhone(form.providerPhoneNumber) || null,
         autoPay: form.autoPay,
-        nextPaymentDate: form.autoPay ? form.dueDate : null,
+        autoPayDaysBefore: form.autoPayDaysBefore,
         documentUrl,
         documentType: file?.type || bill?.documentType || null,
         ...(file ? { documentName: file.name } : {}),
@@ -295,7 +300,13 @@ export default function BillModal({
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}
     >
       {confirmationDialog}
+      {showAutopaySchedule && <AutopayScheduleModal days={form.autoPayDaysBefore} onClose={() => setShowAutopaySchedule(false)} onConfirm={(days) => {
+        setForm((current) => ({ ...current, autoPay: true, autoPayDaysBefore: days, frequency: current.frequency === "one-time" ? "" : current.frequency }));
+        setShowAutopaySchedule(false);
+        setError("");
+      }} />}
       <section
+        inert={showAutopaySchedule}
         role="dialog"
         aria-modal="true"
         aria-labelledby="bill-modal-title"
@@ -392,7 +403,7 @@ export default function BillModal({
                 ["Category", bill.category],
                 ["Account number", bill.accountNumber || "Not provided"],
                 ["Frequency", frequencyLabel(bill.frequency)],
-                ["Autopay", bill.autoPay ? "On" : "Off"],
+                ["Autopay", bill.autoPay ? (bill.autoPayDaysBefore ? `${bill.autoPayDaysBefore} days before due date` : "On the due date") : "Off"],
                 ["Provider phone", bill.providerPhoneNumber || "Not provided"],
                 ["Amount paid", money.format(bill.amountPaid ?? (isPaymentSubmitted ? bill.amount : 0))],
                 ["Payment coverage", isPaymentSubmitted ? ((bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid") : "Not paid"],
@@ -611,7 +622,7 @@ export default function BillModal({
               <span>
                 <b className="block text-base">Enable autopay</b>
                 <small className="mt-1 block text-base text-[#718097]">
-                  Pay automatically on the due date.
+                  {form.autoPay ? (form.autoPayDaysBefore ? `Pay ${form.autoPayDaysBefore} days before the due date.` : "Pay on the due date.") : "Choose when to pay automatically."}
                 </small>
               </span>
               <input
@@ -619,12 +630,14 @@ export default function BillModal({
                 checked={form.autoPay}
                 onChange={(e) => {
                   const autoPay = e.target.checked;
-                  setForm((current) => ({ ...current, autoPay, frequency: autoPay && current.frequency === "one-time" ? "" : !autoPay && !current.frequency ? "one-time" : current.frequency }));
+                  if (autoPay) setShowAutopaySchedule(true);
+                  else setForm((current) => ({ ...current, autoPay: false, frequency: current.frequency || "one-time" }));
                   setError("");
                 }}
                 className="h-4 w-4 accent-[#009b67]"
               />
             </label>
+            {form.autoPay && <button type="button" onClick={() => setShowAutopaySchedule(true)} className="mt-2 text-base font-semibold text-[#009b67]">Change autopay timing</button>}
             <div className="mt-6 flex gap-3">
               <button
                 type="button"

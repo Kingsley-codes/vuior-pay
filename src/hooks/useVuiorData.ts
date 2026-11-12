@@ -21,6 +21,7 @@ export type Bill = {
   dueDate: string;
   status: string;
   autoPay: boolean;
+  autoPayDaysBefore?: number;
   autopayId?: string;
   nextPaymentDate?: string;
   frequency: string;
@@ -134,6 +135,7 @@ export function useVuiorData(
                 data.dueDate ?? data.due_date,
               ),
               autoPay: Boolean(data.autoPay),
+              autoPayDaysBefore: Number(data.autoPayDaysBefore ?? 0),
               autopayId: data.autopayId
                 ? String(data.autopayId)
                 : data.autoPayId

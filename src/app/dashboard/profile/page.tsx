@@ -282,14 +282,6 @@ export function ProfileSettingsPanel() {
                 }
               />
             </Field>
-            <Field label="ZIP / postal code">
-              <input
-                value={form.zipCode}
-                onChange={(event) => setField("zipCode", event.target.value)}
-                autoComplete="postal-code"
-                required
-              />
-            </Field>
           </div>
           <div className="mt-7 flex justify-end border-t border-[#edf1ef] pt-5">
             <button

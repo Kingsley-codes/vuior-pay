@@ -31,7 +31,8 @@ import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
 import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
-import { billCategories } from "@/utils/transactions";
+import { billCategories, periods, periodBounds, type Period } from "@/utils/transactions";
+import FilterSelect from "@/components/ui/FilterSelect";
 import { monthlyComparison } from "@/utils/monthlyComparison";
 
 const money = new Intl.NumberFormat("en-US", {
@@ -74,13 +75,6 @@ function monthKey(value: Date | string) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
 
-function monthLabel(value: string) {
-  const [year, month] = value.split("-").map(Number);
-  return new Date(year, month - 1).toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
-}
 
 function displayStatus(bill: Bill) {
   const value = bill.status.trim().toLowerCase().replaceAll("_", " ");
@@ -108,9 +102,9 @@ export default function BillsPage() {
   const [frequencies, setFrequencies] = useState<string[]>([]);
   const [providers, setProviders] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState(() =>
-    monthLabel(monthKey(new Date())),
-  );
+  const [period, setPeriod] = useState<Period>("This month");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState<{
     mode: "add" | "details" | "edit";
@@ -177,17 +171,8 @@ export default function BillsPage() {
     [bills],
   );
 
-  const monthOptions = useMemo(() => {
-    const months = bills.map((bill) => monthKey(bill.dueDate)).filter(Boolean);
-    return [
-      "All Months",
-      ...Array.from(new Set([...months, monthKey(new Date())]))
-        .sort((a, b) => b.localeCompare(a))
-        .map(monthLabel),
-    ];
-  }, [bills]);
-
   const billsByTab = useMemo(() => {
+    const bounds = periodBounds(period, from, to);
     const filteredBills = (targetTab: Tab) =>
       bills
         .filter((bill) => {
@@ -207,8 +192,7 @@ export default function BillsPage() {
             (frequencies.length === 0 ||
               frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
             (categories.length === 0 || categories.includes(bill.category)) &&
-            (selectedMonth === "All Months" ||
-              monthLabel(monthKey(bill.dueDate)) === selectedMonth) &&
+            (bounds !== null && new Date(bill.dueDate) >= bounds[0] && new Date(bill.dueDate) < bounds[1]) &&
             (providers.length === 0 || providers.includes(bill.name.trim())) &&
             `${bill.name} ${bill.category}`
               .toLowerCase()
@@ -219,11 +203,11 @@ export default function BillsPage() {
     return Object.fromEntries(
       BILL_TABS.map((item) => [item, filteredBills(item)]),
     ) as Record<Tab, Bill[]>;
-  }, [bills, categories, selectedMonth, search, providers, frequencies]);
+  }, [bills, categories, period, from, to, search, providers, frequencies]);
   const filterKey = JSON.stringify([
     tab,
     categories,
-    selectedMonth,
+    period, from, to,
     search,
     providers,
     frequencies,
@@ -502,7 +486,7 @@ export default function BillsPage() {
                   </button>
                 ))}
               </div>
-              <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid items-end gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-4">
                 <form
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -555,11 +539,7 @@ export default function BillsPage() {
                   options={BILL_FREQUENCIES}
                   optionLabel={frequencyLabel}
                 />
-                <Filter
-                  value={selectedMonth}
-                  onChange={setSelectedMonth}
-                  options={monthOptions}
-                />
+                <FilterSelect label="Date range" value={period} onChange={(value) => setPeriod(value as Period)} icon={CalendarDays} options={periods.map((value) => ({ value, label: value }))} />
                 <MultiSelectFilter
                   label="Provider"
                   value={providers}
@@ -567,6 +547,18 @@ export default function BillsPage() {
                   options={providerOptions}
                 />
               </div>
+
+              {period === "Custom" && (
+                <div className="flex flex-wrap items-end gap-3 border-b border-[#e7ecea] bg-[#f8faf9] p-3">
+                  <label className="text-base text-[#596885]">From
+                    <input type="date" value={from} max={to || undefined} onChange={(event) => setFrom(event.target.value)} className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base" />
+                  </label>
+                  <label className="text-base text-[#596885]">To
+                    <input type="date" value={to} min={from || undefined} onChange={(event) => setTo(event.target.value)} className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base" />
+                  </label>
+                  {!periodBounds(period, from, to) && <p role="status" className="pb-3 text-base text-[#a67617]">Choose a valid start and end date.</p>}
+                </div>
+              )}
 
               {tab !== "Paid" && selectableVisible.length > 0 && (
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7ecea] bg-[#fbfdfc] px-4 py-3">
@@ -1048,8 +1040,8 @@ function InfoModal({
         ) : (
           <>
             <p className="mt-4 text-base leading-6 text-[#65728a]">
-              Enable autopay for an individual bill and Vuior will charge it on
-              the due date using your saved payment method.
+              Enable autopay for an individual bill and choose how many days before
+              the due date Vuior should pay it using your saved payment method.
             </p>
             <ul className="mt-4 space-y-3 text-base text-[#53617a]">
               <li>• Turn it on or off anytime from the bill list.</li>
@@ -1069,35 +1061,6 @@ function InfoModal({
         </button>
       </section>
     </div>
-  );
-}
-
-function Filter({
-  value,
-  onChange,
-  options,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  options: string[];
-}) {
-  return (
-    <label className="relative">
-      <select
-        aria-label="Period"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-10 w-full appearance-none rounded-md border border-[#dfe5e7] bg-white px-3 pr-8 text-base text-[#34425d] outline-none focus:border-[#00a96b]"
-      >
-        {options.map((option) => (
-          <option key={option}>{option}</option>
-        ))}
-      </select>
-      <ChevronDown
-        size={14}
-        className="pointer-events-none absolute right-3 top-3 text-[#718097]"
-      />
-    </label>
   );
 }
 

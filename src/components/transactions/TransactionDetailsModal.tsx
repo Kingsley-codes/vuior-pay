@@ -2,13 +2,13 @@
 
 import { CreditCard, Flag, X } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getTransactionReference } from "@/services/transactionReference";
 import BillDocumentPreview from "@/components/bills/BillDocumentPreview";
 import type { Bill, Transaction } from "@/hooks/useVuiorData";
 import {
   billsForTransaction,
-  categoriesForTransaction,
   displayName,
-  normalize,
   transactionKind,
   transactionPaymentMethod,
   transactionStatus,
@@ -31,10 +31,19 @@ export default function TransactionDetailsModal({
 }) {
   const isCredit = transactionKind(transaction) === "credit";
   const linkedBills = isCredit ? [] : billsForTransaction(transaction, bills);
-  const rawCredits = transaction.amount;
-  const credits = normalize(transaction.type).includes("sent")
-    ? -Math.abs(rawCredits)
-    : rawCredits;
+  const credits = Math.abs(transaction.amount);
+  const legacyReference = /^(Sent to|Received from) user \(([^)]+)\)$/.exec(transaction.reference || "");
+  const [resolvedReference, setResolvedReference] = useState<{ id: string; value: string } | null>(null);
+  const reference = resolvedReference?.id === transaction.id ? resolvedReference.value
+    : legacyReference ? `${legacyReference[1]} user` : transaction.reference;
+  useEffect(() => {
+    if (!/^(Sent to|Received from) user \(([^)]+)\)$/.test(transaction.reference || "")) return;
+    let active = true;
+    getTransactionReference(transaction.id).then((value) => {
+      if (active) setResolvedReference({ id: transaction.id, value });
+    }).catch(() => { /* Keep the readable fallback if the reference is unavailable. */ });
+    return () => { active = false; };
+  }, [transaction.id, transaction.reference]);
   const publicBillIds = transaction.billPublicIds.length
     ? transaction.billPublicIds
     : transaction.billIds.map(
@@ -47,11 +56,7 @@ export default function TransactionDetailsModal({
       ? []
       : [["Bill IDs", publicBillIds.join(", ") || "Not applicable"]]),
     ["Type", displayName(transaction.type)],
-    ...(linkedBills.length
-      ? []
-      : [
-          ["Category", categoriesForTransaction(transaction, bills).join(", ")],
-        ]),
+    ["Category", displayName(transaction.category) || "Not recorded"],
     [
       "Payment method",
       paymentMethod === "stripe"
@@ -74,7 +79,7 @@ export default function TransactionDetailsModal({
         timeStyle: "short",
       }),
     ],
-    ["Reference", transaction.reference || "Not recorded"],
+    ["Reference", reference || "Not recorded"],
   ];
 
   return (
@@ -120,13 +125,12 @@ export default function TransactionDetailsModal({
             </p>
             <p className="mt-2 text-[28px] font-semibold">
               {isCredit
-                ? `${credits > 0 ? "+" : ""}${credits.toLocaleString(undefined, { maximumFractionDigits: 2 })} credits`
-                : money.format(transaction.amount)}
+                ? `${credits.toLocaleString(undefined, { maximumFractionDigits: 2 })} credits`
+                : money.format(Math.abs(transaction.amount))}
             </p>
             {!isCredit && transaction.credits !== 0 && (
               <p className="mt-2 text-base text-[#009b67]">
-                Credits: {transaction.credits > 0 ? "+" : ""}
-                {transaction.credits.toFixed(2)}
+                Credits: {Math.abs(transaction.credits).toFixed(2)}
               </p>
             )}
             {Boolean(
@@ -137,7 +141,7 @@ export default function TransactionDetailsModal({
                   <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-base">
                     <span className="text-[#718097]">Credits applied</span>
                     <span className="font-medium tabular-nums">
-                      {transaction.creditsApplied.toFixed(2)} credits
+                      {Math.abs(transaction.creditsApplied).toFixed(2)} credits
                     </span>
                   </p>
                 ) : null}
@@ -145,7 +149,7 @@ export default function TransactionDetailsModal({
                   <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-base">
                     <span className="text-[#718097]">Paid via Stripe after credits</span>
                     <span className="font-medium tabular-nums">
-                      {money.format(transaction.amountCharged)}
+                      {money.format(Math.abs(transaction.amountCharged))}
                     </span>
                   </p>
                 )}
@@ -153,7 +157,7 @@ export default function TransactionDetailsModal({
                   <p className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-base">
                     <span className="text-[#718097]">Pending reward</span>
                     <span className="font-medium tabular-nums text-[#009b67]">
-                      {transaction.pendingCredits.toFixed(2)} credits (
+                      {Math.abs(transaction.pendingCredits).toFixed(2)} credits (
                       {transaction.rewardStatus || "pending"})
                     </span>
                   </p>
@@ -185,7 +189,7 @@ export default function TransactionDetailsModal({
                         {bill.billId}
                       </span>
                     </span>
-                    <span className="text-base text-[#718097]">Amount paid: {money.format(bill.amountPaid ?? bill.amount)} / {(bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid"}</span>
+                    <span className="text-base text-[#718097]">Amount paid: {money.format(Math.abs(bill.amountPaid ?? bill.amount))} / {(bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid"}</span>
                     {bill.documentUrl ? (
                       <BillDocumentPreview
                         url={bill.documentUrl}

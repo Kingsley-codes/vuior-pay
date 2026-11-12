@@ -31,10 +31,13 @@ const money = new Intl.NumberFormat("en-US", {
 
 export default function ReferralsPage() {
   const { user } = useVuiorSession();
-  const { transactions, referralQualifyingSpendThisYear, loading } = useVuiorData(user?.id);
+  const { transactions, referralQualifyingSpendThisYear, loading } =
+    useVuiorData(user?.id);
   const [referralCode, setReferralCode] = useState("");
   const [redeemedForUser, setRedeemedForUser] = useState<string | null>(null);
-  const hasRedeemedReferral = Boolean(user?.redeemedReferralCode || (user?.id && redeemedForUser === user.id));
+  const hasRedeemedReferral = Boolean(
+    user?.redeemedReferralCode || (user?.id && redeemedForUser === user.id),
+  );
   const [promoCode, setPromoCode] = useState("");
   const [redeeming, setRedeeming] = useState<"referral" | "promo" | null>(null);
   const [feedback, setFeedback] = useState<Feedback>(null);
@@ -80,10 +83,11 @@ export default function ReferralsPage() {
     setFeedback(null);
     if (!user?.id) return;
     if (redeeming === "referral") return;
-    if (hasRedeemedReferral) return setFeedback({
-      tone: "error",
-      text: "You have already redeemed a referral code. Each user can redeem only one.",
-    });
+    if (hasRedeemedReferral)
+      return setFeedback({
+        tone: "error",
+        text: "You have already redeemed a referral code. Each user can redeem only one.",
+      });
     if (code.length < 5)
       return setFeedback({
         tone: "error",
@@ -142,241 +146,248 @@ export default function ReferralsPage() {
   if (loading) return <ReferralsSkeleton />;
 
   return (
-    
-      <div className="mx-auto max-w-[1320px] p-5 sm:p-7 lg:p-8">
-        <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#043d33] via-[#075847] to-[#08765c] px-6 py-7 text-white shadow-[0_20px_55px_rgba(4,61,51,.18)] sm:px-9 sm:py-9">
-          <div className="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[55px] border-white/5" />
-          <div className="absolute -bottom-24 left-[38%] h-56 w-56 rounded-full bg-[#35d39b]/8 blur-2xl" />
-          <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_420px]">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-base font-medium text-[#c9f5e5]">
-                <Sparkles size={14} /> Rewards center
-              </span>
-              <h1 className="mt-5 text-[32px] font-bold tracking-[-.04em] sm:text-[40px]">
-                Promo and Referrals
-              </h1>
-              <p className="mt-3 max-w-[580px] text-base leading-7 text-[#c7e4dc]">
-                Unlock exclusive offers, invite friends to Vuior, and keep every
-                reward in one place.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button
-                  onClick={shareCode}
-                  className="flex h-11 items-center gap-2 rounded-lg bg-white px-5 text-base font-semibold text-[#075544]"
-                >
-                  <Share2 size={16} /> Share your code
-                </button>
-                <button
-                  onClick={() =>
-                    document
-                      .getElementById("redeem-codes")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                  className="flex h-11 items-center gap-2 rounded-lg border border-white/20 bg-white/8 px-5 text-base font-semibold"
-                >
-                  Redeem a code <ArrowRight size={15} />
-                </button>
-              </div>
-            </div>
-            <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm sm:p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-base uppercase tracking-[.15em] text-[#b8ded3]">
-                    Your referral code
-                  </p>
-                  <p className="mt-1 text-base text-white/65">
-                    Share it with friends
-                  </p>
-                </div>
-                <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-[#62e2b5]">
-                  <Gift size={22} />
-                </span>
-              </div>
-              <div className="mt-5 flex items-center gap-3 rounded-xl border border-dashed border-white/20 bg-[#032f28]/30 p-3">
-                <strong className="min-w-0 flex-1 truncate text-[19px] tracking-[.12em]">
-                  {ownCode}
-                </strong>
-                <button
-                  onClick={copyCode}
-                  className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white text-[#075544]"
-                  aria-label="Copy referral code"
-                >
-                  {copied ? <Check size={17} /> : <Copy size={17} />}
-                </button>
-              </div>
-              <p className="mt-3 flex items-center gap-2 text-base text-[#b8ded3]">
-                <CheckCircle2 size={14} />{" "}
-                {copied ? "Code copied to clipboard" : "Ready to share"}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {feedback ? (
-          <div
-            role="status"
-            className={`mt-5 flex items-center gap-3 rounded-xl border px-4 py-3 text-base ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}
-          >
-            <CheckCircle2 size={18} />
-            {feedback.text}
-          </div>
-        ) : null}
-
-        <section className="mt-5 grid gap-4 md:grid-cols-3">
-          <Metric
-            icon={<UsersRound size={20} />}
-            label="Successful referrals"
-            value={String(referralCredits.filter(isSuccessfulReferral).length)}
-            note="Friends rewarded"
-          />
-          <Metric
-            icon={<WalletCards size={20} />}
-            label="Referral rewards"
-            value={money.format(totalEarned)}
-            note="Total credits earned"
-          />
-          <article className="rounded-2xl border border-[#e1e8e5] bg-white p-5 shadow-[0_8px_28px_rgba(25,55,47,.04)]">
-            <div className="flex items-center justify-between">
-              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#fff6e9] text-[#e68a16]">
-                <Trophy size={20} />
-              </span>
-              <span className="text-base text-[#718097]">{eligibility}%</span>
-            </div>
-            <p className="mt-4 text-base text-[#65728a]">
-              Referral eligibility
-            </p>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#edf1ef]">
-              <div
-                className="h-full rounded-full bg-[#00a36a]"
-                style={{ width: `${eligibility}%` }}
-              />
-            </div>
-            <p className="mt-2 text-base text-[#7c899c]">
-              {money.format(referralQualifyingSpendThisYear)} of $1,000 in bills paid this year
-            </p>
-            <p className="mt-2 text-base text-[#718097]">
-              Both users must pay $1,000 in bills this year. Payments using credits
-              or Stripe count, including partial payments. Buying credits alone
-              does not count.
-            </p>
-          </article>
-        </section>
-
-        <section id="redeem-codes" className="mt-5 grid gap-5 xl:grid-cols-2">
-          <RedeemCard
-            icon={<TicketPercent size={22} />}
-            eyebrow="Limited offers"
-            title="Redeem a promo code"
-            description="Apply an eligible campaign or partner offer directly to your Vuior wallet."
-            accent="promo"
-          >
-            <form onSubmit={redeemPromo} className="mt-6">
-              <label className="text-base font-medium text-[#42516b]">
-                Promo code<span className="text-red-600" aria-label="required"> *</span>
-              </label>
-              <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-                <input
-                  required
-                  aria-label="Promo code"
-                  value={promoCode}
-                  onChange={(event) =>
-                    setPromoCode(event.target.value.toUpperCase())
-                  }
-                  placeholder="ENTER PROMO CODE"
-                  className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-base uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
-                />
-                <ActionButton busy={redeeming === "promo"}>
-                  Apply promo
-                </ActionButton>
-              </div>
-            </form>
-          </RedeemCard>
-          <RedeemCard
-            icon={<UserPlus size={22} />}
-            eyebrow="Invited by someone?"
-            title="Redeem a referral code"
-            description="Enter your inviter’s code after you become a verified bill payer."
-            accent="referral"
-          >
-            <form onSubmit={redeemReferral} className="mt-6">
-              {hasRedeemedReferral && (
-                <p role="status" className="mb-3 text-base text-[#53617a]">
-                  You have already redeemed a referral code. Each user can redeem only one.
-                </p>
-              )}
-              <label className="text-base font-medium text-[#42516b]">
-                Referral code<span className="text-red-600" aria-label="required"> *</span>
-              </label>
-              <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-                <input
-                  required
-                  aria-label="Referral code"
-                  disabled={hasRedeemedReferral || redeeming === "referral"}
-                  value={referralCode}
-                  onChange={(event) =>
-                    setReferralCode(event.target.value.toUpperCase())
-                  }
-                  placeholder="ENTER REFERRAL CODE"
-                  className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-base uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
-                />
-                <ActionButton busy={redeeming === "referral"} disabled={hasRedeemedReferral}>
-                  {hasRedeemedReferral ? "Already redeemed" : "Redeem code"}
-                </ActionButton>
-              </div>
-            </form>
-          </RedeemCard>
-        </section>
-
-        <section className="mt-5 rounded-2xl border border-[#e1e8e5] bg-white p-6 shadow-[0_8px_28px_rgba(25,55,47,.04)] sm:p-7">
+    <div className="mx-auto max-w-[1320px] p-5 sm:p-7 lg:p-8">
+      <section className="relative overflow-hidden rounded-3xl bg-linear-to-br from-[#043d33] via-[#075847] to-[#08765c] px-6 py-7 text-white shadow-[0_20px_55px_rgba(4,61,51,.18)] sm:px-9 sm:py-9">
+        <div className="absolute -right-16 -top-24 h-72 w-72 rounded-full border-[55px] border-white/5" />
+        <div className="absolute -bottom-24 left-[38%] h-56 w-56 rounded-full bg-[#35d39b]/8 blur-2xl" />
+        <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_420px]">
           <div>
-            <p className="text-base font-semibold uppercase tracking-[.14em] text-[#00a36a]">
-              Simple and rewarding
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-base font-medium text-[#c9f5e5]">
+              <Sparkles size={14} /> Rewards center
+            </span>
+            <h1 className="mt-5 text-[32px] font-bold tracking-[-.04em] sm:text-[40px]">
+              Promo and Referrals
+            </h1>
+            <p className="mt-3 max-w-[580px] text-base leading-7 text-[#c7e4dc]">
+              Unlock exclusive offers, invite friends to Vuior, and keep every
+              reward in one place.
             </p>
-            <h2 className="mt-2 text-[20px] font-bold">How referrals work</h2>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                onClick={shareCode}
+                className="flex h-11 items-center gap-2 rounded-lg bg-white px-5 text-base font-semibold text-[#075544]"
+              >
+                <Share2 size={16} /> Share your code
+              </button>
+              <button
+                onClick={() =>
+                  document
+                    .getElementById("redeem-codes")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+                className="flex h-11 items-center gap-2 rounded-lg border border-white/20 bg-white/8 px-5 text-base font-semibold"
+              >
+                Redeem a code <ArrowRight size={15} />
+              </button>
+            </div>
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {[
-              [
-                Share2,
-                "Share your code",
-                "Send your unique Vuior code to friends and family.",
-              ],
-              [
-                UserPlus,
-                "Your friend joins",
-                "They create an account and start managing bills.",
-              ],
-              [
-                BadgePercent,
-                "You both earn",
-                "Rewards unlock when eligibility requirements are met.",
-              ],
-            ].map(([Icon, title, copy], index) => {
-              const I = Icon as typeof Share2;
-              return (
-                <div
-                  key={String(title)}
-                  className="relative rounded-xl bg-[#f7faf9] p-5"
-                >
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#00a36a] shadow-sm">
-                    <I size={18} />
-                  </span>
-                  <span className="absolute right-4 top-4 text-base text-[#9aa6b5]">
-                    0{index + 1}
-                  </span>
-                  <h3 className="mt-4 text-base font-semibold">
-                    {String(title)}
-                  </h3>
-                  <p className="mt-2 text-base leading-6 text-[#718097]">
-                    {String(copy)}
-                  </p>
-                </div>
-              );
-            })}
+          <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-base uppercase tracking-[.15em] text-[#b8ded3]">
+                  Your referral code
+                </p>
+                <p className="mt-1 text-base text-white/65">
+                  Share it with friends
+                </p>
+              </div>
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/10 text-[#62e2b5]">
+                <Gift size={22} />
+              </span>
+            </div>
+            <div className="mt-5 flex items-center gap-3 rounded-xl border border-dashed border-white/20 bg-[#032f28]/30 p-3">
+              <strong className="min-w-0 flex-1 truncate text-[19px] tracking-[.12em]">
+                {ownCode}
+              </strong>
+              <button
+                onClick={copyCode}
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-white text-[#075544]"
+                aria-label="Copy referral code"
+              >
+                {copied ? <Check size={17} /> : <Copy size={17} />}
+              </button>
+            </div>
+            <p className="mt-3 flex items-center gap-2 text-base text-[#b8ded3]">
+              <CheckCircle2 size={14} />{" "}
+              {copied ? "Code copied to clipboard" : "Ready to share"}
+            </p>
           </div>
-        </section>
-      </div>
-    
+        </div>
+      </section>
+
+      {feedback ? (
+        <div
+          role="status"
+          className={`mt-5 flex items-center gap-3 rounded-xl border px-4 py-3 text-base ${feedback.tone === "success" ? "border-[#b9ead7] bg-[#effbf6] text-[#087553]" : "border-[#fecdd3] bg-[#fff1f2] text-[#be123c]"}`}
+        >
+          <CheckCircle2 size={18} />
+          {feedback.text}
+        </div>
+      ) : null}
+
+      <section className="mt-5 grid gap-4 md:grid-cols-3">
+        <Metric
+          icon={<UsersRound size={20} />}
+          label="Successful referrals"
+          value={String(referralCredits.filter(isSuccessfulReferral).length)}
+          note="Friends rewarded"
+        />
+        <Metric
+          icon={<WalletCards size={20} />}
+          label="Referral rewards"
+          value={money.format(totalEarned)}
+          note="Total credits earned"
+        />
+        <article className="rounded-2xl border border-[#e1e8e5] bg-white p-5 shadow-[0_8px_28px_rgba(25,55,47,.04)]">
+          <div className="flex items-center justify-between">
+            <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#fff6e9] text-[#e68a16]">
+              <Trophy size={20} />
+            </span>
+            <span className="text-base text-[#718097]">{eligibility}%</span>
+          </div>
+          <p className="mt-4 text-base text-[#65728a]">Referral eligibility</p>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#edf1ef]">
+            <div
+              className="h-full rounded-full bg-[#00a36a]"
+              style={{ width: `${eligibility}%` }}
+            />
+          </div>
+          <p className="mt-2 text-base text-[#7c899c]">
+            {money.format(referralQualifyingSpendThisYear)} of $1,000 in bills
+            paid this year
+          </p>
+          <p className="mt-2 text-base text-[#718097]">
+            Both users must pay $1,000 in bills this year.
+          </p>
+        </article>
+      </section>
+
+      <section id="redeem-codes" className="mt-5 grid gap-5 xl:grid-cols-2">
+        <RedeemCard
+          icon={<TicketPercent size={22} />}
+          eyebrow="Limited offers"
+          title="Redeem a promo code"
+          description="Apply an eligible campaign or partner offer directly to your Vuior wallet."
+          accent="promo"
+        >
+          <form onSubmit={redeemPromo} className="mt-6">
+            <label className="text-base font-medium text-[#42516b]">
+              Promo code
+              <span className="text-red-600" aria-label="required">
+                {" "}
+                *
+              </span>
+            </label>
+            <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+              <input
+                required
+                aria-label="Promo code"
+                value={promoCode}
+                onChange={(event) =>
+                  setPromoCode(event.target.value.toUpperCase())
+                }
+                placeholder="ENTER PROMO CODE"
+                className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-base uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
+              />
+              <ActionButton busy={redeeming === "promo"}>
+                Apply promo
+              </ActionButton>
+            </div>
+          </form>
+        </RedeemCard>
+        <RedeemCard
+          icon={<UserPlus size={22} />}
+          eyebrow="Invited by someone?"
+          title="Redeem a referral code"
+          description="Enter your inviter’s code after you become a verified bill payer."
+          accent="referral"
+        >
+          <form onSubmit={redeemReferral} className="mt-6">
+            {hasRedeemedReferral && (
+              <p role="status" className="mb-3 text-base text-[#53617a]">
+                You have already redeemed a referral code. Each user can redeem
+                only one.
+              </p>
+            )}
+            <label className="text-base font-medium text-[#42516b]">
+              Referral code
+              <span className="text-red-600" aria-label="required">
+                {" "}
+                *
+              </span>
+            </label>
+            <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+              <input
+                required
+                aria-label="Referral code"
+                disabled={hasRedeemedReferral || redeeming === "referral"}
+                value={referralCode}
+                onChange={(event) =>
+                  setReferralCode(event.target.value.toUpperCase())
+                }
+                placeholder="ENTER REFERRAL CODE"
+                className="h-12 min-h-12 w-full min-w-0 flex-none sm:flex-1 rounded-lg border border-[#dce4e2] bg-white px-4 text-base uppercase tracking-[.08em] outline-none focus:border-[#00a36a]"
+              />
+              <ActionButton
+                busy={redeeming === "referral"}
+                disabled={hasRedeemedReferral}
+              >
+                {hasRedeemedReferral ? "Already redeemed" : "Redeem code"}
+              </ActionButton>
+            </div>
+          </form>
+        </RedeemCard>
+      </section>
+
+      <section className="mt-5 rounded-2xl border border-[#e1e8e5] bg-white p-6 shadow-[0_8px_28px_rgba(25,55,47,.04)] sm:p-7">
+        <div>
+          <p className="text-base font-semibold uppercase tracking-[.14em] text-[#00a36a]">
+            Simple and rewarding
+          </p>
+          <h2 className="mt-2 text-[20px] font-bold">How referrals work</h2>
+        </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {[
+            [
+              Share2,
+              "Share your code",
+              "Send your unique Vuior code to friends and family.",
+            ],
+            [
+              UserPlus,
+              "Your friend joins",
+              "They create an account and start managing bills.",
+            ],
+            [
+              BadgePercent,
+              "You both earn",
+              "Rewards unlock when eligibility requirements are met.",
+            ],
+          ].map(([Icon, title, copy], index) => {
+            const I = Icon as typeof Share2;
+            return (
+              <div
+                key={String(title)}
+                className="relative rounded-xl bg-[#f7faf9] p-5"
+              >
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-[#00a36a] shadow-sm">
+                  <I size={18} />
+                </span>
+                <span className="absolute right-4 top-4 text-base text-[#9aa6b5]">
+                  0{index + 1}
+                </span>
+                <h3 className="mt-4 text-base font-semibold">
+                  {String(title)}
+                </h3>
+                <p className="mt-2 text-base leading-6 text-[#718097]">
+                  {String(copy)}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    </div>
   );
 }
 

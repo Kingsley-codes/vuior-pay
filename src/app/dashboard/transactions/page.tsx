@@ -1,4 +1,5 @@
 "use client";
+import FilterSelect from "@/components/ui/FilterSelect";
 import TablePagination from "@/components/ui/TablePagination";
 import { monthlyComparison } from "@/utils/monthlyComparison";
 
@@ -206,47 +207,6 @@ function MultiSelectFilter({
   );
 }
 
-function FilterSelect({
-  label,
-  value,
-  onChange,
-  options,
-  icon: Icon = SlidersHorizontal,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  options: { value: string; label: string }[];
-  icon?: typeof SlidersHorizontal;
-}) {
-  return (
-    <div className="relative min-w-0">
-      <span className="mb-1.5 block text-base font-medium text-[#53637f]">
-        {label}
-      </span>
-      <Icon
-        size={15}
-        className="pointer-events-none absolute left-3 top-[44px] text-[#7b879b]"
-      />
-      <select
-        aria-label={label}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-11 w-full appearance-none rounded-lg border border-[#dfe5e7] bg-white pl-9 pr-9 text-base text-[#344260] outline-none transition hover:border-[#bacbc3] focus:border-[#00a96b] focus:ring-2 focus:ring-[#00a96b]/10"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <ChevronDown
-        size={14}
-        className="pointer-events-none absolute right-3 top-[44px] text-[#7b879b]"
-      />
-    </div>
-  );
-}
 
 function StatusBadge({ status }: { status: string }) {
   const label = transactionStatus(status);
@@ -267,11 +227,7 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function creditAmount(item: Transaction) {
-  const value = item.amount;
-  const signed = normalize(item.type).includes("sent")
-    ? -Math.abs(value)
-    : value;
-  return `${signed > 0 ? "+" : ""}${signed.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return Math.abs(item.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export default function TransactionsPage() {
@@ -891,7 +847,7 @@ export default function TransactionsPage() {
                           className={`whitespace-nowrap px-5 py-4 text-right text-[17px] font-semibold tabular-nums ${!billTransaction && !outgoing ? "text-[#009b67]" : "text-[#26344c]"}`}
                         >
                           {billTransaction
-                            ? money.format(item.amount)
+                            ? money.format(Math.abs(item.amount))
                             : creditAmount(item)}
                         </td>
                         <td className="px-5 py-4">
@@ -974,7 +930,7 @@ export default function TransactionsPage() {
                       <div className="text-right">
                         <p className="text-base font-semibold tabular-nums">
                           {billTransaction
-                            ? money.format(item.amount)
+                            ? money.format(Math.abs(item.amount))
                             : `${creditAmount(item)} credits`}
                         </p>
                         <div className="mt-2">

@@ -67,7 +67,10 @@ export default function DashboardPage() {
       return daysUntil(bill.dueDate) >= 0;
     })
     .sort((a, b) => +new Date(a.dueDate) - +new Date(b.dueDate));
-  const unpaidTotal = activeBillsThisMonth.reduce(
+  const overdueBills = activeBills.filter(
+    (bill) => bill.status.trim().toLowerCase() === "overdue",
+  );
+  const overdueTotal = overdueBills.reduce(
     (sum, bill) => sum + bill.amount,
     0,
   );
@@ -96,13 +99,13 @@ export default function DashboardPage() {
       icon: WalletCards,
     },
     {
-      title: "Total Unpaid Bills",
-      value: money.format(unpaidTotal),
-      note: `${activeBillsThisMonth.length} active bill${activeBillsThisMonth.length === 1 ? "" : "s"}`,
+      title: "Total Overdue Bills",
+      value: money.format(overdueTotal),
+      note: `${overdueBills.length} overdue bill${overdueBills.length === 1 ? "" : "s"}`,
       icon: FileText,
     },
     {
-      title: "Payments This Month",
+      title: "Transactions This Month",
       value: String(paymentsThisMonth),
       note: monthlyComparison(paymentsThisMonth, paymentsLastMonth),
       icon: CalendarCheck2,
