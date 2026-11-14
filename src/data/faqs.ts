@@ -76,7 +76,7 @@ export const MOBILE_FAQS: FAQItem[] = [
     value: "q2",
     title: "How does Vuior Billpay work?",
     content:
-      "Users link their bills to the platform, choose a payment method, and schedule or automate payments. Vuior tracks due dates and offers savings insights based on early payments and bill behavior.",
+      "Add your bills and pay manually, or enable autopay for a recurring bill and choose how many days before its due date to pay. Vuior uses your saved default payment method for autopay and calculates eligible credits from the actual payment date.",
     category: "Payments",
   },
   {
@@ -88,9 +88,9 @@ export const MOBILE_FAQS: FAQItem[] = [
   },
   {
     value: "q7",
-    title: "Can I cancel or edit a scheduled payment?",
+    title: "How do I change or turn off bill autopay?",
     content:
-      "Yes, payments can be edited or canceled up to 24 hours before the scheduled processing date.",
+      "Open the bill and select Edit. Use Change autopay timing to choose a different number of days, or turn autopay off, then save your changes before payment processing begins. Changing the due date also updates the autopay date using your saved timing. Turning autopay off does not reverse a payment already processed. Paid bills cannot be edited.",
     category: "Payments",
   },
   {
@@ -111,7 +111,7 @@ export const MOBILE_FAQS: FAQItem[] = [
     value: "q15",
     title: "How do I earn credits?",
     content:
-      "Credits are earned when your bill payment is verified and marked as Paid (green). The amount earned depends on how early you pay — up to 15% for paying 15+ days early, plus an extra 3% bonus when auto-pay is enabled.",
+      "Eligible early-payment credits are calculated from the date payment is made and added after the bill is verified and marked as Paid. You can earn up to 15% for paying 15 or more days early. Autopay follows the same reward tiers as manual payments; enabling it does not add a separate bonus. Payments on or after the due date earn no early-payment credits.",
     category: "Credit Earned",
   },
   {
@@ -165,9 +165,16 @@ export const MOBILE_FAQS: FAQItem[] = [
   },
   {
     value: "q23",
-    title: "What are the auto-pay benefits?",
+    title: "How does autopay work?",
     content:
-      "Enabling auto-pay on your bills gives you an extra +3% savings bonus on top of the early payment savings tiers. Combined with paying 15+ days early, you can earn up to 18% in total savings. Auto-pay ensures your bills are paid on time automatically, reducing the risk of late fees.",
+      "When creating or editing a bill, enable autopay and choose a whole number from 0 to 30 days before the due date in the timing popup. Choose 0 to pay on the due date. Confirm the timing, choose a recurring bill frequency, and save the bill. For example, choosing 7 days for a bill due on the 20th schedules payment for the 13th. Vuior uses your saved default payment method and applies the same timing to future recurring bills.",
+    category: "Payments",
+  },
+  {
+    value: "autopay-past-date",
+    title: "What if my selected autopay date has already passed?",
+    content:
+      "If the date calculated from your due date and chosen timing has already passed, autopay will be attempted at the next daily payment run after you save the bill. Saving does not trigger an instant payment. Keep your default payment method up to date and ensure funds are available. Any early-payment credits depend on when payment actually succeeds.",
     category: "Payments",
   },
   {

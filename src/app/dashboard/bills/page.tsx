@@ -365,7 +365,7 @@ export default function BillsPage() {
                   },
                   {
                     label: "Autopay guide",
-                    description: "Plan your automatic payments.",
+                    description: "Choose how many days before the due date to pay.",
                     icon: RefreshCcw,
                     kind: "autopay" as const,
                   },
@@ -1040,15 +1040,18 @@ function InfoModal({
         ) : (
           <>
             <p className="mt-4 text-base leading-6 text-[#65728a]">
-              Enable autopay for an individual bill and choose how many days before
-              the due date Vuior should pay it using your saved payment method.
+              When adding or editing a bill, enable autopay to open the timing
+              popup. Choose 0–30 days before the due date, confirm your timing,
+              select a recurring frequency, and save the bill.
             </p>
             <ul className="mt-4 space-y-3 text-base text-[#53617a]">
-              <li>• Turn it on or off anytime from the bill list.</li>
+              <li>• Choose 0 to pay on the due date. Your chosen timing carries over to future recurring bills.</li>
               <li>
-                • Your payment method and transaction remain securely recorded.
+                • Autopay charges your saved default payment method. Keep it up to date and ensure funds are available.
               </li>
-              <li>• Eligible early-pay rewards still apply when available.</li>
+              <li>• Edit the bill to change its timing or turn autopay off, then save before payment processing begins.</li>
+              <li>• If the selected payment date has passed, payment will be attempted at the next daily run.</li>
+              <li>• Credits depend on the actual payment date. Enabling autopay does not add a separate reward bonus.</li>
             </ul>
             <EarlyPaymentNote className="text-[#65728a]" />
           </>

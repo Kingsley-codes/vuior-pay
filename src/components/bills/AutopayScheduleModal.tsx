@@ -16,7 +16,7 @@ export default function AutopayScheduleModal({ days, onConfirm, onClose }: {
       onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); onClose(); } }}>
       <section role="dialog" aria-modal="true" aria-labelledby="autopay-schedule-title" className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
         <h2 id="autopay-schedule-title" className="text-xl font-semibold">Choose your autopay timing</h2>
-        <p className="mt-2 text-base text-[#65728a]">Pay automatically before each bill is due. If the selected date has already passed, payment will be attempted at the next daily run.</p>
+        <p className="mt-2 text-base text-[#65728a]">Choose when to pay each recurring bill using your saved default payment method. Confirm your timing, then save the bill. If the selected payment date has passed, payment will be attempted at the next daily run.</p>
         <label className="mt-5 block text-base font-medium">
           Days before the due date
           <input autoFocus type="number" min={0} max={30} step={1} value={value} onChange={(event) => setValue(event.target.value)} className="mt-2 h-11 w-full rounded-lg border border-[#dfe6e4] px-3" />

@@ -403,7 +403,7 @@ export default function BillModal({
                 ["Category", bill.category],
                 ["Account number", bill.accountNumber || "Not provided"],
                 ["Frequency", frequencyLabel(bill.frequency)],
-                ["Autopay", bill.autoPay ? (bill.autoPayDaysBefore ? `${bill.autoPayDaysBefore} days before due date` : "On the due date") : "Off"],
+                ["Autopay", bill.autoPay ? (bill.autoPayDaysBefore ? `${bill.autoPayDaysBefore} ${bill.autoPayDaysBefore === 1 ? "day" : "days"} before due date` : "On the due date") : "Off"],
                 ["Provider phone", bill.providerPhoneNumber || "Not provided"],
                 ["Amount paid", money.format(bill.amountPaid ?? (isPaymentSubmitted ? bill.amount : 0))],
                 ["Payment coverage", isPaymentSubmitted ? ((bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid") : "Not paid"],
@@ -622,7 +622,7 @@ export default function BillModal({
               <span>
                 <b className="block text-base">Enable autopay</b>
                 <small className="mt-1 block text-base text-[#718097]">
-                  {form.autoPay ? (form.autoPayDaysBefore ? `Pay ${form.autoPayDaysBefore} days before the due date.` : "Pay on the due date.") : "Choose when to pay automatically."}
+                  {form.autoPay ? (form.autoPayDaysBefore ? `Pay ${form.autoPayDaysBefore} ${form.autoPayDaysBefore === 1 ? "day" : "days"} before the due date.` : "Pay on the due date.") : "Turn on autopay to choose 0 to 30 days before the due date, then save the bill."}
                 </small>
               </span>
               <input

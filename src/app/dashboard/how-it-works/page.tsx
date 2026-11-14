@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
+import { MOBILE_FAQS } from "@/data/faqs";
 
 const tiers = [
   { days: "1–3 days early", rate: 2 },
@@ -34,7 +35,7 @@ const steps = [
   {
     icon: CalendarDays,
     title: "Pay before it’s due",
-    description: "Choose an eligible bill and review your payment. The earlier you pay, the higher your potential credit reward.",
+    description: "Pay manually or enable autopay on a recurring bill. Choose 0–30 days before the due date, confirm the timing, and save the bill. Eligible credits depend on the actual payment date.",
   },
   {
     icon: Coins,
@@ -44,6 +45,10 @@ const steps = [
 ];
 
 const faqs = [
+  ...["q23", "q7", "autopay-past-date"].map((value) => {
+    const faq = MOBILE_FAQS.find((item) => item.value === value)!;
+    return { question: faq.title, answer: faq.content };
+  }),
   {
     question: "When will my credits be available?",
     answer: "Your early-payment reward is confirmed at payment and added after your bill payment is approved and marked as Paid. While a payment is In review, its pending reward is not yet available to spend. You can check your bill status in Bills and your credit activity in Transactions.",
