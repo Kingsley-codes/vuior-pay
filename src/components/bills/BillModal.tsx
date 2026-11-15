@@ -10,7 +10,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { doc, getDoc } from "firebase/firestore";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
-import { ADDRESS_REQUIRED_MESSAGE, hasProfileAddress } from "@/utils/profileRequirements";
+import {
+  ADDRESS_REQUIRED_MESSAGE,
+  hasProfileAddress,
+} from "@/utils/profileRequirements";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
   CalendarDays,
@@ -40,7 +43,12 @@ import {
   normalizeInternationalPhone,
 } from "@/utils/inputFormatting";
 
-import { BILL_FREQUENCIES, normalizeBillFrequency, frequencyLabel, validAutopayFrequency } from "@/utils/billFrequency";
+import {
+  BILL_FREQUENCIES,
+  normalizeBillFrequency,
+  frequencyLabel,
+  validAutopayFrequency,
+} from "@/utils/billFrequency";
 import { billCreditInfo } from "@/utils/billCredits";
 
 type Mode = "add" | "details" | "edit";
@@ -125,7 +133,11 @@ export default function BillModal({
           category: bill.category || "",
           amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
-          frequency: bill.autoPay && normalizeBillFrequency(bill.frequency) === "one-time" ? "" : normalizeBillFrequency(bill.frequency),
+          frequency:
+            bill.autoPay &&
+            normalizeBillFrequency(bill.frequency) === "one-time"
+              ? ""
+              : normalizeBillFrequency(bill.frequency),
           accountNumber: bill.accountNumber || "",
           providerPhoneNumber: normalizeInternationalPhone(
             bill.providerPhoneNumber || "",
@@ -149,7 +161,12 @@ export default function BillModal({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const close = (event: KeyboardEvent) => { if (event.key === "Escape") { if (showAutopaySchedule) setShowAutopaySchedule(false); else onClose(); } };
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (showAutopaySchedule) setShowAutopaySchedule(false);
+        else onClose();
+      }
+    };
     document.addEventListener("keydown", close);
     return () => document.removeEventListener("keydown", close);
   }, [onClose, showAutopaySchedule]);
@@ -158,7 +175,10 @@ export default function BillModal({
     const term = form.name.trim();
     let cancelled = false;
     const timer = window.setTimeout(() => {
-      if (!term) { setProviders([]); return; }
+      if (!term) {
+        setProviders([]);
+        return;
+      }
       void searchProviders(term)
         .then((matches) => !cancelled && setProviders(matches))
         .catch(() => !cancelled && setProviders([]));
@@ -215,8 +235,12 @@ export default function BillModal({
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!validAutopayFrequency(form.autoPay, form.frequency)) return setError("Choose a recurring frequency to enable autopay.");
-    if (isPaid) { setError("Paid bills cannot be edited."); return; }
+    if (!validAutopayFrequency(form.autoPay, form.frequency))
+      return setError("Choose a recurring frequency to enable autopay.");
+    if (isPaid) {
+      setError("Paid bills cannot be edited.");
+      return;
+    }
     const amount = currencyInputNumber(form.amount);
     if (
       !form.name.trim() ||
@@ -276,10 +300,28 @@ export default function BillModal({
         form.category,
         selectedProvider?.id,
       );
-      const key = JSON.stringify({ form, fileName: file?.name, fileSize: file?.size, fileModified: file?.lastModified });
-      if (saveRequest.current?.key !== key) saveRequest.current = { key, id: crypto.randomUUID() };
-      const result = await withBillConfirmation((confirmation) => saveUserBill({ values: { ...values, provider_ID: providerId }, billId: bill?.id, requestId: saveRequest.current!.id, confirmation }), confirmBill);
-      if (!result) { saveRequest.current = null; return; }
+      const key = JSON.stringify({
+        form,
+        fileName: file?.name,
+        fileSize: file?.size,
+        fileModified: file?.lastModified,
+      });
+      if (saveRequest.current?.key !== key)
+        saveRequest.current = { key, id: crypto.randomUUID() };
+      const result = await withBillConfirmation(
+        (confirmation) =>
+          saveUserBill({
+            values: { ...values, provider_ID: providerId },
+            billId: bill?.id,
+            requestId: saveRequest.current!.id,
+            confirmation,
+          }),
+        confirmBill,
+      );
+      if (!result) {
+        saveRequest.current = null;
+        return;
+      }
       onClose();
     } catch (cause) {
       setError(
@@ -300,11 +342,23 @@ export default function BillModal({
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}
     >
       {confirmationDialog}
-      {showAutopaySchedule && <AutopayScheduleModal days={form.autoPayDaysBefore} onClose={() => setShowAutopaySchedule(false)} onConfirm={(days) => {
-        setForm((current) => ({ ...current, autoPay: true, autoPayDaysBefore: days, frequency: current.frequency === "one-time" ? "" : current.frequency }));
-        setShowAutopaySchedule(false);
-        setError("");
-      }} />}
+      {showAutopaySchedule && (
+        <AutopayScheduleModal
+          days={form.autoPayDaysBefore}
+          onClose={() => setShowAutopaySchedule(false)}
+          onConfirm={(days) => {
+            setForm((current) => ({
+              ...current,
+              autoPay: true,
+              autoPayDaysBefore: days,
+              frequency:
+                current.frequency === "one-time" ? "" : current.frequency,
+            }));
+            setShowAutopaySchedule(false);
+            setError("");
+          }}
+        />
+      )}
       <section
         inert={showAutopaySchedule}
         role="dialog"
@@ -352,13 +406,23 @@ export default function BillModal({
             </button>
           </div>
         </header>
-        {mode === "add" && (profileLoading || !hasProfileAddress(user?.address)) ? (
+        {mode === "add" &&
+        (profileLoading || !hasProfileAddress(user?.address)) ? (
           <div className="p-5 sm:p-7" role="status">
-            {profileLoading ? <p>Checking your profile...</p> : <>
-              <h3 className="font-semibold">Complete your profile</h3>
-              <p className="mt-2 text-base">{ADDRESS_REQUIRED_MESSAGE}</p>
-              <Link href="/dashboard/settings?tab=profile" className="mt-4 inline-block rounded-lg bg-[#009b67] px-4 py-3 text-base font-semibold text-white">Add address</Link>
-            </>}
+            {profileLoading ? (
+              <p>Checking your profile...</p>
+            ) : (
+              <>
+                <h3 className="font-semibold">Complete your profile</h3>
+                <p className="mt-2 text-base">{ADDRESS_REQUIRED_MESSAGE}</p>
+                <Link
+                  href="/dashboard/settings?tab=profile"
+                  className="mt-4 inline-block rounded-lg bg-[#009b67] px-4 py-3 text-base font-semibold text-white"
+                >
+                  Add address
+                </Link>
+              </>
+            )}
           </div>
         ) : mode === "details" && bill ? (
           <div className="p-5 sm:p-7">
@@ -393,7 +457,10 @@ export default function BillModal({
               </div>
             </div>
             <div className="mt-4 rounded-xl bg-[#f0f8f3] p-4 text-base text-[#39704e]">
-              <p className="font-semibold">{credits?.label}: {money.format(credits?.amount || 0)} in credits</p>
+              <p className="font-semibold">
+                {credits?.label}: {money.format(credits?.amount || 0)} in
+                credits
+              </p>
               <p className="mt-1 text-base">{credits?.description}</p>
               <EarlyPaymentNote />
             </div>
@@ -403,10 +470,29 @@ export default function BillModal({
                 ["Category", bill.category],
                 ["Account number", bill.accountNumber || "Not provided"],
                 ["Frequency", frequencyLabel(bill.frequency)],
-                ["Autopay", bill.autoPay ? (bill.autoPayDaysBefore ? `${bill.autoPayDaysBefore} ${bill.autoPayDaysBefore === 1 ? "day" : "days"} before due date` : "On the due date") : "Off"],
+                [
+                  "Autopay",
+                  bill.autoPay
+                    ? bill.autoPayDaysBefore
+                      ? `${bill.autoPayDaysBefore} ${bill.autoPayDaysBefore === 1 ? "day" : "days"} before due date`
+                      : "On the due date"
+                    : "Off",
+                ],
                 ["Provider phone", bill.providerPhoneNumber || "Not provided"],
-                ["Amount paid", money.format(bill.amountPaid ?? (isPaymentSubmitted ? bill.amount : 0))],
-                ["Payment coverage", isPaymentSubmitted ? ((bill.amountPaid ?? bill.amount) < bill.amount ? "Partly paid" : "Fully paid") : "Not paid"],
+                [
+                  "Amount paid",
+                  money.format(
+                    bill.amountPaid ?? (isPaymentSubmitted ? bill.amount : 0),
+                  ),
+                ],
+                [
+                  "Payment coverage",
+                  isPaymentSubmitted
+                    ? (bill.amountPaid ?? bill.amount) < bill.amount
+                      ? "Partly paid"
+                      : "Fully paid"
+                    : "Not paid",
+                ],
                 ["Payment method", bill.paidWith || "Not paid"],
               ].map(([label, value]) => (
                 <div
@@ -448,7 +534,11 @@ export default function BillModal({
               className="relative flex min-h-[132px] w-full items-center gap-4 overflow-hidden rounded-2xl border border-dashed border-[#8fd4b8] bg-[#f3fbf7] p-5 text-left hover:bg-[#edf9f3]"
             >
               {preview &&
-              !isPdfDocument(preview, file?.type || bill?.documentType, file?.name || bill?.documentName) ? (
+              !isPdfDocument(
+                preview,
+                file?.type || bill?.documentType,
+                file?.name || bill?.documentName,
+              ) ? (
                 <Image
                   src={preview}
                   alt="Bill preview"
@@ -469,7 +559,12 @@ export default function BillModal({
                     : bill?.documentUrl
                       ? "Replace attached document"
                       : "Upload a bill document"}
-                  {mode === "add" && <span className="text-red-600" aria-label="required"> *</span>}
+                  {mode === "add" && (
+                    <span className="text-red-600" aria-label="required">
+                      {" "}
+                      *
+                    </span>
+                  )}
                 </b>
                 <small className="mt-1.5 block text-base leading-6 text-[#657a72]">
                   JPG, PNG, WEBP or PDF up to 10 MB. Vuior AI will fill in the
@@ -603,11 +698,27 @@ export default function BillModal({
                 />
               </Field>
               <Field label="Frequency" required>
-                <select required value={form.frequency} onChange={(e) => update("frequency", e.target.value)}>
-                  <option value="" disabled>Select a recurring frequency</option>
-                  {BILL_FREQUENCIES.filter((value) => !form.autoPay || value !== "one-time").map((value) => <option key={value} value={value}>{frequencyLabel(value)}</option>)}
+                <select
+                  required
+                  value={form.frequency}
+                  onChange={(e) => update("frequency", e.target.value)}
+                >
+                  <option value="" disabled>
+                    Select a recurring frequency
+                  </option>
+                  {BILL_FREQUENCIES.filter(
+                    (value) => !form.autoPay || value !== "one-time",
+                  ).map((value) => (
+                    <option key={value} value={value}>
+                      {frequencyLabel(value)}
+                    </option>
+                  ))}
                 </select>
-                {form.autoPay && <small className="mt-1 block text-[#65728a]">Autopay requires a recurring frequency.</small>}
+                {form.autoPay && (
+                  <small className="mt-1 block text-[#65728a]">
+                    Autopay requires a recurring frequency.
+                  </small>
+                )}
               </Field>
               <Field label="Provider phone">
                 <PhoneNumberInput
@@ -622,7 +733,11 @@ export default function BillModal({
               <span>
                 <b className="block text-base">Enable autopay</b>
                 <small className="mt-1 block text-base text-[#718097]">
-                  {form.autoPay ? (form.autoPayDaysBefore ? `Pay ${form.autoPayDaysBefore} ${form.autoPayDaysBefore === 1 ? "day" : "days"} before the due date.` : "Pay on the due date.") : "Turn on autopay to choose 0 to 30 days before the due date, then save the bill."}
+                  {form.autoPay
+                    ? form.autoPayDaysBefore
+                      ? `Pay ${form.autoPayDaysBefore} ${form.autoPayDaysBefore === 1 ? "day" : "days"} before the due date.`
+                      : "Pay on the due date."
+                    : "Choose when to pay automatically."}
                 </small>
               </span>
               <input
@@ -631,13 +746,26 @@ export default function BillModal({
                 onChange={(e) => {
                   const autoPay = e.target.checked;
                   if (autoPay) setShowAutopaySchedule(true);
-                  else setForm((current) => ({ ...current, autoPay: false, frequency: current.frequency || "one-time" }));
+                  else
+                    setForm((current) => ({
+                      ...current,
+                      autoPay: false,
+                      frequency: current.frequency || "one-time",
+                    }));
                   setError("");
                 }}
                 className="h-4 w-4 accent-[#009b67]"
               />
             </label>
-            {form.autoPay && <button type="button" onClick={() => setShowAutopaySchedule(true)} className="mt-2 text-base font-semibold text-[#009b67]">Change autopay timing</button>}
+            {form.autoPay && (
+              <button
+                type="button"
+                onClick={() => setShowAutopaySchedule(true)}
+                className="mt-2 text-base font-semibold text-[#009b67]"
+              >
+                Change autopay timing
+              </button>
+            )}
             <div className="mt-6 flex gap-3">
               <button
                 type="button"
@@ -681,7 +809,12 @@ function Field({
   return (
     <label className={`${wide ? "mt-4 block" : "block"}`}>
       <span className="mb-2 block text-base font-bold uppercase tracking-wider text-[#44516b]">
-        {label} {required && <span className="text-red-600" aria-label="required">*</span>}
+        {label}{" "}
+        {required && (
+          <span className="text-red-600" aria-label="required">
+            *
+          </span>
+        )}
       </span>
       <div className="[&_input]:h-11 [&_input]:w-full [&_input]:rounded-lg [&_input]:border [&_input]:border-[#dfe6e4] [&_input]:px-3 [&_input]:text-base [&_input]:outline-none [&_input]:focus:border-[#009b67] [&_select]:h-11 [&_select]:w-full [&_select]:rounded-lg [&_select]:border [&_select]:border-[#dfe6e4] [&_select]:bg-white [&_select]:px-3 [&_select]:text-base [&_select]:outline-none [&_textarea]:w-full [&_textarea]:rounded-lg [&_textarea]:border [&_textarea]:border-[#dfe6e4] [&_textarea]:p-3 [&_textarea]:text-base [&_textarea]:outline-none">
         {children}

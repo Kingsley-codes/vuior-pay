@@ -41,10 +41,7 @@ export default function AutopayScheduleModal({
         <h2 id="autopay-schedule-title" className="text-xl font-semibold">
           Choose your autopay timing
         </h2>
-        <p className="mt-2 text-base text-[#65728a]">
-          CHoose a set date to pay automatically. If the selected date has
-          already passed, payment will be attempted at the next daily run.
-        </p>
+
         <label className="mt-5 block text-base font-medium">
           Days before the due date
           <input
