@@ -31,7 +31,12 @@ import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
 import type { Bill } from "@/hooks/useVuiorData";
 import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
-import { billCategories, periods, periodBounds, type Period } from "@/utils/transactions";
+import {
+  billCategories,
+  periods,
+  periodBounds,
+  type Period,
+} from "@/utils/transactions";
 import FilterSelect from "@/components/ui/FilterSelect";
 import { monthlyComparison } from "@/utils/monthlyComparison";
 
@@ -74,7 +79,6 @@ function monthKey(value: Date | string) {
   if (Number.isNaN(date.getTime())) return "";
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 }
-
 
 function displayStatus(bill: Bill) {
   const value = bill.status.trim().toLowerCase().replaceAll("_", " ");
@@ -192,7 +196,9 @@ export default function BillsPage() {
             (frequencies.length === 0 ||
               frequencies.includes(normalizeBillFrequency(bill.frequency))) &&
             (categories.length === 0 || categories.includes(bill.category)) &&
-            (bounds !== null && new Date(bill.dueDate) >= bounds[0] && new Date(bill.dueDate) < bounds[1]) &&
+            bounds !== null &&
+            new Date(bill.dueDate) >= bounds[0] &&
+            new Date(bill.dueDate) < bounds[1] &&
             (providers.length === 0 || providers.includes(bill.name.trim())) &&
             `${bill.name} ${bill.category}`
               .toLowerCase()
@@ -207,7 +213,9 @@ export default function BillsPage() {
   const filterKey = JSON.stringify([
     tab,
     categories,
-    period, from, to,
+    period,
+    from,
+    to,
     search,
     providers,
     frequencies,
@@ -365,7 +373,7 @@ export default function BillsPage() {
                   },
                   {
                     label: "Autopay guide",
-                    description: "Choose how many days before the due date to pay.",
+                    description: "Plan your automatic payments.",
                     icon: RefreshCcw,
                     kind: "autopay" as const,
                   },
@@ -539,7 +547,13 @@ export default function BillsPage() {
                   options={BILL_FREQUENCIES}
                   optionLabel={frequencyLabel}
                 />
-                <FilterSelect label="Date range" value={period} onChange={(value) => setPeriod(value as Period)} icon={CalendarDays} options={periods.map((value) => ({ value, label: value }))} />
+                <FilterSelect
+                  label="Date range"
+                  value={period}
+                  onChange={(value) => setPeriod(value as Period)}
+                  icon={CalendarDays}
+                  options={periods.map((value) => ({ value, label: value }))}
+                />
                 <MultiSelectFilter
                   label="Provider"
                   value={providers}
@@ -550,13 +564,31 @@ export default function BillsPage() {
 
               {period === "Custom" && (
                 <div className="flex flex-wrap items-end gap-3 border-b border-[#e7ecea] bg-[#f8faf9] p-3">
-                  <label className="text-base text-[#596885]">From
-                    <input type="date" value={from} max={to || undefined} onChange={(event) => setFrom(event.target.value)} className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base" />
+                  <label className="text-base text-[#596885]">
+                    From
+                    <input
+                      type="date"
+                      value={from}
+                      max={to || undefined}
+                      onChange={(event) => setFrom(event.target.value)}
+                      className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base"
+                    />
                   </label>
-                  <label className="text-base text-[#596885]">To
-                    <input type="date" value={to} min={from || undefined} onChange={(event) => setTo(event.target.value)} className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base" />
+                  <label className="text-base text-[#596885]">
+                    To
+                    <input
+                      type="date"
+                      value={to}
+                      min={from || undefined}
+                      onChange={(event) => setTo(event.target.value)}
+                      className="mt-1 block h-10 rounded-md border border-[#dfe5e7] bg-white px-3 text-base"
+                    />
                   </label>
-                  {!periodBounds(period, from, to) && <p role="status" className="pb-3 text-base text-[#a67617]">Choose a valid start and end date.</p>}
+                  {!periodBounds(period, from, to) && (
+                    <p role="status" className="pb-3 text-base text-[#a67617]">
+                      Choose a valid start and end date.
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -1040,18 +1072,16 @@ function InfoModal({
         ) : (
           <>
             <p className="mt-4 text-base leading-6 text-[#65728a]">
-              When adding or editing a bill, enable autopay to open the timing
-              popup. Choose 0–30 days before the due date, confirm your timing,
-              select a recurring frequency, and save the bill.
+              Enable autopay for an individual bill and choose how many days
+              before the due date Vuior should pay it using your saved payment
+              method.
             </p>
             <ul className="mt-4 space-y-3 text-base text-[#53617a]">
-              <li>• Choose 0 to pay on the due date. Your chosen timing carries over to future recurring bills.</li>
+              <li>• Turn it on or off anytime from the bill list.</li>
               <li>
-                • Autopay charges your saved default payment method. Keep it up to date and ensure funds are available.
+                • Your payment method and transaction remain securely recorded.
               </li>
-              <li>• Edit the bill to change its timing or turn autopay off, then save before payment processing begins.</li>
-              <li>• If the selected payment date has passed, payment will be attempted at the next daily run.</li>
-              <li>• Credits depend on the actual payment date. Enabling autopay does not add a separate reward bonus.</li>
+              <li>• Eligible early-pay rewards still apply when available.</li>
             </ul>
             <EarlyPaymentNote className="text-[#65728a]" />
           </>

@@ -182,7 +182,7 @@ export function FeaturesSection() {
           </li>
           <li>
             <Icon name="clock" />
-            Choose how many days early autopay runs
+            Set up autopay and reminders
           </li>
           <li>
             <Icon name="wallet" />
@@ -277,7 +277,7 @@ export function HowItWorks() {
     {
       icon: "calendar" as const,
       title: "Pay early",
-      text: "Pay manually or set autopay for your chosen number of days before each bill is due.",
+      text: "Choose when to pay or set autopay and stay ahead.",
     },
     {
       icon: "gift" as const,

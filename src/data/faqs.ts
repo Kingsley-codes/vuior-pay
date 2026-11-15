@@ -111,7 +111,7 @@ export const MOBILE_FAQS: FAQItem[] = [
     value: "q15",
     title: "How do I earn credits?",
     content:
-      "Eligible early-payment credits are calculated from the date payment is made and added after the bill is verified and marked as Paid. You can earn up to 15% for paying 15 or more days early. Autopay follows the same reward tiers as manual payments; enabling it does not add a separate bonus. Payments on or after the due date earn no early-payment credits.",
+      "Credits are earned when your bill payment is verified and marked as Paid (green). The amount earned depends on how early you pay — up to 15% for paying 15+ days early, plus an extra 3% bonus when auto-pay is enabled.",
     category: "Credit Earned",
   },
   {
@@ -254,9 +254,19 @@ export const MOBILE_FAQS: FAQItem[] = [
       "Absolutely. We use bank-level encryption, secure servers, and comply with industry-standard data protection practices. Your financial data is never sold or shared without your consent. All bill documents are stored securely in encrypted cloud storage. Payments are processed through Stripe, a PCI-compliant payment processor.",
     category: "Others",
   },
+  {
+    value: "q30",
+    title: "Can I cancel or edit a scheduled payment?",
+    content:
+      "Yes, payments can be edited or canceled up to 24 hours before the scheduled processing date.",
+    category: "Payments",
+  },
 ];
 
 // Keep the dashboard's quick answers consistent with the public FAQ page.
-export const SUPPORT_FAQS = ["q19", "q16", "support-ticket", "support-tracking"].map(
-  (value) => MOBILE_FAQS.find((faq) => faq.value === value)!,
-);
+export const SUPPORT_FAQS = [
+  "q19",
+  "q16",
+  "support-ticket",
+  "support-tracking",
+].map((value) => MOBILE_FAQS.find((faq) => faq.value === value)!);

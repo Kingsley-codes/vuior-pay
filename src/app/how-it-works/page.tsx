@@ -107,7 +107,7 @@ export default function HowItWorksPage() {
               "02",
               CalendarDays,
               "Pay early",
-              "Pay manually or set autopay for 0–30 days before the due date. Eligible credits depend on when payment is made.",
+              "Choose when to pay or set autopay. The earlier you pay, the more you earn.",
             ],
             [
               "03",
@@ -236,7 +236,7 @@ export default function HowItWorksPage() {
             [
               RefreshCcw,
               "Pay bills and manage autopay",
-              "Enable autopay when adding or editing a recurring bill, choose how many days before it is due to pay, and save your timing.",
+              "Pay instantly or set autopay for peace of mind.",
             ],
             [
               History,
