@@ -33,7 +33,6 @@ import TransactionDetailsModal from "@/components/transactions/TransactionDetail
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { type Transaction, useVuiorData } from "@/hooks/useVuiorData";
 import {
-  billCategories,
   billsForTransaction,
   categoriesForTransaction,
   creditCategories,
@@ -268,17 +267,6 @@ export default function TransactionsPage() {
       status: [],
     });
   }
-  const creditTypes = useMemo(
-    () => [
-      ...new Set([
-        ...creditCategories,
-        ...transactions
-          .filter((item) => transactionKind(item) === "credit")
-          .map((item) => displayName(item.type)),
-      ]),
-    ],
-    [transactions],
-  );
   const transactionTypeOptions = useMemo(
     () => [
       ...new Set([
@@ -372,7 +360,6 @@ export default function TransactionsPage() {
   const hasFilters =
     filters.search ||
     (filters.transactionTypes?.length ?? 0) > 0 ||
-    filters.category.length > 0 ||
     filters.status.length > 0 ||
     filters.period !== "This week";
 
@@ -622,7 +609,7 @@ export default function TransactionsPage() {
             aria-labelledby={`${filters.type}-tab`}
           >
             <div className="space-y-3 border-b border-[#e7ecea] p-4 sm:p-5">
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-3">
                 <form
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -658,23 +645,6 @@ export default function TransactionsPage() {
                     </button>
                   </div>
                 </form>
-                <MultiSelectFilter
-                  label={filters.type === "credit" ? "Credit type" : "Category"}
-                  value={filters.category}
-                  onChange={(category) => updateFilters({ category })}
-                  allLabel={
-                    filters.type === "credit"
-                      ? "All credit types"
-                      : "All categories"
-                  }
-                  options={[
-                    ...(filters.type === "credit"
-                      ? creditTypes
-                      : filters.type === "bill"
-                        ? [...billCategories, "Uncategorized"]
-                        : [...billCategories, "Uncategorized", ...creditTypes]),
-                  ].map((value) => ({ value, label: value }))}
-                />
                 <MultiSelectFilter
                   label="Type"
                   value={filters.transactionTypes ?? []}
