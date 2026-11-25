@@ -373,7 +373,6 @@ export default function TransactionsPage() {
     filters.search ||
     (filters.transactionTypes?.length ?? 0) > 0 ||
     filters.category.length > 0 ||
-    filters.provider.length > 0 ||
     filters.status.length > 0 ||
     filters.period !== "This week";
 

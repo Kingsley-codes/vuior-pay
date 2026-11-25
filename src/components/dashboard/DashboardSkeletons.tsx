@@ -189,8 +189,9 @@ export function TransactionsSkeleton() {
           <Bone className="h-4 w-32" />
           <Bone className="h-4 w-36" />
         </div>
-        <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 xl:grid-cols-5">
-          {Array.from({ length: 5 }, (_, index) => (
+          <div className="grid gap-3 border-b border-[#e7ecea] p-4 sm:grid-cols-2 sm:p-5 xl:grid-cols-4">
+            <Bone className="col-span-full h-11" />
+            {Array.from({ length: 4 }, (_, index) => (
             <Bone key={index} className="h-11" />
           ))}
         </div>
