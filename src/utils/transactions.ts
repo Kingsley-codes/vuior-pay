@@ -131,6 +131,7 @@ export function periodBounds(
 
 export type TransactionFilters = {
   type: string;
+  transactionTypes?: string[];
   category: string[];
   provider: string[];
   status: string[];
@@ -179,6 +180,10 @@ export function filterTransactions(
         );
       return (
         (filters.type === "all" || transactionKind(item) === filters.type) &&
+        (!filters.transactionTypes?.length ||
+          filters.transactionTypes.some(
+            (type) => normalize(type) === normalize(item.type),
+          )) &&
         categoryMatches &&
         providerMatches &&
         statusMatches &&

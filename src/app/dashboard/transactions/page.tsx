@@ -62,6 +62,7 @@ const compactMoney = new Intl.NumberFormat("en-US", {
 
 const defaults: TransactionFilters = {
   type: "all",
+  transactionTypes: [],
   category: [],
   provider: [],
   status: [],
@@ -261,6 +262,7 @@ export default function TransactionsPage() {
   function selectTab(type: "all" | "bill" | "credit") {
     updateFilters({
       type,
+      transactionTypes: [],
       category: [],
       provider: [],
       status: [],
@@ -277,19 +279,23 @@ export default function TransactionsPage() {
     ],
     [transactions],
   );
-  const providerOptions = useMemo(
-    () =>
-      [
-        ...new Set(
-          [
-            ...transactions.flatMap((item) => [
-              item.provider,
-              ...billsForTransaction(item, bills).map((bill) => bill.name),
-            ]),
-          ].filter((value): value is string => Boolean(value?.trim())),
-        ),
-      ].sort((a, b) => a.localeCompare(b)),
-    [transactions, bills],
+  const transactionTypeOptions = useMemo(
+    () => [
+      ...new Set([
+        ...(filters.type !== "credit" ? ["Bill Payment"] : []),
+        ...(filters.type !== "bill"
+          ? [...creditCategories, "Credits Returned"]
+          : []),
+        ...transactions
+          .filter(
+            (item) =>
+              filters.type === "all" || transactionKind(item) === filters.type,
+          )
+          .map((item) => displayName(item.type))
+          .filter(Boolean),
+      ]),
+    ],
+    [transactions, filters.type],
   );
   const filtered = useMemo(
     () => filterTransactions(transactions, bills, filters),
@@ -365,6 +371,7 @@ export default function TransactionsPage() {
     Number(user?.referralBonus ?? 0);
   const hasFilters =
     filters.search ||
+    (filters.transactionTypes?.length ?? 0) > 0 ||
     filters.category.length > 0 ||
     filters.provider.length > 0 ||
     filters.status.length > 0 ||
@@ -670,12 +677,14 @@ export default function TransactionsPage() {
                   ].map((value) => ({ value, label: value }))}
                 />
                 <MultiSelectFilter
-                  label="Provider"
-                  value={filters.provider}
-                  onChange={(provider) => updateFilters({ provider })}
-                  allLabel="All providers"
-                  searchable
-                  options={providerOptions.map((value) => ({
+                  label="Type"
+                  value={filters.transactionTypes ?? []}
+                  onChange={(transactionTypes) =>
+                    updateFilters({ transactionTypes })
+                  }
+                  allLabel="All types"
+                  icon={ArrowLeftRight}
+                  options={transactionTypeOptions.map((value) => ({
                     value,
                     label: value,
                   }))}
