@@ -3,6 +3,7 @@ import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import AutopayScheduleModal from "@/components/bills/AutopayScheduleModal";
 
 import { saveUserBill } from "@/services/billSave";
+import { createAutopaySetupSession } from "@/services/payments";
 import { withBillConfirmation } from "@/utils/billDuplicates";
 import { useBillConfirmation } from "@/hooks/useBillConfirmation";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -134,7 +135,7 @@ export default function BillModal({
           amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
           frequency:
-            bill.autoPay &&
+            (bill.autoPay || bill.autopaySetupPending) &&
             normalizeBillFrequency(bill.frequency) === "one-time"
               ? ""
               : normalizeBillFrequency(bill.frequency),
@@ -142,7 +143,7 @@ export default function BillModal({
           providerPhoneNumber: normalizeInternationalPhone(
             bill.providerPhoneNumber || "",
           ),
-          autoPay: bill.autoPay,
+          autoPay: bill.autoPay || Boolean(bill.autopaySetupPending),
           autoPayDaysBefore: bill.autoPayDaysBefore ?? 0,
         }
       : emptyForm,
@@ -322,6 +323,15 @@ export default function BillModal({
         saveRequest.current = null;
         return;
       }
+      if (result.needsCardSetup) {
+        try {
+          const session = await createAutopaySetupSession(result.billId);
+          window.location.assign(session.url);
+        } catch (cause) {
+          setError(`Your bill is saved, but autopay is waiting for card setup. ${cause instanceof Error ? cause.message : "Save again to retry."}`);
+        }
+        return;
+      }
       onClose();
     } catch (cause) {
       setError(
@@ -472,7 +482,9 @@ export default function BillModal({
                 ["Frequency", frequencyLabel(bill.frequency)],
                 [
                   "Autopay",
-                  bill.autoPay
+                  bill.autopaySetupPending
+                    ? "Waiting for card setup — open Edit to finish"
+                    : bill.autoPay
                     ? bill.autoPayDaysBefore
                       ? `${bill.autoPayDaysBefore} ${bill.autoPayDaysBefore === 1 ? "day" : "days"} before due date`
                       : "On the due date"
@@ -757,6 +769,17 @@ export default function BillModal({
                 className="h-4 w-4 accent-[#009b67]"
               />
             </label>
+            {form.autoPay && (
+              <p className="mt-3 text-base leading-6 text-[#53617a]">
+                Autopay covers this bill and future recurring bills. By saving,
+                you authorize charges to your saved default card on the selected
+                dates, including applicable processing fees. If you need a card,
+                you&apos;ll add it securely on Stripe after saving. Card setup does
+                not pay the bill; payment runs on the scheduled date, or at the
+                next daily run if that date has passed. You can turn autopay off
+                before payment processing begins.
+              </p>
+            )}
             {form.autoPay && (
               <button
                 type="button"

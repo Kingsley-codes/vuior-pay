@@ -29,6 +29,7 @@ import BillModal from "@/components/bills/BillModal";
 import BillPaymentModal from "@/components/bills/BillPaymentModal";
 import { useVuiorSession } from "@/hooks/useVuiorSession";
 import { useVuiorData } from "@/hooks/useVuiorData";
+import { confirmAutopaySetup } from "@/services/payments";
 import type { Bill } from "@/hooks/useVuiorData";
 import { BillsSkeleton } from "@/components/dashboard/DashboardSkeletons";
 import {
@@ -117,6 +118,35 @@ export default function BillsPage() {
   const [infoModal, setInfoModal] = useState<"savings" | "autopay" | null>(
     null,
   );
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!user?.id || !params.has("autopay")) return;
+    let active = true;
+    async function finishSetup() {
+      let message = "Your bill is saved. Autopay is waiting for card setup. Open the bill and choose Edit to finish setup or turn autopay off.";
+      try {
+        if (params.get("autopay") === "success") {
+          const sessionId = params.get("session_id");
+          if (!sessionId) throw new Error("Missing card setup confirmation. Open the bill and choose Edit to retry.");
+          const result = await confirmAutopaySetup(sessionId);
+          message = result.activated
+            ? "Card setup complete. Autopay is enabled for this bill and future recurring bills, starting on its scheduled payment date."
+            : "This setup did not activate autopay because the bill changed. Open the bill and choose Edit to check its current settings.";
+        }
+      } catch (cause) {
+        message = cause instanceof Error ? cause.message : "Unable to confirm card setup. Open the bill and choose Edit to retry.";
+      }
+      if (!active) return;
+      setPaymentMessage(message);
+      params.delete("autopay");
+      params.delete("session_id");
+      params.delete("billId");
+      window.history.replaceState({}, "", `${window.location.pathname}${params.size ? `?${params}` : ""}`);
+    }
+    void finishSetup();
+    return () => { active = false; };
+  }, [user?.id]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

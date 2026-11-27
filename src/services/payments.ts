@@ -116,3 +116,17 @@ export async function payBillsWithCredits(userId: string, bills: Bill[], request
 export function checkoutUrl(result: { sessionId: string; url?: string }) {
   return result.url || `https://checkout.stripe.com/c/pay/${result.sessionId}`;
 }
+
+export function createAutopaySetupSession(billId: string) {
+  return post<{ url: string }>(
+    "https://us-central1-vuior-3c7ff.cloudfunctions.net/createAutopaySetupSession",
+    { billId },
+  );
+}
+
+export function confirmAutopaySetup(sessionId: string) {
+  return post<{ activated: boolean }>(
+    "https://us-central1-vuior-3c7ff.cloudfunctions.net/confirmAutopaySetup",
+    { sessionId },
+  );
+}
