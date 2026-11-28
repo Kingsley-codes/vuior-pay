@@ -12,5 +12,5 @@ export async function saveUserBill(input: { values: Record<string, unknown>; bil
     if (result.code === "duplicate-bill" && result.duplicate) throw new DuplicateBillError(result.message, result.duplicate, Boolean(result.canUpdate) && !input.billId);
     throw new Error(result.message || "Unable to save this bill.");
   }
-  return result.data as { billId: string; updated: boolean; needsCardSetup?: boolean };
+  return result.data as { billId: string; updated: boolean; suggestAddCard?: boolean };
 }

@@ -45,4 +45,5 @@ next-env.d.ts
 
 SOCIAL_AUTH_SETUP.md
 
-tests/
+tests/*
+!tests/transactions.test.mjs

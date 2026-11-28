@@ -25,6 +25,7 @@ export type VuiorUser = {
   redeemedReferralCode?: boolean;
   referralBonus?: number;
   stripeCustomerId?: string;
+  hasSavedCard?: boolean;
   mustChangePassword?: boolean;
 };
 
@@ -78,6 +79,7 @@ export function useVuiorSession() {
               data.referralBonus ?? data.referralEarnings ?? 0,
             ),
             stripeCustomerId: String(data.stripeCustomerId ?? ""),
+            hasSavedCard: data.hasSavedCard === true,
             mustChangePassword: data.mustChangePassword === true,
           });
           setLoading(false);

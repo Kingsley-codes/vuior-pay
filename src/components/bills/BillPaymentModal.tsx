@@ -21,6 +21,7 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
   const submitting = useRef(false);
   const requestId = useRef<string | null>(null);
   const [method, setMethod] = useState<"card" | "credits">("card");
+  const [saveCard, setSaveCard] = useState(false);
   const [applyCredits, setApplyCredits] = useState(false);
   const [creditAmount, setCreditAmount] = useState("");
   const [processing, setProcessing] = useState(false);
@@ -59,7 +60,7 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
         await payBillsWithCredits(user.id, bills, requestId.current, billAmounts);
         onPaid("Payment submitted for review. Eligible early-payment credits will be added after approval.");
       } else {
-        const response = await createBillsCheckout({ userId: user.id, bills, billAmounts, creditsApplied: discount, savings: rewards, customerId: user.stripeCustomerId });
+        const response = await createBillsCheckout({ userId: user.id, bills, billAmounts, creditsApplied: discount, savings: rewards, customerId: user.stripeCustomerId, saveCard });
         window.location.assign(checkoutUrl(response));
       }
     } catch (cause) {
@@ -128,6 +129,7 @@ export default function BillPaymentModal({ bills, expectedBillCount, user, onClo
               })}
             </div>
 
+            {method === "card" && <label className="mt-4 flex items-start gap-3 rounded-xl border border-[#e4ebe6] p-4 text-base"><input type="checkbox" checked={saveCard} onChange={event => setSaveCard(event.target.checked)} className="mt-1 h-4 w-4 accent-[#009b67]" /><span><span className="block font-medium">Save this card for future payments</span><span className="mt-1 block leading-6 text-[#65728a]">Securely save your card with Stripe. Your default card can be charged on the scheduled dates for bills with autopay enabled, including processing fees.</span></span></label>}
             {method === "card" && available > 0 && maxCredits > 0 && (
               <div className="mt-4 rounded-xl border border-[#e4ebe6] p-4">
                 <label className="flex cursor-pointer items-start gap-3">

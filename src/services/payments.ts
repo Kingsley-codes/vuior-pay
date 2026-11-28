@@ -45,7 +45,7 @@ export function sendCredits(
   });
 }
 
-export function createCreditsCheckout(userId: string, credits: number) {
+export function createCreditsCheckout(userId: string, credits: number, saveCard = false) {
   if (!Number.isFinite(credits) || credits < 0.5) {
     throw new Error("Add at least $0.50 to continue to card checkout.");
   }
@@ -56,6 +56,7 @@ export function createCreditsCheckout(userId: string, credits: number) {
   return post<{ sessionId: string; url?: string }>(endpoints.addCredits, {
     userId,
     credits,
+    saveCard,
     success_url: `${base}/dashboard/transactions?checkout=success`,
     cancel_url: `${base}/dashboard/transactions?wallet=add&checkout=cancelled`,
   });
@@ -67,12 +68,14 @@ export function createBillsCheckout(params: {
   creditsApplied: number;
   savings: number;
   customerId?: string;
+  saveCard?: boolean;
   billAmounts?: Record<string, number>;
 }) {
   const base = window.location.origin;
   const subtotal = params.bills.reduce((sum, bill) => sum + bill.amount, 0);
   return post<{ sessionId: string; url?: string }>(endpoints.payBills, {
     userId: params.userId,
+    saveCard: params.saveCard === true,
     billAmounts: params.billAmounts,
     visibleItems: params.bills.map((bill) => ({
       id: bill.id,
@@ -125,8 +128,13 @@ export function createAutopaySetupSession(billId: string) {
 }
 
 export function confirmAutopaySetup(sessionId: string) {
-  return post<{ activated: boolean }>(
+  return post<{ cardSaved: boolean }>(
     "https://us-central1-vuior-3c7ff.cloudfunctions.net/confirmAutopaySetup",
     { sessionId },
   );
+}
+
+export type SavedCard = { id: string; brand: string; last4: string; expMonth: number; expYear: number; isDefault: boolean; expired: boolean };
+export function managePaymentMethods(input: { action: "list" | "default" | "remove" | "setupWeb" | "confirm"; paymentMethodId?: string; sessionId?: string }) {
+  return post<{ cards: SavedCard[]; url?: string }>("https://us-central1-vuior-3c7ff.cloudfunctions.net/managePaymentMethods", input);
 }

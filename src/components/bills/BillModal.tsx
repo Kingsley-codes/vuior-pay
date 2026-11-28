@@ -3,7 +3,6 @@ import EarlyPaymentNote from "@/components/EarlyPaymentNote";
 import AutopayScheduleModal from "@/components/bills/AutopayScheduleModal";
 
 import { saveUserBill } from "@/services/billSave";
-import { createAutopaySetupSession } from "@/services/payments";
 import { withBillConfirmation } from "@/utils/billDuplicates";
 import { useBillConfirmation } from "@/hooks/useBillConfirmation";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -135,7 +134,7 @@ export default function BillModal({
           amount: formatCurrencyInput(String(bill.amount)),
           dueDate: dateInput(bill.dueDate),
           frequency:
-            (bill.autoPay || bill.autopaySetupPending) &&
+            bill.autoPay &&
             normalizeBillFrequency(bill.frequency) === "one-time"
               ? ""
               : normalizeBillFrequency(bill.frequency),
@@ -143,11 +142,12 @@ export default function BillModal({
           providerPhoneNumber: normalizeInternationalPhone(
             bill.providerPhoneNumber || "",
           ),
-          autoPay: bill.autoPay || Boolean(bill.autopaySetupPending),
+          autoPay: bill.autoPay,
           autoPayDaysBefore: bill.autoPayDaysBefore ?? 0,
         }
       : emptyForm,
   );
+  const [cardSetupBillId, setCardSetupBillId] = useState<string | null>(null);
   const [showAutopaySchedule, setShowAutopaySchedule] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState(bill?.documentUrl || "");
@@ -323,13 +323,8 @@ export default function BillModal({
         saveRequest.current = null;
         return;
       }
-      if (result.needsCardSetup) {
-        try {
-          const session = await createAutopaySetupSession(result.billId);
-          window.location.assign(session.url);
-        } catch (cause) {
-          setError(`Your bill is saved, but autopay is waiting for card setup. ${cause instanceof Error ? cause.message : "Save again to retry."}`);
-        }
+      if (result.suggestAddCard) {
+        setCardSetupBillId(result.billId);
         return;
       }
       onClose();
@@ -352,6 +347,8 @@ export default function BillModal({
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}
     >
       {confirmationDialog}
+      {cardSetupBillId && <div role="dialog" aria-modal="true" aria-labelledby="autopay-card-title" className="fixed inset-0 z-[70] grid place-items-center bg-[#07142d]/60 p-5"><div className="w-full max-w-md rounded-2xl bg-white p-6"><h2 id="autopay-card-title" className="text-xl font-semibold">Your bill is saved</h2><p className="mt-3 text-base leading-6 text-[#65728a]">Would you like to add a card for autopay? Autopay is on. Without a saved card, the scheduled payment will fail and you will be notified.</p><div className="mt-6 flex justify-end gap-3"><button disabled={working} onClick={onClose} className="rounded-lg border px-4 py-2 text-base">Later</button><button disabled={working} onClick={() => window.location.assign("/dashboard/settings?tab=payments")} className="rounded-lg bg-[#009b67] px-4 py-2 text-base font-semibold text-white">Add a card</button></div></div></div>}
+
       {showAutopaySchedule && (
         <AutopayScheduleModal
           days={form.autoPayDaysBefore}
@@ -482,9 +479,7 @@ export default function BillModal({
                 ["Frequency", frequencyLabel(bill.frequency)],
                 [
                   "Autopay",
-                  bill.autopaySetupPending
-                    ? "Waiting for card setup — open Edit to finish"
-                    : bill.autoPay
+                  bill.autoPay
                     ? bill.autoPayDaysBefore
                       ? `${bill.autoPayDaysBefore} ${bill.autoPayDaysBefore === 1 ? "day" : "days"} before due date`
                       : "On the due date"
@@ -773,9 +768,10 @@ export default function BillModal({
               <p className="mt-3 text-base leading-6 text-[#53617a]">
                 Autopay covers this bill and future recurring bills. By saving,
                 you authorize charges to your saved default card on the selected
-                dates, including applicable processing fees. If you need a card,
-                you&apos;ll add it securely on Stripe after saving. Card setup does
-                not pay the bill; payment runs on the scheduled date, or at the
+                dates, including applicable processing fees. Without a saved
+                card, the scheduled payment will fail and you will be notified.
+                You can add a card after saving. Card setup does not pay the
+                bill; payment runs on the scheduled date, or at the
                 next daily run if that date has passed. You can turn autopay off
                 before payment processing begins.
               </p>

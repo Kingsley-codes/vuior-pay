@@ -41,6 +41,7 @@ export default function WalletModal({
   onClose: () => void;
 }) {
   const [action, setAction] = useState<WalletAction>(initialAction);
+  const [saveCard, setSaveCard] = useState(false);
   const [amount, setAmount] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,7 +82,7 @@ export default function WalletModal({
     setLoading(true);
     try {
       if (action === "add") {
-        const checkout = await createCreditsCheckout(userId, numeric);
+        const checkout = await createCreditsCheckout(userId, numeric, saveCard);
         window.location.assign(checkoutUrl(checkout));
       } else {
         const response = await sendCredits(
@@ -274,6 +275,7 @@ export default function WalletModal({
                 </div>
               </div>
             )}
+            {action === "add" && <label className="mt-4 flex items-start gap-3 rounded-xl border border-[#dfe8e5] p-4 text-base"><input type="checkbox" checked={saveCard} onChange={event => setSaveCard(event.target.checked)} className="mt-1 h-4 w-4 accent-[#009b67]" /><span><span className="block font-medium">Save card for future payments</span><span className="mt-1 block leading-6 text-[#718097]">Securely save with Stripe. Your default card can be charged for bills with autopay enabled, including processing fees.</span></span></label>}
             {result ? (
               <div
                 className={`mt-4 flex gap-2 rounded-lg border p-3 text-base ${result.ok ? "border-[#bde6d4] bg-[#effaf5] text-[#08764f]" : "border-[#fecaca] bg-[#fff1f2] text-[#b4233b]"}`}

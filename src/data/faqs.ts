@@ -167,7 +167,7 @@ export const MOBILE_FAQS: FAQItem[] = [
     value: "q23",
     title: "How does autopay work?",
     content:
-      "When creating or editing a bill, enable autopay and choose a whole number from 0 to 30 days before the due date. Choose 0 to pay on the due date. Choose a recurring frequency and save. If you do not have a usable saved card, complete secure card setup on Stripe to activate autopay. Autopay covers the first bill and future recurring bills using your default card. Card setup does not pay the bill immediately. If you cancel setup, your bill stays saved with autopay inactive; open Edit to retry or turn it off. For example, choosing 7 days for a bill due on the 20th schedules payment for the 13th.",
+      "When creating or editing a bill, enable autopay and choose a whole number from 0 to 30 days before the due date. Choose 0 to pay on the due date. Choose a recurring frequency and save. Autopay stays enabled even if you have no saved card. If no saved default card is available on the scheduled date, payment fails and you are notified. Add a card in Payment methods to allow future autopay attempts to use it. Saving a card does not pay a bill immediately. For example, choosing 7 days for a bill due on the 20th schedules payment for the 13th.",
     category: "Payments",
   },
   {

@@ -124,15 +124,15 @@ export default function BillsPage() {
     if (!user?.id || !params.has("autopay")) return;
     let active = true;
     async function finishSetup() {
-      let message = "Your bill is saved. Autopay is waiting for card setup. Open the bill and choose Edit to finish setup or turn autopay off.";
+      let message = "Card setup cancelled. Your autopay settings are unchanged. Without a saved card, the scheduled payment will fail and you will be notified.";
       try {
         if (params.get("autopay") === "success") {
           const sessionId = params.get("session_id");
           if (!sessionId) throw new Error("Missing card setup confirmation. Open the bill and choose Edit to retry.");
           const result = await confirmAutopaySetup(sessionId);
-          message = result.activated
-            ? "Card setup complete. Autopay is enabled for this bill and future recurring bills, starting on its scheduled payment date."
-            : "This setup did not activate autopay because the bill changed. Open the bill and choose Edit to check its current settings.";
+          message = result.cardSaved
+            ? "Card saved. Your autopay settings are unchanged. Scheduled payments will use your default card."
+            : "Card setup could not be confirmed. Open Payment methods to check your saved cards.";
         }
       } catch (cause) {
         message = cause instanceof Error ? cause.message : "Unable to confirm card setup. Open the bill and choose Edit to retry.";
