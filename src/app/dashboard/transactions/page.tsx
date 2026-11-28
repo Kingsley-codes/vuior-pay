@@ -612,7 +612,7 @@ export default function TransactionsPage() {
             aria-labelledby={`${filters.type}-tab`}
           >
             <div className="space-y-3 border-b border-[#e7ecea] p-4 sm:p-5">
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 <form
                   onSubmit={(event) => {
                     event.preventDefault();
@@ -661,7 +661,19 @@ export default function TransactionsPage() {
                     label: value,
                   }))}
                 />
-                <FilterSelect label="Amount" value={filters.amountRange || "all"} onChange={amountRange => updateFilters({ amountRange })} options={[{ value: "all", label: "All amounts" }, ...amountRanges.map(value => ({ value, label: `$${value.replace("-", " ? $")}` })), { value: "custom", label: "Custom range" }]} />
+                <FilterSelect
+                  label="Amount"
+                  value={filters.amountRange || "all"}
+                  onChange={(amountRange) => updateFilters({ amountRange })}
+                  options={[
+                    { value: "all", label: "All amounts" },
+                    ...amountRanges.map((value) => ({
+                      value,
+                      label: `$${value.replace("-", " - $")}`,
+                    })),
+                    { value: "custom", label: "Custom range" },
+                  ]}
+                />
                 <FilterSelect
                   label="Date range"
                   value={filters.period}
