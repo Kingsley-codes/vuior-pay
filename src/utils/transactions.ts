@@ -130,7 +130,7 @@ export function periodBounds(
 }
 
 export type TransactionFilters = {
-  amountRange?: string;
+  amountRanges?: string[];
   minAmount?: string;
   maxAmount?: string;
   type: string;
@@ -149,10 +149,16 @@ export function filterTransactions(
   filters: TransactionFilters,
   now = new Date(),
 ) {
-  const range = filters.amountRange || "all";
-  const parts = range === "custom" ? [filters.minAmount || "", filters.maxAmount || ""] : range.split("-");
-  const amounts = range === "all" ? [0, Infinity] : parts.map(Number);
-  if (range !== "all" && (parts.length !== 2 || parts.some(value => !value.trim()) || amounts.some(value => !Number.isFinite(value)) || amounts[0] < 0 || amounts[1] < amounts[0])) return [];
+  const amounts: [number, number][] = [];
+  for (const range of filters.amountRanges ?? []) {
+    const parts = range === "custom"
+      ? [filters.minAmount || "", filters.maxAmount || ""]
+      : range.split("-");
+    const [minimum, maximum] = parts.map(Number);
+    if (parts.length !== 2 || parts.some(value => !value.trim()) ||
+        !Number.isFinite(minimum) || !Number.isFinite(maximum) || minimum < 0 || maximum < minimum) return [];
+    amounts.push([minimum, maximum]);
+  }
   const bounds = periodBounds(filters.period, filters.from, filters.to, now);
   if (!bounds) return [];
   const query = filters.search.trim().toLowerCase();
@@ -191,7 +197,7 @@ export function filterTransactions(
           filters.transactionTypes.some(
             (type) => normalize(type) === normalize(item.type),
           )) &&
-        Math.abs(item.amount) >= amounts[0] && Math.abs(item.amount) <= amounts[1] &&
+        (!amounts.length || amounts.some(([minimum, maximum]) => Math.abs(item.amount) >= minimum && Math.abs(item.amount) <= maximum)) &&
         categoryMatches &&
         providerMatches &&
         statusMatches &&

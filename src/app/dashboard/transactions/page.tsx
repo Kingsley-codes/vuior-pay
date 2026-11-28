@@ -62,7 +62,7 @@ const compactMoney = new Intl.NumberFormat("en-US", {
 const amountRanges = ["0-500", "501-1000", "1001-1500", "1501-2000", "2001-3000", "3001-4000"];
 
 const defaults: TransactionFilters = {
-  amountRange: "all", minAmount: "", maxAmount: "",
+  amountRanges: [], minAmount: "", maxAmount: "",
   type: "all",
   transactionTypes: [],
   category: [],
@@ -361,7 +361,7 @@ export default function TransactionsPage() {
       .reduce((sum, item) => sum + Math.max(0, item.amount), 0) ||
     Number(user?.referralBonus ?? 0);
   const hasFilters =
-    filters.amountRange !== "all" || filters.search ||
+    (filters.amountRanges?.length ?? 0) > 0 || filters.search ||
     (filters.transactionTypes?.length ?? 0) > 0 ||
     filters.status.length > 0 ||
     filters.period !== "This week";
@@ -661,12 +661,12 @@ export default function TransactionsPage() {
                     label: value,
                   }))}
                 />
-                <FilterSelect
+                <MultiSelectFilter
                   label="Amount"
-                  value={filters.amountRange || "all"}
-                  onChange={(amountRange) => updateFilters({ amountRange })}
+                  value={filters.amountRanges ?? []}
+                  onChange={(amountRanges) => updateFilters({ amountRanges })}
+                  allLabel="All amounts"
                   options={[
-                    { value: "all", label: "All amounts" },
                     ...amountRanges.map((value) => ({
                       value,
                       label: `$${value.replace("-", " - $")}`,
@@ -696,7 +696,7 @@ export default function TransactionsPage() {
                   )}
                 />
               </div>
-              {filters.amountRange === "custom" && <div className="flex flex-wrap items-end gap-3 rounded-lg bg-[#f8faf9] p-3">{(["minAmount", "maxAmount"] as const).map(field => <label key={field} className="text-base text-[#596885]">{field === "minAmount" ? "Minimum amount ($)" : "Maximum amount ($)"}<input type="number" min="0" step="0.01" inputMode="decimal" value={filters[field] || ""} onChange={event => updateFilters({ [field]: event.target.value })} className="mt-1 block h-11 w-44 rounded-lg border border-[#dfe5e7] bg-white px-3 text-base outline-none focus:border-[#009b67]" /></label>)}{(!filters.minAmount || !filters.maxAmount || Number(filters.minAmount) < 0 || Number(filters.maxAmount) < Number(filters.minAmount)) && <p role="status" className="text-base text-amber-700">Enter a valid minimum and maximum; maximum must be at least minimum.</p>}</div>}
+              {filters.amountRanges?.includes("custom") && <div className="flex flex-wrap items-end gap-3 rounded-lg bg-[#f8faf9] p-3">{(["minAmount", "maxAmount"] as const).map(field => <label key={field} className="text-base text-[#596885]">{field === "minAmount" ? "Minimum amount ($)" : "Maximum amount ($)"}<input type="number" min="0" step="0.01" inputMode="decimal" value={filters[field] || ""} onChange={event => updateFilters({ [field]: event.target.value })} className="mt-1 block h-11 w-44 rounded-lg border border-[#dfe5e7] bg-white px-3 text-base outline-none focus:border-[#009b67]" /></label>)}{(!filters.minAmount || !filters.maxAmount || Number(filters.minAmount) < 0 || Number(filters.maxAmount) < Number(filters.minAmount)) && <p role="status" className="text-base text-amber-700">Enter a valid minimum and maximum; maximum must be at least minimum.</p>}</div>}
               {filters.period === "Custom" && (
                 <div className="flex flex-wrap items-end gap-3 rounded-lg bg-[#f8faf9] p-3">
                   <label className="text-base text-[#596885]">

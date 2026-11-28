@@ -42,9 +42,19 @@ test("amount ranges include their endpoints and combine with existing filters", 
   const amounts = [0, 500, 500.5, 501, 1000, 1001, 1500, 1501, 2000, 2001, 3000, 3001, 4000, 4001];
   const data = amounts.map(amount => ({ ...transaction(String(amount), "Bill Payment", "Bill Transactions"), amount }));
   const filtered = changes => filterTransactions(data, [], { ...filters, ...changes }, now).map(row => row.amount).sort((a,b) => a-b);
-  for (const [range, expected] of [["0-500", [0,500]], ["501-1000", [501,1000]], ["1001-1500", [1001,1500]], ["1501-2000", [1501,2000]], ["2001-3000", [2001,3000]], ["3001-4000", [3001,4000]]]) assert.deepEqual(filtered({ amountRange: range }), expected);
-  assert.deepEqual(filtered({ amountRange: "custom", minAmount: "500.50", maxAmount: "1001" }), [500.5,501,1000,1001]);
-  assert.deepEqual(filtered({ amountRange: "custom", minAmount: "1000", maxAmount: "500" }), []);
-  assert.deepEqual(filtered({ amountRange: "custom", minAmount: "", maxAmount: "500" }), []);
-  assert.deepEqual(filtered({ amountRange: "0-500", type: "credit" }), []);
+  for (const [range, expected] of [["0-500", [0,500]], ["501-1000", [501,1000]], ["1001-1500", [1001,1500]], ["1501-2000", [1501,2000]], ["2001-3000", [2001,3000]], ["3001-4000", [3001,4000]]]) assert.deepEqual(filtered({ amountRanges: [range] }), expected);
+  assert.deepEqual(filtered({ amountRanges: ["custom"], minAmount: "500.50", maxAmount: "1001" }), [500.5,501,1000,1001]);
+  assert.deepEqual(filtered({ amountRanges: ["custom"], minAmount: "1000", maxAmount: "500" }), []);
+  assert.deepEqual(filtered({ amountRanges: ["custom"], minAmount: "", maxAmount: "500" }), []);
+  assert.deepEqual(filtered({ amountRanges: ["0-500"], type: "credit" }), []);
+});
+
+test("multiple amount ranges form a union and clearing them restores all amounts", () => {
+  const amounts = [0, 500, 501, 1000, 1001, 1500, 1501, 2000, 3500, 4001];
+  const data = amounts.map(amount => ({ ...transaction(String(amount), "Bill Payment", "Bill Transactions"), amount }));
+  const filtered = changes => filterTransactions(data, [], { ...filters, ...changes }, now).map(row => row.amount).sort((a,b) => a-b);
+  assert.deepEqual(filtered({ amountRanges: ["0-500", "1001-1500"] }), [0,500,1001,1500]);
+  assert.deepEqual(filtered({ amountRanges: ["0-500", "custom"], minAmount: "3500", maxAmount: "4001" }), [0,500,3500,4001]);
+  assert.deepEqual(filtered({ amountRanges: ["0-500", "custom"], minAmount: "", maxAmount: "4001" }), []);
+  assert.deepEqual(filtered({ amountRanges: [] }), amounts);
 });
